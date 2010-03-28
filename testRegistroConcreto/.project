@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Prueba</name>
+	<name>testRegistroConcreto</name>
 	<comment></comment>
 	<projects>
+		<project>application</project>
+		<project>common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -31,7 +33,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/Prueba/Debug}</value>
+					<value>${workspace_loc:/testRegistroConcreto/Debug}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
