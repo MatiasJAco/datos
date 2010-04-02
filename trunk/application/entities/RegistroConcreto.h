@@ -23,12 +23,15 @@ private:
 
 public:
 	RegistroConcreto(){};
+
+	RegistroConcreto(const RegistroConcreto& reg);
+
 	RegistroConcreto(int clave,double tdouble,float tfloat,std::string tstring);
 	virtual ~RegistroConcreto();
 
-	unsigned int getSize();
+	unsigned int getSize() const;
 
-	char* serialize(char* bytes);
+	char* serialize(char* bytes) const;
 
 	/**
 	 * Transfo0rma la cadena de bytes a un registro
@@ -36,14 +39,14 @@ public:
 	 */
 	void deserialize(const char* bytes);
 
-	std::string toString();
+	std::string toString() const;
 
 
-	bool operator==(Register& registro)	;
+	bool operator==(const Register& registro) const	;
 
-	virtual bool operator<(Register& registro);
+	virtual bool operator<(const Register& registro) const;
 
-	virtual bool operator>(Register& registro);
+	virtual bool operator>(const Register& registro) const;
 
     int getClave() const
     {
