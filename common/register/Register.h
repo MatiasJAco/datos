@@ -25,7 +25,7 @@ public:
 	 * Obtiene el tamaño del registro.
 	 * \return El tamaño del registro.
 	 */
-	virtual unsigned int getSize()=0;
+	virtual unsigned int getSize() const = 0;
 
 
 	/**
@@ -33,7 +33,7 @@ public:
 	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
 	 * \return El puntero a la cadena de bytes
 	 */
-	virtual char* serialize(char* bytes) = 0;
+	virtual char* serialize(char* bytes) const = 0;
 
 	/**
 	 * Transforma la cadena de bytes a un registro
@@ -43,18 +43,29 @@ public:
 
 
 
-	virtual bool operator==(Register& registro) = 0;
+	virtual bool operator==(const Register& registro)const = 0;
 
-	virtual bool operator<(Register& registro) = 0;
+	virtual bool operator<(const Register& registro)const = 0;
 
-	virtual bool operator>(Register& registro) = 0;
+	virtual bool operator>(const Register& registro)const = 0;
 
-	virtual std::string toString() = 0;
+	virtual std::string toString() const = 0;
 
 };
 
-std::ostream& operator << (std::ostream& os, Register& reg);
+std::ostream& operator <<  (std::ostream& os,const Register& reg);
 
-std::istream& operator >> (std::istream& is,Register& reg);
+std::istream& operator >> (std::istream& is,const Register& reg);
+
+////< Para usarlo en sets de stl
+class RegisterCmp{
+
+public:
+	  bool operator() (const Register& r1, const Register& r2) const
+	  {
+		  return r1 < r2;
+	  }
+
+};
 
 #endif /* REGISTER_H_ */
