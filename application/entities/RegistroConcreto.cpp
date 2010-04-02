@@ -22,7 +22,16 @@ RegistroConcreto::~RegistroConcreto() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned int RegistroConcreto::getSize()
+
+RegistroConcreto::RegistroConcreto(const RegistroConcreto & reg)
+{
+	m_clave = reg.m_clave;
+	m_double = reg.m_double;
+	m_float = reg.m_float;
+	m_string = reg.m_string;
+}
+
+unsigned int RegistroConcreto::getSize() const
 {
 	unsigned int size = 0;
 
@@ -32,7 +41,7 @@ unsigned int RegistroConcreto::getSize()
 }
 
 
-char *RegistroConcreto::serialize(char *bytes)
+char *RegistroConcreto::serialize(char *bytes) const
 {
 	ByteConverter::intToBytes(m_clave,bytes);
 	bytes+= sizeof(m_clave);
@@ -61,16 +70,31 @@ void RegistroConcreto::deserialize(const char *bytes)
 
 
 
-bool RegistroConcreto::operator <(Register & registro)
+bool RegistroConcreto::operator <(const Register & registro) const
 {
-	RegistroConcreto *reg=dynamic_cast<RegistroConcreto*> (&registro);
+	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
 
-	return (m_clave<reg->m_clave);
+	return (m_clave<reg.m_clave);
 }
 
 
 
-string RegistroConcreto::toString()
+bool RegistroConcreto::operator >(const Register & registro) const
+{
+	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
+
+	return (m_clave>reg.m_clave);
+}
+
+
+bool RegistroConcreto::operator ==(const Register & registro) const
+{
+	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
+
+	return (m_clave==reg.m_clave);
+}
+
+string RegistroConcreto::toString() const
 {
 	stringstream retStr;
 
@@ -79,20 +103,5 @@ string RegistroConcreto::toString()
 
 	return retStr.str();
 
-}
-
-bool RegistroConcreto::operator >(Register & registro)
-{
-	RegistroConcreto *reg=dynamic_cast<RegistroConcreto*> (&registro);
-
-	return (m_clave>reg->m_clave);
-}
-
-
-bool RegistroConcreto::operator ==(Register & registro)
-{
-	RegistroConcreto *reg=dynamic_cast<RegistroConcreto*> (&registro);
-
-	return (m_clave==reg->m_clave);
 }
 
