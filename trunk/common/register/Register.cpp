@@ -16,14 +16,14 @@ Register::~Register() {
 	// TODO Auto-generated destructor stub
 }
 
-std::istream & operator >>(std::istream & is, Register & reg)
+std::istream & operator >>(std::istream & is, const Register & reg)
 {
 	return is;
 }
 
 
 
-std::ostream & operator <<(std::ostream & os, Register & reg)
+std::ostream & operator <<(std::ostream & os, const Register & reg)
 {
 	os << reg.toString();
 
