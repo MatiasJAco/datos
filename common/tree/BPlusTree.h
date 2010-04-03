@@ -8,28 +8,29 @@
 #ifndef BPLUSTREE_H_
 #define BPLUSTREE_H_
 
-#include "Nodo.h"
+#include "Node.h"
 #include "Bucket.h"
-#include "BufferTree.h"
+#include "BufferNode.h"
 #include "../register/Register.h"
 
 class BPlusTree {
 
-public:
-	static const unsigned int TAMANIO_NODO;
-
 private:
 
-	Nodo* raiz;
+	unsigned int m_sizeNodo;
 
-	Bucket* first_bucket;
-	Bucket* last_bucket;
+	Node* m_raiz;
 
-	BufferTree buffer;
+	Bucket* m_firstBucket;
+	Bucket* m_lastBucket;
 
+	BufferNode m_buffer;
 
 public:
 	BPlusTree();
+
+	BPlusTree(unsigned int sizeNodo);
+
 	virtual ~BPlusTree();
 
 	void insertar(Register& registro);

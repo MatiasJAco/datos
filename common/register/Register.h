@@ -16,6 +16,7 @@ class Register {
 
 public:
 
+	//---------------Constructor/Destructor-------//
 	/// El constructor
 	Register();
 	/** El destructor */
@@ -27,7 +28,7 @@ public:
 	 */
 	virtual unsigned int getSize() const = 0;
 
-
+	//-------------Serialize/Deserialize----------//
 	/**
 	 * Serializa el registro en bytes
 	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
@@ -42,6 +43,9 @@ public:
 	virtual void deserialize(const char* bytes) = 0;
 
 
+	//---------------Operators--------------------//
+	//TODO REVISAR, NO FUNCIONA
+//	virtual Register& operator=(const Register& registro) = 0;
 
 	virtual bool operator==(const Register& registro)const = 0;
 
@@ -49,15 +53,35 @@ public:
 
 	virtual bool operator>(const Register& registro)const = 0;
 
+
+	/**
+	 * Devuelve un string con el contenido del registro
+	 * Se debe definir en cada clase obligatoriamente, para
+	 * ser utilizada por el operador << en Register
+	 * @return string con la informacion contenida en el registro
+	 * @see Register operator <<
+	 */
 	virtual std::string toString() const = 0;
 
 };
 
+/**
+ * Operador << saca el contenido del Register en un stream, con los contenidos
+ * para esto emplea el metodo toString().
+ * Esta funcion se emplea principalmente para pruebas.
+ * @see toString()
+ */
+
 std::ostream& operator <<  (std::ostream& os,const Register& reg);
 
+//TODO ME PARE QUE NO VA
 std::istream& operator >> (std::istream& is,const Register& reg);
 
-////< Para usarlo en sets de stl
+/**
+ * Implementa operador () necesario para crear un set con Registers
+ *
+ * @see STL set
+ */
 class RegisterCmp{
 
 public:

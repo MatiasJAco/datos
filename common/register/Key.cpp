@@ -1,17 +1,17 @@
 /*
- * Nodo.cpp
+ * Key.cpp
  *
- *  Created on: 24/03/2010
+ *  Created on: 02/04/2010
  *      Author: kira
  */
 
-#include "Nodo.h"
+#include "Key.h"
 
-Nodo::Nodo() {
+Key::Key() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Nodo::~Nodo() {
+Key::~Key() {
 	// TODO Auto-generated destructor stub
 }
