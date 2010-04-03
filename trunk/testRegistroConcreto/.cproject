@@ -494,6 +494,8 @@
 </profile>
 </scannerConfigBuildInfo>
 </storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cconfiguration>
 <cconfiguration id="cdt.managedbuild.config.gnu.exe.release.1403804314">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.1403804314" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -526,8 +528,8 @@
 <tool id="cdt.managedbuild.tool.gnu.c.linker.exe.release.1484657171" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.release"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.release.134436892" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.release">
 <option id="gnu.cpp.link.option.paths.749052831" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/common/Release}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/application/Release}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/common/Release}&quot;"/>
 </option>
 <option id="gnu.cpp.link.option.libs.246395420" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="application"/>
@@ -961,6 +963,8 @@
 </profile>
 </scannerConfigBuildInfo>
 </storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cconfiguration>
 </storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">
