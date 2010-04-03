@@ -11,7 +11,10 @@
 #include <iostream>
 
 #include "../common/utils/ByteConverter.h"
+#include "../application/entities/KeyInt.h"
 #include "../application/entities/RegistroConcreto.h"
+#include "../application/entities/StringRegister.h"
+
 
 using namespace std;
 
@@ -45,19 +48,58 @@ int main(int argc, char *argv[])
 //	free(cdd);
 //	free(cdf);
 //	free(ci);
+	KeyInt regkey(45);
+	KeyInt reg2key;
+
+		char * byteskey;
+		unsigned int size = regkey.getSize();
+
+		byteskey = new char[size];
+		regkey.serialize(byteskey);
+
+
+
+		reg2key.deserialize(byteskey);
+//		cout << reg2key<<endl;
+		regkey=reg2key;
+
+		delete[] byteskey;
+
+
+		try{
+			StringRegister strReg(regkey,"Hola");
+			StringRegister strReg2;
+
+			char * bytes;
+			size = strReg.getSize();
+
+			bytes = new char[size];
+			strReg.serialize(bytes);
+
+
+			strReg2.deserialize(bytes);
+			cout << strReg2<<endl;
+
+			delete[] bytes;
+		}
+		catch(char const *e)
+		{
+			cout << e<<endl;
+		}
+
 	try{
-		RegistroConcreto reg(10,11.2,12.33,"Hola");
+		RegistroConcreto reg(regkey,10,11.2,12.33,"Hola");
 		RegistroConcreto reg2;
 
 		char * bytes;
-		unsigned int size = reg.getSize();
+		size = reg.getSize();
 
 		bytes = new char[size];
 		reg.serialize(bytes);
 
 
 		reg2.deserialize(bytes);
-		cout << reg2<<endl;
+//		cout << reg2<<endl;
 
 		delete[] bytes;
 	}
