@@ -9,7 +9,6 @@
 #define NODE_H_
 
 #include "../register/Register.h"
-#include "../register/Key.h"
 #include "../utils/ByteConverter.h"
 
 #include <map>
@@ -24,9 +23,9 @@ public:
 protected:
 
 	//---------------Typedefs--------------//
-	typedef std::map<Key*,Register*> RegisterMap;
-	typedef std::map<Key*,Register*>::iterator RegisterMapIterator;
-	typedef std::pair<Key*,Register*> RegisterMapPair;
+	typedef std::map<Register*,Register*> RegisterMap;
+	typedef std::map<Register*,Register*>::iterator RegisterMapIterator;
+	typedef std::pair<Register*,Register*> RegisterMapPair;
 
 	//---------------Atributes-------------//
 
@@ -49,12 +48,12 @@ protected:
 	 * unsigned int m_Id El Id del nodo (se obtiene con el offset del nodo en disco)
 	 * Este dato no se persiste en disco.
 	 */
-	unsigned int m_NodeNumber;
+	unsigned int m_nodeNumber;
 
 	/**
 	 * unsigned int m_BranchFactor porcentaje de utilizacion minima del nodo
 	 */
-	unsigned int m_BranchFactor;
+	unsigned int m_branchFactor;
 
 public:
 	//--------------Constructor/Destructor----------------//
@@ -82,7 +81,7 @@ public:
 	 * @param const Key& key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	virtual bool remove(const Key& key)=0;
+	virtual bool remove(const Register& key)=0;
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -91,7 +90,7 @@ public:
 	 * @param Register &reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(const Key& key, Register *reg)=0;
+	virtual bool find(const Register& key, Register &reg)const=0;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -100,7 +99,7 @@ public:
 	 * @param Register &reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual bool modify(const Key& key, const Register &reg)=0;
+	virtual bool modify(const Register& key, const Register &reg)=0;
 
 
 
@@ -164,7 +163,7 @@ public:
 	unsigned int getLevel();
 	void setNivel(const unsigned int nivel);
 
-	unsigned int getNodeNumber();
+	unsigned int getNodeNumber()const;
 	void setNodeNumber(unsigned int number);
 
 	unsigned int getBranchFactor() const;

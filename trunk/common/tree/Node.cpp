@@ -21,15 +21,15 @@ Node::Node(unsigned int level,unsigned int size,unsigned int BranchFactor)
 {
 	m_level = level;
 	m_size = size;
-	m_BranchFactor = BranchFactor;
+	m_branchFactor = BranchFactor;
 }
 
 Node::Node(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor)
 {
-	m_NodeNumber = NodeNumber;
+	m_nodeNumber = NodeNumber;
 	m_level = level;
 	m_size = size;
-	m_BranchFactor = BranchFactor;
+	m_branchFactor = BranchFactor;
 }
 
 void Node::setNivel(const unsigned int nivel)
@@ -50,16 +50,17 @@ bool Node::isEmpty()
 
 unsigned int Node::getUsedSpace()
 {
+	//TODO CAMBIAR PARA QUE INCLUYA EL TAMAÑO DE LOS DATOS DE CONTROL
 	unsigned int totalOcupied = 0;
-	if(!isEmpty())
-	{
-		RegisterMapIterator iter;
 
-		for (iter = m_registers.begin(); iter != m_registers.end(); iter++)
-		{
-			totalOcupied += (iter->second)->getSize();
-		}
+
+	RegisterMapIterator iter;
+
+	for (iter = m_registers.begin(); iter != m_registers.end(); iter++)
+	{
+		totalOcupied += (iter->second)->getSize();
 	}
+
 	return totalOcupied;
 }
 
@@ -73,7 +74,7 @@ bool Node::underflow()
 	//Obtengo el espacio utilizado en el nodo
 	totalOcupied = getUsedSpace();
 
-	if(totalOcupied < m_BranchFactor)
+	if(totalOcupied < m_branchFactor)
 		retVal = true;
 
 	return retVal;
@@ -95,7 +96,7 @@ bool Node::overflow()
 
 unsigned int Node::getBranchFactor() const
 {
-    return m_BranchFactor;
+    return m_branchFactor;
 }
 
 char *Node::serialize(char *bytes) const
@@ -115,24 +116,24 @@ void Node::deserialize(const char *bytes)
 
 bool Node::isLeaf(const char *bytes)
 {
-	int level = ByteConverter::bytesToUInt(bytes);
+	unsigned int level = ByteConverter::bytesToUInt(bytes);
 
 	return (level == LEAF_LEVEL);
 }
 
 void Node::setBranchFactor(unsigned int branchFactor)
 {
-    m_BranchFactor = branchFactor;
+    m_branchFactor = branchFactor;
 }
 
 void Node::setNodeNumber(unsigned int number)
 {
-	m_NodeNumber = number;
+	m_nodeNumber = number;
 }
 
-unsigned int Node::getNodeNumber()
+unsigned int Node::getNodeNumber()const
 {
-	return m_NodeNumber;
+	return m_nodeNumber;
 }
 
 
