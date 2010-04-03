@@ -73,6 +73,21 @@ char *ByteConverter::stringToBytes(const std::string str, char *bytes)
 
 
 
+char *ByteConverter::uIntToBytes(const unsigned int entero, char *bytes)
+{
+	memcpy(bytes,&entero,sizeof(unsigned int));
+	return bytes;
+}
+
+unsigned int ByteConverter::bytesToUInt(const char *bytes)
+{
+	unsigned int entero = 0;
+
+	memcpy(&entero,bytes,sizeof(unsigned int));
+
+	return entero;
+}
+
 std::string ByteConverter::bytesToString(const char *bytes)
 {
 	int size_str = 0;
