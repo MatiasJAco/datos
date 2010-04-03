@@ -5,13 +5,13 @@
  *      Author: kira
  */
 
-#include "BufferTree.h"
+#include "BufferNode.h"
 
-BufferTree::BufferTree() {
+BufferNode::BufferNode() {
 	// TODO Auto-generated constructor stub
 
 }
 
-BufferTree::~BufferTree() {
+BufferNode::~BufferNode() {
 	// TODO Auto-generated destructor stub
 }

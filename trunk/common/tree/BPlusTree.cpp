@@ -7,11 +7,15 @@
 
 #include "BPlusTree.h"
 
-const unsigned int BPlusTree::TAMANIO_NODO = 512;
 
 BPlusTree::BPlusTree() {
 	// TODO Auto-generated constructor stub
 
+}
+
+BPlusTree::BPlusTree(unsigned int sizeNodo)
+{
+	m_sizeNodo = sizeNodo;
 }
 
 BPlusTree::~BPlusTree() {

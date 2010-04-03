@@ -8,9 +8,9 @@
 #ifndef BUCKET_H_
 #define BUCKET_H_
 
-#include "Nodo.h"
+#include "Node.h"
 
-class Bucket: public Nodo {
+class Bucket: public Node {
 public:
 	Bucket();
 	virtual ~Bucket();
