@@ -7,6 +7,8 @@
 
 #include "Register.h"
 
+using namespace std;
+
 Register::Register() {
 	// TODO Auto-generated constructor stub
 
@@ -29,6 +31,34 @@ std::ostream & operator <<(std::ostream & os, const Register & reg)
 
 	return os;
 }
+
+bool Register::operator >(const Register & registro) const
+{
+	throw ("Operador > no implementado");
+}
+
+
+
+bool Register::operator <(const Register & registro) const
+{
+	throw ("Operador < no implementado");
+}
+
+
+
+bool Register::operator ==(const Register & registro) const
+{
+	throw ("Operador == no implementado");
+}
+
+Register *Register::getRegisterKey() const
+{
+	throw ("No se definio getRegisterKey() para esta clase");
+}
+
+
+
+
 
 
 

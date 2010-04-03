@@ -10,6 +10,7 @@
 
 #include "Node.h"
 #include <iostream>
+#include <sstream>
 
 class LeafNode: public Node {
 
@@ -19,9 +20,28 @@ private:
 
 public:
 	LeafNode();
+	LeafNode(unsigned int size,unsigned int BranchFactor);
+	LeafNode(unsigned int NodeNumber,unsigned int size,unsigned int BranchFactor);
 	~LeafNode();
 
-	std::string toString() const;
+
+	std::string toString()const;
+
+	/**
+	 * Devuelve una instancia nueva de la clase.
+	 * Se crea una nueva instancia del tipo especifico con new()
+	 * Importante: Una vez que se termine de usar la instancia
+	 * es necesario liberar la memoria mediante un delete.
+	 * @throws bad_alloc en caso de error al asignar memoria
+	 * @return Register * puntero a la instancia nueva
+	 */
+	Register * newInstance() const;
+
+	/**
+	 * Obtiene el tamaño del registro.
+	 * \return El tamaño del registro.
+	 */
+	unsigned int getSize() const;
 
 
 
@@ -41,7 +61,7 @@ public:
 	 * @param const Key& key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	bool remove(const Key& key);
+	bool remove(const Register& key);
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -50,7 +70,7 @@ public:
 	 * @param Register &reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const Key& key, Register &reg);
+	bool find(const Register& key, Register &reg) const;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -59,7 +79,7 @@ public:
 	 * @param Register &reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	bool modify(const Key& key, Register &reg);
+	bool modify(const Register& key, const Register &reg);
 
 
 	//-------------------Serialize/Deserialize--------------------//
@@ -75,18 +95,7 @@ public:
 	 * Transforma la cadena de bytes a un registro
 	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
 	 */
-	virtual void deserialize(const char* bytes);
-
-
-	//---------------Operators--------------------//
-	//TODO REVISAR, NO FUNCIONA
-//	virtual Register& operator=(const Register& registro) = 0;
-
-	bool operator==(const Register& registro)const;
-
-	bool operator<(const Register& registro)const;
-
-	bool operator>(const Register& registro)const;
+	void deserialize(const char* bytes);
 
 
 };

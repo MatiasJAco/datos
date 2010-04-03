@@ -13,6 +13,8 @@
 class InnerNode: public Node {
 public:
 	InnerNode();
+	InnerNode(unsigned int level,unsigned int size,unsigned int BranchFactor);
+	InnerNode(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor);
 	~InnerNode();
 
 };

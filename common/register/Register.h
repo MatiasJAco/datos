@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <exception>
 /**
  * Clase abstracta para el mapeo de datos en disco
  */
@@ -62,7 +63,23 @@ public:
 	 */
 	virtual Register * newInstance() const = 0;
 
+
+	//------------------Operators------------------------//
 	//	virtual Register& operator=(const Register& registro) = 0;
+
+	virtual bool operator==(const Register& registro)const;
+
+	virtual bool operator<(const Register& registro)const;
+
+	virtual bool operator>(const Register& registro)const;
+
+	/**
+	 * Obtiene la clave del register.
+	 * En caso de que el elemento no tenga una Key este metodo no se redefine
+	 * Para las clases que no lo implementan este metodo tira excepcion
+	 * En las clases que lo implementan este metodo crea una nueva clave mediante new
+	 */
+	virtual Register * getRegisterKey()const;
 
 };
 
