@@ -19,7 +19,7 @@ class Node : public Register{
 public:
 	//---------------Constants------------//
 	static const unsigned int LEAF_LEVEL = 0;
-
+	static const unsigned int UNDEFINED_NODE_NUMBER = -1;
 
 protected:
 
@@ -60,7 +60,9 @@ public:
 	//--------------Constructor/Destructor----------------//
 	Node();
 
+	Node(unsigned int level,unsigned int size,unsigned int BranchFactor);
 	Node(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor);
+
 
 	virtual ~Node();
 
