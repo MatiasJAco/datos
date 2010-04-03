@@ -56,16 +56,6 @@ void StringRegister::deserialize(const char *bytes)
 }
 
 
-
-bool StringRegister::operator <(const Register & registro) const
-{
-	const StringRegister& reg = dynamic_cast<const StringRegister&> (registro);
-
-	return (m_clave<reg.m_clave);
-}
-
-
-
 Register & StringRegister::operator =(const Register & registro)
 {
 	const StringRegister& reg = dynamic_cast<const StringRegister&> (registro);
@@ -79,19 +69,11 @@ Register & StringRegister::operator =(const Register & registro)
 	return *this;
 }
 
-bool StringRegister::operator >(const Register & registro) const
+
+
+Register *StringRegister::newInstance() const
 {
-	const StringRegister& reg = dynamic_cast<const StringRegister&> (registro);
-
-	return (m_clave>reg.m_clave);
-}
-
-
-bool StringRegister::operator ==(const Register & registro) const
-{
-	const StringRegister& reg = dynamic_cast<const StringRegister&> (registro);
-
-	return (m_clave==reg.m_clave);
+	return new StringRegister();
 }
 
 string StringRegister::toString() const

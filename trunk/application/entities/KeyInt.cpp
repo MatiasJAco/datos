@@ -88,4 +88,11 @@ std::string KeyInt::toString() const
 	return retStr.str();
 }
 
+Register *KeyInt::newInstance() const
+{
+	return new KeyInt();
+}
+
+
+
 
