@@ -8,7 +8,6 @@
 #ifndef KEYINT_H_
 #define KEYINT_H_
 
-#include "../../common/register/Key.h"
 #include "../../common/utils/ByteConverter.h"
 #include "../../common/register/Register.h"
 
@@ -19,7 +18,7 @@
  * Implementacion de Key utilizando una clave tipo entero.
  * @see Key
  */
-class KeyInt: public Key {
+class KeyInt: public Register {
 
 private:
 	int m_value;
