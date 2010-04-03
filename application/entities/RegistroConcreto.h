@@ -71,6 +71,21 @@ public:
 	 */
 	std::string toString() const;
 
+
+	/**
+	 * Devuelve una instancia nueva de la clase.
+	 * Se crea una nueva instancia del tipo especifico con new()
+	 * Importante: Una vez que se termine de usar la instancia
+	 * es necesario liberar la memoria mediante un delete.
+	 * @throws bad_alloc en caso de error al asignar memoria
+	 * @return Register * puntero a la instancia nueva
+	 */
+	Register * newInstance()const;
+
+
+
+	Register& operator=(const Register& registro);
+
 	//---------------Serialize/Deserialize-------//
 	/**
 	 * Convierte el registro a una cadena de bytes.
@@ -87,22 +102,6 @@ public:
 	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
 	 */
 	void deserialize(const char* bytes);
-
-
-
-
-	//----------------Operators----------------------//
-
-	Register& operator=(const Register& registro);
-
-	//Todas las operaciones de comparacion
-	//se realizan empleando las claves
-	bool operator==(const Register& registro) const	;
-
-	bool operator<(const Register& registro) const;
-
-	bool operator>(const Register& registro) const;
-
 
 	// -----------------Get/Set----------------------//
     int getClave() const

@@ -40,6 +40,19 @@ public:
 
 	unsigned int getSize() const;
 
+	Register& operator=(const Register& registro);
+
+	/**
+	 * Devuelve una instancia nueva de la clase.
+	 * Se crea una nueva instancia del tipo especifico con new()
+	 * Importante: Una vez que se termine de usar la instancia
+	 * es necesario liberar la memoria mediante un delete.
+	 * @throws bad_alloc en caso de error al asignar memoria
+	 * @return Register * puntero a la instancia nueva
+	 */
+	Register * newInstance() const;
+
+
 	char* serialize(char* bytes) const;
 
 	/**
@@ -49,14 +62,6 @@ public:
 	void deserialize(const char* bytes);
 
 	std::string toString() const;
-
-	Register& operator=(const Register& registro);
-
-	bool operator==(const Register& registro) const	;
-
-	bool operator<(const Register& registro) const;
-
-	bool operator>(const Register& registro) const;
 
     KeyInt getClave() const
     {

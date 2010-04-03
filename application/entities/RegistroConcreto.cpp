@@ -74,16 +74,6 @@ void RegistroConcreto::deserialize(const char *bytes)
 }
 
 
-
-bool RegistroConcreto::operator <(const Register & registro) const
-{
-	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
-
-	return (m_clave<reg.m_clave);
-}
-
-
-
 Register & RegistroConcreto::operator =(const Register & registro)
 {
 	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
@@ -100,20 +90,13 @@ Register & RegistroConcreto::operator =(const Register & registro)
 	return *this;
 }
 
-bool RegistroConcreto::operator >(const Register & registro) const
-{
-	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
 
-	return (m_clave>reg.m_clave);
+
+Register *RegistroConcreto::newInstance() const
+{
+	return new RegistroConcreto();
 }
 
-
-bool RegistroConcreto::operator ==(const Register & registro) const
-{
-	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
-
-	return (m_clave==reg.m_clave);
-}
 
 string RegistroConcreto::toString() const
 {
