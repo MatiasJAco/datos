@@ -104,10 +104,8 @@ public:
 	void deserialize(const char* bytes);
 
 	// -----------------Get/Set----------------------//
-    int getClave() const
-    {
-        return m_int;
-    }
+	virtual Register * getRegisterKey()const;
+
 
     double getDouble() const
     {
@@ -122,11 +120,6 @@ public:
     std::string getString() const
     {
         return m_string;
-    }
-
-    void setClave(int m_clave)
-    {
-        this->m_int = m_clave;
     }
 
     void setDouble(double m_double)

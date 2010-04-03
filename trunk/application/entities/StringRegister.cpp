@@ -73,7 +73,13 @@ Register & StringRegister::operator =(const Register & registro)
 
 Register *StringRegister::newInstance() const
 {
-	return new StringRegister();
+	return new StringRegister(*this);
+}
+
+Register *StringRegister::getRegisterKey() const
+{
+	KeyInt *key = new KeyInt(m_clave);
+	return key;
 }
 
 string StringRegister::toString() const

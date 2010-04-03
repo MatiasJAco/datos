@@ -109,3 +109,11 @@ string RegistroConcreto::toString() const
 
 }
 
+Register *RegistroConcreto::getRegisterKey() const
+{
+	KeyInt *key = new KeyInt(m_clave);
+	return key;
+}
+
+
+

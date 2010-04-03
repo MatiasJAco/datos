@@ -61,6 +61,9 @@ public:
 	 */
 	void deserialize(const char* bytes);
 
+
+	Register * getRegisterKey()const;
+
 	std::string toString() const;
 
     KeyInt getClave() const
