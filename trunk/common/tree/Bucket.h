@@ -14,6 +14,10 @@ class Bucket: public Node {
 public:
 	Bucket();
 	virtual ~Bucket();
+
+	bool insert(const Register& reg);
+	bool remove(const Key& key);
+
 };
 
 #endif /* BUCKET_H_ */
