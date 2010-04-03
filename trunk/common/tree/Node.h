@@ -10,7 +10,8 @@
 
 #include "../register/Register.h"
 #include "../register/Key.h"
-#include <list>
+#include "../utils/ByteConverter.h"
+
 #include <map>
 
 class Node : public Register{
@@ -24,6 +25,8 @@ protected:
 
 	//---------------Typedefs--------------//
 	typedef std::map<Key*,Register*> RegisterMap;
+	typedef std::map<Key*,Register*>::iterator RegisterMapIterator;
+	typedef std::pair<Key*,Register*> RegisterMapPair;
 
 	//---------------Atributes-------------//
 
@@ -38,19 +41,9 @@ protected:
 	unsigned int m_level;
 
 	/**
-	 * unsigned int m_qRegisters cantidad de registros
-	 */
-	unsigned int m_qRegisters;
-
-	/**
 	 * RegisterMap m_registers: Los registros en si
 	 */
 	RegisterMap m_registers;
-
-	/**
-	 * unsigned int Espacio libre dentro del nodo
-	 */
-	unsigned int m_qFreeSpace;
 
 	/**
 	 * unsigned int m_Id El Id del nodo (se obtiene con el offset del nodo en disco)
@@ -58,11 +51,16 @@ protected:
 	 */
 	unsigned int m_NodeNumber;
 
+	/**
+	 * unsigned int m_BranchFactor porcentaje de utilizacion minima del nodo
+	 */
+	unsigned int m_BranchFactor;
+
 public:
 	//--------------Constructor/Destructor----------------//
 	Node();
 
-	Node(unsigned int size,unsigned int level);
+	Node(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor);
 
 	virtual ~Node();
 
@@ -91,7 +89,7 @@ public:
 	 * @param Register &reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(const Key& key, Register &reg)=0;
+	virtual bool find(const Key& key, Register *reg)=0;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -100,7 +98,9 @@ public:
 	 * @param Register &reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual bool modify(const Key& key, Register &reg)=0;
+	virtual bool modify(const Key& key, const Register &reg)=0;
+
+
 
 	/**
 	 * Evalua si el nodo esta vacio
@@ -123,10 +123,51 @@ public:
 	bool underflow();
 
 
-	virtual std::string toString() const;
+	virtual std::string toString() const=0;
+
+	/**
+	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
+	 * registros y viendo el tamaño de cada elemento.
+	 * @return unsigned int espacio en uso
+	 */
+	unsigned int getUsedSpace();
+
+
+	/**
+	 * Se encarga de averiguar si la cadena de bytes corresponde a una
+	 * hoja o no.
+	 * Para esto al serializar el nivel tiene que estar en una posicion fija
+	 * para todas las clases hijas
+	 * @param const char* bytes la cadena de bytes a evaluar
+	 * @return bool TRUE si es hoja, FALSE en caso contrario
+	 */
+	static bool isLeaf(const char* bytes);
+
+
+	//-------------Serialize/Deserialize----------//
+	/**
+	 * Serializa el registro en bytes
+	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
+	 * \return El puntero a la cadena de bytes
+	 */
+	virtual char* serialize(char* bytes) const;
+
+	/**
+	 * Transforma la cadena de bytes a un registro
+	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
+	 */
+	virtual void deserialize(const char* bytes);
+
 	//---------------Get/Set--------------------------//
-	unsigned int getNivel();
-	void setNivel(unsigned int nivel);
+	unsigned int getLevel();
+	void setNivel(const unsigned int nivel);
+
+	unsigned int getNodeNumber();
+	void setNodeNumber(unsigned int number);
+
+	unsigned int getBranchFactor() const;
+	void setBranchFactor(unsigned int m_FactorLlenado);
+
 
 };
 

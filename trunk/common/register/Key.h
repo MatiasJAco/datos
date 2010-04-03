@@ -30,6 +30,17 @@ public:
 	 */
 	virtual unsigned int getSize() const = 0;
 
+
+	/**
+	 * Devuelve una instancia nueva de la clase.
+	 * Se crea una nueva instancia del tipo especifico con new()
+	 * Importante: Una vez que se termine de usar la instancia
+	 * es necesario liberar la memoria mediante un delete.
+	 * @throws bad_alloc en caso de error al asignar memoria
+	 * @return Register * puntero a la instancia nueva
+	 */
+	virtual Register * newInstance() const = 0;
+
 	/**
 	 * Serializa el registro en bytes
 	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
@@ -42,7 +53,9 @@ public:
 	 */
 	virtual void deserialize(const char* bytes) = 0;
 
-//  virtual Register& operator=(const Register& registro) = 0;
+	//---------------Operators--------------------//
+	//TODO REVISAR, NO FUNCIONA
+//	virtual Register& operator=(const Register& registro) = 0;
 
 	virtual bool operator==(const Register& registro)const = 0;
 

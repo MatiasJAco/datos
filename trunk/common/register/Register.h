@@ -43,17 +43,6 @@ public:
 	virtual void deserialize(const char* bytes) = 0;
 
 
-	//---------------Operators--------------------//
-	//TODO REVISAR, NO FUNCIONA
-//	virtual Register& operator=(const Register& registro) = 0;
-
-	virtual bool operator==(const Register& registro)const = 0;
-
-	virtual bool operator<(const Register& registro)const = 0;
-
-	virtual bool operator>(const Register& registro)const = 0;
-
-
 	/**
 	 * Devuelve un string con el contenido del registro
 	 * Se debe definir en cada clase obligatoriamente, para
@@ -62,6 +51,18 @@ public:
 	 * @see Register operator <<
 	 */
 	virtual std::string toString() const = 0;
+
+	/**
+	 * Devuelve una instancia nueva de la clase.
+	 * Se crea una nueva instancia del tipo especifico con new()
+	 * Importante: Una vez que se termine de usar la instancia
+	 * es necesario liberar la memoria mediante un delete.
+	 * @throws bad_alloc en caso de error al asignar memoria
+	 * @return Register * puntero a la instancia nueva
+	 */
+	virtual Register * newInstance() const = 0;
+
+	//	virtual Register& operator=(const Register& registro) = 0;
 
 };
 
@@ -77,19 +78,5 @@ std::ostream& operator <<  (std::ostream& os,const Register& reg);
 //TODO ME PARE QUE NO VA
 std::istream& operator >> (std::istream& is,const Register& reg);
 
-/**
- * Implementa operador () necesario para crear un set con Registers
- *
- * @see STL set
- */
-class RegisterCmp{
-
-public:
-	  bool operator() (const Register& r1, const Register& r2) const
-	  {
-		  return r1 < r2;
-	  }
-
-};
 
 #endif /* REGISTER_H_ */

@@ -35,6 +35,21 @@ public:
 	static char* intToBytes(const int entero,char* bytes);
 
 	/**
+	 * Convierte una cadena de bytes a un entero.
+	 * \param bytes La cadena de bytes a convertir
+	 * \return Entero despues de la conversión de la cadena de bytes.
+	 */
+	static unsigned int bytesToUInt(const char* bytes);
+
+	/**
+	 * Convierte un entero a una cadena de bytes.
+	 * \param entero El entero a convertir.
+	 * \param bytes La cadena de bytes donde se almacena la conversión.
+	 * \return El puntero a la cadena de bytes.
+	 */
+	static char* uIntToBytes(const unsigned int entero,char* bytes);
+
+	/**
 	 * Convierte una cadena de bytes a un double.
 	 * \param bytes La cadena de bytes a convertir
 	 * \return double despues de la conversión de la cadena de bytes.

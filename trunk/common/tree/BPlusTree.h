@@ -9,7 +9,7 @@
 #define BPLUSTREE_H_
 
 #include "Node.h"
-#include "Bucket.h"
+#include "LeafNode.h"
 #include "BufferNode.h"
 #include "../register/Register.h"
 
@@ -21,8 +21,8 @@ private:
 
 	Node* m_raiz;
 
-	Bucket* m_firstBucket;
-	Bucket* m_lastBucket;
+	LeafNode* m_firstBucket;
+	LeafNode* m_lastBucket;
 
 	BufferNode m_buffer;
 
