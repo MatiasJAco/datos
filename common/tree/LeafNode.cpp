@@ -19,10 +19,12 @@ LeafNode::~LeafNode() {
 
 bool LeafNode::insert(const Register & reg)
 {
-
+	return true;
 }
 
 bool LeafNode::remove(const Key & key)
 {
+	return true;
+
 }
 

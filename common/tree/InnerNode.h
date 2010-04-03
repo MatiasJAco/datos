@@ -13,7 +13,8 @@
 class InnerNode: public Node {
 public:
 	InnerNode();
-	virtual ~InnerNode();
+	~InnerNode();
+
 };
 
 #endif /* INNERNODE_H_ */

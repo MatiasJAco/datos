@@ -19,7 +19,7 @@ private:
 
 public:
 	LeafNode();
-	virtual ~LeafNode();
+	~LeafNode();
 
 	std::string toString() const;
 

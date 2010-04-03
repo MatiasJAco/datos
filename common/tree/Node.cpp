@@ -17,6 +17,13 @@ Node::~Node()
 }
 
 
+Node::Node(unsigned int level,unsigned int size,unsigned int BranchFactor)
+{
+	m_level = level;
+	m_size = size;
+	m_BranchFactor = BranchFactor;
+}
+
 Node::Node(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor)
 {
 	m_NodeNumber = NodeNumber;
@@ -110,7 +117,7 @@ bool Node::isLeaf(const char *bytes)
 {
 	int level = ByteConverter::bytesToUInt(bytes);
 
-	return (level == 0);
+	return (level == LEAF_LEVEL);
 }
 
 void Node::setBranchFactor(unsigned int branchFactor)
