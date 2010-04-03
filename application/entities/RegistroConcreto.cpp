@@ -9,9 +9,9 @@
 
 using namespace std;
 
-RegistroConcreto::RegistroConcreto(int clave, double tdouble, float tfloat, std::string tstring)
+RegistroConcreto::RegistroConcreto(KeyInt clave, int tint,double tdouble, float tfloat, std::string tstring):m_clave(clave)
 {
-	m_clave = clave;
+	m_int = tint;
 	m_double = tdouble;
 	m_float = tfloat;
 	m_string = tstring;
@@ -26,6 +26,7 @@ RegistroConcreto::~RegistroConcreto() {
 RegistroConcreto::RegistroConcreto(const RegistroConcreto & reg)
 {
 	m_clave = reg.m_clave;
+	m_int = reg.m_int;
 	m_double = reg.m_double;
 	m_float = reg.m_float;
 	m_string = reg.m_string;
@@ -35,7 +36,7 @@ unsigned int RegistroConcreto::getSize() const
 {
 	unsigned int size = 0;
 
-	size = sizeof(m_clave)+sizeof(m_double)+sizeof(m_float)+sizeof(char)*(m_string.size()+1);
+	size = m_clave.getSize()+ sizeof(m_int)+sizeof(m_double)+sizeof(m_float)+sizeof(char)*(m_string.size()+1);
 
 	return size;
 }
@@ -43,8 +44,10 @@ unsigned int RegistroConcreto::getSize() const
 
 char *RegistroConcreto::serialize(char *bytes) const
 {
-	ByteConverter::intToBytes(m_clave,bytes);
-	bytes+= sizeof(m_clave);
+	m_clave.serialize(bytes);
+	bytes+= m_clave.getSize();
+	ByteConverter::intToBytes(m_int,bytes);
+	bytes+= sizeof(m_int);
 	ByteConverter::doubleToBytes(m_double, bytes);
 	bytes+=sizeof(m_double);
 	ByteConverter::floatToBytes(m_float, bytes);
@@ -58,8 +61,10 @@ char *RegistroConcreto::serialize(char *bytes) const
 
 void RegistroConcreto::deserialize(const char *bytes)
 {
-	m_clave = ByteConverter::bytesToInt(bytes);
-	bytes+=sizeof(m_clave);
+	m_clave.deserialize(bytes);
+	bytes+= m_clave.getSize();
+	m_int = ByteConverter::bytesToInt(bytes);
+	bytes+=sizeof(m_int);
 	m_double = ByteConverter::bytesToDouble(bytes);
 	bytes+=sizeof(m_double);
 	m_float = ByteConverter::bytesToFloat(bytes);
@@ -78,6 +83,22 @@ bool RegistroConcreto::operator <(const Register & registro) const
 }
 
 
+
+Register & RegistroConcreto::operator =(const Register & registro)
+{
+	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
+
+ 	if (this == &reg)      // Same object?
+ 		return *this;        // Yes, so skip assignment, and just return *this.
+
+ 	m_clave= reg.m_clave;
+	m_int = reg.m_int;
+	m_double = reg.m_double;
+	m_float = reg.m_float;
+	m_string = reg.m_string;
+
+	return *this;
+}
 
 bool RegistroConcreto::operator >(const Register & registro) const
 {
@@ -98,7 +119,7 @@ string RegistroConcreto::toString() const
 {
 	stringstream retStr;
 
-	retStr << "clave: "<<m_clave<<endl<<"double "<<m_double<<endl<<"float "<<
+	retStr <<m_clave<< endl<<"int: "<<m_int<<endl<<"double "<<m_double<<endl<<"float "<<
 			m_float<<endl<<"string "<<m_string<<endl;
 
 	return retStr.str();
