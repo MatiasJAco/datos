@@ -20,6 +20,7 @@ public:
 	//---------------Constructor/Destructor-------//
 	/// El constructor
 	Register();
+
 	/** El destructor */
 	virtual ~Register();
 
@@ -63,6 +64,11 @@ public:
 	 */
 	virtual Register * newInstance() const = 0;
 
+	/**
+	 * Setea los campos del registro con los mismos del objeto pasado por parametro
+	 * @param registro Registro sobre el cual se hara la copia.
+	 */
+	virtual void setFields(const Register& registro) = 0;
 
 	//------------------Operators------------------------//
 	//	virtual Register& operator=(const Register& registro) = 0;
@@ -83,7 +89,22 @@ public:
 
 };
 
+
 /**
+ * Class RegisterComparator
+ * Clase que me provee de una callback de comparacion, utilizada en containers de stl
+ */
+class RegisterComparator
+{
+public:
+	bool operator() (Register* reg1,Register* reg2)
+	{
+		return ((*reg1) < (*reg2));
+	}
+};
+
+
+/** @related Register
  * Operador << saca el contenido del Register en un stream, con los contenidos
  * para esto emplea el metodo toString().
  * Esta funcion se emplea principalmente para pruebas.

@@ -1,8 +1,6 @@
-/*
- * Nodo.h
- *
- *  Created on: 24/03/2010
- *      Author: kira
+/**
+ * @file Node.h
+ * @author Alex - MCM
  */
 
 #ifndef NODE_H_
@@ -23,8 +21,8 @@ public:
 protected:
 
 	//---------------Typedefs--------------//
-	typedef std::map<Register*,Register*> RegisterMap;
-	typedef std::map<Register*,Register*>::iterator RegisterMapIterator;
+	typedef std::map<Register*,Register*,RegisterComparator> RegisterMap;
+	typedef RegisterMap::iterator RegisterMapIterator;
 	typedef std::pair<Register*,Register*> RegisterMapPair;
 
 	//---------------Atributes-------------//
@@ -59,8 +57,23 @@ public:
 	//--------------Constructor/Destructor----------------//
 	Node();
 
-	Node(unsigned int level,unsigned int size,unsigned int BranchFactor);
-	Node(unsigned int NodeNumber,unsigned int level,unsigned int size,unsigned int BranchFactor);
+	/**
+	 * Constructor.
+	 * @param level Nivel en el que se encuentra el nodo.
+	 * @param size Tamaño del nodo
+	 * @param branchFactor Factor de carga que determina cuando el nodo esta por debajo o por encima
+	 * de la cantidad minima/maxima de registros.
+	 */
+	Node(unsigned int level,unsigned int size,unsigned int branchFactor);
+	/**
+	 * Constructor.
+	 * @param nodeNumber Identificador del nodo.
+	 * @param level Nivel en el que se encuentra el nodo.
+	 * @param size Tamaño del nodo
+	 * @param branchFactor Factor de carga que determina cuando el nodo esta por debajo o por encima
+	 * de la cantidad minima/maxima de registros.
+	 */
+	Node(unsigned int nodeNumber,unsigned int level,unsigned int size,unsigned int branchFactor);
 
 
 	virtual ~Node();
@@ -74,14 +87,14 @@ public:
 	 * @param const Register& reg registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	virtual bool insert(const Register& reg)=0;
+	virtual bool insert(const Register& reg) = 0;
 
 	/**
 	 * Elimina el elemento identificado por la clave
 	 * @param const Key& key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	virtual bool remove(const Register& key)=0;
+	virtual bool remove(const Register& key) = 0;
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -90,7 +103,7 @@ public:
 	 * @param Register &reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(const Register& key, Register &reg)const=0;
+	virtual bool find(const Register& key, Register &reg)const = 0;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -99,7 +112,7 @@ public:
 	 * @param Register &reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual bool modify(const Register& key, const Register &reg)=0;
+	virtual bool modify(const Register& key, const Register &reg) = 0;
 
 
 
@@ -111,7 +124,7 @@ public:
 
 	/**
 	 * Evalua si se supero la capacidad del nodo en una insercion previa
-	 * Sirve para evaluar cuando hay que partir el nodo.
+	 * Sirve para evaluar cuando hay q//	const Register* key  = registro.getRegisterKey());ue partir el nodo.
 	 * @return bool TRUE si se supero la capacidad anteriormente FALSE en caso contrario
 	 */
 	bool overflow();
@@ -123,15 +136,12 @@ public:
 	 */
 	bool underflow();
 
-
-	virtual std::string toString() const=0;
-
 	/**
 	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
 	 * registros y viendo el tamaño de cada elemento.
 	 * @return unsigned int espacio en uso
 	 */
-	unsigned int getUsedSpace();
+	virtual unsigned int getUsedSpace();
 
 
 	/**
@@ -159,16 +169,37 @@ public:
 	 */
 	virtual void deserialize(const char* bytes);
 
+	virtual void setFields(const Register& registro);
+
 	//---------------Get/Set--------------------------//
 	unsigned int getLevel();
 	void setNivel(const unsigned int nivel);
+
+	unsigned int getSize() const;
 
 	unsigned int getNodeNumber()const;
 	void setNodeNumber(unsigned int number);
 
 	unsigned int getBranchFactor() const;
-	void setBranchFactor(unsigned int m_FactorLlenado);
+	void setBranchFactor(unsigned int branchFactor);
 
+protected:
+	// TODO cambiar el nombre
+	/**
+	 * Transforma a una cadena de bytes el nodo, teniendo en cuenta que los herederos de @class Node
+	 * podrian tener datos de control adicionales, por eso es definida virtual pura dentro de esta clase.
+	 * @param bytes La cadena de bytes en donde se almacena el resultado de la serializacion
+	 * @return Puntero a la cadena de bytes.
+	 */
+	virtual char* serializeChilds(char* bytes) const = 0;
+	/**
+	 * Setea el valor del nodo a partir de la cadena de bytes, teniendo en cuenta que los herederos de
+	 * @class Node podrian tener datos de control adicionales, por eso es definida virtual pura dentro de esta clase.
+	 * Es llamada desde el metodo serialize.
+	 * @param bytes La cadena de bytes en donde se almacena el resultado de la serializacion
+	 * @return Puntero a la cadena de bytes.
+	 */
+	virtual void deserializeChilds(const char* bytes) = 0;
 
 };
 
