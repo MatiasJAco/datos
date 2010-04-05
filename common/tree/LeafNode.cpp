@@ -16,78 +16,91 @@ LeafNode::LeafNode() {
 
 LeafNode::~LeafNode() {
 	// TODO Auto-generated destructor stub
+
 }
 
-
-bool LeafNode::insert(const Register & reg)
+LeafNode::LeafNode(unsigned int nodeNumber, unsigned int size, unsigned int branchFactor):Node(nodeNumber,Node::LEAF_LEVEL,size,branchFactor)
 {
-	bool retVal=true;
-	RegisterMapIterator it;
+	m_prevNode = 0;
+	m_nextNode = 0;
+}
 
-	Register* reg1 = reg.newInstance();
-	Register* key;
+LeafNode::LeafNode(unsigned int size, unsigned int branchFactor):Node(Node::LEAF_LEVEL,size,branchFactor)
+{
+	m_prevNode = 0;
+	m_nextNode = 0;
+}
 
+bool LeafNode::insert(const Register & registro)
+{
+	// Recordar: en el insert aun cuando haya overflow, se estan agregando los registros al map
+	// en algun momento deberian ser borrados. (split?)
 
-	it = m_registers.find(reg1);
+	bool retVal = true;
 
-	if(it == m_registers.end())
-	{
-		key = reg1->getRegisterKey();
-		m_registers.insert(m_registers.end(),RegisterMapPair(key, reg1));
-	}
-	//En caso que ya este no se crea el elemento
-	else
-	{
-		//Pongo el valor de retorno en false y elimino el registro reg1
-		//que se uso para buscar en el mapa, ya que este no se va a insertar
-		retVal=false;
-		delete reg1;
-	}
+	Register* reg = registro.newInstance();
+	Register* key  = registro.getRegisterKey();
 
-	delete key;
+	pair<RegisterMapIterator,bool> p = m_registers.insert(RegisterMapPair(key, reg));
+	retVal = p.second;
+
 	return retVal;
-}
-
-LeafNode::LeafNode(unsigned int NodeNumber, unsigned int size, unsigned int branchFactor):Node(NodeNumber,0,size,branchFactor)
-{
-	m_PrevNode=0;
-	m_NextNode=0;
-}
-
-LeafNode::LeafNode(unsigned int size, unsigned int branchFactor):Node(0,size,branchFactor)
-{
-	m_PrevNode=0;
-	m_NextNode=0;
-}
-
-Register *LeafNode::newInstance() const
-{
-	return new LeafNode();
-
-}
-
-unsigned int LeafNode::getSize() const
-{
-	//TODO VER TAMAÑO
-	return 0;
 }
 
 bool LeafNode::remove(const Register & key)
 {
-	return true;
+	Register* keyreg = key.newInstance();
 
+	RegisterMapIterator it = m_registers.find(keyreg);
+
+	bool found = (it!=m_registers.end());
+
+	if( found ){
+		delete (it->first);
+		delete (it->second);
+		m_registers.erase(it);
+	}
+
+	delete keyreg;
+
+	return found;
 }
 
-bool LeafNode::modify(const Register & key, const Register & reg)
+bool LeafNode::modify(const Register & key, const Register & registro)
 {
-	return true;
+	Register* keyreg = key.newInstance();
 
+	RegisterMapIterator it = m_registers.find(keyreg);
+
+	bool found = (it!=m_registers.end());
+
+	if( found ){
+		Register * reg = it->second;
+		reg->setFields(registro);
+	}
+
+	delete keyreg;
+
+	return found;
 }
 
-bool LeafNode::find(const Register & key, Register & reg) const
+bool LeafNode::find(const Register & key, Register & registro)const
 {
-	return true;
+	Register* keyreg = key.newInstance();
+	RegisterMap map = m_registers;
 
+	RegisterMapIterator it = map.find(keyreg);
+
+	bool found = (it!=m_registers.end());
+
+	if( found ){
+		Register* reg = it->second;
+		registro.setFields(*reg);
+	}
+
+	delete keyreg;
+
+	return found;
 }
 
 /**
@@ -95,8 +108,11 @@ bool LeafNode::find(const Register & key, Register & reg) const
  * \param bytes Cadena de bytes en la que almacena el contenido del registro
  * \return El puntero a la cadena de bytes
  */
-char* LeafNode::serialize(char* bytes) const
+char* LeafNode::serializeChilds(char* bytes) const
 {
+	ByteConverter::uIntToBytes(m_prevNode,bytes);
+	bytes+= sizeof(m_prevNode);
+	ByteConverter::uIntToBytes(m_nextNode,bytes);
 	return bytes;
 }
 
@@ -104,9 +120,16 @@ char* LeafNode::serialize(char* bytes) const
  * Transforma la cadena de bytes a un registro
  * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
  */
-void LeafNode::deserialize(const char* bytes)
+void LeafNode::deserializeChilds(const char* bytes)
 {
+	m_prevNode = ByteConverter::bytesToUInt(bytes);
+	bytes+= sizeof(m_prevNode);
+	m_nextNode = ByteConverter::bytesToUInt(bytes);
+}
 
+Register *LeafNode::newInstance() const
+{
+	return new LeafNode();
 }
 
 string LeafNode::toString()const
@@ -115,10 +138,11 @@ string LeafNode::toString()const
 	RegisterMapIterator iter;
 	RegisterMap map = m_registers;
 
-	ss <<"NodeNumber " <<m_nodeNumber<<endl;
-	ss <<"Nivel " <<m_level<<endl;
-	ss <<"Prev " <<m_PrevNode<<endl;
-	ss <<"Next " <<m_NextNode<<endl;
+	ss <<"NodeNumber " << m_nodeNumber << endl;
+	ss <<"Nivel " << m_level << endl;
+	ss <<"Tamanio " << m_size << endl;
+	ss <<"Prev " << m_prevNode << endl;
+	ss <<"Next " << m_nextNode << endl;
 
 
 	for (iter = map.begin(); iter != map.end(); iter++)
@@ -129,6 +153,15 @@ string LeafNode::toString()const
 	return ss.str();
 }
 
+
+void LeafNode::setFields(const Register& registro)
+{
+	const LeafNode& node = dynamic_cast<const LeafNode&>(registro);
+
+	Node::setFields(registro);
+	m_prevNode = node.m_prevNode;
+	m_nextNode = node.m_nextNode;
+}
 
 
 
