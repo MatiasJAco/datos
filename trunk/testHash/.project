@@ -3,6 +3,10 @@
 	<name>testHash</name>
 	<comment></comment>
 	<projects>
+		<project>Prueba</project>
+		<project>doc</project>
+		<project>application</project>
+		<project>common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
