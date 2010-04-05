@@ -19,6 +19,11 @@ KeyInt::KeyInt(int value)
 	m_value = value;
 }
 
+KeyInt::KeyInt(const KeyInt& key) {
+	// TODO Auto-generated constructor stub
+	m_value = key.m_value;
+}
+
 KeyInt::~KeyInt() {
 	// TODO Auto-generated destructor stub
 }
@@ -88,9 +93,15 @@ std::string KeyInt::toString() const
 	return retStr.str();
 }
 
+void KeyInt::setFields(const Register & registro)
+{
+	const KeyInt& reg = dynamic_cast<const KeyInt&> (registro);
+	m_value = reg.m_value;
+}
+
 Register *KeyInt::newInstance() const
 {
-	return new KeyInt();
+	return new KeyInt(*this);
 }
 
 

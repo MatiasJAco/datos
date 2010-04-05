@@ -16,7 +16,7 @@
 /**
  * Class KeyInt
  * Implementacion de Key utilizando una clave tipo entero.
- * @see Key
+ * @see Register
  */
 class KeyInt: public Register {
 
@@ -28,8 +28,9 @@ public:
 
 	KeyInt(int value);
 
-	~KeyInt();
+	KeyInt(const KeyInt& key);
 
+	~KeyInt();
 
 	/**
 	 * Obtiene el tamaño del registro.
@@ -56,6 +57,13 @@ public:
 	bool operator<(const Register& registro)const;
 
 	bool operator>(const Register& registro)const;
+
+	/**
+	 * Setea los campos del registro con los mismos del objeto pasado por parametro
+	 * @param registro Registro sobre el cual se hara la copia.
+	 */
+	void setFields(const Register& registro);
+
 
 	std::string toString() const;
 

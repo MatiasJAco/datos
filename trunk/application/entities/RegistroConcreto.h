@@ -86,6 +86,13 @@ public:
 
 	Register& operator=(const Register& registro);
 
+	/**
+	 * Setea los campos del registro con los mismos del objeto pasado por parametro
+	 * @param registro Registro sobre el cual se hara la copia.
+	 */
+	void setFields(const Register& registro);
+
+
 	//---------------Serialize/Deserialize-------//
 	/**
 	 * Convierte el registro a una cadena de bytes.
