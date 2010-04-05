@@ -10,33 +10,54 @@
 #include <iostream>
 #include <sstream>
 
+/**
+ *	Permite el manejo en memoria de los datos almacenados en el arbol.
+ *	Estructura que representa a los nodos hojas.
+ *	Implementa los metodos de Register para su persistencia en disco.
+ */
 class LeafNode: public Node {
 
 private:
-
+	/// Puntero al nodo anterior.
 	unsigned int m_prevNode;
+	/// Puntero al nodo siguiente.
 	unsigned int m_nextNode;
 
 public:
+	/// Constructor
 	LeafNode();
+	/**
+	 * Constructor
+	 * @param size Tamaño del nodo hoja.
+	 * @param branchFactor Factor de carga del nodo hoja.
+	 */
 	LeafNode(unsigned int size,unsigned int branchFactor);
+
+	/**
+	 * Constructor
+	 * @param nodeNumber Identificador del nodo hoja.
+	 * @param size Tamaño del nodo hoja.
+	 * @param branchFactor Factor de carga del nodo hoja.
+	 */
 	LeafNode(unsigned int nodeNumber,unsigned int size,unsigned int branchFactor);
+
+	/// Destructor.
 	~LeafNode();
 
-	//-------------Metodos basicos------------------------//
+	//-------------Metodos de operación basicos sobre registros ------------------------//
 
 	/**
 	 * Inserta un Register en el nodo, puede superar la capacidad del nodo
 	 * por lo cual luego de una insercion hay que llamar al metodo overflow()
 	 * para no rebalsar el espacio en disco del nodo
-	 * @param const Register& reg registro a insertar
+	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
 	bool insert(const Register& registro);
 
 	/**
 	 * Elimina el elemento identificado por la clave
-	 * @param const Key& key clave del elemento a eliminar
+	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
 	bool remove(const Register& key);
@@ -44,8 +65,8 @@ public:
 	/**
 	 * Busca el elemento identificado por la clave
 	 * Si lo encuentra guarda el registro en reg
-	 * @param const Key& key clave del elemento a buscar
-	 * @param Register &reg refencia en la cual se va a almacenar el registro encontrado
+	 * @param key clave del elemento a buscar
+	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
 	bool find(const Register& key, Register &registro) const;
@@ -53,8 +74,8 @@ public:
 	/**
 	 * Modifica el nodo identificado por la clave
 	 * Si lo encuentra escribe el contenido de reg en el registro
-	 * @param const Key& key clave del elemento a modificar
-	 * @param Register &reg valor que se colocara en el registro
+	 * @param key clave del elemento a modificar
+	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
 	bool modify(const Register& key, const Register &registro);
@@ -70,6 +91,13 @@ public:
 	 */
 	Register * newInstance() const;
 
+	/**
+	 * Devuelve un string con el contenido del registro
+	 * Se debe definir en cada clase obligatoriamente, para
+	 * ser utilizada por el operador << en Register
+	 * @return string con la informacion contenida en el registro
+	 * @see Register operator <<
+	 */
 	std::string toString()const;
 
 	/**
@@ -84,14 +112,14 @@ protected:
 
 	/**
 	 * Serializa el registro en bytes.
-	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
-	 * \return El puntero a la cadena de bytes
+	 * @param bytes Cadena de bytes en la que almacena el contenido del registro
+	 * @return El puntero a la cadena de bytes
 	 */
 	char* serializeChilds(char* bytes) const;
 
 	/**
 	 * Transforma la cadena de bytes a un registro
-	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
+	 * @param bytes Cadena de bytes de la cual lee para setear los campos del registro.
 	 */
 	void deserializeChilds(const char* bytes);
 
