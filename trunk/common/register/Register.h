@@ -1,7 +1,7 @@
 /**
- * \file Registro.h
- * \author MCM
- * \date 26-03-2010
+ * @file Register.h
+ * @author MCM
+ * @date 26-03-2010
  */
 
 #ifndef REGISTER_H_
@@ -32,21 +32,21 @@ public:
 
 	//-------------Serialize/Deserialize----------//
 	/**
-	 * Serializa el registro en bytes
+	 * Serializa el registro en bytes.
 	 * \param bytes Cadena de bytes en la que almacena el contenido del registro
 	 * \return El puntero a la cadena de bytes
 	 */
 	virtual char* serialize(char* bytes) const = 0;
 
 	/**
-	 * Transforma la cadena de bytes a un registro
+	 * Transforma la cadena de bytes a un registro.
 	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
 	 */
 	virtual void deserialize(const char* bytes) = 0;
 
 
 	/**
-	 * Devuelve un string con el contenido del registro
+	 * Devuelve un string con el contenido del registro.
 	 * Se debe definir en cada clase obligatoriamente, para
 	 * ser utilizada por el operador << en Register
 	 * @return string con la informacion contenida en el registro
@@ -73,17 +73,43 @@ public:
 	//------------------Operators------------------------//
 	//	virtual Register& operator=(const Register& registro) = 0;
 
+	/**
+	 * Operador de comparacion de igualdad.
+	 * Tiene sentido su definición para aquellos registros que tengan clave.
+	 * El metodo no esta definido virtual puro. Para las clases que no lo implementan este
+	 * metodo tira una excepcion.
+	 * @param registro Registro de la misma clase contra el cual se hace la comparacion.
+	 * @return TRUE si es igual, FALSE de lo contrario.
+	 */
 	virtual bool operator==(const Register& registro)const;
 
+	/**
+	 * Operador de comparacion por menor.
+	 * Tiene sentido su definición para aquellos registros que tengan clave.
+	 * El metodo no esta definido virtual puro. Para las clases que no lo implementan este
+	 * metodo tira una excepcion.
+	 * @param registro Registro de la misma clase contra el cual se hace la comparacion.
+	 * @return TRUE si es menor, FALSE de lo contrario.
+	 */
 	virtual bool operator<(const Register& registro)const;
 
+	/**
+	 * Operador de comparacion por mayor.
+	 * Tiene sentido su definición para aquellos registros que tengan clave.
+	 * El metodo no esta definido virtual puro. Para las clases que no lo implementan este
+	 * metodo tira una excepcion.
+	 * @param registro Registro de la misma clase contra el cual se hace la comparacion.
+	 * @return TRUE si es mayor, FALSE de lo contrario.
+	 */
 	virtual bool operator>(const Register& registro)const;
 
 	/**
 	 * Obtiene la clave del register.
-	 * En caso de que el elemento no tenga una Key este metodo no se redefine
-	 * Para las clases que no lo implementan este metodo tira excepcion
-	 * En las clases que lo implementan este metodo crea una nueva clave mediante new
+	 * Tiene sentido su definición para aquellos registros que tengan clave.
+	 * En caso de que el elemento no tenga una Key este metodo no se redefine.
+	 * Para las clases que no lo implementan este metodo tira excepcion.
+	 * En las clases que lo implementan este metodo crea una nueva clave mediante new por
+	 * lo cual el manejo de memoria por el llamado a este metodo queda a cargo del usuario.
 	 */
 	virtual Register * getRegisterKey()const;
 
@@ -91,12 +117,18 @@ public:
 
 
 /**
- * Class RegisterComparator
+ * @class RegisterComparator
  * Clase que me provee de una callback de comparacion, utilizada en containers de stl
  */
 class RegisterComparator
 {
 public:
+	/**
+	 * Operador function_callback
+	 * Utilizada en containers de stl, por ejemplo map, para comparar por menor
+	 * a dos registros.
+	 * @see Register
+	 */
 	bool operator() (Register* reg1,Register* reg2)
 	{
 		return ((*reg1) < (*reg2));
@@ -113,7 +145,9 @@ public:
 
 std::ostream& operator <<  (std::ostream& os,const Register& reg);
 
-//TODO ME PARE QUE NO VA
+/**
+ * TODO NO IMPLEMENTADA
+ */
 std::istream& operator >> (std::istream& is,const Register& reg);
 
 

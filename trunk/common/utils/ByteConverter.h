@@ -1,7 +1,7 @@
 /**
- * \file ByteConverter.h
- * \author MCM
- * \date 26-03-2010
+ * @file ByteConverter.h
+ * @author MCM
+ * @date 26-03-2010
  */
 
 #ifndef BYTECONVERTER_H_
@@ -73,15 +73,28 @@ public:
 
 	/**
 	 * Convierte un float a una cadena de bytes.
-	 * \param decimalf  float El float a convertir.
+	 * \param decimalf El float a convertir.
 	 * \param bytes La cadena de bytes donde se almacena la conversión.
 	 * \return El puntero a la cadena de bytes.
 	 */
 	static char* floatToBytes(const float decimalf,char* bytes);
 
+	/**
+	 * Convierte una cadena de bytes a un dato de tipo string.
+	 * \param bytes La cadena de bytes a convertir
+	 * \return string despues de la conversión de la cadena de bytes.
+	 */
+	static std::string bytesToString(const char* bytes);
+
+	/**
+	 * Convierte un dato de tipo string a una cadena de bytes, sin
+	 * necesidad de manejar el tamaño en caracteres del string.
+	 * @param bytes La cadena de bytes donde almacena la conversion.
+	 * @param str El string a convertir en bytes.
+	 * @return El puntero a la cadena de bytes.
+	 */
 	static char* stringToBytes(const std::string str,char* bytes);
 
-	static std::string bytesToString(const char* bytes);
 };
 
 #endif /* BYTECONVERTER_H_ */
