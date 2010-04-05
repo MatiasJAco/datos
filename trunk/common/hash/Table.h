@@ -24,7 +24,7 @@ public:
 	 * y primer registro = 0 (apuntando al bloque 0 del archivo de Hash)
 	 * NOTA: tabla.txt va a tener como primer registro el tamaño de si misma
 	 */
-	FILE * crearArchTabla();
+	FILE * crearArch();
 
 	/**
 	 * Se encarga de abrir la tabla, devolver un listado de los elementos de la tabla
@@ -32,13 +32,13 @@ public:
 	 * La funcion devuelve el tamaño de la tabla.
 	 * Nota: recordar que el primer elemento de la tabla es su propio tamaño (tamTabla)
 	 */
-	int parsearTabla(int * listaElementosTabla);
+	int parsear(int * listaElementosTabla);
 
 	/**
 	 * Retorna la cant de elementos que tiene la tabla segun el primer renglon
 	 * el cual contiene el tamaño de la misma
 	 */
-	int obtenerTamanioTabla();
+	int obtenerTamanio();
 
 	/**
 	 * Retorna el bloque a apuntar en el archivo de Hash segun la posicion en la tabla
@@ -50,17 +50,17 @@ public:
 	/**
 	 * Modifica el registro "numReg" en la tabla con el valorNuevo a cambiar
 	 */
-	void modificarRegistroEnTabla(int numReg,int valorNuevo);
+	void modificarRegistro(int numReg,int valorNuevo);
 
 	/**
 	 * Se le pasa una lista de elementos y el tamaño de la tabla para imprimir la tabla por consola
 	 */
-	void imprimirTabla(int * listaElementosTabla,int tamTabla);
+	void imprimir(int * listaElementosTabla,int tamTabla);
 
 	/**
 	 * Duplica la tabla con los mismos contenidos que posee
 	 */
-	void duplicarTabla();
+	void duplicar();
 
 private:
 	/**
@@ -68,22 +68,22 @@ private:
 	 * le pase como parametro.
 	 * informar si hubo error al intentar hacerlo
 	 */
-	FILE * abrirArchTabla(char formato[2]);
+	FILE * abrirArch(char formato[2]);
 
 	/**
 	 * Se encarga de abrir el archivo de la Tabla para lectura
 	 */
-	FILE * abrirArchTablaLectura();
+	FILE * abrirArchLectura();
 
 	/**
 	 * Se encarga de abrir el archivo de la Tabla para escritura
 	 */
-	FILE * abrirArchTablaEscritura();
+	FILE * abrirArchEscritura();
 
 	/**
 	 * Se encarga de cerrar el archivo de la Tabla e informar si hubo error al intentar hacerlo
 	 */
-	void cerrarArchTabla(FILE * arch_tabla);
+	void cerrarArch(FILE * arch_tabla);
 
 	/**
 	 * Crea archivo temporario para uso de modificacion de datos
