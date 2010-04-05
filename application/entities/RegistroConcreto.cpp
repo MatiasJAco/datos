@@ -81,7 +81,7 @@ Register & RegistroConcreto::operator =(const Register & registro)
  	if (this == &reg)      // Same object?
  		return *this;        // Yes, so skip assignment, and just return *this.
 
- 	m_clave= reg.m_clave;
+ 	m_clave = reg.m_clave;
 	m_int = reg.m_int;
 	m_double = reg.m_double;
 	m_float = reg.m_float;
@@ -115,5 +115,15 @@ Register *RegistroConcreto::getRegisterKey() const
 	return key;
 }
 
+void RegistroConcreto::setFields(const Register& registro)
+{
+	const RegistroConcreto& reg = dynamic_cast<const RegistroConcreto&> (registro);
 
+ 	m_clave = reg.m_clave;
+	m_int = reg.m_int;
+	m_double = reg.m_double;
+	m_float = reg.m_float;
+	m_string = reg.m_string;
+
+}
 

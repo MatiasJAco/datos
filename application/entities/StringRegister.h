@@ -36,6 +36,7 @@ public:
 	StringRegister(const StringRegister& reg);
 
 	StringRegister(KeyInt clave,std::string tstring);
+
 	 ~StringRegister();
 
 	unsigned int getSize() const;
@@ -56,7 +57,7 @@ public:
 	char* serialize(char* bytes) const;
 
 	/**
-	 * Transfo0rma la cadena de bytes a un registro
+	 * Transforma la cadena de bytes a un registro
 	 * \param bytes Cadena de bytes de la cual lee para setear los campos del registro.
 	 */
 	void deserialize(const char* bytes);
@@ -65,6 +66,13 @@ public:
 	Register * getRegisterKey()const;
 
 	std::string toString() const;
+
+	/**
+	 * Setea los campos del registro con los mismos del objeto pasado por parametro
+	 * @param registro Registro sobre el cual se hara la copia.
+	 */
+	void setFields(const Register& registro);
+
 
     KeyInt getClave() const
     {

@@ -91,3 +91,11 @@ string StringRegister::toString() const
 	return retStr.str();
 
 }
+
+void StringRegister::setFields(const Register& registro)
+{
+	const StringRegister& reg = dynamic_cast<const StringRegister&> (registro);
+
+ 	m_clave= reg.m_clave;
+	m_string = reg.m_string;
+}
