@@ -5,136 +5,21 @@
  *      Author: matias
  */
 
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <math.h>
-#include <getopt.h>
-#include "../logger/archivoTexto.h"
-#include <iostream>
 
-//Valores algo arbitrarios para los arrays estáticos.
-#define STACK_SIZE 150
-#define INPUT_STRING_BUFFER_SIZE 200
+#include "Logger.h"
 
+ Logger::Logger(){
 
-namespace 
-{
-    const int TAMANIO_LIMITE = 200;
-}
-typedef enum {FILE_INPUT, STRING_INPUT, NONE} input_t;
-
-
-  //puntero que contendra la direccion del archivo a procesar
-  ArchivoTexto* archivo;
-//Estructura estática que representa al stack.
-typedef struct {
-	double stack_buf[STACK_SIZE];
-	size_t stack_index;
-} stack_t;
-
-//Headers.
-
-void print_help(void);
-std::string procesar_linea(char *line);
-void buscar_cadena(std::string cadena);
-void recorrer_log(void);
-void escribir_archivo(std::string cadena);
-
-
-
-int main(int argc, char **argv)
-{
-	//Variables especiales para la función 'getopt_long'.
-	static struct option long_options[] =
-	{
-		{"buscar", required_argument, 0, 'B'},
-		{"ayuda", no_argument, 0, 'h'},
-		{"ingresar", required_argument, 0, 'I'},
-		{"secuenciar", no_argument, 0, 'S'},
-		{0, 0, 0, 0}
-	};
-	int option_index = 0;
-
-	//Variables de estado de los argumentos del programa.
-	bool h_flag, b_flag,i_flag, s_flag;
-	char *e_arg;
-	input_t input = NONE;
-
-	//Buffer donde se almacenara cada linea (string) leída.
-
-
-	int c;
-
-
-	//Utilizo la función 'getopt_long' para analizar los argumentos.
-	h_flag = b_flag = i_flag = s_flag = false;
-	while ((c = getopt_long (argc, argv, "hSI:B:", long_options, &option_index)) != -1) {
-		switch (c) {
-		case 'h':
-			h_flag = true;
-			break;
-		case 'B':
-			b_flag = true;
-			e_arg = optarg;
-			break;
-		case 'I':
-			i_flag = true;
-			e_arg = optarg;
-			break;
-		case 'S':
-			s_flag = true;
-
-			break;
-		case '?': // Hubo un error en los argumentos, termino el programa.
-			return 1;
-			break;
-		}
-	}
-
-
-
-	//Tomo acción en base a los argumentos pasados.
-	if (b_flag == true) {
-		input = STRING_INPUT;
-		std::string cadena="";
-		cadena=cadena+procesar_linea(e_arg);
-		buscar_cadena(cadena);
-		return 0;
-	}
-	if (h_flag == true) {
-		print_help();
-		return 0;
-	}
-
-
-	if (s_flag == true) {
-		recorrer_log();
-		return 0;
-
-	}
-
-	if (i_flag == true) {
-		input = STRING_INPUT;
-		std::string cadena="";
-		cadena=cadena+procesar_linea(e_arg);
-		escribir_archivo(cadena);
-		return 0;
-	}
 };
 
+ Logger::~Logger(){};
 
 
-//Procesa una linea particular buscando números y operaciones.
-std::string procesar_linea(char *line) {
+std::string Logger::procesar_linea(char *line) {
 
 	//Puntero que se utilizará para barrer toda la línea.
 	char *line_index = line;
 
-	//Variable de la función strtod, utilizada para saber si encontró o no un
-	//número.
 
 	std::string cadena="";
 
@@ -180,14 +65,13 @@ std::string procesar_linea(char *line) {
 			line_index++;
 
 
-	} //END - for (;;)
+	}
 	return cadena;
 }
 
 
 
-//Busca una cadena de caracteres en el archivo de texto.
-void buscar_cadena(std::string cadena){
+void Logger::buscar(std::string cadena){
 	archivo=new ArchivoTexto("logger.txt");
 	char caracterABuscar;
 	char caracterLeido;
@@ -222,25 +106,10 @@ void buscar_cadena(std::string cadena){
 	archivo->~ArchivoTexto();
 };
 
-//Recorre el log actual y lo imprime por pantalla.
-	void recorrer_log(){
-		std::string cadenaLeida="";
-
-		archivo=new ArchivoTexto("logger.txt");
-		while (archivo->leerLinea(cadenaLeida)){
-
-			std::cout<<cadenaLeida<<std::endl;
-			std::cout<<archivo->getTamanio()<<std::endl;
-		}
-		archivo->~ArchivoTexto();
-
-	};
-
-//Ingresa datos al archivo de texto.
 
 
 
-void escribir_archivo(std::string cadena){
+void Logger::escribir_archivo(std::string cadena){
 
 	archivo=new ArchivoTexto("logger.txt");
 	long tamanio=0;
@@ -253,12 +122,37 @@ void escribir_archivo(std::string cadena){
 	archivo->~ArchivoTexto();
 };
 
+//Busca la cadena de caracteres en el log.
+void Logger::buscar_cadena(char * e_arg){
+	std::string cadena = "";
+	cadena = cadena + this->procesar_linea(e_arg);
+    this->buscar(cadena);
+}
 
 
+	void Logger::recorrer_log(){
+		std::string cadenaLeida="";
+
+		archivo=new ArchivoTexto("logger.txt");
+		while (archivo->leerLinea(cadenaLeida)){
+
+			std::cout<<cadenaLeida<<std::endl;
+
+		}
+		archivo->~ArchivoTexto();
+
+	};
 
 
-//Imprime la ayuda.
-void print_help(void) {
+void Logger::ingresar(char *e_arg)
+{
+    std::string cadena = "";
+    cadena = cadena + this->procesar_linea(e_arg);
+    this->escribir_archivo(cadena);
+}
+
+
+void Logger::imprimir_ayuda(void) {
 	printf("\t-B, --buscar \t\tBuscar cadena de caracteres.\n");
 	printf("\t-h, --ayuda \t\tAyuda para la operacion de la aplicacion.\n");
 	printf("\t-I, --ingresar \tIngresar datos a la estructura.\n");
