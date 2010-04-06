@@ -1,14 +1,3 @@
-/**
- * Facultad de Ingeniería - Universidad de Buenos Aires
- * 75.41 - Algoritmos y Programación II
- * Archivo de Texto (declaración)
- * Cátedra Ing. Patricia Calvo
- * v1.0
- * Autor: Mariano Simone (marianosimone+7541@gmail.com)
- *
- * Modificaciones realizadas para adaptacion al tp: Matías Jore Acosta
- **/
-
 #ifndef __ARCHIVOTEXTO_H__
 #define __ARCHIVOTEXTO_H__
 
