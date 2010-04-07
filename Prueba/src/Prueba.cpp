@@ -1,12 +1,7 @@
 #include <iostream>
 using std::cerr;
-using std::cin;
-using std::cout;
 using std::endl;
 using std::ios;
-
-#include <iomanip>
-using std::setw;
 
 #include <fstream>
 using std::fstream;
@@ -20,82 +15,52 @@ using std::string;
 #include <stdio.h>
 #include <string.h>
 
-class Account
+#include "../application/entities/KeyInt.h"
+#include "../application/entities/StringRegister.h"
+
+/**
+ * Este método devuelve el valor de la función de hash.
+ * TODO hacer que en vez de 123, vaya la clave que contiene KeyInt
+ */
+int hash(int tamanioTabla, KeyInt key)
 {
-public:
-    Account( int accountNumberValue, string lastNameValue, string firstNameValue, double balanceValue )
-    {
-       setAccountNumber( accountNumberValue );
-       setLastName( lastNameValue );
-       setFirstName( firstNameValue );
-       setBalance( balanceValue );
-    }
+	return 123 % tamanioTabla;
+}
 
-    int getAccountNumber() const
-    {
-       return accountNumber;
-    }
-    void setAccountNumber( int accountNumberValue )
-    {
-       accountNumber = accountNumberValue; // should validate
-    }
-    string getLastName() const
-    {
-       return lastName;
-    }
-    void setLastName( string lastNameString )
-    {
-       const char *lastNameValue = lastNameString.data();
-       strncpy( lastName, lastNameValue, 5 );
-       lastName[ 5 ] = '\0';
-    }
+/**
+ * TODO: Este método indica si existe una clave en el archivo de la organización directa.
+ */
+bool existe(KeyInt keyInt)
+{
+	return false;
+}
 
-    string getFirstName() const
-    {
-       return firstName;
-    }
+/**
+ * Método que agrega un registro a un bloque del archivo de la organización directa.
+ */
+void insertar(StringRegister stringRegister)
+{
+	fstream outCredit("credit.dat", ios::out | ios::binary);
 
-    void setFirstName( string firstNameString )
+    // exit program if fstream cannot open file
+    if (!outCredit)
     {
-       const char *firstNameValue = firstNameString.data();
-       strncpy( firstName, firstNameValue, 5 );
-       firstName[ 5 ] = '\0';
-    }
-    double getBalance() const
-    {
-       return balance;
-    }
-    void setBalance( double balanceValue )
-    {
-       balance = balanceValue;
-    }
+        cerr << "File could not be opened." << endl;
+        exit(1);
+     }
 
-private:
-   int accountNumber;
-   char lastName[ 15 ];
-   char firstName[ 10 ];
-   double balance;
-};
+     // seek position in file of user-specified record
+     // TODO reemplazar "0" por el número de registro relativo
+     outCredit.seekp(0 * sizeof(StringRegister));
 
+     // write user-specified information in file
+     outCredit.write(reinterpret_cast< const char * >(&stringRegister),sizeof(StringRegister));
+}
 
 int main()
 {
-   fstream outCredit( "credit.dat", ios::out | ios::binary );
-
-   // exit program if fstream cannot open file
-   if ( !outCredit )
-   {
-      cerr << "File could not be opened." << endl;
-      exit( 1 );
-   } // end if
-
-   Account client(1,"AAAAA","BBBBB",1.2);
-
-   // seek position in file of user-specified record
-   outCredit.seekp( ( client.getAccountNumber() - 1 ) * sizeof( Account ) );
-
-   // write user-specified information in file
-   outCredit.write( reinterpret_cast< const char * >( &client ),sizeof( Account ) );
-
-   return 0;
+	KeyInt regkey(45);
+	StringRegister stringRegister(regkey,"Hola");
+	insertar(stringRegister);
+	return 0;
 }
