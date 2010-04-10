@@ -8,6 +8,8 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+
+#include <string>
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
@@ -26,7 +28,7 @@ private:
 	 */
 	ArchivoTexto* archivo;
 
-	static const int TAMANIO_LIMITE = 200;
+	static const int TAMANIO_LIMITE = 100;
 
 	/**
 	 * Busca una cadena de caracteres en el archivo de texto.
@@ -46,6 +48,9 @@ private:
 	 */
 	void escribir_archivo(std::string cadena);
 
+	std::string itos(int i);
+
+	void buscarArchivo(char *ptrArchivo, std::string cadena);
 
 public:
 

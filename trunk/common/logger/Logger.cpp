@@ -7,6 +7,7 @@
 
 
 #include "Logger.h"
+using namespace std;
 
  Logger::Logger(){
 
@@ -14,6 +15,21 @@
 
  Logger::~Logger(){};
 
+
+string Logger::itos(int i){                                                 //   int to string en c++
+       string num;
+       int temp;
+       while(i / 10!=0){
+         temp=i%10;
+         i= i/10;
+         temp =temp + 48;
+         num = (char)temp + num;
+
+       }
+       i=i+48;
+       num = (char)i + num ;
+       return num;
+}
 
 std::string Logger::procesar_linea(char *line) {
 
@@ -71,39 +87,62 @@ std::string Logger::procesar_linea(char *line) {
 
 
 
+void Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
+{
+    archivo = new ArchivoTexto(ptrArchivo);
+    char caracterABuscar;
+    char caracterLeido;
+    std::string lineaDeCadenaBuscada;
+    unsigned int posicionComienzoDeLinea = 0;
+    bool cambioDeLinea = true;
+    unsigned int contadorDeLetras = 0;
+    while(!archivo->finDeArchivo()){
+        caracterABuscar = cadena.at(contadorDeLetras);
+        archivo->leerCaracter(caracterLeido);
+        if(cambioDeLinea){
+            cambioDeLinea = false;
+            posicionComienzoDeLinea = archivo->getPosicionCursor() - 1;
+        }
+        ;
+        if(caracterLeido == '\n'){
+            cambioDeLinea = true;
+        }
+        if(caracterABuscar == caracterLeido){
+            contadorDeLetras++;
+            if(contadorDeLetras == cadena.capacity()){
+                contadorDeLetras = 0;
+                archivo->setPosicionCursor(posicionComienzoDeLinea);
+                archivo->leerLinea(lineaDeCadenaBuscada);
+                std::cout << lineaDeCadenaBuscada << std::endl;
+                cambioDeLinea = true;
+            }
+        }
+        else
+            contadorDeLetras = 0;
+
+    }
+    ;
+    archivo->~ArchivoTexto();
+}
+
 void Logger::buscar(std::string cadena){
-	archivo=new ArchivoTexto("logger.txt");
-	char caracterABuscar;
-	char caracterLeido;
-	std::string lineaDeCadenaBuscada;
-	unsigned int posicionComienzoDeLinea;
-	bool cambioDeLinea=true;
-	unsigned int contadorDeLetras=0;
-	while (not archivo->finDeArchivo()){
+	int buffer[1];
+	buffer[0]=0;
+	FILE *archdisco;
+	archdisco = fopen("contador.dat","rb");
+	fread(buffer,4,1,archdisco);
+	fclose(archdisco);
+	string nombre="logger";
+	for(int i=1;i<buffer[0];i++){
+		string numeroLog=itos(i);
+		string nuevoNombre=nombre+numeroLog+".txt";
 
-		caracterABuscar=cadena.at(contadorDeLetras);
-		archivo->leerCaracter(caracterLeido);
-		if(cambioDeLinea){
-			cambioDeLinea=false;
-			posicionComienzoDeLinea=archivo->getPosicionCursor()-1;
-		};
-		if(caracterLeido=='\n'){
-			cambioDeLinea=true;
-		}
-		if(caracterABuscar==caracterLeido){
-			contadorDeLetras++;
-			if(contadorDeLetras==cadena.capacity()){
-				contadorDeLetras=0;
-				archivo->setPosicionCursor(posicionComienzoDeLinea);
-				archivo->leerLinea(lineaDeCadenaBuscada);
-				std::cout<<lineaDeCadenaBuscada<<std::endl;
-				cambioDeLinea=true;
-
-			}
-		}else contadorDeLetras=0;
+		char* ptrArchivo=&nuevoNombre[0];
+		buscarArchivo(ptrArchivo, cadena);
 	};
-
-	archivo->~ArchivoTexto();
+	string nuevoNombre=nombre+".txt";
+	char* ptrArchivo=&nuevoNombre[0];
+	buscarArchivo(ptrArchivo,cadena);
 };
 
 
@@ -113,12 +152,48 @@ void Logger::escribir_archivo(std::string cadena){
 
 	archivo=new ArchivoTexto("logger.txt");
 	long tamanio=0;
+	FILE *archdisco;
+	archdisco = fopen("contador.dat","a");
+	fseek(archdisco, 0, SEEK_END);
+	size_t size = ftell(archdisco);
+	fclose(archdisco);
+	if(archivo->getTamanio()==0 && size==0){
+
+		archdisco = fopen("contador.dat","wb");
+		int buffer[1];
+		buffer[0]=1;
+
+		fwrite(buffer,4,1,archdisco);
+		fclose(archdisco);
+	}
+
 	archivo->irAlFinal();
+
 	archivo->escribir(cadena);
 	archivo->terminarLinea();
 	tamanio= archivo->getTamanio();
-	if (tamanio> TAMANIO_LIMITE)
-	rename("logger.txt","logger1.txt");
+	if (tamanio> TAMANIO_LIMITE){
+		int buffer[1];
+		buffer[0]=0;
+
+		FILE *archdisco;
+		archdisco = fopen("contador.dat","rb");
+		fread(buffer,4,1,archdisco);
+		fclose(archdisco);
+		buffer[0]++;
+		archdisco = fopen("contador.dat","wb");
+		fwrite(buffer,4,1,archdisco);
+		fclose(archdisco);
+		buffer[0]--;
+		string numeroLog=itos(buffer[0]);
+		string nombre="logger";
+		string nuevoNombre=nombre+numeroLog+".txt";
+		char* ptrNewName=&nuevoNombre[0];
+		rename("logger.txt",ptrNewName);
+		archivo->~ArchivoTexto();
+		archivo=new ArchivoTexto("logger.txt");
+		archivo->~ArchivoTexto();
+	}else
 	archivo->~ArchivoTexto();
 };
 
