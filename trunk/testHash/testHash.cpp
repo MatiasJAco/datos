@@ -1,8 +1,13 @@
 #include <iostream>
 using namespace std;
 #include "../common/hash/Table.h"
+#include "../logic/input/StringInputData.h"
 
 int main(){
+
+	StringInputData* sid = new StringInputData();
+	sid->getKey();
+
 	Table miTabla;
 	miTabla.crearArch();
 	int tamTabla = miTabla.obtenerTamanio();
