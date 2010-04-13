@@ -21,12 +21,12 @@ public:
 	/**
 	 * Convierte a registro un stream pasado por parametro
 	 */
-	virtual bool setValue(std::stringstream valor)=0;
+	virtual bool setValue(char * valor)=0;
 
-	/**
+/*	*
 	 * Recupera el stream que corresponde a un Registro
-	 */
-	virtual std::stringstream getValue()=0;
+
+	virtual std::stringstream getValue()=0;*/
 
 	/**
 	 * Obtiene el tamaño del Registro (en bytes)
@@ -35,8 +35,8 @@ public:
 
 
 
-private:
-	std::stringstream m_value;
+protected:
+	char * m_value;
 };
 
 #endif /* REGISTER_H_ */

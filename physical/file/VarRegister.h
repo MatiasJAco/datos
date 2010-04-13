@@ -9,8 +9,12 @@
 #define VARREGISTER_H_
 #include "Register.h"
 #include <sstream>
+#include <cstring>
+#include <iostream>
 
-class VarRegister {
+
+class VarRegister: public Register
+{
 public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
@@ -23,12 +27,14 @@ public:
 	/**
 	 * Convierte a registro un stream pasado por parametro
 	 */
-	bool setValue(std::stringstream valor);
+	bool setValue(char * valor,unsigned int size);
+
+	bool setValue(char * valor);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro
-	 */
-	std::stringstream getValue();
+	*/
+	char * getValue();
 
 	/**
 	 * Obtiene el tamaño del Registro (en bytes)
