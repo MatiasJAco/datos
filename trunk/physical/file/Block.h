@@ -8,9 +8,9 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 #include "Register.h"
-#include "FixedRegister.h"//TODO ver si usar solo la clase abstracta
 #include "VarRegister.h"
 #include <sstream>
+#include <list>
 
 /**
  * Block
@@ -27,25 +27,22 @@ public:
 	 * Inserta un registro en la posicion actual.
 	 * @see Register
 	 */
-	bool addRegister(const Register &reg);
-
-	/**
-	 * Obtiene el proximo Register, siendo este de longitud fija
-	 * y definida mediante el parametro que se le pasa. Es necesario pasar
-	 * el tamaño del Registro ya que el tamaño no se persiste en disco, y es
-	 * unicamente conocido por la capa logica.
-	 * La instancia de Register se crea internamente.
-	 * @see Register
-	 */
-	FixedRegister getFixedRegister(const unsigned int size);
+	bool addRegister(const VarRegister &reg);
 
 	/**
 	 * Obtiene el proximo Register, siendo este de longitud variable.
 	 * La informacion de la longitud del Register no es necesario pasarla,
 	 * ya que se encuentra persistida en disco.
-	 * TODO ver si se deja que devuelva un VarRegister, o ponemos un Register *
+	 *
 	 */
-	VarRegister getVarRegister();
+	VarRegister getNextRegister();
+
+	/**
+	 * Devuelve el contador al principio del bloque
+	 */
+	void restartCounter();
+
+	//TODO poner un delete registro, y un modificar
 
 	/**
 	 * Obtiene la cantidad de registros.
@@ -71,10 +68,9 @@ private:
 	unsigned int m_count;
 
 	/**
-	 * Contenido del bloque
-	 * TODO DISCUTIR...
+	 * Lista que contiene todos los Registers del bloque.
 	 */
-	std::stringstream m_value;
+	std::list <VarRegister> m_registers;
 
 };
 
