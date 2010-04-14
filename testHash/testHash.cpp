@@ -12,43 +12,43 @@ int main(){
 	sid->setValue(ss);
 	sid->getKey();
 
-	Table miTabla;
-	miTabla.crearArch();
-	int tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla[tamTabla];
+	Table myTable;
+	myTable.createFile();
+	int sizeOfTable = myTable.getSize();
+	int listElementsTable[sizeOfTable];
 
-	miTabla.parsear(listaElementosTabla);
-	miTabla.imprimir(listaElementosTabla,tamTabla);
+	myTable.parse(listElementsTable);
+	myTable.print(listElementsTable,sizeOfTable);
 
-	miTabla.modificarRegistro(2,50);
-	tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla2[tamTabla];
-	miTabla.parsear(listaElementosTabla2);
-	miTabla.imprimir(listaElementosTabla2,tamTabla);
+	myTable.modifyRegister(2,50);
+	sizeOfTable = myTable.getSize();
+	int listElementsTable2[sizeOfTable];
+	myTable.parse(listElementsTable2);
+	myTable.print(listElementsTable2,sizeOfTable);
 
-	miTabla.duplicar();
-	tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla3[tamTabla];
-	miTabla.parsear(listaElementosTabla3);
-	miTabla.imprimir(listaElementosTabla3,tamTabla);
+	myTable.duplicate();
+	sizeOfTable = myTable.getSize();
+	int listElementsTable3[sizeOfTable];
+	myTable.parse(listElementsTable3);
+	myTable.print(listElementsTable3,sizeOfTable);
 
-	miTabla.duplicar();
-	tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla4[tamTabla];
-	miTabla.parsear(listaElementosTabla4);
-	miTabla.imprimir(listaElementosTabla4,tamTabla);
+	myTable.duplicate();
+	sizeOfTable = myTable.getSize();
+	int listElementsTable4[sizeOfTable];
+	myTable.parse(listElementsTable4);
+	myTable.print(listElementsTable4,sizeOfTable);
 
-	miTabla.duplicar();
-	tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla5[tamTabla];
-	miTabla.parsear(listaElementosTabla5);
-	miTabla.imprimir(listaElementosTabla5,tamTabla);
+	myTable.duplicate();
+	sizeOfTable = myTable.getSize();
+	int listElementsTable5[sizeOfTable];
+	myTable.parse(listElementsTable5);
+	myTable.print(listElementsTable5,sizeOfTable);
 
-	miTabla.modificarRegistro(70,23);
-	tamTabla = miTabla.obtenerTamanio();
-	int listaElementosTabla6[tamTabla];
-	miTabla.parsear(listaElementosTabla6);
-	miTabla.imprimir(listaElementosTabla6,tamTabla);
+	myTable.modifyRegister(70,23);
+	sizeOfTable = myTable.getSize();
+	int listElementsTable6[sizeOfTable];
+	myTable.parse(listElementsTable6);
+	myTable.print(listElementsTable6,sizeOfTable);
 
 	return 0;
 }
