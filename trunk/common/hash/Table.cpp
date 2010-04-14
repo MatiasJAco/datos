@@ -16,29 +16,29 @@ Table::~Table() {
 	// TODO Auto-generated destructor stub
 }
 
-FILE * Table::abrirArch(char formato[2]){
+FILE * Table::openFile(char format[2]){
 	FILE * arch_tabla;
 	char * nombreArchTabla = "tabla.txt";
-	arch_tabla = fopen(nombreArchTabla,formato);
+	arch_tabla = fopen(nombreArchTabla,format);
 	if( !arch_tabla )
 	  printf( "\nError: No se pudo abrir la tabla correctamente\n" );
 	return arch_tabla;
 }
 
-FILE * Table::abrirArchLectura(){
-	return abrirArch("r");
+FILE * Table::openFileForRead(){
+	return openFile("r");
 }
 
-FILE * Table::abrirArchEscritura(){
-	return abrirArch("w");
+FILE * Table::openFileForWrite(){
+	return openFile("w");
 }
 
-void Table::cerrarArch(FILE * arch_tabla){
-	if( fclose(arch_tabla) )
+void Table::closeFile(FILE * tableFile){
+	if( fclose(tableFile) )
 		      printf( "\nError: No se pudo cerrar la tabla correctamente\n" );
 }
 
-FILE* Table::crearArchivoTemporal(){
+FILE* Table::createTemporalFile(){
 	FILE * arch_tabla_temporal;
 	char * nombreArchTabla = "tablaTemporal.txt";
 	arch_tabla_temporal = fopen(nombreArchTabla,"w");
@@ -47,23 +47,23 @@ FILE* Table::crearArchivoTemporal(){
 	return arch_tabla_temporal;
 }
 
-FILE * Table::crearArch(){
-	FILE* archTabla = abrirArchEscritura();
+FILE * Table::createFile(){
+	FILE* archTabla = openFileForWrite();
 	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "0\n0" );"
 	fprintf( archTabla, "9\n0\n1\n2\n3\n4\n5\n6\n7\n8" );
 
-	cerrarArch(archTabla);
+	closeFile(archTabla);
 	return archTabla;
 }
 
-int Table::parsear(int * listaElementosTabla){
+int Table::parse(int * listElementsTable){
 	int tamTabla;
 	char linea[180];
 	char * ptr = NULL;
 	int cont = 0;
 	FILE * arch_tabla;
 
-	arch_tabla = abrirArchLectura();
+	arch_tabla = openFileForRead();
 
 	//Tomo el primer renglon (tamTabla)
 	fgets(linea,180,arch_tabla);
@@ -76,38 +76,38 @@ int Table::parsear(int * listaElementosTabla){
 		if (ptr == NULL)
 				printf("\nError: El archivo de la tabla contiene un renglon vacio. El mismo no se puede parsear. No puede contener un renglon vacio.\n\t");
 		else{
-			listaElementosTabla[cont] = atoi(ptr);
+			listElementsTable[cont] = atoi(ptr);
 			cont++;
 		}
 	}
 
-	cerrarArch(arch_tabla);
+	closeFile(arch_tabla);
 
 	return tamTabla;
 }
 
-int Table::obtenerTamanio(){
+int Table::getSize(){
 	int tamTabla;
 	char linea[180];
 	char * ptr = NULL;
 	FILE * arch_tabla;
-	arch_tabla = abrirArchLectura();
+	arch_tabla = openFileForRead();
 	//Tomo el primer renglon (tamTabla)
 	fgets(linea,180,arch_tabla);
 	ptr = strtok(linea," \n\t");
 	tamTabla = atoi(ptr);
-	cerrarArch(arch_tabla);
+	closeFile(arch_tabla);
 	return tamTabla;
 }
 
-int Table::obtenerBloqueAApuntarEnArchivoHash(int registroAApuntarEnTabla){
+int Table::getNumberOfBucketInHash(int NumOfRegToPointInTable){
 	FILE * arch_tabla;
 	char * ptr = NULL;
 	char linea[180];
 
-	arch_tabla = abrirArchLectura();
+	arch_tabla = openFileForRead();
 
-	for (int i = 0;i<registroAApuntarEnTabla+2;i++){
+	for (int i = 0;i<NumOfRegToPointInTable+2;i++){
 		if (!feof(arch_tabla))
 			fgets(linea,180,arch_tabla);
 		else{
@@ -119,23 +119,23 @@ int Table::obtenerBloqueAApuntarEnArchivoHash(int registroAApuntarEnTabla){
 	ptr = strtok(linea," \n\t");
 	int resultado = atoi(ptr);
 
-	cerrarArch(arch_tabla);
+	closeFile(arch_tabla);
 
 	return resultado;
 }
 
-void Table::modificarRegistro(int numReg,int valorNuevo){
+void Table::modifyRegister(int numReg,int newValue){
 	int numeroRenglon = numReg+1;
-	int tam_tabla_a_borrar = obtenerTamanio();
+	int tam_tabla_a_borrar = getSize();
 	if ((numReg<tam_tabla_a_borrar)&&(numReg>=0)){
 		FILE * arch_tabla_a_borrar;
-		arch_tabla_a_borrar = abrirArchLectura();
-		FILE * archTemporal = crearArchivoTemporal();
+		arch_tabla_a_borrar = openFileForRead();
+		FILE * archTemporal = createTemporalFile();
 		char linea[180];
 		char * ptr = NULL;
 		char valorObtenido[10];
 		char valorNuevoString[10];
-		sprintf(valorNuevoString,"%i",valorNuevo);
+		sprintf(valorNuevoString,"%i",newValue);
 
 		for (int i = 1;i<=numeroRenglon;i++){
 			if (!feof(arch_tabla_a_borrar)){
@@ -166,8 +166,8 @@ void Table::modificarRegistro(int numReg,int valorNuevo){
 					printf("\nError: hubo un error al intentar acceder a un registro de la tabla en modificarRegistroEnTabla2.");
 			}
 		}
-		cerrarArch(arch_tabla_a_borrar);
-		cerrarArch(archTemporal);
+		closeFile(arch_tabla_a_borrar);
+		closeFile(archTemporal);
 		remove("tabla.txt");
 		rename("tablaTemporal.txt","tabla.txt");
 	}
@@ -176,23 +176,23 @@ void Table::modificarRegistro(int numReg,int valorNuevo){
 	}
 }
 
-void Table::imprimir(int * listaElementosTabla,int tamTabla){
-	printf("\nTabla (de tamaño = %i):\n ",tamTabla);
-	for (int i = 0; i<tamTabla;i++){
-		printf("%i",listaElementosTabla[i]);
-		if (i<tamTabla-1)
+void Table::print(int * listElementsTable,int sizeOfTable){
+	printf("\nTabla (de tamaño = %i):\n ",sizeOfTable);
+	for (int i = 0; i<sizeOfTable;i++){
+		printf("%i",listElementsTable[i]);
+		if (i<sizeOfTable-1)
 			printf(" | ");
 	}
-	if (tamTabla == 0)
+	if (sizeOfTable == 0)
 		printf("Sin elementos ..");
 }
 
-void Table::duplicar(){
-	int tamTabla = obtenerTamanio();
+void Table::duplicate(){
+	int tamTabla = getSize();
 	int listaElementosTabla[tamTabla];
-	parsear(listaElementosTabla);
+	parse(listaElementosTabla);
 
-	FILE * archTemporal = crearArchivoTemporal();
+	FILE * archTemporal = createTemporalFile();
 	char nuevoTam[10];
 	int aux = tamTabla*2;
 	sprintf(nuevoTam,"%i",aux);
@@ -212,7 +212,7 @@ void Table::duplicar(){
 			fprintf( archTemporal, "\n" );
 	}
 
-	cerrarArch(archTemporal);
+	closeFile(archTemporal);
 	remove("tabla.txt");
 	rename("tablaTemporal.txt","tabla.txt");
 }
