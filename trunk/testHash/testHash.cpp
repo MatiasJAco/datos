@@ -1,11 +1,15 @@
 #include <iostream>
-using namespace std;
+#include <sstream>
 #include "../common/hash/Table.h"
 #include "../logic/input/StringInputData.h"
+using namespace std;
 
 int main(){
-
+	stringstream ss (stringstream::in | stringstream::out);
+	ss.str("paytiti");
 	StringInputData* sid = new StringInputData();
+	sid->setKey(34);
+	sid->setValue(ss);
 	sid->getKey();
 
 	Table miTabla;
