@@ -4,8 +4,9 @@
 	<comment></comment>
 	<projects>
 		<project>Prueba</project>
-		<project>doc</project>
+		<project>logic</project>
 		<project>application</project>
+		<project>doc</project>
 		<project>common</project>
 	</projects>
 	<buildSpec>
