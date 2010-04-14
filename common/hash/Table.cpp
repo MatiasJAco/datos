@@ -50,14 +50,14 @@ FILE* Table::createTemporalFile(){
 FILE * Table::createFile(){
 	FILE* archTabla = openFileForWrite();
 	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "0\n0" );"
-	fprintf( archTabla, "9\n0\n1\n2\n3\n4\n5\n6\n7\n8" );
+	fprintf( archTabla, "10\n21\n0\n23\n24\n25\n21\n22\n23\n24\n25" );
 
 	closeFile(archTabla);
 	return archTabla;
 }
 
 int Table::parse(int * listElementsTable){
-	int tamTabla;
+	int sizeOfTable;
 	char linea[180];
 	char * ptr = NULL;
 	int cont = 0;
@@ -65,12 +65,12 @@ int Table::parse(int * listElementsTable){
 
 	arch_tabla = openFileForRead();
 
-	//Tomo el primer renglon (tamTabla)
+	//Tomo el primer renglon (sizeOfTable)
 	fgets(linea,180,arch_tabla);
 	ptr = strtok(linea," \n\t");
-	tamTabla = atoi(ptr);
+	sizeOfTable = atoi(ptr);
 
-	for(int i = 1;i<=tamTabla;i++){
+	for(int i = 1;i<=sizeOfTable;i++){
 		fgets(linea,180,arch_tabla);
 		ptr = strtok(linea," \n\t");
 		if (ptr == NULL)
@@ -83,21 +83,21 @@ int Table::parse(int * listElementsTable){
 
 	closeFile(arch_tabla);
 
-	return tamTabla;
+	return sizeOfTable;
 }
 
 int Table::getSize(){
-	int tamTabla;
+	int sizeOfTable;
 	char linea[180];
 	char * ptr = NULL;
 	FILE * arch_tabla;
 	arch_tabla = openFileForRead();
-	//Tomo el primer renglon (tamTabla)
+	//Tomo el primer renglon (sizeOfTable)
 	fgets(linea,180,arch_tabla);
 	ptr = strtok(linea," \n\t");
-	tamTabla = atoi(ptr);
+	sizeOfTable = atoi(ptr);
 	closeFile(arch_tabla);
-	return tamTabla;
+	return sizeOfTable;
 }
 
 int Table::getNumberOfBucketInHash(int NumOfRegToPointInTable){
@@ -188,26 +188,26 @@ void Table::print(int * listElementsTable,int sizeOfTable){
 }
 
 void Table::duplicate(){
-	int tamTabla = getSize();
-	int listaElementosTabla[tamTabla];
-	parse(listaElementosTabla);
+	int sizeOfTable = getSize();
+	int listElementsTable[sizeOfTable];
+	parse(listElementsTable);
 
 	FILE * archTemporal = createTemporalFile();
 	char nuevoTam[10];
-	int aux = tamTabla*2;
+	int aux = sizeOfTable*2;
 	sprintf(nuevoTam,"%i",aux);
 	char valorObtenido[10];
 
 	fprintf( archTemporal, nuevoTam );
 	fprintf( archTemporal, "\n" );
 
-	for(int i = 0;i<tamTabla;i++){
-			sprintf(valorObtenido,"%i",listaElementosTabla[i]);
+	for(int i = 0;i<sizeOfTable;i++){
+			sprintf(valorObtenido,"%i",listElementsTable[i]);
 			fprintf( archTemporal,  valorObtenido);
 			fprintf( archTemporal, "\n" );
 	}
-	for(int i = 0;i<tamTabla;i++){
-			sprintf(valorObtenido,"%i",listaElementosTabla[i]);
+	for(int i = 0;i<sizeOfTable;i++){
+			sprintf(valorObtenido,"%i",listElementsTable[i]);
 			fprintf( archTemporal,  valorObtenido);
 			fprintf( archTemporal, "\n" );
 	}
@@ -217,5 +217,39 @@ void Table::duplicate(){
 	rename("tablaTemporal.txt","tabla.txt");
 }
 
+int Table::verifyAndDivide(){
+	int sizeOfTable = getSize();
+	if (sizeOfTable<=1) return -1;
+	if (fmod(sizeOfTable,2)!=0) return -1;
 
+	int listElementsTable[sizeOfTable];
+	parse(listElementsTable);
+	int pos;
+	for (int i = 0; i<sizeOfTable/2;i++){
+		pos=i+sizeOfTable/2;
+		if (listElementsTable[i]!=listElementsTable[pos])
+			return -1;
+	}
+
+	//aca ya se verifico y se puede eliminar
+	FILE * archTemporal = createTemporalFile();
+	char nuevoTam[10];
+	int aux = (int) ( sizeOfTable/2);
+	sprintf(nuevoTam,"%i",aux);
+	char valorObtenido[10];
+
+	fprintf( archTemporal, nuevoTam );
+	fprintf( archTemporal, "\n" );
+
+	for(int i = 0;i<sizeOfTable/2;i++){
+			sprintf(valorObtenido,"%i",listElementsTable[i]);
+			fprintf( archTemporal,  valorObtenido);
+			fprintf( archTemporal, "\n" );
+	}
+	closeFile(archTemporal);
+	remove("tabla.txt");
+	rename("tablaTemporal.txt","tabla.txt");
+
+	return 0;
+}
 
