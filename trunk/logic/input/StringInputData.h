@@ -16,9 +16,10 @@ public:
 	StringInputData();
 	virtual ~StringInputData();
 
-	void setValue(string value);
-	string getValue();
+	void setKey(int key);
+	void setValue(std::stringstream& value);
 	int getKey();
+	string getValue();
 };
 
 #endif /* STRINGINPUTDATA_H_ */
