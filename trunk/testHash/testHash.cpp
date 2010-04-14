@@ -20,7 +20,7 @@ int main(){
 	myTable.parse(listElementsTable);
 	myTable.print(listElementsTable,sizeOfTable);
 
-	myTable.modifyRegister(2,50);
+	myTable.modifyRegister(1,22);
 	sizeOfTable = myTable.getSize();
 	int listElementsTable2[sizeOfTable];
 	myTable.parse(listElementsTable2);
@@ -44,11 +44,20 @@ int main(){
 	myTable.parse(listElementsTable5);
 	myTable.print(listElementsTable5,sizeOfTable);
 
-	myTable.modifyRegister(70,23);
+	/*myTable.modifyRegister(70,23);
 	sizeOfTable = myTable.getSize();
 	int listElementsTable6[sizeOfTable];
 	myTable.parse(listElementsTable6);
-	myTable.print(listElementsTable6,sizeOfTable);
+	myTable.print(listElementsTable6,sizeOfTable);*/
+
+	if (myTable.verifyAndDivide()!= 0)
+		printf("\nno se puede dividir");
+	else printf("\nSI se puede dividir");
+
+	sizeOfTable = myTable.getSize();
+	int listElementsTable7[sizeOfTable];
+	myTable.parse(listElementsTable7);
+	myTable.print(listElementsTable7,sizeOfTable);
 
 	return 0;
 }
