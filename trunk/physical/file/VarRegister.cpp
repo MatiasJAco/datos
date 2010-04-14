@@ -16,8 +16,10 @@ VarRegister::VarRegister()
 }
 
 
-VarRegister::VarRegister(std::stringstream value)
+VarRegister::VarRegister(char *value, unsigned int size)
 {
+	m_value=NULL;
+	setValue(value, size);
 }
 
 VarRegister::~VarRegister()
@@ -28,46 +30,57 @@ VarRegister::~VarRegister()
 
 bool VarRegister::setValue(char * valor, unsigned int size)
 {
-		if(m_value !=NULL)
-			delete m_value;
+		bool retVal=true;
 
-		m_value = new char[size+1];
-		char *p=m_value;
+		if(valor !=NULL)
+		{
+			if(m_value !=NULL)
+				delete m_value;
 
-		memcpy(p,&size,sizeof(size));
-		p+=sizeof(size);
+			m_value = new char[size+1];
+			char *p=m_value;
 
-		memcpy(p,&valor,size);
+			memcpy(p,&size,sizeof(size));
+			p+=sizeof(size);
+
+			memcpy(p,valor,size*sizeof(char));
+
+			retVal=true;
+		}
+		else
+			retVal=false;
 
 		return true;
 
 }
 
-bool VarRegister::setValue(char * valor)
-{
-	return false;
-}
-
 unsigned int VarRegister::getSize()
 {
-	return 0;
+	unsigned int size = 0;
+	memcpy(&size,m_value,sizeof(size));
+
+	return size;
 }
 
 
 
 char *VarRegister::getValue()
 {
+	char * retChar=NULL;
 
-	unsigned int size = 0;
+	if(m_value !=NULL)
+	{
+		unsigned int size = 0;
 
-	char *p=m_value;
+		char *p=m_value;
 
-	memcpy(&size,m_value,sizeof(size));
-	p+=sizeof(size);
+		memcpy(&size,m_value,sizeof(size));
+		p+=sizeof(size);
 
-	char * retChar = new char[size];
+		retChar = new char[size];
 
-	memcpy(retChar,p,size);
+		memcpy(retChar,p,size*sizeof(char));
+	}
 
 	return retChar;
 }

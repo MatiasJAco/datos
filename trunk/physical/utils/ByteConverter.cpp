@@ -99,14 +99,11 @@ unsigned int ByteConverter::bytesToUInt(const char *bytes)
 
 std::string ByteConverter::bytesToString(const char *bytes)
 {
-	int size_str = 0;
 	string str;
+	unsigned int size_str =strlen(bytes)+1;
 
-	memcpy(&size_str,bytes,sizeof(size_str));
-	bytes+=sizeof(size_str);
-	char* c_str = new char[size_str+1];
-	memcpy(c_str,bytes,size_str);
-	c_str[size_str] = '\0';
+	char* c_str = new char[size_str];
+	memcpy(c_str,bytes,size_str*sizeof(char));
 
 
 	str = c_str;

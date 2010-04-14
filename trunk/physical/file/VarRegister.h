@@ -19,7 +19,7 @@ public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	VarRegister();
-	VarRegister(std::stringstream value);
+	VarRegister(char *value, unsigned int size);
 	~VarRegister();
 
 	//-------------------------METODOS-----------------------------------//
@@ -28,8 +28,6 @@ public:
 	 * Convierte a registro un stream pasado por parametro
 	 */
 	bool setValue(char * valor,unsigned int size);
-
-	bool setValue(char * valor);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro

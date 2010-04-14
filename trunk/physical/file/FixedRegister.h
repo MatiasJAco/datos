@@ -19,7 +19,7 @@ public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	FixedRegister(const unsigned int size);
-	FixedRegister(std::stringstream value,const unsigned int size);
+	FixedRegister(char * value,const unsigned int size);
 	~FixedRegister();
 
 	//-------------------------METODOS-----------------------------------//
@@ -27,12 +27,12 @@ public:
 	/**
 	 * Convierte a registro un stream pasado por parametro
 	 */
-	bool setValue(std::stringstream valor);
+	bool setValue(char * valor,unsigned int size);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro
 	 */
-	std::stringstream getValue();
+	char * getValue();
 
 	/**
 	 * Obtiene el tamaño del Registro (en bytes)
