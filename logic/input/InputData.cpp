@@ -8,7 +8,6 @@
 #include "InputData.h"
 
 InputData::InputData() {
-	this->value = "paytiti";
 }
 
 InputData::~InputData() {

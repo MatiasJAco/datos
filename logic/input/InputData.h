@@ -19,15 +19,17 @@ using namespace std;
 class InputData {
 
 protected:
-	string value;
+	int key;
+	stringstream value;
 
 public:
 	InputData();
 	virtual ~InputData();
 
-	virtual void setValue(string value) = 0;
-	virtual string getValue() = 0;
+	virtual void setKey(int key) = 0;
+	virtual void setValue(std::stringstream& value) = 0;
 	virtual int getKey() = 0;
+	virtual string getValue() = 0;
 };
 
 #endif /* INPUTDATA_H_ */
