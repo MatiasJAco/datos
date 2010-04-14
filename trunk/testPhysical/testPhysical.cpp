@@ -19,10 +19,12 @@ int main()
 	int intVar=123455666;
 	int intVar2;
 	string stringVar ="tu madre!";
+	string stringVar2;
+
 	char * streamVar;
 
-
-	varR->setValue((char*)longVar, sizeof(longVar));
+	//Se pasa la direccion del valor casteada a puntero a char
+	varR->setValue((char*)&longVar, sizeof(longVar));
 	streamVar = varR->getValue();
 
 	longVar2=ByteConverter::bytesToLong(streamVar);
@@ -37,7 +39,7 @@ int main()
 	delete streamVar;
 
 
-	varR->setValue((char*)intVar, sizeof(intVar));
+	varR->setValue((char*)&intVar, sizeof(intVar));
 	streamVar = varR->getValue();
 
 	intVar2=ByteConverter::bytesToInt(streamVar);
@@ -53,7 +55,18 @@ int main()
 
 
 	varR->setValue((char*)stringVar.c_str(), stringVar.size());
+	streamVar = varR->getValue();
 
+	stringVar2=ByteConverter::bytesToString(streamVar);
+
+	if(stringVar!=stringVar2)
+	{
+		cout <<"string1 "<<stringVar<<",string2 "<<stringVar2<<endl;
+		cout << "Error en registro string"<<endl;
+	}
+
+
+	delete streamVar;
 
 	delete varR;
 
