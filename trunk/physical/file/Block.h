@@ -18,7 +18,7 @@
 class Block {
 public:
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
-	Block();
+	Block(unsigned int blocknumber);
 	~Block();
 
 	//-------------------------METODOS-----------------------------------//

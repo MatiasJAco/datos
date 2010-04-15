@@ -10,15 +10,13 @@
 
 using namespace std;
 
-VarRegister::VarRegister()
+VarRegister::VarRegister():Register()
 {
-	m_value=NULL;
 }
 
 
-VarRegister::VarRegister(char *value, unsigned int size)
+VarRegister::VarRegister(char *value, unsigned int size):Register()
 {
-	m_value=NULL;
 	setValue(value, size);
 }
 
