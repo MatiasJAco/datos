@@ -7,9 +7,9 @@
 
 #include "Register.h"
 
-Register::Register() {
-	// TODO Auto-generated constructor stub
-
+Register::Register()
+{
+	m_value=NULL;
 }
 
 Register::~Register() {

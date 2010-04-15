@@ -8,6 +8,9 @@
 #ifndef FIXEDREGISTER_H_
 #define FIXEDREGISTER_H_
 #include "Register.h"
+#include <sstream>
+#include <cstring>
+#include <iostream>
 
 /**
  * Registros de longitud fija. No se persiste la longitud a disco
@@ -18,6 +21,7 @@ class FixedRegister: public Register
 public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
+	FixedRegister();
 	FixedRegister(const unsigned int size);
 	FixedRegister(char * value,const unsigned int size);
 	~FixedRegister();

@@ -23,15 +23,14 @@ public:
 	~File();
 
 	//-------------------------METODOS-----------------------------------//
-	/**
-	 * Crea el archivo
-	 */
-	bool createFile(const std::string fileName, unsigned int blockSize);
 
 	/**
 	 * Abre el archivo
 	 */
 	bool openFile(const std::string fileName);
+
+
+	bool openFile(const std::string fileName, unsigned int blocksize);
 
 	/**
 	 * Crea una instancia de la clase Block, y le reserva un
@@ -79,6 +78,10 @@ private:
 	 * la clase File
 	 */
 	std::fstream m_FileHandler;
+
+
+	std::string m_FileName;
+
 };
 
 #endif /* FILE_H_ */

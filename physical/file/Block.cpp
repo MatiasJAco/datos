@@ -7,7 +7,8 @@
 
 #include "Block.h"
 
-Block::Block() {
+Block::Block(unsigned int blocknumber)
+{
 	// TODO Auto-generated constructor stub
 
 }
