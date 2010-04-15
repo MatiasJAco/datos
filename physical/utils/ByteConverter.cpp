@@ -12,8 +12,10 @@ using namespace std;
 int ByteConverter::bytesToInt(const char *bytes)
 {
 	int entero = 0;
-
-	memcpy(&entero,bytes,sizeof(int));
+	if(bytes!=NULL)
+	{
+		memcpy(&entero,bytes,sizeof(int));
+	}
 
 	return entero;
 }
@@ -22,16 +24,20 @@ long ByteConverter::bytesToLong(const char *bytes)
 {
 	long entero = 0;
 
-	memcpy(&entero,bytes,sizeof(long));
-
+	if(bytes!=NULL)
+	{
+		memcpy(&entero,bytes,sizeof(long));
+	}
 	return entero;
 }
 
 double ByteConverter::bytesToDouble(const char *bytes)
 {
 	double decimald = 0;
-
-	memcpy(&decimald,bytes,sizeof(double));
+	if(bytes!=NULL)
+	{
+		memcpy(&decimald,bytes,sizeof(double));
+	}
 
 	return decimald;
 }
@@ -40,9 +46,10 @@ double ByteConverter::bytesToDouble(const char *bytes)
 float ByteConverter::bytesToFloat(const char *bytes)
 {
 	float decimalf = 0;
-
-	memcpy(&decimalf,bytes,sizeof(float));
-
+	if(bytes!=NULL)
+	{
+		memcpy(&decimalf,bytes,sizeof(float));
+	}
 	return decimalf;
 }
 
@@ -91,24 +98,29 @@ char *ByteConverter::uIntToBytes(const unsigned int entero, char *bytes)
 unsigned int ByteConverter::bytesToUInt(const char *bytes)
 {
 	unsigned int entero = 0;
-
-	memcpy(&entero,bytes,sizeof(unsigned int));
+	if(bytes!=NULL)
+	{
+		memcpy(&entero,bytes,sizeof(unsigned int));
+	}
 
 	return entero;
 }
 
 std::string ByteConverter::bytesToString(const char *bytes)
 {
-	string str;
-	unsigned int size_str =strlen(bytes)+1;
+	string str="";
+	if(bytes!=NULL)
+	{
+		unsigned int size_str =strlen(bytes)+1;
 
-	char* c_str = new char[size_str];
-	memcpy(c_str,bytes,size_str*sizeof(char));
+		char* c_str = new char[size_str];
+		memcpy(c_str,bytes,size_str*sizeof(char));
 
 
-	str = c_str;
+		str = c_str;
 
-	delete[] c_str;
+		delete[] c_str;
+	}
 
 	return str;
 }
