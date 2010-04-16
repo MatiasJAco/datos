@@ -8,6 +8,7 @@
 #ifndef FILE_H_
 #define FILE_H_
 #include "Block.h"
+#include "FreeBlockFile.h"
 #include <fstream>
 
 /**
@@ -79,8 +80,9 @@ private:
 	 */
 	std::fstream m_FileHandler;
 
-
 	std::string m_FileName;
+
+	FreeBlockFile m_FreeBlockFile;
 
 };
 
