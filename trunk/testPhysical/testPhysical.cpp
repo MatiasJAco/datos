@@ -7,6 +7,7 @@
 #include "../physical/file/VarRegister.h"
 #include "../physical/file/FixedRegister.h"
 #include "../physical/file/File.h"
+#include "../physical/file/FreeBlockFile.h"
 #include "../physical/utils/ByteConverter.h"
 #include <sstream>
 
@@ -167,21 +168,47 @@ void testFixedRegister()
 	cout<< "------------------------"<<endl;
 
 }
+
+void testFreeBlockFile()
+{
+	cout << "testeo archivo bloques libres"<<endl;
+	FreeBlockFile *archivo=new FreeBlockFile();
+
+	if(!archivo->open("free"))
+		cout << "error al abrir el archivo de bloques libres"<<endl;
+
+	archivo->pushFreeBlock(30);
+
+	unsigned int salida=0;
+
+	if(!archivo->popFreeBlock(salida))
+		cout << "error al leer el archivo de bloques libres"<<endl;
+
+	 cout << "salida:"<<salida<<endl;
+
+	archivo->close();
+	delete archivo;
+
+	cout << "fin testeo archivo bloques libres"<<endl;
+	cout<< "------------------------"<<endl;
+
+
+}
 int main()
 {
 
 	testVarRegister();
 	testFixedRegister();
+	testFreeBlockFile();
 
-
-	File *archivo=new File();
+/*	File *archivo=new File();
 
 
 	if(!archivo->openFile("./pepito", 1))
 		cout << "Error al abrir pepito"<<endl;
 
 
-	delete archivo;
+	delete archivo;*/
 
 
 
