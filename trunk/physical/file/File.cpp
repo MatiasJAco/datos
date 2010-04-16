@@ -8,6 +8,7 @@
 #include "File.h"
 using namespace std;
 
+
 File::File()
 {
 	m_blockSize=0;
@@ -31,7 +32,7 @@ bool File::openFile(const std::string fileName, unsigned int blocksize)
 
 bool File::openFile(const std::string fileName)
 {
-	bool retVal=false;
+	bool retVal=true;
 
 	//Si ya estaba abierto lo cierro
 	if(m_FileHandler.is_open())
@@ -40,14 +41,29 @@ bool File::openFile(const std::string fileName)
 	//Me guardo el nombre del archivo
 	m_FileName=fileName;
 
+	//Se abre el archivo en modo escritura unicamente para crearlo si no existe.
+	//Si no existe y lo abro en modo lectura se presenta un error. El append se
+	//agrega para que no trunque el archivo
+	m_FileHandler.open (fileName.c_str(), ios::out|ios::binary|ios::app);
+	m_FileHandler.close();
+
+	if(!m_FreeBlockFile.open(m_FileName))
+	{
+		retVal=false;
+	}
+
 	//Abro el archivo en modo lectura/escritura binaria
-	m_FileHandler.open (fileName.c_str(),ios::in | ios::out | ios::binary);
+	m_FileHandler.open (fileName.c_str(),ios::in | ios::out| ios::binary);
+
+	if(!m_FreeBlockFile.open(m_FileName))
+		retVal=false;
 
 	//Me fijo si lo abrio exitosamente
-	if(m_FileHandler.is_open())
-		retVal=true;
+	if(!m_FileHandler.is_open())
+		retVal=false;
 
-	m_FileHandler.put('a');
+
+
 	return retVal;
 }
 
@@ -71,7 +87,7 @@ Block File::getBlock(const unsigned int blockNumber)
 
 bool File::closeFile()
 {
-	if(!m_FileHandler.is_open())
+	if(m_FileHandler.is_open())
 		m_FileHandler.close();
 
 	return true;
