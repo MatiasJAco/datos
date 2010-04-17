@@ -10,6 +10,7 @@
 #include "../physical/file/FreeBlockFile.h"
 #include "../physical/utils/ByteConverter.h"
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -48,7 +49,7 @@ void testVarRegister()
 	}
 
 
-	delete streamVar;
+	delete []streamVar;
 
 	if(!varR->setValue((char*)&intVar, sizeof(intVar)))
 		cout << "Fallo al setear registro long "<<endl;
@@ -64,12 +65,12 @@ void testVarRegister()
 	}
 
 
-	delete streamVar;
+	delete [] streamVar;
 
-	if(!varR->setValue((char*)stringVar.c_str(), stringVar.size()))
+	if(!varR->setValue((char*)stringVar.c_str(), stringVar.size()+1))
 		cout << "Fallo al setear registro string "<<endl;
 
-	if(varR->getSize() != stringVar.size()*sizeof(char))
+	if(varR->getSize() != stringVar.size()*sizeof(char)+1)
 		cout << "getSize error"<<endl;
 
 	streamVar = varR->getValue();
@@ -83,7 +84,7 @@ void testVarRegister()
 	}
 
 
-	delete streamVar;
+	delete [] streamVar;
 
 	delete varR;
 	cout<< "Fin Testeo reg variables"<<endl;
@@ -100,7 +101,7 @@ void testFixedRegister()
 	FixedRegister *fixedR = new FixedRegister();
 
 	if(fixedR->getSize() != 0)
-		cout << "getSize error"<<endl;
+		cout << "getSize error1"<<endl;
 
 	long longVar=123443232434;
 	long longVar2=0;
@@ -117,7 +118,7 @@ void testFixedRegister()
 	streamVar = fixedR->getValue();
 
 	if(fixedR->getSize() != sizeof(longVar))
-		cout << "getSize error"<<endl;
+		cout << "getSize error2"<<endl;
 
 	longVar2=ByteConverter::bytesToLong(streamVar);
 
@@ -128,7 +129,7 @@ void testFixedRegister()
 	}
 
 
-	delete streamVar;
+	delete []streamVar;
 
 	if(!fixedR->setValue((char*)&intVar, sizeof(intVar)))
 		cout << "Fallo al setear registro int "<<endl;
@@ -144,9 +145,9 @@ void testFixedRegister()
 	}
 
 
-	delete streamVar;
+	delete [] streamVar;
 
-	if(!fixedR->setValue((char*)stringVar.c_str(), stringVar.size()))
+	if(!fixedR->setValue((char*)stringVar.c_str(), stringVar.size()+1))
 		cout << "Fallo al setear registro int "<<endl;
 
 	streamVar = fixedR->getValue();
@@ -160,7 +161,7 @@ void testFixedRegister()
 	}
 
 
-	delete streamVar;
+	delete [] streamVar;
 
 	delete fixedR;
 
@@ -177,14 +178,54 @@ void testFreeBlockFile()
 	if(!archivo->open("free"))
 		cout << "error al abrir el archivo de bloques libres"<<endl;
 
-	archivo->pushFreeBlock(30);
+	unsigned int entrada=30;
+	archivo->pushFreeBlock(entrada);
 
 	unsigned int salida=0;
 
 	if(!archivo->popFreeBlock(salida))
 		cout << "error al leer el archivo de bloques libres"<<endl;
 
-	 cout << "salida:"<<salida<<endl;
+	if(entrada !=salida)
+		cout << "Error en el push pop salida:"<<salida<<endl;
+
+
+	 for(int i=0; i <100; i++)
+	 {
+		 archivo->pushFreeBlock(i);
+		 if(i==57)
+		 {
+			 if(!archivo->popFreeBlock(salida))
+			 {
+				 cout << "Error del pop 57"<<endl;
+			 }
+			 if(salida!=57)
+				 cout <<"error 57"<<endl;
+		 }
+	 }
+
+	 archivo->showFreeNodes();
+
+	 for(int i=0; i <99; i++)
+	 {
+		 if(!archivo->popFreeBlock(salida))
+		 {
+			 cout << "Error en el pop"<< i<<endl;
+		 }
+
+
+		 if(salida==57)
+		 {
+				 cout <<"error 57"<<endl;
+		 }
+	 }
+
+	 if(archivo->popFreeBlock(salida))
+	 {
+		 cout << "error, no reporta archivo vacio"<<endl;
+	 }
+
+	 archivo->showFreeNodes();
 
 	archivo->close();
 	delete archivo;
@@ -194,21 +235,44 @@ void testFreeBlockFile()
 
 
 }
+void testFile()
+{
+	cout << "Testeo de file"<<endl;
+	File *archivo=new File();
+
+	Block*block;
+
+	if(!archivo->openFile("./pepito", 1))
+		cout << "Error al abrir pepito"<<endl;
+
+
+	block = archivo->getNewBlock();
+
+	if(block==NULL)
+		cout << "error al crear el bloque"<<endl;
+
+
+	if(!archivo->saveBlock(block))
+		cout <<"Error al salvar el bloque"<<endl;
+
+	delete archivo;
+
+	cout << "Fin Testeo de file"<<endl;
+	cout<< "------------------------"<<endl;
+
+}
+
 int main()
 {
 
 	testVarRegister();
 	testFixedRegister();
 	testFreeBlockFile();
-
-/*	File *archivo=new File();
-
-
-	if(!archivo->openFile("./pepito", 1))
-		cout << "Error al abrir pepito"<<endl;
+	testFile();
 
 
-	delete archivo;*/
+
+
 
 
 
