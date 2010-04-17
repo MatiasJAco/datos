@@ -13,7 +13,6 @@
 #include "../logic/input/InputData.h"
 #include "../physical/file/Block.h"
 
-using namespace std;
 
 class Node{
 

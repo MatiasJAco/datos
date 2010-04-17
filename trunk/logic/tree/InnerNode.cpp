@@ -39,6 +39,11 @@ bool InnerNode::modify(const InputData & dato, const InputData & dato2)
 	return true;
 }
 
+unsigned int InnerNode::getUsedSpace()
+{
+	return 0;
+}
+
 void InnerNode::divide(){
 
 

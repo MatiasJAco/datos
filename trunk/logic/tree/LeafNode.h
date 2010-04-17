@@ -80,6 +80,13 @@ public:
 	 */
 	bool modify(const InputData& dato, const InputData& dato2);
 
+	/**
+	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
+	 * registros y viendo el tamaño de cada elemento.
+	 * @return unsigned int espacio en uso
+	 */
+	unsigned int getUsedSpace();
+
 
 protected:
 
