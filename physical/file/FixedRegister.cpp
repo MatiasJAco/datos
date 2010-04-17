@@ -17,22 +17,23 @@ FixedRegister::FixedRegister():Register()
 
 FixedRegister::FixedRegister(const unsigned int size):Register()
 {
-	if(m_size>0)
+	if(size>0)
 		m_size = size;
 }
 
 FixedRegister::FixedRegister(char *value, const unsigned int size):Register()
 {
-	if(m_size>0)
+	if(size>0)
+	{
 		m_size = size;
-
-	setValue(value, size);
+		setValue(value, size);
+	}
 }
 
 FixedRegister::~FixedRegister()
 {
 	if(m_value !=NULL)
-		delete m_value;
+		delete [] m_value;
 }
 
 
@@ -45,7 +46,7 @@ bool FixedRegister::setValue(char *valor, unsigned int size)
 		m_size=size;
 
 		if(m_value !=NULL)
-			delete m_value;
+			delete [] m_value;
 
 		m_value = new char[size];
 		char *p=m_value;
@@ -70,7 +71,7 @@ char *FixedRegister::getValue()
 	{
 		char *p=m_value;
 
-		retChar = new char[m_size];
+		retChar = new char[m_size+1];
 
 		memcpy(retChar,p,m_size*sizeof(char));
 	}
@@ -78,6 +79,10 @@ char *FixedRegister::getValue()
 	return retChar;
 }
 
+bool FixedRegister::deserialize(char * stream)
+{
+	return true;
+}
 
 
 unsigned int FixedRegister::getSize()

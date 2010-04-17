@@ -23,7 +23,7 @@ VarRegister::VarRegister(char *value, unsigned int size):Register()
 VarRegister::~VarRegister()
 {
 	if(m_value !=NULL)
-		delete m_value;
+		delete [] m_value;
 }
 
 bool VarRegister::setValue(char * valor, unsigned int size)
@@ -33,14 +33,16 @@ bool VarRegister::setValue(char * valor, unsigned int size)
 		if(valor !=NULL)
 		{
 			if(m_value !=NULL)
-				delete m_value;
+				delete [] m_value;
 
-			m_value = new char[size+1];
+			m_value = new char[size+sizeof(size)];
 			char *p=m_value;
 
 			memcpy(p,&size,sizeof(size));
 			p+=sizeof(size);
 
+			unsigned int temp =size*sizeof(char);
+			temp++;
 			memcpy(p,valor,size*sizeof(char));
 
 			retVal=true;
@@ -50,6 +52,21 @@ bool VarRegister::setValue(char * valor, unsigned int size)
 
 		return true;
 
+}
+
+bool VarRegister::deserialize(char * stream)
+{
+	unsigned int size = 0;
+	memcpy(&size,stream,sizeof(size));
+
+	if(m_value!=NULL)
+		delete [] m_value;
+
+	m_value = new char[size+1];
+
+	memcpy(&m_value,stream,sizeof(char)*size+1);
+
+	return true;
 }
 
 unsigned int VarRegister::getSize()
@@ -75,7 +92,7 @@ char *VarRegister::getValue()
 		memcpy(&size,m_value,sizeof(size));
 		p+=sizeof(size);
 
-		retChar = new char[size];
+		retChar = new char[size+1];
 
 		memcpy(retChar,p,size*sizeof(char));
 	}

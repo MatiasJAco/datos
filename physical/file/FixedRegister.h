@@ -43,6 +43,8 @@ public:
 	 */
 	unsigned int getSize();
 
+	bool deserialize(char * stream);
+
 
 private:
 	unsigned int m_size;

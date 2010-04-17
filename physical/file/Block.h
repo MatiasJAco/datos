@@ -9,6 +9,7 @@
 #define BLOCK_H_
 #include "Register.h"
 #include "VarRegister.h"
+#include "../utils/ByteConverter.h"
 #include <sstream>
 #include <list>
 
@@ -17,8 +18,13 @@
  */
 class Block {
 public:
+	//------------------------TYPEDEFS----------------------------------//
+	typedef std::list <VarRegister> RegisterList;
+	typedef RegisterList::iterator RegisterListIt;
+
+
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
-	Block(unsigned int blocknumber);
+	Block(unsigned int blocknumber, unsigned int blockSize);
 	~Block();
 
 	//-------------------------METODOS-----------------------------------//
@@ -47,14 +53,32 @@ public:
 	/**
 	 * Obtiene la cantidad de registros.
 	 */
-	unsigned int getRegisterAmmount();
+	unsigned int getRegisterAmount();
+
+	unsigned int getBlockNumber();
+
+	bool serialize(char *streamChar);
+
+	bool deserialize(char *streamChar);
 
 private:
+
+	bool LoadBlockAtributes(char *streamChar);
+
+	bool SaveBlockAtributes(char *streamChar);
+
+private:
+
+	unsigned int m_blockNumber;
+
+	unsigned int m_blockSize;
+
+	unsigned int m_FirstRegisterOffset;
 
 	/**
 	 * Espacio libre restante
 	 */
-	unsigned int m_freeBytes;
+	unsigned int m_usedBytes;
 
 	/**
 	 * Cantidad de registros en el nodo.
@@ -65,12 +89,13 @@ private:
 	 * Posicion actual dentro del nodo. Se usa para ir recorriendo
 	 * secuencialmente
 	 */
-	unsigned int m_count;
+	RegisterListIt m_actualReg;
 
 	/**
 	 * Lista que contiene todos los Registers del bloque.
 	 */
-	std::list <VarRegister> m_registers;
+	RegisterList m_registers;
+
 
 };
 

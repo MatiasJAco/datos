@@ -37,11 +37,13 @@ bool FreeBlockFile::open(const std::string filename)
 	//Abro en modo out inicialmente para crear el archivo si no existe
 	//pongo append para que la posicion apunte al final
 	//obtengo el tamaño del archivo
+	m_FileHandler.clear();
 	m_FileHandler.open (freeFileName.c_str(), ios::out|ios::binary|ios::app);
 	m_fileSize =m_FileHandler.tellg();
 	m_FileHandler.close();
 
 	//Abro en modo lectura/escritura binaria
+	m_FileHandler.clear();
 	m_FileHandler.open (freeFileName.c_str(), ios::out|ios::in|ios::binary);
 
 	//Me fijo si lo abrio exitosamente
@@ -182,6 +184,26 @@ bool FreeBlockFile::popFreeBlock(unsigned int & numblock)
 	return retVal;
 }
 
+
+void FreeBlockFile::showFreeNodes()
+{
+	readBlockCount(m_BlockCount);
+	cout << "Cantidad de bloques:"<<m_BlockCount<<endl;
+	cout << "Bloques:"<<endl;
+
+	unsigned int i;
+	char * charStream=new char[m_BlockCount*m_registerSize];
+	m_FileHandler.seekg (sizeof(m_BlockCount), ios::beg);
+
+	m_FileHandler.read(charStream, m_BlockCount*m_registerSize);
+
+	for(i=0; i<m_BlockCount; i++)
+	{
+		cout <<ByteConverter::bytesToUInt(&charStream[i*m_registerSize])<<",";
+	}
+	delete [] charStream;
+	cout <<endl;
+}
 
 
 bool FreeBlockFile::close()

@@ -33,6 +33,8 @@ public:
 	 */
 	virtual unsigned int getSize()=0;
 
+	virtual bool deserialize(char * stream)=0;
+
 
 
 protected:
