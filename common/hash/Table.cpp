@@ -50,7 +50,8 @@ FILE* Table::createTemporalFile(){
 FILE * Table::createFile(){
 	FILE* archTabla = openFileForWrite();
 	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "0\n0" );"
-	fprintf( archTabla, "10\n21\n0\n23\n24\n25\n21\n22\n23\n24\n25" );
+	//fprintf( archTabla, "10\n21\n0\n23\n24\n25\n21\n22\n23\n24\n25" );
+	fprintf( archTabla, "1\n0" );
 
 	closeFile(archTabla);
 	return archTabla;
