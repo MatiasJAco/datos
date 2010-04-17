@@ -20,6 +20,7 @@ LeafNode::LeafNode(unsigned int number,unsigned int size,unsigned int branch){
 	this->m_size=size;
 	this->m_branchFactor=branch;
 	this->m_bloque=NULL;
+
 };
 
 void LeafNode::dividir(){
