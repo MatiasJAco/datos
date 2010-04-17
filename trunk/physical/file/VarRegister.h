@@ -39,6 +39,8 @@ public:
 	 */
 	unsigned int getSize();
 
+	bool deserialize(char * stream);
+
 };
 
 #endif /* VARREGISTER_H_ */

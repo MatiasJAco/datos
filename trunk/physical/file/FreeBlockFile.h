@@ -55,6 +55,8 @@ public:
 	bool popFreeBlock(unsigned int &numblock);
 
 
+	void showFreeNodes();
+
 private:
 
 	/**
@@ -69,6 +71,7 @@ private:
 	 * @return bool true si esta ok false caso contrario
 	 */
 	bool writeBlockCount(const unsigned int blockCount);
+
 
 private:
 

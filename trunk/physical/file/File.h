@@ -10,6 +10,7 @@
 #include "Block.h"
 #include "FreeBlockFile.h"
 #include <fstream>
+#include <iostream>
 
 /**
  * Clase encargada de realizar las operaciones del archivo en si
@@ -40,12 +41,12 @@ public:
 	 * espacio libre, en caso contrario mete al final del archivo el bloque.
 	 *
 	 */
-	Block getNewBlock();
+	Block *getNewBlock();
 
 	/**
 	 * Guarda el contenido del Bloque pasado por parametro a disco
 	 */
-	bool saveBlock(Block & bq);
+	bool saveBlock(Block * bq);
 
 	/**
 	 * Elimina el Block de disco. Lo agrega a la lista de bloques libres
@@ -59,7 +60,7 @@ public:
 	 * Se le pasa un numero de bloque, con eso calcula la posicion del bloque
 	 * en disco, y crea una instancia de la clase Block con su contenido.
 	 */
-	Block getBlock(const unsigned int blockNumber);
+	Block *getBlock(const unsigned int blockNumber);
 
 	/**
 	 * Cierra el archivo, libera los FHS, etc
@@ -67,12 +68,25 @@ public:
 	bool closeFile();
 
 private:
+	bool SaveFileAttributes();
 
+	bool LoadFileAttributes();
+
+
+private:
+
+	static const unsigned int DEFAULT_BLOCK_SIZE =512;
 	/**
 	 * Guarda el tamaño del bloque, es necesario para no andar laburando desde
 	 * afuera con offsets a los bloques.
 	 */
 	unsigned int m_blockSize;
+
+	unsigned int m_FileSize;
+
+	unsigned int m_LastBlock;
+
+	unsigned int m_FirstBlockOffset;
 
 	/**
 	 * FileHandler del archivo, se mantiene a lo largo de toda la vida de
