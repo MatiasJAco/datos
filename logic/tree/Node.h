@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include "../logic/input/InputData.h"
-
+#include "../physical/file/Block.h"
 
 using namespace std;
 
@@ -39,6 +39,7 @@ protected:
 	/// Factor de carga del nodo. Da una indicacion de cuando se produce overflow o underflow.
 	unsigned int m_branchFactor;
 
+	Block* m_bloque;
 
 public:
 
@@ -75,14 +76,14 @@ public:
 	 * @param reg registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	virtual bool insert(InputData data) = 0;
+	virtual bool insert(InputData &data) = 0;
 
 	/**
 	 * Elimina el elemento identificado por la clave
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar, FALSE de lo contrario.
 	 */
-	virtual bool remove(InputData data) = 0;
+	virtual bool remove(InputData &data) = 0;
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -91,7 +92,7 @@ public:
 	 * @param reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(InputData data)const = 0;
+	virtual bool find(InputData &data)const = 0;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -100,7 +101,7 @@ public:
 	 * @param reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual bool modify(InputData data1, InputData data2) = 0;
+	virtual bool modify(InputData& data1, InputData& data2) = 0;
 
 	/**
 	 * Evalua si el nodo esta vacio.
@@ -164,7 +165,7 @@ public:
 	 * Setea los campos del registro con los mismos del objeto pasado por parametro
 	 * @param registro Registro sobre el cual se hara la copia.
 	 */
-	virtual void setFields(const Inputdata& data);
+	virtual void setFields(const InputData& data);
 
 	//---------------Get/Set--------------------------//
 	/// Devuelve el nivel del nodo
