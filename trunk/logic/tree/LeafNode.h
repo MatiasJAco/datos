@@ -13,7 +13,6 @@
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos hojas.
- *	Implementa los metodos de Register para su persistencia en disco.
  */
 class LeafNode: public Node {
 
@@ -32,7 +31,7 @@ public:
 	 * @param size Tamaño del nodo hoja.
 	 * @param branchFactor Factor de carga del nodo hoja.
 	 */
-	LeafNode(unsigned int size,unsigned int branchFactor);
+	LeafNode(unsigned int size,double branchFactor);
 
 	/**
 	 * Constructor
@@ -40,7 +39,7 @@ public:
 	 * @param size Tamaño del nodo hoja.
 	 * @param branchFactor Factor de carga del nodo hoja.
 	 */
-	LeafNode(unsigned int nodeNumber,unsigned int size,unsigned int branchFactor);
+	LeafNode(unsigned int nodeNumber,unsigned int size,double branchFactor);
 
 	/// Destructor.
 	~LeafNode();
@@ -70,7 +69,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& dato, InputData& dato2) const;
+	bool find(const InputData& data1, const InputData& data2) const;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -82,49 +81,13 @@ public:
 	bool modify(const InputData& dato, const InputData& dato2);
 
 
-	/**
-	 * Devuelve una instancia nueva de la clase.
-	 * Se crea una nueva instancia del tipo especifico con new()
-	 * Importante: Una vez que se termine de usar la instancia
-	 * es necesario liberar la memoria mediante un delete.
-	 * @throws bad_alloc en caso de error al asignar memoria
-	 * @return Register * puntero a la instancia nueva
-	 */
-	Register * newInstance() const;
-
-	/**
-	 * Devuelve un string con el contenido del registro
-	 * Se debe definir en cada clase obligatoriamente, para
-	 * ser utilizada por el operador << en Register
-	 * @return string con la informacion contenida en el registro
-	 * @see Register operator <<
-	 */
-	std::string toString()const;
-
-	/**
-	 * Setea los campos del registro con los mismos del objeto pasado por parametro
-	 * @param registro Registro sobre el cual se hara la copia.
-	 */
-	void setFields(const InputData& dato);
-
-	void dividir();
-
-
 protected:
-	//-------------------Serialize/Deserialize--------------------//
 
-	/**
-	 * Serializa el registro en bytes.
-	 * @param bytes Cadena de bytes en la que almacena el contenido del registro
-	 * @return El puntero a la cadena de bytes
-	 */
-	char* serializeChilds(char* bytes) const;
+	void divide();
 
-	/**
-	 * Transforma la cadena de bytes a un registro
-	 * @param bytes Cadena de bytes de la cual lee para setear los campos del registro.
-	 */
-	void deserializeChilds(const char* bytes);
+	void join();
+
+	void save();
 
 };
 
