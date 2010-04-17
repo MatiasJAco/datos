@@ -2,16 +2,11 @@
 #include <sstream>
 #include "../common/hash/Table.h"
 #include "../logic/input/StringInputData.h"
+#include "../logic/hash/Hash.h"
+
 using namespace std;
 
-int main(){
-	stringstream ss (stringstream::in | stringstream::out);
-	ss.str("paytiti");
-	StringInputData* sid = new StringInputData();
-	sid->setKey(34);
-	sid->setValue(ss);
-	sid->getKey();
-
+void test1() {
 	Table myTable;
 	myTable.createFile();
 	int sizeOfTable = myTable.getSize();
@@ -58,6 +53,23 @@ int main(){
 	int listElementsTable7[sizeOfTable];
 	myTable.parse(listElementsTable7);
 	myTable.print(listElementsTable7,sizeOfTable);
+}
 
+void test2() {
+	/* Se toma el dato que ingresa el usuario. */
+	stringstream ss (stringstream::in | stringstream::out);
+	ss.str("paytiti");
+	StringInputData* sid = new StringInputData();
+	sid->setKey(34);
+	sid->setValue(ss);
+
+	Hash* hash = new Hash();
+	hash->add(sid);
+
+}
+
+int main(){
+	//test1();
+	test2();
 	return 0;
 }
