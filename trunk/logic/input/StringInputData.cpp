@@ -23,7 +23,6 @@ void StringInputData::setValue(std::stringstream& value) {
 }
 
 int StringInputData::getKey() {
-	cout << "Clave: " << this->key;
 	return this->key;
 }
 
