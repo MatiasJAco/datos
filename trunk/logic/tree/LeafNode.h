@@ -69,7 +69,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& dato, InputData& dato) const;
+	bool find(const InputData& dato, InputData& dato2) const;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -78,7 +78,7 @@ public:
 	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	bool modify(const InputData& dato, const InputData& dato);
+	bool modify(const InputData& dato, const InputData& dato2);
 
 
 	/**
@@ -105,6 +105,8 @@ public:
 	 * @param registro Registro sobre el cual se hara la copia.
 	 */
 	void setFields(const InputData& dato);
+
+	void dividir();
 
 
 protected:
