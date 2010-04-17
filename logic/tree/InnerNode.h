@@ -14,17 +14,8 @@
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos internos.
- *	Implementa los metodos de Register para su persistencia en disco.
  */
 class InnerNode: public Node {
-protected:
-
-	/**
-	 * Contiene los punteros de los nodos internos.
-	 * Utiliza un map para almacenarlos de tipo RegisterMap (definido en Node) donde
-	 * la clave es la clave del registro y el dato es el valor del puntero izquierdo.
-	 */
-	RegisterMap punteros;
 
 public:
 	/// Constructor.
@@ -36,7 +27,7 @@ public:
 	 * @param size Tamaño del nodo.
 	 * @param branchFactor Factor de carga del nodo.
 	 */
-	InnerNode(unsigned int level,unsigned int size,unsigned int branchFactor);
+	InnerNode(unsigned int level,unsigned int size,double branchFactor);
 
 	/**
 	 * Constructor
@@ -45,7 +36,7 @@ public:
 	 * @param size Tamaño del nodo hoja.
 	 * @param branchFactor Factor de carga del nodo hoja.
 	 */
-	InnerNode(unsigned int nodeNumber,unsigned int level,unsigned int size,unsigned int branchFactor);
+	InnerNode(unsigned int nodeNumber,unsigned int level,unsigned int size,double branchFactor);
 
 	/// Destructor.
 	~InnerNode();
@@ -75,7 +66,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& key, InputData& dato) const;
+	bool find(const InputData& key, const InputData& dato) const;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -87,47 +78,13 @@ public:
 	bool modify(const InputData& key, const InputData& dato);
 
 
-	/**
-	 * Devuelve una instancia nueva de la clase.
-	 * Se crea una nueva instancia del tipo especifico con new()
-	 * Importante: Una vez que se termine de usar la instancia
-	 * es necesario liberar la memoria mediante un delete.
-	 * @throws bad_alloc en caso de error al asignar memoria
-	 * @return Register * puntero a la instancia nueva
-	 */
-	Register * newInstance() const;
-
-	/**
-	 * Devuelve un string con el contenido del registro
-	 * Se debe definir en cada clase obligatoriamente, para
-	 * ser utilizada por el operador << en Register
-	 * @return string con la informacion contenida en el registro
-	 * @see Register operator <<
-	 */
-	std::string toString()const;
-
-	/**
-	 * Setea los campos del registro con los mismos del objeto pasado por parametro
-	 * @param registro Registro sobre el cual se hara la copia.
-	 */
-	void setFields(const InputData& dato);
-
-
 protected:
-	//-------------------Serialize/Deserialize--------------------//
 
-	/**
-	 * Serializa el registro en bytes.
-	 * @param bytes Cadena de bytes en la que almacena el contenido del registro
-	 * @return El puntero a la cadena de bytes
-	 */
-	char* serializeChilds(char* bytes) const;
+	void divide();
 
-	/**
-	 * Transforma la cadena de bytes a un registro
-	 * @param bytes Cadena de bytes de la cual lee para setear los campos del registro.
-	 */
-	void deserializeChilds(const char* bytes);
+	void join();
+
+	void save();
 
 
 };

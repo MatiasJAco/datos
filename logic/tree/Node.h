@@ -51,18 +51,18 @@ public:
 	 * @param level Nivel en el que se encuentra el nodo.
 	 * @param size Tamaño del nodo
 	 * @param branchFactor Factor de carga que determina cuando el nodo esta por debajo o por encima
-	 * de la cantidad minima/maxima de registros.
+	 * de la cantidad minima/maxima de pares clave-valor.
 	 */
-	Node(unsigned int level,unsigned int size,unsigned int branchFactor);
+	Node(unsigned int level,unsigned int size,double branchFactor);
 	/**
 	 * Constructor.
 	 * @param nodeNumber Identificador del nodo.
 	 * @param level Nivel en el que se encuentra el nodo.
 	 * @param size Tamaño del nodo
 	 * @param branchFactor Factor de carga que determina cuando el nodo esta por debajo o por encima
-	 * de la cantidad minima/maxima de registros.
+	 * de la cantidad minima/maxima de pares clave-valor.
 	 */
-	Node(unsigned int nodeNumber,unsigned int level,unsigned int size,unsigned int branchFactor);
+	Node(unsigned int nodeNumber,unsigned int level,unsigned int size,double branchFactor);
 
 	/// Destructor
 	virtual ~Node();
@@ -73,17 +73,17 @@ public:
 	 * Inserta un Register en el nodo, puede superar la capacidad del nodo
 	 * por lo cual luego de una insercion hay que llamar al metodo overflow()
 	 * para no rebalsar el espacio en disco del nodo
-	 * @param reg registro a insertar
+	 * @param data par clave-valor a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	virtual bool insert(InputData &data) = 0;
+	virtual bool insert(const InputData &data) = 0;
 
 	/**
 	 * Elimina el elemento identificado por la clave
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar, FALSE de lo contrario.
 	 */
-	virtual bool remove(InputData &data) = 0;
+	virtual bool remove(const InputData &data) = 0;
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -92,7 +92,7 @@ public:
 	 * @param reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(InputData &data)const = 0;
+	virtual bool find(const InputData &data1,const InputData &data2)const = 0;
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -101,7 +101,7 @@ public:
 	 * @param reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual bool modify(InputData& data1, InputData& data2) = 0;
+	virtual bool modify(const InputData& data1, const InputData& data2) = 0;
 
 	/**
 	 * Evalua si el nodo esta vacio.
@@ -132,46 +132,12 @@ public:
 	 */
 	virtual unsigned int getUsedSpace();
 
-
-	/**
-	 * Se encarga de averiguar si la cadena de bytes corresponde a una
-	 * hoja o no.
-	 * Para esto al serializar el nivel tiene que estar en una posicion fija
-	 * para todas las clases hijas
-	 * @param bytes la cadena de bytes a evaluar
-	 * @return bool TRUE si es hoja, FALSE en caso contrario
-	 */
-	static bool isLeaf(const char* bytes);
-
-
-	//-------------Serialize/Deserialize----------//
-	/**
-	 * Convierte el registro a una cadena de bytes.
-	 * Convierte cada atributo mediante los metodos definidos en
-	 * ByteConverter
-	 * @param bytes cadena en la cual se serializan los atributos
-	 * @return cadena resultante al serializar
-	 * @see ByteConverter
-	 */
-	virtual char* serialize(char* bytes) const;
-
-	/**
-	 * Transforma la cadena de bytes a un registro
-	 * @param bytes Cadena de bytes de la cual lee para setear los campos del registro.
-	 */
-	virtual void deserialize(const char* bytes);
-
-	/**
-	 * Setea los campos del registro con los mismos del objeto pasado por parametro
-	 * @param registro Registro sobre el cual se hara la copia.
-	 */
-	virtual void setFields(const InputData& data);
-
 	//---------------Get/Set--------------------------//
+
 	/// Devuelve el nivel del nodo
-	unsigned int getLevel();
+	unsigned int getLevel()const;
 	/// Modifica el nivel del nodo
-	void setNivel(const unsigned int nivel);
+	void setLevel(const unsigned int level);
 
 	/// Devuelve el tamaño del nodo. No existe metodo para modificar el tamaño una vez construido.
 	unsigned int getSize() const;
@@ -182,32 +148,17 @@ public:
 	void setNodeNumber(unsigned int number);
 
 	/// Devuelve el factor de carga del nodo.
-	unsigned int getBranchFactor() const;
+	double getBranchFactor() const;
 	/// Modifica el factor de carga.
-	void setBranchFactor(unsigned int branchFactor);
+	void setBranchFactor(double branchFactor);
 
 protected:
-	/**
-	 * Transforma a una cadena de bytes el nodo, teniendo en cuenta que los herederos de Node
-	 * podrian tener datos de control adicionales, por eso es definida virtual pura dentro de esta clase.
-	 * @param bytes La cadena de bytes en donde se almacena el resultado de la serializacion
-	 * @return Puntero a la cadena de bytes.
-	 */
-	virtual char* serializeChilds(char* bytes) const = 0;
-	/**
-	 * Setea el valor del nodo a partir de la cadena de bytes, teniendo en cuenta que los herederos de
-	 * Node podrian tener datos de control adicionales, por eso es definida virtual pura dentro de esta clase.
-	 * Es llamada desde el metodo serialize.
-	 * @param bytes La cadena de bytes en donde se almacena el resultado de la serializacion
-	 * @return Puntero a la cadena de bytes.
-	 */
-	virtual void deserializeChilds(const char* bytes) = 0;
 
-	virtual void divide()=0;
+	virtual void divide() = 0;
 
-	virtual void join()=0;
+	virtual void join() = 0;
 
-	virtual void save()=0;
+	virtual void save() = 0;
 
 };
 
