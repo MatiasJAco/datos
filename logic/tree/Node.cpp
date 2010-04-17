@@ -68,3 +68,19 @@ void Node::setBranchFactor(double branchFactor)
 	m_branchFactor = branchFactor;
 }
 
+
+bool Node::isEmpty()
+{
+	return true;
+}
+
+bool Node::overflow()
+{
+	return true;
+}
+
+
+bool Node::underflow()
+{
+	return true;
+}

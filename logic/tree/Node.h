@@ -129,7 +129,7 @@ public:
 	 * registros y viendo el tamaño de cada elemento.
 	 * @return unsigned int espacio en uso
 	 */
-	virtual unsigned int getUsedSpace();
+	virtual unsigned int getUsedSpace() = 0;
 
 	//---------------Get/Set--------------------------//
 
