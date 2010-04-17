@@ -23,6 +23,7 @@ private:
 	/// Puntero al nodo siguiente.
 	unsigned int m_nextNode;
 
+
 public:
 	/// Constructor
 	LeafNode();
