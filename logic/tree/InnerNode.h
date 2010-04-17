@@ -77,6 +77,7 @@ public:
 	 */
 	bool modify(const InputData& key, const InputData& dato);
 
+	unsigned int getUsedSpace();
 
 protected:
 
