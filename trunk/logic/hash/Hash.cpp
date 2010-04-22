@@ -28,3 +28,13 @@ void Hash::add(StringInputData* sid) {
 	/* Guardará el dato ingresado por el usuario en el bloque "blockNumber". */
 	//file.saveRegister(sid, blockNumber);
 }
+
+StringInputData* Hash::get(int key) {
+	int size = this->hashTable->getSize();
+	int blockPositionInTable = key % size;
+	int blockNumber = this->hashTable->getNumberOfBucketInHash(blockPositionInTable);
+
+	/* Obtendrá el registro que tiene el dato deseado. */
+	//file.getRegister(blockNumber);
+	return new StringInputData();
+}
