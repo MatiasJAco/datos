@@ -9,7 +9,7 @@
 #define HASH_H_
 
 #include "../input/StringInputData.h"
-#include "../../common/hash/Table.h"
+#include "Table.h"
 
 class Hash {
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "../common/hash/Table.h"
+#include "../logic/hash/Table.h"
 #include "../logic/input/StringInputData.h"
 #include "../logic/hash/Hash.h"
 
