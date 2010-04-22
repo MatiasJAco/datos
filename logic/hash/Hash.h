@@ -26,6 +26,11 @@ public:
 	 * This method adds a value to the hash.
 	 */
 	void add(StringInputData* sid);
+
+	/**
+	 * This method gets a Data object, giving it's key.
+	 */
+	StringInputData* get(int key);
 };
 
 #endif /* HASH_H_ */
