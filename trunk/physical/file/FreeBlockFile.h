@@ -28,7 +28,7 @@ public:
 
 	/**
 	 * Abre el archivo de bloques libres
-	 * @param filename nombre archivo = <filename>.free
+	 * @param filename nombre archivo = [filename].free
 	 * @return bool false en caso de error, true en caso ok
 	 */
 	bool open(const std::string filename);
@@ -55,7 +55,9 @@ public:
 	 */
 	bool popFreeBlock(unsigned int &numblock);
 
-
+	/**
+	 * Muestra por pantalla los nodos libres, se usa para debug
+	 */
 	void showFreeNodes();
 
 private:

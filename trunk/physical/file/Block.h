@@ -19,11 +19,23 @@
 class Block {
 public:
 	//------------------------TYPEDEFS----------------------------------//
+	/**
+	 * Definicion del tipo de datos que almacena los registros
+	 */
 	typedef std::list <VarRegister> RegisterList;
+
+	/**
+	 * Definicion del iterador de la lista
+	 */
 	typedef RegisterList::iterator RegisterListIt;
 
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
+	/**
+	 * Constructor
+	 * @param blocknumber numero del bloque a crear
+	 * @param blockSize tamaño del bloque
+	 */
 	Block(unsigned int blocknumber, unsigned int blockSize);
 	~Block();
 
@@ -55,13 +67,34 @@ public:
 	 */
 	unsigned int getRegisterAmount();
 
+	/**
+	 * Obtiene el numero del bloque actual
+	 * @return numero de bloque
+	 */
 	unsigned int getBlockNumber();
 
+	/**
+	 * Muestra por pantalla el contenido del bloque. Se usa para debug
+	 */
+	void printRegisters();
+
+	//--------------------SERIALIZE/DESERIALIZE-------------------//
+	/**
+	 * Convierte a un stream el contenido del registro
+	 * @param streamChar stream de caracteres en el cual se coloca el contenido del bloque.
+	 * tiene que tener memoria asignada desde el ambito del cual se la llama
+	 * @return true en caso de ok, false en caso contrario
+	 */
 	bool serialize(char *streamChar);
 
+	/**
+	 * Carga el bloque desde un stream
+	 * @param streamChar stream de caracteres del cual se carga el registro
+	 * @return true en caso de ok, false en caso contrario
+	 */
 	bool deserialize(char *streamChar);
 
-	void printRegisters();
+
 
 private:
 
