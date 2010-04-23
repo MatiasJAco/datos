@@ -22,7 +22,7 @@ void StringInputData::setValue(std::stringstream& value) {
 	this->value << value.str();
 }
 
-int StringInputData::getKey() {
+int StringInputData::getKey()const {
 	return this->key;
 }
 

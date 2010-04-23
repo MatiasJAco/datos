@@ -28,7 +28,7 @@ public:
 
 	virtual void setKey(int key) = 0;
 	virtual void setValue(std::stringstream& value) = 0;
-	virtual int getKey() = 0;
+	virtual  int getKey()const = 0;
 	virtual string getValue() = 0;
 };
 
