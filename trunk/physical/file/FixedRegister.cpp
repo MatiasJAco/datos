@@ -85,7 +85,7 @@ bool FixedRegister::deserialize(char * stream)
 }
 
 
-unsigned int FixedRegister::getSize()
+unsigned int FixedRegister::getSize()const
 {
 	return m_size;
 }

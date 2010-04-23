@@ -61,6 +61,8 @@ public:
 
 	bool deserialize(char *streamChar);
 
+	void printRegisters();
+
 private:
 
 	bool LoadBlockAtributes(char *streamChar);

@@ -1,38 +1,38 @@
 /*
- * File.cpp
+ * BlockFile.cpp
  *
  *  Created on: 11/04/2010
  *      Author: alex
  */
 
-#include "File.h"
+#include "BlockFile.h"
 using namespace std;
 
 
-File::File()
+BlockFile::BlockFile()
 {
 	m_FirstBlockOffset=sizeof(unsigned int);
 	m_blockSize=DEFAULT_BLOCK_SIZE;
 
 }
 
-File::~File()
+BlockFile::~BlockFile()
 {
-	closeFile();
+	close();
 }
 
-bool File::deleteBlock(const unsigned int blockNumber)
+bool BlockFile::deleteBlock(const unsigned int blockNumber)
 {
 	return m_FreeBlockFile.pushFreeBlock(blockNumber);
 }
 
-bool File::openFile(const std::string fileName, unsigned int blocksize)
+bool BlockFile::open(const std::string fileName, unsigned int blocksize)
 {
 	m_blockSize=blocksize;
-	return openFile(fileName);
+	return open(fileName);
 }
 
-bool File::openFile(const std::string fileName)
+bool BlockFile::open(const std::string fileName)
 {
 	bool retVal=false;
 
@@ -60,11 +60,11 @@ bool File::openFile(const std::string fileName)
 			if(m_FileSize==0)
 			{
 				m_LastBlock=0;
-				if(!SaveFileAttributes())
+				if(!writeHeader())
 					throw "Error al salvar atributos";
 			}
 			else
-				if(!LoadFileAttributes())
+				if(!readHeader())
 					throw "Error al cargar atributos";
 
 			retVal=true;
@@ -75,7 +75,7 @@ bool File::openFile(const std::string fileName)
 	return retVal;
 }
 
-bool File::LoadFileAttributes()
+bool BlockFile::readHeader()
 {
 	char *charBlockNum=new char[sizeof(m_LastBlock)];
 
@@ -88,7 +88,7 @@ bool File::LoadFileAttributes()
 	return true;
 }
 
-bool File::SaveFileAttributes()
+bool BlockFile::writeHeader()
 {
 	//Leo los primeros bytes del archivo para ver la cantidad de bloques en uso
 	char * charBlockNum=new char[sizeof(m_LastBlock)];
@@ -104,15 +104,15 @@ bool File::SaveFileAttributes()
 }
 
 
-Block *File::getNewBlock()
+Block *BlockFile::getNewBlock()
 {
 	Block *block=NULL;
 	unsigned int blockNumber;
 
 	if(!m_FreeBlockFile.popFreeBlock(blockNumber))
 	{
-		blockNumber=m_LastBlock;
 		m_LastBlock++;
+		blockNumber=m_LastBlock;
 	}
 
 	block=new Block(blockNumber, m_blockSize);
@@ -122,15 +122,15 @@ Block *File::getNewBlock()
 
 
 
-Block *File::getBlock(const unsigned int blockNumber)
+Block *BlockFile::getBlock(const unsigned int blockNumber)
 {
 	Block *block=NULL;
 	unsigned int offset;
 
-	if(blockNumber<m_LastBlock&&m_FileHandler.is_open())
+	if(blockNumber<=m_LastBlock&&m_FileHandler.is_open())
 	{
 		block=new Block(blockNumber, m_blockSize);
-		offset=m_FirstBlockOffset+blockNumber*m_blockSize;
+		offset=m_FirstBlockOffset+(blockNumber-1)*m_blockSize;
 
 		char * blockStream= new char[m_blockSize];
 
@@ -151,18 +151,25 @@ Block *File::getBlock(const unsigned int blockNumber)
 
 
 
-bool File::closeFile()
+bool BlockFile::close()
 {
+	bool retVal=false;
 	//Si esta abierto lo cierro
 	if(m_FileHandler.is_open())
-		m_FileHandler.close();
+	{
+		if(writeHeader())
+		{
+			m_FileHandler.close();
+			retVal=true;
+		}
+	}
 
-	return true;
+	return retVal;
 }
 
 
 
-bool File::saveBlock(Block * block)
+bool BlockFile::saveBlock(Block * block)
 {
 	bool retVal = false;
 
@@ -183,11 +190,11 @@ bool File::saveBlock(Block * block)
 
 		//Calculo la posicion del bloque en el archivo, basandome en su numero de bloque
 		//y saltandome los bytes que corresponden al header del archivo
-		offset=m_FirstBlockOffset+blockNumber*m_blockSize;
+		offset=m_FirstBlockOffset+(blockNumber-1)*m_blockSize;
 
 		//Busco la posicion y escribo el bloque completo en disco.
 		m_FileHandler.seekg (offset, ios::beg);
-		m_FileHandler.read(blockStream, m_blockSize*sizeof(char));
+		m_FileHandler.write(blockStream, m_blockSize*sizeof(char));
 
 		//Libero el stream temporal
 		delete []blockStream;

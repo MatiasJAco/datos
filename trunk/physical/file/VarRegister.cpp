@@ -6,6 +6,7 @@
  */
 
 #include "VarRegister.h"
+#include "../utils/ByteConverter.h"
 
 
 using namespace std;
@@ -14,6 +15,17 @@ VarRegister::VarRegister():Register()
 {
 }
 
+VarRegister::VarRegister(const VarRegister &orig):Register()
+{
+	if(orig.m_value!=NULL)
+	{
+		unsigned int size;
+		size = orig.getSize();
+
+		m_value = new char[size+sizeof(size)];
+		memcpy(m_value,orig.m_value,sizeof(size)+sizeof(char)*size);
+	}
+}
 
 VarRegister::VarRegister(char *value, unsigned int size):Register()
 {
@@ -54,22 +66,44 @@ bool VarRegister::setValue(char * valor, unsigned int size)
 
 }
 
-bool VarRegister::deserialize(char * stream)
+bool VarRegister::serialize(char *stream)
 {
-	unsigned int size = 0;
-	memcpy(&size,stream,sizeof(size));
+	bool retVal=false;
 
-	if(m_value!=NULL)
-		delete [] m_value;
+	if(stream!=NULL)
+	{
+		unsigned int size;
 
-	m_value = new char[size+1];
+		size=getSize();
 
-	memcpy(&m_value,stream,sizeof(char)*size+1);
-
-	return true;
+		memcpy(stream,m_value,sizeof(char)*size+sizeof(size));
+		retVal=true;
+	}
+	return retVal;
 }
 
-unsigned int VarRegister::getSize()
+bool VarRegister::deserialize(char * stream)
+{
+	bool retVal=false;
+
+	if(stream!=NULL)
+	{
+		if(m_value!=NULL)
+			delete [] m_value;
+
+
+		unsigned int size =0;
+		memcpy(&size,stream,sizeof(size));
+
+		m_value = new char[size];
+
+		memcpy(m_value,stream,sizeof(char)*size+sizeof(unsigned int));
+		retVal=true;
+	}
+	return retVal;
+}
+
+unsigned int VarRegister::getSize() const
 {
 	unsigned int size = 0;
 	memcpy(&size,m_value,sizeof(size));
@@ -77,7 +111,11 @@ unsigned int VarRegister::getSize()
 	return size;
 }
 
-
+unsigned int VarRegister::getDiskSize() const
+{
+	unsigned int size = getSize() + sizeof(unsigned int);
+	return size;
+}
 
 char *VarRegister::getValue()
 {
@@ -89,15 +127,36 @@ char *VarRegister::getValue()
 
 		char *p=m_value;
 
-		memcpy(&size,m_value,sizeof(size));
-		p+=sizeof(size);
+		size = getSize();
 
+		p+=sizeof(size);
 		retChar = new char[size+1];
 
 		memcpy(retChar,p,size*sizeof(char));
 	}
 
 	return retChar;
+}
+
+VarRegister & VarRegister::operator=(const VarRegister &orig)
+{
+	if(orig.m_value!=NULL)
+	{
+		unsigned int size;
+		size = orig.getSize();
+
+		m_value = new char[size+sizeof(size)];
+		memcpy(m_value,orig.m_value,sizeof(size)+sizeof(char)*size);
+	}
+	return *this;
+}
+
+void VarRegister::printRegister()
+{
+	if(m_value !=NULL)
+		ByteConverter::printHexa(m_value,getSize()+sizeof(unsigned int));
+	else
+		cout << "Registro vacio"<<endl;
 }
 
 

@@ -41,7 +41,7 @@ public:
 	/**
 	 * Obtiene el tamaño del Registro (en bytes)
 	 */
-	unsigned int getSize();
+	unsigned int getSize()const;
 
 	bool deserialize(char * stream);
 
