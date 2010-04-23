@@ -12,7 +12,7 @@
 using namespace std;
 
 FreeBlockFile::FreeBlockFile() {
-	m_fileSize=0;
+	m_FileSize=0;
 	m_BlockCount=0;
 	m_registerSize=sizeof(unsigned int);
 }
@@ -39,7 +39,7 @@ bool FreeBlockFile::open(const std::string filename)
 	//obtengo el tamaño del archivo
 	m_FileHandler.clear();
 	m_FileHandler.open (freeFileName.c_str(), ios::out|ios::binary|ios::app);
-	m_fileSize =m_FileHandler.tellg();
+	m_FileSize =m_FileHandler.tellg();
 	m_FileHandler.close();
 
 	//Abro en modo lectura/escritura binaria
@@ -50,15 +50,15 @@ bool FreeBlockFile::open(const std::string filename)
 	if(m_FileHandler.is_open())
 	{
 		//Si es la primera vez que se abre tomo que la cant de bloques es 0
-		if(m_fileSize==0)
+		if(m_FileSize==0)
 		{
 			m_BlockCount=0;
-			retVal=writeBlockCount(m_BlockCount);
+			retVal=writeHeader(m_BlockCount);
 		}
 		//Si no es la primera vez que se abre leo la cantidad de bloques del archivo
 		else
 		{
-			retVal=readBlockCount(m_BlockCount);
+			retVal=readHeader(m_BlockCount);
 		}
 	}
 	else
@@ -70,8 +70,18 @@ bool FreeBlockFile::open(const std::string filename)
 }
 
 
+bool FreeBlockFile::readHeader()
+{
+	return readHeader(m_BlockCount);
+}
 
-bool FreeBlockFile::readBlockCount(unsigned int &blockCount)
+bool FreeBlockFile::writeHeader()
+{
+	return writeHeader(m_BlockCount);
+}
+
+
+bool FreeBlockFile::readHeader(unsigned int &blockCount)
 {
 	char *charBlockNum=new char[sizeof(blockCount)];
 
@@ -85,7 +95,7 @@ bool FreeBlockFile::readBlockCount(unsigned int &blockCount)
 }
 
 
-bool FreeBlockFile::writeBlockCount(const unsigned int blockCount )
+bool FreeBlockFile::writeHeader(const unsigned int blockCount )
 {
 	//Leo los primeros bytes del archivo para ver la cantidad de bloques en uso
 	char * charBlockNum=new char[sizeof(blockCount)];
@@ -111,7 +121,7 @@ bool FreeBlockFile::pushFreeBlock(const unsigned int numblock)
 		unsigned int tmpblockCount=m_BlockCount+1;
 
 		//Grabo en disco la cant de bloques
-		if(writeBlockCount(tmpblockCount))
+		if(writeHeader(tmpblockCount))
 		{
 			//Grabo el dato en la posicion del ultimo bloque
 			unsigned int offset =m_BlockCount*m_registerSize+sizeof(m_BlockCount);
@@ -155,7 +165,7 @@ bool FreeBlockFile::popFreeBlock(unsigned int & numblock)
 		unsigned int tmpblockCount=m_BlockCount-1;
 
 		//Escribo al archivo la cant de bloques que va a quedar
-		if(writeBlockCount(tmpblockCount))
+		if(writeHeader(tmpblockCount))
 		{
 			//Tomo el ultimo bloque
 			char * charStream=new char[m_registerSize];
@@ -187,7 +197,7 @@ bool FreeBlockFile::popFreeBlock(unsigned int & numblock)
 
 void FreeBlockFile::showFreeNodes()
 {
-	readBlockCount(m_BlockCount);
+	readHeader(m_BlockCount);
 	cout << "Cantidad de bloques:"<<m_BlockCount<<endl;
 	cout << "Bloques:"<<endl;
 
@@ -211,7 +221,7 @@ bool FreeBlockFile::close()
 	if(m_FileHandler.is_open())
 		m_FileHandler.close();
 
-	m_fileSize=0;
+	m_FileSize=0;
 	m_BlockCount=0;
 
 	return true;

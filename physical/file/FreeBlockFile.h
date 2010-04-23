@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include "FixedRegister.h"
+#include "File.h"
 #include "../utils/ByteConverter.h"
 
 /**
@@ -19,7 +20,7 @@
  * Se guarda internamente la cantidad de bloques libres dentro del archivo
  * TODO ver si hacer truncate
  */
-class FreeBlockFile
+class FreeBlockFile:public File
 {
 public:
 	FreeBlockFile();
@@ -64,32 +65,30 @@ private:
 	 * @param blockCount cantidad de bloques en el archivo de bloques libres
 	 * @return bool true si esta ok false caso contrario
 	 */
-	bool readBlockCount(unsigned int & blockCount);
+	bool readHeader();
 	/**
 	 * Escribe en el archivo el numero de bloques
 	 * @param blockCount cantidad de bloques en el archivo de bloques libres
 	 * @return bool true si esta ok false caso contrario
 	 */
-	bool writeBlockCount(const unsigned int blockCount);
+	bool writeHeader();
+
+
+	/**
+	 * Lee del archivo el numero de bloques
+	 * @param blockCount cantidad de bloques en el archivo de bloques libres
+	 * @return bool true si esta ok false caso contrario
+	 */
+	bool readHeader(unsigned int & blockCount);
+	/**
+	 * Escribe en el archivo el numero de bloques
+	 * @param blockCount cantidad de bloques en el archivo de bloques libres
+	 * @return bool true si esta ok false caso contrario
+	 */
+	bool writeHeader(const unsigned int blockCount);
 
 
 private:
-
-	/**
-	 * FH del archivo
-	 */
-	std::fstream m_FileHandler;
-
-	/**
-	 * Nombre del archivo
-	 */
-	std::string m_FileName;
-
-	/**
-	 * Tamaño fisico del archivo
-	 */
-	unsigned int m_fileSize;
-
 	/**
 	 * Cantidad de bloques en el archivo de bloques libres
 	 */
