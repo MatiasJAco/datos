@@ -22,7 +22,17 @@ public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	FixedRegister();
+	/**
+	 * Constructor
+	 * @param size fija el tamaño del registro
+	 */
 	FixedRegister(const unsigned int size);
+
+	/**
+	 * Constructor
+	 * @param value valor del registro
+	 * @param size fija el tamaño del registro
+	 */
 	FixedRegister(char * value,const unsigned int size);
 	~FixedRegister();
 
@@ -43,10 +53,20 @@ public:
 	 */
 	unsigned int getSize()const;
 
+	/**
+	 * Carga el registro desde un stream
+	 * @param stream stream de caracteres del cual se carga el registro
+	 * @return true en caso de ok, false en caso contrario
+	 */
+
 	bool deserialize(char * stream);
 
 
 private:
+
+	/**
+	 * Tamaño del registro
+	 */
 	unsigned int m_size;
 };
 

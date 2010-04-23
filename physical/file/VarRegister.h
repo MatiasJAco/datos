@@ -12,13 +12,28 @@
 #include <cstring>
 #include <iostream>
 
+/**
+ * Implementa registros de longitud variable
+ * Para eso se guarda la long de los registros a disco
+ */
 class VarRegister: public Register
 {
 public:
 
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	VarRegister();
+
+	/**
+	 * Constructor de copia
+	 * @param orig valor a copiar
+	 */
 	VarRegister(const VarRegister &orig);
+
+	/**
+	 * Constructor
+	 * @param value stream que contiene el valor del registro
+	 * @param size tamaño del registro
+	 */
 	VarRegister(char *value, unsigned int size);
 	~VarRegister();
 

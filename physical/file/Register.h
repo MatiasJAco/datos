@@ -33,11 +33,19 @@ public:
 	 */
 	virtual unsigned int getSize()const =0 ;
 
+	/**
+	 * Carga el registro desde un stream
+	 * @param stream stream de caracteres del cual se carga el registro
+	 * @return true en caso de ok, false en caso contrario
+	 */
 	virtual bool deserialize(char * stream)=0;
 
 
 
 protected:
+	/**
+	 * Stream que contiene los datos del registro
+	 */
 	char * m_value;
 };
 
