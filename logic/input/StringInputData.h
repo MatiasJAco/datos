@@ -18,7 +18,7 @@ public:
 
 	void setKey(int key);
 	void setValue(std::stringstream& value);
-	int getKey();
+	 int getKey()const;
 	string getValue();
 };
 
