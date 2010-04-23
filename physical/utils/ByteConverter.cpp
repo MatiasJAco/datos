@@ -113,7 +113,7 @@ std::string ByteConverter::bytesToString(const char *bytes)
 	{
 		unsigned int size_str =strlen(bytes)+1;
 
-		char* c_str = new char[size_str];
+		char* c_str = new char[size_str+sizeof(unsigned int)];
 		memcpy(c_str,bytes,size_str*sizeof(char));
 
 
@@ -124,6 +124,21 @@ std::string ByteConverter::bytesToString(const char *bytes)
 
 	return str;
 }
+
+void ByteConverter::printHexa(char *stream, unsigned int size)
+{
+	int fin =size;
+	for(int i=0; i<fin; i++)
+	{
+	        if (i%2==0)
+	        cout << " ";
+	        cout << setfill('0') << setw(2) << hex << ((0x00FF)&(unsigned int)
+	stream[i]);
+	        cout.flush();
+	}
+}
+
+
 
 
 
