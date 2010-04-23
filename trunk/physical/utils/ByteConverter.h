@@ -9,6 +9,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 
 
 /**
@@ -103,6 +104,14 @@ public:
 	 * @return El puntero a la cadena de bytes.
 	 */
 	static char* stringToBytes(const std::string str,char* bytes);
+
+	/**
+	 * Imprime el contenido del stream en hexadecimal. Su uso es para debug
+	 * @param stream el stream a imprimir
+	 * @param size cantidad de bytes a imprimir
+	 */
+	static void printHexa(char *stream,unsigned int size);
+
 
 };
 
