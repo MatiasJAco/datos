@@ -6,7 +6,7 @@
  */
 #include "../physical/file/VarRegister.h"
 #include "../physical/file/FixedRegister.h"
-#include "../physical/file/File.h"
+#include "../physical/file/BlockFile.h"
 #include "../physical/file/FreeBlockFile.h"
 #include "../physical/utils/ByteConverter.h"
 #include <sstream>
@@ -238,15 +238,72 @@ void testFreeBlockFile()
 void testFile()
 {
 	cout << "Testeo de file"<<endl;
-	File *archivo=new File();
+	BlockFile *archivo=new BlockFile();
 
 	Block*block;
+	Block*block2;
 
-	if(!archivo->openFile("./pepito", 1))
+	if(!archivo->open("./pepito", 512))
 		cout << "Error al abrir pepito"<<endl;
 
 
 	block = archivo->getNewBlock();
+
+	block2=archivo->getNewBlock();
+	archivo->saveBlock(block2);
+	delete block2;
+
+	block2=archivo->getNewBlock();
+	archivo->saveBlock(block2);
+	delete block2;
+
+	block2=archivo->getNewBlock();
+	archivo->saveBlock(block2);
+	delete block2;
+
+	archivo->deleteBlock(2);
+
+	block2=archivo->getNewBlock();
+	if(block2->getBlockNumber()!=2)
+		cout << "Error en el nodo libre recuperado"<<endl;
+
+	archivo->saveBlock(block2);
+	delete block2;
+
+
+
+	VarRegister *varR = new VarRegister();
+	unsigned int tamTmp;
+	char *p;
+
+	block->restartCounter();
+	for(int i=0; i < 10; i++)
+	{
+		varR->setValue((char*)&i, sizeof(i));
+		p= varR->getValue();
+		tamTmp= varR->getSize();
+		if(!block->addRegister(*varR))
+			cout << "Se acabo el espacio"<<endl;
+	}
+
+	//block->printRegisters();
+
+	VarRegister var2;
+
+	cout << "recover"<<endl;
+	block->restartCounter();
+	for(int i=0; i < 10; i++)
+	{
+		var2=block->getNextRegister();
+		//var2.printRegister();
+		//cout <<endl;
+	}
+
+	cout <<"seguimod"<<endl;
+	delete varR;
+
+
+	archivo->saveBlock(block);
 
 	if(block==NULL)
 		cout << "error al crear el bloque"<<endl;
@@ -255,7 +312,28 @@ void testFile()
 	if(!archivo->saveBlock(block))
 		cout <<"Error al salvar el bloque"<<endl;
 
+	delete block;
 	delete archivo;
+
+	block=NULL;
+	//----------------------Recuperacion de datos--------------------------//
+	BlockFile *archivo2=new BlockFile();
+	if(!archivo2->open("./pepito", 512))
+		cout << "2 Error al abrir pepito"<<endl;
+
+	block = archivo->getBlock(0);
+
+	cout << "recover2"<<endl;
+	block->restartCounter();
+	block->printRegisters();
+
+	for(int i=0; i < 10; i++)
+	{
+		var2=block->getNextRegister();
+	}
+
+	delete block;
+	delete archivo2;
 
 	cout << "Fin Testeo de file"<<endl;
 	cout<< "------------------------"<<endl;
@@ -264,12 +342,17 @@ void testFile()
 
 int main()
 {
-
+try
+{
 	testVarRegister();
 	testFixedRegister();
 	testFreeBlockFile();
 	testFile();
-
+}
+catch (exception e)
+{
+	cout <<e.what()<<endl;
+}
 
 
 
