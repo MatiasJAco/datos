@@ -7,8 +7,9 @@
 
 #include "Bucket.h"
 
-Bucket::Bucket(unsigned int number) {
+Bucket::Bucket(unsigned int number, unsigned int depth) {
 	this->number = number;
+	this->depth = depth;
 }
 
 Bucket::~Bucket() {

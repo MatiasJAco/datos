@@ -18,7 +18,7 @@ private:
 	unsigned int depth; // Dispersion del cubo.
 
 public:
-	Bucket(unsigned int number);
+	Bucket(unsigned int number, unsigned int depth);
 	virtual ~Bucket();
 
 	void setNumber(unsigned int number);

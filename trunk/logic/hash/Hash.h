@@ -19,7 +19,7 @@ class Hash {
 private:
 	Table* hashTable;
 	BlockFile* hashFile;
-	list<Bucket>* buckets;
+	list<Bucket> buckets;
 
 public:
 
