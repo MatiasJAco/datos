@@ -91,12 +91,23 @@ public:
 
 	void divide(Node* destNode);
 
+	void join(Node* fusionNode);
+
+	/**
+	 * Simula la eliminacion de una determinada cantidad de bytes.
+	 *
+	 * **/
+	bool falseRemove(unsigned int toRemove);
+
+	/**
+	*Dona una cantidad minima determinada de bytes a otro nodo.
+	*
+	***/
+	virtual void donate(Node* destNode,unsigned int toDonate);
+
 protected:
 
 
-
-
-	void join();
 
 	void save();
 

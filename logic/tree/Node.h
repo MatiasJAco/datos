@@ -156,13 +156,22 @@ public:
 
 	virtual void divide(Node* destNode) = 0;
 
+	/**
+	 * Simula la eliminacion de una determinada cantidad de bytes.
+	 *Devuelve true si se puede hacer si que se de underflow.
+	 * **/
+	bool falseRemove(unsigned int toRemove);
+
+	virtual void join(Node* fusionNode) = 0;
+
+
+	/**
+	*Dona una cantidad minima determinada de bytes a otro nodo.
+	*
+	***/
+	virtual void donate(Node* destNode,unsigned int toDonate) = 0;
+
 protected:
-
-
-
-
-
-	virtual void join() = 0;
 
 	virtual void save() = 0;
 

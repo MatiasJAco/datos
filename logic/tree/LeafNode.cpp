@@ -57,8 +57,7 @@ void divide(Node* destNode){
 
 }
 
-void LeafNode::join()
-{
+void LeafNode::join(Node* fusionNode){
 }
 
 void LeafNode::save()

@@ -29,12 +29,15 @@ bool InnerNode::find(const InputData & dato,const InputData & dato2) const
 
 bool InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
-	//char* clave = NULL;
+
 	int claveInt;
 	int punteroIzq;
 	char* reg;
 	int claveBuscada=dato.getKey();
 //encuentra al sucesor que puede tener el dato
+	//Itera una vez para obviar el dato de control.
+	this->m_bloque->getNextRegister();
+
 	do{
 		reg=this->m_bloque->getNextRegister().getValue();
 		punteroIzq=	ByteConverter::bytesToInt(reg);
@@ -43,6 +46,7 @@ bool InnerNode::insert(const InputData & dato){
 	}while((claveBuscada > claveInt ) );
 
 	this->m_bloque->restartCounter();
+
 	INodeData* contenido=new INodeData(punteroIzq,claveInt);
 
 //se lo pide al arbol
@@ -61,7 +65,8 @@ bool InnerNode::insert(const InputData & dato){
 		};
 		VarRegister regActual;
 
-
+		//Itera una vez para obviar el dato de control.
+		this->m_bloque->getNextRegister();
 		do{
 
 
@@ -80,19 +85,54 @@ bool InnerNode::insert(const InputData & dato){
 
 				this->m_bloque->addRegister(*nuevoRegistro);
 		};
-
 	}
-
 
 	return true;
 }
 
 bool InnerNode::remove(const InputData & dato){
-	//	if (sucesor->underflow()){
-	//		//intentar balancear
-	//		//sino fusionar
-	//
+	//	comparo el dato con las claves
 
+	int claveInt;
+	int punteroIzq;
+	char* reg;
+	int claveBuscada=dato.getKey();
+	//encuentra al sucesor que puede tener el dato
+	//Itera una vez para obviar el dato de control.
+	this->m_bloque->getNextRegister();
+	do{
+		reg=this->m_bloque->getNextRegister().getValue();
+		punteroIzq=	ByteConverter::bytesToInt(reg);
+		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
+	}while((claveBuscada > claveInt ) );
+
+	this->m_bloque->restartCounter();
+
+	INodeData* contenido=new INodeData(punteroIzq,claveInt);
+
+	//se lo pide al arbol
+	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
+	sucesor->remove(dato);
+	if (sucesor->underflow()){
+	//		//intentar balancear con el hermano derecho
+
+			reg=this->m_bloque->getNextRegister().getValue();
+			punteroIzq=	ByteConverter::bytesToInt(reg);
+			claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
+			int cantNecesaria=sucesor->getBranchFactor()-sucesor->getUsedSpace();
+			Node* hermanoEqui=this->m_tree->getNode(contenido->getLeftPointer());
+			if(hermanoEqui->falseRemove(cantNecesaria)){
+				hermanoEqui->donate(sucesor,cantNecesaria);
+
+			}else{
+			//sino fusionar
+				sucesor->join(hermanoEqui);
+			}
+
+
+		//
+	//
+	}
 	return true;
 }
 
@@ -113,3 +153,7 @@ bool InnerNode::isLeaf(){
 
 void InnerNode::divide(Node* destNode){
 };
+
+
+void InnerNode::join(Node* fusionNode){
+}
