@@ -40,6 +40,7 @@ protected:
 
 	Block* m_bloque;
 
+
 public:
 
 	//--------------Constructor/Destructor----------------//
@@ -151,9 +152,15 @@ public:
 	/// Modifica el factor de carga.
 	void setBranchFactor(double branchFactor);
 
+	virtual bool isLeaf() = 0;
+
+	virtual void divide(Node* destNode) = 0;
+
 protected:
 
-	virtual void divide() = 0;
+
+
+
 
 	virtual void join() = 0;
 

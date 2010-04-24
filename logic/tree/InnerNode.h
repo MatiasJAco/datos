@@ -10,12 +10,19 @@
 #include "Node.h"
 #include <iostream>
 #include <sstream>
-
+#include "../logic/tree/dataNode/INodeData.h"
+#include "LeafNode.h"
+#include "../logic/tree/BPlusTree.h"
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos internos.
  */
 class InnerNode: public Node {
+
+private:
+	BPlusTree* m_tree;
+
+	bool castear(INodeData& content ,char* stream);
 
 public:
 	/// Constructor.
@@ -79,9 +86,14 @@ public:
 
 	unsigned int getUsedSpace();
 
+	bool isLeaf();
+
+	void divide(Node* destNode);
+
 protected:
 
-	void divide();
+
+
 
 	void join();
 

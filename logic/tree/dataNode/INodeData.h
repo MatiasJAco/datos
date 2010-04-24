@@ -27,7 +27,7 @@ public:
 	INodeData();
 
 	/// Constructor con parametro clave y puntero izquierdo.
-	INodeData(int key,unsigned int leftPointer);
+	INodeData( unsigned int leftPointer,int key);
 
 	/// Destructor
 	virtual ~INodeData();

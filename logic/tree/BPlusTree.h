@@ -34,6 +34,9 @@ public:
 	virtual ~BPlusTree();
 
 	void insertar(InputData& dato);
+
+	Node* getNode(int nodeNumber );
+
 };
 
 #endif /* BPLUSTREE_H_ */
