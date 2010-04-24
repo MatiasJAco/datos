@@ -33,14 +33,14 @@ unsigned int Bucket::getDepth(){
 
 //TODO revisar que funcionen bien los operadores
 bool operator<(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.getNumber() < bucket2.getNumber();
+	return bucket1.number < bucket2.number;
 }
 bool operator>(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.getNumber() > bucket2.getNumber();
+	return bucket1.number > bucket2.number;
 }
 bool operator==(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.getNumber() == bucket2.getNumber();
+	return bucket1.number == bucket2.number;
 }
 bool operator!=(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.getNumber() != bucket2.getNumber();
+	return bucket1.number != bucket2.number;
 }
