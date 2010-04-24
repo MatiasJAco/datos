@@ -34,7 +34,7 @@ public:
 	/**
 	 * Constructor
 	 * @param blocknumber numero del bloque a crear
-	 * @param blockSize tamaño del bloque
+	 * @param blockSize tamaï¿½o del bloque
 	 */
 	Block(unsigned int blocknumber, unsigned int blockSize);
 	~Block();
@@ -94,7 +94,11 @@ public:
 	 */
 	bool deserialize(char *streamChar);
 
-
+	/**
+	 * Sirve para obtener la cantidad de bytes libres que quedan en el bloque.
+	 * @return Devuelve la cantidad de bytes libres del bloque.
+	 */
+	unsigned int getRemainingSpace();
 
 private:
 
@@ -111,7 +115,7 @@ private:
 	unsigned int m_FirstRegisterOffset;
 
 	/**
-	 * Espacio libre restante
+	 * Espacio usado por el bloque
 	 */
 	unsigned int m_usedBytes;
 

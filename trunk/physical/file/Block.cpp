@@ -14,7 +14,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize)
 	m_FirstRegisterOffset= sizeof(m_registerCount)+sizeof(m_usedBytes);
 
 	if(blocksize < m_FirstRegisterOffset+1)
-		throw "El tamaño del bloque debe poder por lo menos comprender los datos de control";
+		throw "El tamaï¿½o del bloque debe poder por lo menos comprender los datos de control";
 
 	restartCounter();
 	m_blockNumber = blocknumber;
@@ -180,4 +180,7 @@ unsigned int Block::getRegisterAmount()
 	return m_registerCount;
 }
 
-
+unsigned int Block::getRemainingSpace()
+{
+	return m_blockSize - m_usedBytes;
+}
