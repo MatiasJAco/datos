@@ -38,7 +38,7 @@ void Hash::add(StringInputData* sid) {
 	if (block == NULL) {
 		Bucket* bucket = new Bucket(bucketNumber);
 		bucket->setDepth(hashTableSize);
-		this->buckets.push_back(bucket);
+		//this->buckets.push_back(bucket);
 
 		Block* block = this->hashFile->getNewBlock();
 		block->addRegister(*varRegister);
@@ -49,7 +49,7 @@ void Hash::add(StringInputData* sid) {
 			block->addRegister(*varRegister);
 			this->hashFile->saveBlock(block);
 		} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
-			list<Bucket>::iterator bucket = this->buckets.begin();
+			/*list<Bucket>::iterator bucket = this->buckets.begin();
 			bool found = false;
 			while((!found) && (bucket != this->buckets.end())) {
 				if (bucket->getNumber == bucketNumber) {
@@ -57,7 +57,7 @@ void Hash::add(StringInputData* sid) {
 				}
 				found = true;
 				bucket++;
-			}
+			}*/
 			//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
 		}
 	}
