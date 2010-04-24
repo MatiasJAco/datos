@@ -49,9 +49,9 @@ unsigned int LeafNode::getUsedSpace()
 	return 0;
 }
 
-void LeafNode::divide(){
-	LeafNode* nodoNuevo = new LeafNode();
-	while(nodoNuevo->getUsedSpace()<50){
+void divide(Node* destNode){
+//	LeafNode* nodoNuevo = new LeafNode();
+	while(destNode->getUsedSpace()<50){
 		//TODO Implementar traslado de registros de un bloque a otro.
 	}
 
@@ -66,6 +66,9 @@ void LeafNode::save()
 
 }
 
+bool LeafNode::isLeaf(){
+	return true;
+};
 
 
 

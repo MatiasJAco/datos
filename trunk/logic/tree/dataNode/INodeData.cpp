@@ -12,7 +12,7 @@ INodeData::INodeData() {
 
 }
 
-INodeData::INodeData(int key, unsigned int leftPointer)
+INodeData::INodeData( unsigned int leftPointer,int key)
 {
 	m_key = key;
 	m_leftPointer = leftPointer;

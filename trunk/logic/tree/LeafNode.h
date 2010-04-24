@@ -87,10 +87,12 @@ public:
 	 */
 	unsigned int getUsedSpace();
 
+	bool isLeaf();
+
+	void divide(Node* destNode);
+
 
 protected:
-
-	void divide();
 
 	void join();
 
