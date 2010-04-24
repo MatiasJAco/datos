@@ -3,8 +3,6 @@
 	<name>testNode</name>
 	<comment></comment>
 	<projects>
-		<project>application</project>
-		<project>common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
