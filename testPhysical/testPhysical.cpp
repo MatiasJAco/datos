@@ -273,17 +273,18 @@ void testFile()
 
 
 	VarRegister *varR = new VarRegister();
-	unsigned int tamTmp;
-	char *p;
+	//unsigned int tamTmp;
+	//char *p;
 
 	block->restartCounter();
 	for(int i=0; i < 10; i++)
 	{
 		varR->setValue((char*)&i, sizeof(i));
-		p= varR->getValue();
-		tamTmp= varR->getSize();
+		//p= varR->getValue();
+		//tamTmp= varR->getSize();
 		if(!block->addRegister(*varR))
 			cout << "Se acabo el espacio"<<endl;
+
 	}
 
 	//block->printRegisters();
@@ -321,7 +322,7 @@ void testFile()
 	if(!archivo2->open("./pepito", 512))
 		cout << "2 Error al abrir pepito"<<endl;
 
-	block = archivo->getBlock(0);
+	block = archivo2->getBlock(1);
 
 	cout << "recover2"<<endl;
 	block->restartCounter();
@@ -332,6 +333,7 @@ void testFile()
 		var2=block->getNextRegister();
 	}
 
+	//archivo2->resize(1032);
 	delete block;
 	delete archivo2;
 
