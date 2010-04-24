@@ -9,18 +9,22 @@
 #define BUCKET_H_
 
 #include "../../physical/file/Block.h"
+#include "../../physical/file/BlockFile.h"
 
 class Bucket {
 
 private:
-	Block* block;
+	unsigned int number; // Numero de cubo.
+	unsigned int depth; // Dispersion del cubo.
 
 public:
-	Bucket();
+	Bucket(unsigned int number);
 	virtual ~Bucket();
 
-	void setBlock(Block* block);
-	Block* getBlock();
+	void setNumber(unsigned int number);
+	unsigned int getNumber();
+	void setDepth(unsigned int depth);
+	unsigned int getDepth();
 
 	friend bool operator<(const Bucket &object1, const Bucket &object2);
 	friend bool operator>(const Bucket &object1, const Bucket &object2);
