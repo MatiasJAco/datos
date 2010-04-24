@@ -31,19 +31,20 @@ bool InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
 	//char* clave = NULL;
 	int claveInt;
-
+	int punteroIzq;
+	char* reg;
 	int claveBuscada=dato.getKey();
-	INodeData* contenido=new INodeData(0,0);
-	do{
-
-	claveInt = ByteConverter::bytesToInt(this->m_bloque->getNextRegister().getValue());
-	//this->castear(*contenido,clave);
-
-
-	}while((claveBuscada < claveInt ) );
-	this->m_bloque->restartCounter();
-
 //encuentra al sucesor que puede tener el dato
+	do{
+		reg=this->m_bloque->getNextRegister().getValue();
+		punteroIzq=	ByteConverter::bytesToInt(reg);
+		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
+
+	}while((claveBuscada > claveInt ) );
+
+	this->m_bloque->restartCounter();
+	INodeData* contenido=new INodeData(punteroIzq,claveInt);
+
 //se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
 	sucesor->insert(dato);
@@ -54,34 +55,32 @@ bool InnerNode::insert(const InputData & dato){
 			LeafNode* nuevoNodo=NULL;
 			sucesor->divide(nuevoNodo);
 
-
-
 		}else{
 			InnerNode* nuevoNodo=NULL;
 			sucesor->divide(nuevoNodo);
 		};
 		VarRegister regActual;
-		VarRegister regAnterior;
-		int cont=0;
+
+
 		do{
-			regAnterior=regActual;
-			cont++;
+
+
 			regActual=this->m_bloque->getNextRegister();
-			this->castear(*contenido,regActual.getValue());
-		}while(claveBuscada>contenido->getKey() );
+
+			claveInt = ByteConverter::bytesToInt(regActual.getValue()+sizeof(int));
+
+		}while((claveBuscada > claveInt ));
 
 		if (claveBuscada<contenido->getKey()){
-				INodeData* nuevoContenido= new INodeData((sucesor->getNodeNumber()+1),contenido->getKey());
+				INodeData* nuevoContenido= new INodeData(m_tree->getNodeQuantity(),contenido->getKey());
 				contenido->setKey(dato.getKey());
 				char* stream;
 				regActual.setValue(contenido->toStream(stream),sizeof(*contenido));
-				nuevoContenido->getKey();
+				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(stream),sizeof(*nuevoContenido));
 
+				this->m_bloque->addRegister(*nuevoRegistro);
 		};
 
-
-
-//
 	}
 
 
@@ -107,29 +106,6 @@ unsigned int InnerNode::getUsedSpace()
 	return 0;
 }
 
-
-
-bool InnerNode::castear(INodeData& contenido,char * stream)
-{
-	bool retVal=false;
-
-	if(stream!=NULL)
-	{
-
-
-		int key=0;
-		memcpy(&key,stream,sizeof(key));
-
-		int  leftPointer=0;
-
-		memcpy(&leftPointer,stream+sizeof(int),sizeof(int));
-		contenido.setKey(key);
-		contenido.setLeftPointer(leftPointer);
-
-		retVal=true;
-	}
-	return retVal;
-}
 
 bool InnerNode::isLeaf(){
 	return false;

@@ -37,6 +37,8 @@ public:
 
 	Node* getNode(int nodeNumber );
 
+	int getNodeQuantity();
+
 };
 
 #endif /* BPLUSTREE_H_ */
