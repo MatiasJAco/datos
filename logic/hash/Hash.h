@@ -9,12 +9,17 @@
 #define HASH_H_
 
 #include "../input/StringInputData.h"
+#include "../../physical/file/BlockFile.h"
 #include "Table.h"
+#include "Bucket.h"
+#include <list>
 
 class Hash {
 
 private:
 	Table* hashTable;
+	BlockFile* hashFile;
+	list<Bucket>* buckets;
 
 public:
 
