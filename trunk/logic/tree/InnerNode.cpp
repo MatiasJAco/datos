@@ -29,15 +29,18 @@ bool InnerNode::find(const InputData & dato,const InputData & dato2) const
 
 bool InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
-	char* clave =NULL;
+	//char* clave = NULL;
+	int claveInt;
+
 	int claveBuscada=dato.getKey();
 	INodeData* contenido=new INodeData(0,0);
 	do{
-	clave=this->m_bloque->getNextRegister().getValue();
-	this->castear(*contenido,clave);
+
+	claveInt = ByteConverter::bytesToInt(this->m_bloque->getNextRegister().getValue());
+	//this->castear(*contenido,clave);
 
 
-	}while((claveBuscada<(int)clave) );
+	}while((claveBuscada < claveInt ) );
 	this->m_bloque->restartCounter();
 
 //encuentra al sucesor que puede tener el dato

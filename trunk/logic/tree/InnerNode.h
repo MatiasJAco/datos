@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include "../logic/tree/dataNode/INodeData.h"
+#include "../../physical/utils/ByteConverter.h"
 #include "LeafNode.h"
 #include "../logic/tree/BPlusTree.h"
 /**
