@@ -50,26 +50,25 @@ bool BlockFile::open(const std::string fileName)
 	m_FileSize =m_FileHandler.tellg();
 	m_FileHandler.close();
 
-	if(m_FreeBlockFile.open(m_FileName))
+
+	//Abro el archivo en modo lectura/escritura binaria
+	m_FileHandler.open (fileName.c_str(),ios::in | ios::out| ios::binary);
+
+	if(m_FileHandler.is_open()&&m_FreeBlockFile.open(m_FileName))
 	{
-		//Abro el archivo en modo lectura/escritura binaria
-		m_FileHandler.open (fileName.c_str(),ios::in | ios::out| ios::binary);
-
-		if(m_FileHandler.is_open()&&m_FreeBlockFile.open(m_FileName))
+		if(m_FileSize==0)
 		{
-			if(m_FileSize==0)
-			{
-				m_LastBlock=0;
-				if(!writeHeader())
-					throw "Error al salvar atributos";
-			}
-			else
-				if(!readHeader())
-					throw "Error al cargar atributos";
-
-			retVal=true;
+			m_LastBlock=0;
+			if(!writeHeader())
+				throw "Error al salvar atributos";
 		}
+		else
+			if(!readHeader())
+				throw "Error al cargar atributos";
+
+		retVal=true;
 	}
+
 
 
 	return retVal;
@@ -93,7 +92,7 @@ bool BlockFile::writeHeader()
 	//Leo los primeros bytes del archivo para ver la cantidad de bloques en uso
 	char * charBlockNum=new char[sizeof(m_LastBlock)];
 
-	m_FileHandler.seekg (0, ios::beg);
+	m_FileHandler.seekp (0, ios::beg);
 	charBlockNum=ByteConverter::uIntToBytes(m_LastBlock,charBlockNum);
 	m_FileHandler.write(charBlockNum, sizeof(m_LastBlock));
 
@@ -127,7 +126,7 @@ Block *BlockFile::getBlock(const unsigned int blockNumber)
 	Block *block=NULL;
 	unsigned int offset;
 
-	if(blockNumber<=m_LastBlock&&m_FileHandler.is_open())
+	if(blockNumber>0&&blockNumber<=m_LastBlock&&m_FileHandler.is_open())
 	{
 		block=new Block(blockNumber, m_blockSize);
 		offset=m_FirstBlockOffset+(blockNumber-1)*m_blockSize;
@@ -159,6 +158,7 @@ bool BlockFile::close()
 	{
 		if(writeHeader())
 		{
+			m_FreeBlockFile.close();
 			m_FileHandler.close();
 			retVal=true;
 		}
@@ -193,7 +193,7 @@ bool BlockFile::saveBlock(Block * block)
 		offset=m_FirstBlockOffset+(blockNumber-1)*m_blockSize;
 
 		//Busco la posicion y escribo el bloque completo en disco.
-		m_FileHandler.seekg (offset, ios::beg);
+		m_FileHandler.seekp (offset, ios_base::beg);
 		m_FileHandler.write(blockStream, m_blockSize*sizeof(char));
 
 		//Libero el stream temporal
