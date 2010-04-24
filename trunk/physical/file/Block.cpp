@@ -32,7 +32,8 @@ Block::~Block()
 
 void Block::restartCounter()
 {
-	m_actualReg = m_registers.begin();
+	if(m_registers.size()>0)
+		m_actualReg = m_registers.begin();
 }
 
 
@@ -64,6 +65,13 @@ bool Block::serialize(char *streamChar)
 			regSize=it->getDiskSize();
 		}
 
+		//Relleno con ceros el resto del stream para no meter basura en el archivo
+		//No es obligatorio...
+		while(p <streamChar+m_blockSize)
+		{
+			*p=0;
+			p++;
+		}
 		retVal=true;
 	}
 	return retVal;
@@ -146,7 +154,14 @@ bool Block::addRegister(const VarRegister & reg)
 
 	if(m_usedBytes+reg.getDiskSize()<=m_blockSize)
 	{
-		m_registers.insert(m_actualReg, reg);
+		if(m_registers.size()>0)
+			m_registers.insert(m_actualReg, reg);
+		else
+		{
+			m_registers.push_back(reg);
+			restartCounter();
+		}
+
 		m_registerCount++;
 		m_usedBytes+=reg.getDiskSize();
 		retVal=true;

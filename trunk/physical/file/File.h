@@ -4,11 +4,12 @@
  *  Created on: 22/04/2010
  *      Author: alex
  */
-#include <fstream>
-
 #ifndef FILE_H_
 #define FILE_H_
 
+#include <fstream>
+#include <unistd.h>
+#include <sys/types.h>
 
 /**
  * Clase abstracta de la cual derivan los archivos
@@ -32,6 +33,11 @@ public:
 	 * @return bool true en caso de exito, false en caso contrario
 	 */
 	virtual bool close()=0;
+
+	/**
+	 * Corta la longitud del archivo
+	 */
+	bool resize(unsigned int size);
 
 protected:
 	//-----------------------------Headers-----------------------------//

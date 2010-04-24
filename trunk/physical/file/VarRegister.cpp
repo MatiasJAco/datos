@@ -20,10 +20,10 @@ VarRegister::VarRegister(const VarRegister &orig):Register()
 	if(orig.m_value!=NULL)
 	{
 		unsigned int size;
-		size = orig.getSize();
+		size = orig.getDiskSize();
 
-		m_value = new char[size+sizeof(size)];
-		memcpy(m_value,orig.m_value,sizeof(size)+sizeof(char)*size);
+		m_value = new char[size];
+		memcpy(m_value,orig.m_value,sizeof(char)*size);
 	}
 }
 
@@ -95,7 +95,7 @@ bool VarRegister::deserialize(char * stream)
 		unsigned int size =0;
 		memcpy(&size,stream,sizeof(size));
 
-		m_value = new char[size];
+		m_value = new char[size+sizeof(unsigned int)];
 
 		memcpy(m_value,stream,sizeof(char)*size+sizeof(unsigned int));
 		retVal=true;
@@ -144,6 +144,9 @@ VarRegister & VarRegister::operator=(const VarRegister &orig)
 	{
 		unsigned int size;
 		size = orig.getSize();
+
+		if(m_value!=NULL)
+			delete [] m_value;
 
 		m_value = new char[size+sizeof(size)];
 		memcpy(m_value,orig.m_value,sizeof(size)+sizeof(char)*size);

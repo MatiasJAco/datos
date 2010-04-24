@@ -6,8 +6,7 @@
  */
 
 #include "FreeBlockFile.h"
-#include <unistd.h>
-#include <sys/types.h>
+
 
 using namespace std;
 
@@ -25,9 +24,9 @@ FreeBlockFile::~FreeBlockFile()
 
 bool FreeBlockFile::open(const std::string filename)
 {
-	string freeFileName=filename+".free";
-
 	bool retVal=true;
+
+	m_FileName=filename+".free";
 
 	//Si estaba abierto lo cierro
 	if(m_FileHandler.is_open())
@@ -38,13 +37,13 @@ bool FreeBlockFile::open(const std::string filename)
 	//pongo append para que la posicion apunte al final
 	//obtengo el tamaño del archivo
 	m_FileHandler.clear();
-	m_FileHandler.open (freeFileName.c_str(), ios::out|ios::binary|ios::app);
+	m_FileHandler.open (m_FileName.c_str(), ios::out|ios::binary|ios::app);
 	m_FileSize =m_FileHandler.tellg();
 	m_FileHandler.close();
 
 	//Abro en modo lectura/escritura binaria
 	m_FileHandler.clear();
-	m_FileHandler.open (freeFileName.c_str(), ios::out|ios::in|ios::binary);
+	m_FileHandler.open (m_FileName.c_str(), ios::out|ios::in|ios::binary);
 
 	//Me fijo si lo abrio exitosamente
 	if(m_FileHandler.is_open())
@@ -218,13 +217,20 @@ void FreeBlockFile::showFreeNodes()
 
 bool FreeBlockFile::close()
 {
+	bool retVal=true;
+
 	if(m_FileHandler.is_open())
+	{
 		m_FileHandler.close();
+
+		if(resize(m_BlockCount*m_registerSize+sizeof(m_BlockCount)))
+			retVal =true;
+	}
 
 	m_FileSize=0;
 	m_BlockCount=0;
 
-	return true;
+	return retVal;
 }
 
 
