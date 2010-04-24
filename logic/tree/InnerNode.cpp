@@ -26,29 +26,29 @@ bool InnerNode::find(const InputData & dato,const InputData & dato2) const
 
 bool InnerNode::insert(const InputData & dato){
 	//comparo el dato con las claves
-	int cont=0;
-	char* clave =NULL;
-	int claveBuscada=dato.getKey();
-	do{
-
-	this->m_bloque->getNextRegister().serialize(clave);
-	if (claveBuscada<(int)clave)
-		cont++;
-
-	}while((claveBuscada=!(int)clave) &&(claveBuscada<(int)clave) );
-
-
-	//encuentra al sucesor que puede tener el dato
-	InnerNode* sucesor= new InnerNode();
-	sucesor->insert(dato);
-	if (sucesor->underflow()){
-		//intentar balancear
-		//sino fusionar
-
-	}else
-		if (sucesor->overflow()){
-			//crear nodo y redistribuir
-		}
+//	int cont=0;
+//	char* clave =NULL;
+//	int claveBuscada=dato.getKey();
+//	do{
+//
+//	this->m_bloque->getNextRegister().serialize(clave);
+//	if (claveBuscada<(int)clave)
+//		cont++;
+//
+//	}while((claveBuscada=!(int)clave) &&(claveBuscada<(int)clave) );
+//
+//
+//	//encuentra al sucesor que puede tener el dato
+//	InnerNode* sucesor= new InnerNode();
+//	sucesor->insert(dato);
+//	if (sucesor->underflow()){
+//		//intentar balancear
+//		//sino fusionar
+//
+//	}else
+//		if (sucesor->overflow()){
+//			//crear nodo y redistribuir
+//		}
 
 
 
