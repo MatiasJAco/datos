@@ -86,23 +86,22 @@ void Hash::inicializeHashFile(){
 }
 
 
-int Hash::calculateHashFunction(StringInputData* sid){
+int Hash::calculateHashFunction(StringInputData* sid) {
 	return 	sid->getKey() % this->hashTable->getSize();
 }
 
-int Hash::getNumberOfBucket(StringInputData* sid){
+int Hash::getNumberOfBucket(StringInputData* sid) {
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
 	return result;
 }
 
-
-bool Hash::existsElement(StringInputData* sid){
-	//TODO: implementar este metodo
-	return false;
+bool Hash::existsElement(StringInputData* sid) {
+	unsigned int bucketNumber = this->getNumberOfBucket(sid);
+	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
+	return bucket->existsRegister(sid->getKey());
 }
-
 
 int Hash::add(StringInputData* sid) {
 	//TODO: por ahora solo llama al add del bucket. Ver si falta algo mas
@@ -123,6 +122,7 @@ int Hash::add(StringInputData* sid) {
 	}
 
 	Bucket* bucket = new Bucket(block);
+	//agregar td al bloque en el 1er reg del block
 
 	//si se pudo agregar en el bucket lo guardo
 	if ( bucket->add(sid) ){
@@ -135,14 +135,6 @@ int Hash::add(StringInputData* sid) {
 	}
 
 	delete bucket;
-
-
-
-
-
-
-
-
 
 	return 0;
 }
