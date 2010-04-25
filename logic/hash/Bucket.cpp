@@ -11,12 +11,20 @@
 //	this->number = number;
 //	this->depth = depth;
 //}
+
+unsigned int Bucket::getDepthFromHashFile(){
+	this->block->restartCounter();
+
+	//el primer registro tiene el valor del td
+	VarRegister varRegister=this->block->getNextRegister(true);
+	unsigned int depth = ByteConverter::bytesToInt(varRegister.getValue());
+	return depth;
+}
+
 Bucket::Bucket(Block* block) {
 	this->block=block;
 	this->number = block->getBlockNumber();
-	//this->depth = ( (VarRegister) block->getNextRegister(false) ).getValue();
-	//TODO: hacer un metodo que devuelva el td sacado desde el bloque
-	this->depth=1;
+	this->depth=getDepthFromHashFile();
 }
 
 Bucket::~Bucket() {
@@ -48,7 +56,6 @@ Block* Bucket::getBlock() {
 
 void Bucket::positionateAtEnd(){
 	this->block->restartCounter();
-
 	while (this->block->hasNextRegister()) {
 		this->block->getNextRegister(true);
 	}
@@ -82,6 +89,7 @@ loadResultEnum Bucket::insert(StringInputData* sid) {
 
 bool Bucket::existsRegister(int key) {
 	this->getBlock()->restartCounter();
+	//TODO: arreglar este metodo
 	while (!this->getBlock()->isLastRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
