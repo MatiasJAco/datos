@@ -73,10 +73,9 @@ bool Bucket::add(StringInputData* sid) {
 }
 
 bool Bucket::existsRegister(int key) {
-	Block* block = this->getBlock();
-	block->restartCounter();
-	while (!block->isLastRegister()) {
-		VarRegister varRegister = block->getNextRegister(true);
+	this->getBlock()->restartCounter();
+	while (!this->getBlock()->isLastRegister()) {
+		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
@@ -85,4 +84,20 @@ bool Bucket::existsRegister(int key) {
 		}
 	}
 	return false;
+}
+
+VarRegister Bucket::getRegister(int key) {
+	VarRegister varRegister;
+	this->getBlock()->restartCounter();
+	bool found = false;
+	while ((!found) && (!this->getBlock()->isLastRegister())) {
+		varRegister = this->getBlock()->getNextRegister(true);
+		char* registerValue = varRegister.getValue();
+		StringInputData* sid = new StringInputData();
+		sid->toData(registerValue);
+		if (sid->getKey() == key) {
+			found = true;
+		}
+	}
+	return varRegister;
 }

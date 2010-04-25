@@ -38,7 +38,19 @@ public:
 	 */
 	bool add(StringInputData* sid);
 
+	/**
+	 * Este metodo indica si existe un registro fisico, con la clave dada.
+	 * @param key Es la clave a buscar.
+	 * @return Devuelve true si encuentra un registro con la clave pasada por parametro. En caso contrario devuelve false.
+	 */
 	bool existsRegister(int key);
+
+	/**
+	 * Este metodo devuelve un registro variable, en base a una clave pasada por parametro.
+	 * @param key Es la clave que sirve para encontrar el registro deseado.
+	 * @return Devuelve el registro cuya clave es la pasada por parametro.
+	 */
+	VarRegister getRegister(int key);
 };
 
 #endif /* BUCKET_H_ */
