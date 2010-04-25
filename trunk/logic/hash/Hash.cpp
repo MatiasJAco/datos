@@ -62,7 +62,6 @@ bool Hash::existsElement(StringInputData* sid) {
 }
 
 int Hash::add(StringInputData* sid) {
-
 	// Verifico unicidad
 	if (existsElement(sid)){
 		return 1;
@@ -86,8 +85,6 @@ int Hash::add(StringInputData* sid) {
 	}
 	else{  //hubo desborde
 
-
-
 	}
 
 	delete bucket;
@@ -95,13 +92,12 @@ int Hash::add(StringInputData* sid) {
 	return 0;
 }
 
-
 void Hash::print() {
 	unsigned int i = 1;
 	Bucket* bucket;
 	Block* actualBlock = this->hashFile->getBlock(i);
 
-	while (actualBlock!= NULL) {
+	while (actualBlock != NULL) {
 		bucket = new Bucket(actualBlock);
 		bucket->print();
 		delete bucket;

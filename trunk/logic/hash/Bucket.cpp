@@ -128,27 +128,9 @@ void Bucket::print(){
 	this->block->restartCounter();
 
 	//imprimo td del bucket
-	varReg=this->block->getNextRegister(true);
-	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
-//	varReg=this->block->getNextRegister(true);
-//	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
-
-	while (!this->block->isLastRegister()) {
+	while (this->block->hasNextRegister()) {
 		varReg=this->block->getNextRegister(true);
 		printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
 	}
-	//imprimo el ultimo
-	varReg=this->block->getNextRegister(true);
-	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
-
-
-//	for(int i=2; i <= cant; i++)
-//	{
-//		varReg=this->block->getNextRegister(true);
-//
-//	}
-
-
-
 
 }
