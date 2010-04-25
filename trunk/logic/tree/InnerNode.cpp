@@ -17,11 +17,6 @@ InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level)
 {
 }
 
-bool InnerNode::find(const InputData & dato,const InputData & dato2) const
-{
-	return true;
-}
-
 
 loadResultEnum InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
@@ -142,6 +137,10 @@ loadResultEnum InnerNode::modify(const InputData& data)
 	return NORMAL_LOAD;
 }
 
+bool InnerNode::find(const InputData & key,InputData & data) const
+{
+	return true;
+}
 
 unsigned int InnerNode::getUsedSpace()
 {
