@@ -48,10 +48,10 @@ Block* Bucket::getBlock() {
 
 void Bucket::positionateAtEnd(){
 	this->block->restartCounter();
-	while (!this->getBlock()->isLastRegister()) {
-		this->getBlock()->getNextRegister(true);
+
+	while (this->block->hasNextRegister()) {
+		this->block->getNextRegister(true);
 	}
-	this->getBlock()->getNextRegister(true);
 }
 
 loadResultEnum Bucket::insert(StringInputData* sid) {
@@ -126,5 +126,9 @@ void Bucket::print(){
 		varReg=this->block->getNextRegister(true);
 		printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
 	}
+//	varReg=this->block->getNextRegister(true);
+//	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+//	varReg=this->block->getNextRegister(true);
+//	printf("%s\n",ByteConverter::bytesToString(varReg.getValue()));
 
 }
