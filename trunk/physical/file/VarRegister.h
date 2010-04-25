@@ -44,6 +44,14 @@ public:
 	 */
 	bool setValue(char * valor,unsigned int size);
 
+
+	/**
+	 * Convierte a registro un stream pasado por parametro
+	 */
+	bool setValue(int);
+
+	bool setValue(std::string value);
+
 	/**
 	 * Recupera el stream que corresponde a un Registro
 	*/

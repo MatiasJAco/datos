@@ -138,6 +138,16 @@ char *VarRegister::getValue()
 	return retChar;
 }
 
+bool VarRegister::setValue(int int1)
+{
+	return setValue((char*)&int1, sizeof(int));
+}
+
+bool VarRegister::setValue(string value)
+{
+	return setValue((char*)value.c_str(),value.size()+1);
+}
+
 VarRegister & VarRegister::operator=(const VarRegister &orig)
 {
 	if(orig.m_value!=NULL)

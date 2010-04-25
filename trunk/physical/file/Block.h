@@ -13,14 +13,16 @@
 #include <sstream>
 #include <list>
 
-typedef enum {UNDERFLOW, NORMAL_LOAD ,OVERFLOW} loadEnum;
+typedef enum {UNDERFLOW, NORMAL_LOAD ,OVERFLOW} loadResultEnum;
 
 
 /**
  * Block
- * TODO recorrer hasta una posicion y recuperar espacio
  */
 class Block {
+
+	friend class BlockManager;
+
 public:
 	//------------------------TYPEDEFS----------------------------------//
 	/**
@@ -52,6 +54,7 @@ public:
 	/**
 	 * Inserta un registro en la posicion actual del iterador, en caso de producirse
 	 * overflow, no inserta.
+	 * @param reg registro a insertar
 	 * @return bool true en caso de exito, false en caso contrario
 	 * @see VarRegister
 	 */
@@ -60,12 +63,13 @@ public:
 	/**
 	 * Inserta un registro en la posicion actual, en caso de producirse
 	 * overflow, no inserta y devuelve en load estado OVERFLOW
+	 * @param reg registro a insertar
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
 	 * 		   de la operacion
 	 * @return bool true en caso de exito, false en caso contrario
-	 * @see VarRegister, loadEnum
+	 * @see VarRegister, loadResultEnum
 	 */
-	bool addRegister(const VarRegister &reg, loadEnum &load);
+	bool addRegister(const VarRegister &reg, loadResultEnum &load);
 
 	/**
 	 * Elimina el registro que se encuentra en la posicion
@@ -82,15 +86,15 @@ public:
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
 	 * 		   de la operacion
 	 * @return bool true en caso de exito
-	 * @see loadEnum
+	 * @see loadResultEnum
 	 */
-	bool deleteRegister(loadEnum &load);
+	bool deleteRegister(loadResultEnum &load);
 
 
 	/**
 	 * Modifica el registro que se encuentra en la posicion actual del iterador
 	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
-	 * @param reg, valor de registro que se va a colocar.
+	 * @param reg valor de registro que se va a colocar.
 	 * @return bool true en caso de ok, false en caso contrario
 	 */
 	bool modifyRegister(const VarRegister & reg);
@@ -100,23 +104,35 @@ public:
 	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
 	 * 		   de la operacion
-	 * @param reg, valor de registro que se va a colocar.
+	 * @param reg valor de registro que se va a colocar.
 	 * @return bool true en caso de ok, false en caso contrario
-	 * @see loadEnum
+	 * @see loadResultEnum
 	 */
-	bool modifyRegister(const VarRegister & reg, loadEnum & load);
+	bool modifyRegister(const VarRegister & reg, loadResultEnum & load);
 
 
 	/**
 	 * Obtiene el proximo Register,  siendo este de longitud variable.
 	 * La informacion de la longitud del Register no es necesario pasarla,
 	 * ya que se encuentra persistida en disco.
-	 * @param foward, indica si avanza el iterador despues de obtener un registro
+	 * @param foward indica si avanza el iterador despues de obtener un registro
 	 * @return VarRegister el registro
 	 *
 	 */
 	VarRegister getNextRegister(bool foward=true);
 
+	/**
+	 * Obtiene el proximo Register,  siendo este de longitud variable.
+	 * La informacion de la longitud del Register no es necesario pasarla,
+	 * ya que se encuentra persistida en disco.
+	 * @param foward indica si avanza el iterador despues de obtener un registro
+	 * @return VarRegister el registro
+	 *
+	 */
+	VarRegister peekRegister();
+
+
+	bool isLastRegister();
 
 	/**
 	 * Devuelve el contador al principio del bloque
@@ -150,7 +166,7 @@ public:
 	float  getActualLoad();
 
 	/**
-	 * Sirve para obtener la cantidad de bytes libres que quedan en el bloque.
+	 * Sirve para obtener la cantidad de bytes usados en el bloque.
 	 * @return Devuelve la cantidad de bytes libres del bloque.
 	 */
 	unsigned int getUsedSpace();
@@ -186,7 +202,7 @@ private:
 
 	float calculateFraction(unsigned int);
 
-	loadEnum evaluateLoad(unsigned int bytes);
+	loadResultEnum evaluateLoad(unsigned int bytes);
 
 	bool LoadBlockAtributes(char *streamChar);
 

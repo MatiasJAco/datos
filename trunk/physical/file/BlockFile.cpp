@@ -19,6 +19,8 @@ BlockFile::BlockFile()
 BlockFile::BlockFile(std::string fileName, float loadFactor=DEFAULT_LOAD_FACTOR)
 {
 	m_LoadFactor=loadFactor;
+	m_FirstBlockOffset=sizeof(unsigned int);
+	m_blockSize=DEFAULT_BLOCK_SIZE;
 	open(fileName);
 }
 
