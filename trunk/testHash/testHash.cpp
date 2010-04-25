@@ -43,7 +43,7 @@ void testAdd() {
 	sid->setValue(ss);
 
 	Hash* hash = new Hash();
-	//hash->add(sid);
+	hash->add(sid);
 	hash->print();
 
 }
