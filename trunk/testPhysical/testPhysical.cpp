@@ -238,7 +238,7 @@ void testFreeBlockFile()
 void testFile()
 {
 	cout << "Testeo de file"<<endl;
-	BlockFile *archivo=new BlockFile();
+	BlockFile *archivo=new BlockFile("./pepito", 0.5);
 
 	Block*block;
 	Block*block2;
@@ -270,53 +270,54 @@ void testFile()
 	archivo->saveBlock(block2);
 	delete block2;
 
-
+	cout << "Insercion"<<endl;
 
 	VarRegister *varR = new VarRegister();
-	//unsigned int tamTmp;
-	//char *p;
 
 	block->restartCounter();
 	for(int i=0; i < 10; i++)
 	{
 		varR->setValue((char*)&i, sizeof(i));
-		//p= varR->getValue();
-		//tamTmp= varR->getSize();
 		if(!block->addRegister(*varR))
 			cout << "Se acabo el espacio"<<endl;
 
 	}
+	string valorString="tu madre!";
+	varR->setValue((char*)valorString.c_str(),valorString.size()+1);
 
+	block->addRegister(*varR);
+
+	long j=42333;
+	varR->setValue((char*)&j,sizeof(long));
+
+	block->addRegister(*varR);
 	//block->printRegisters();
 
 	VarRegister var2;
 
-	cout << "recover"<<endl;
+	cout << "Recuperacion"<<endl;
 	block->restartCounter();
 	for(int i=0; i < 10; i++)
 	{
 		var2=block->getNextRegister();
-		//var2.printRegister();
-		//cout <<endl;
+		if(ByteConverter::bytesToInt(var2.getValue()) !=  i)
+			cout << "Error en getNextRegister()"<<endl;
 	}
 
-	cout <<"seguimod"<<endl;
+	cout <<"Guardado bloque"<<endl;
 	delete varR;
-
-
-	archivo->saveBlock(block);
 
 	if(block==NULL)
 		cout << "error al crear el bloque"<<endl;
-
 
 	if(!archivo->saveBlock(block))
 		cout <<"Error al salvar el bloque"<<endl;
 
 	delete block;
 	delete archivo;
-
 	block=NULL;
+
+
 	//----------------------Recuperacion de datos--------------------------//
 	BlockFile *archivo2=new BlockFile();
 	if(!archivo2->open("./pepito", 512))
@@ -324,15 +325,23 @@ void testFile()
 
 	block = archivo2->getBlock(1);
 
-	cout << "recover2"<<endl;
+	cout << "Recuperacion desde otra instancia de File"<<endl;
 	block->restartCounter();
-	block->printRegisters();
-
 	for(int i=0; i < 10; i++)
 	{
 		var2=block->getNextRegister();
+		if(ByteConverter::bytesToInt(var2.getValue()) !=  i)
+			cout << "Error en getNextRegister()"<<endl;
 	}
 
+	//bool isUnder;
+
+	cout << "espacio usado"<< block->getUsedSpace()<<endl;
+	block->restartCounter();
+	block->getNextRegister();
+
+	block->modifyRegister(var2);
+	block->printRegisters();
 	//archivo2->resize(1032);
 	delete block;
 	delete archivo2;
