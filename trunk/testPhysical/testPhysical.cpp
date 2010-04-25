@@ -350,12 +350,16 @@ void testFile()
 void testBlock()
 {
 	cout << "Testeo de block"<<endl;
-	BlockFile *archivo=new BlockFile("./pepito", 0.5);
+	BlockFile *archivo=new BlockFile("./pepito2", 0.5);
 
 	Block*block;
 	Block*block2;
 
-	if(!archivo->open("./pepito", 512))
+	VarRegister var2;
+	VarRegister *varR = new VarRegister();
+	loadResultEnum loadResult;
+
+	if(!archivo->open("./pepito2", 512))
 		cout << "Error al abrir pepito"<<endl;
 
 	if(block==NULL)
@@ -365,33 +369,28 @@ void testBlock()
 	block2=archivo->getNewBlock();
 	if(block2==NULL)
 		cout << "Error al pedir bloque nuevo"<<endl;
-	archivo->saveBlock(block2);
+
+	block2->restartCounter();
+	for(int i=0; i < 63; i++)
+	{
+		varR->setValue(i);
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	if(block2->addRegister(*varR, loadResult))
+		cout << "error de addRegister"<<endl;
+
+	if(loadResult!=OVERFLOW_LOAD)
+		cout << "No se detecto overflow"<<endl;
+
 	delete block2;
 
-	block2=archivo->getNewBlock();
-	if(block2==NULL)
-		cout << "Error al pedir bloque nuevo"<<endl;
-	archivo->saveBlock(block2);
-	delete block2;
-
-	block2=archivo->getNewBlock();
-	if(block2==NULL)
-		cout << "Error al pedir bloque nuevo"<<endl;
-	archivo->saveBlock(block2);
-	delete block2;
-
-	archivo->deleteBlock(2);
-
-	block2=archivo->getNewBlock();
-	if(block2->getBlockNumber()!=2)
-		cout << "Error en el nodo libre recuperado"<<endl;
-
-	archivo->saveBlock(block2);
-	delete block2;
 
 	cout << "Insercion"<<endl;
-
-	VarRegister *varR = new VarRegister();
 
 	block->restartCounter();
 	for(int i=0; i < 10; i++)
@@ -401,7 +400,7 @@ void testBlock()
 			cout << "Se acabo el espacio"<<endl;
 
 	}
-	block->printRegisters();
+	//block->printRegisters();
 
 	string valorString="tu madre!";
 	varR->setValue(valorString);
@@ -412,9 +411,9 @@ void testBlock()
 	varR->setValue((char*)&j,sizeof(long));
 
 	block->addRegister(*varR);
-	block->printRegisters();
+	//block->printRegisters();
 
-	VarRegister var2;
+
 
 	cout << "Recuperacion"<<endl;
 	block->restartCounter();
