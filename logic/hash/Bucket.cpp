@@ -124,11 +124,8 @@ void Bucket::print(){
 	//imprimo td del bucket
 	while (this->block->hasNextRegister()) {
 		varReg=this->block->getNextRegister(true);
-		printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+		StringInputData* sid = new StringInputData();
+		sid->toData(varReg.getValue());
+		cout << "Key: " << sid->getKey() << " Value: " << sid->getValue() << endl;
 	}
-//	varReg=this->block->getNextRegister(true);
-//	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
-//	varReg=this->block->getNextRegister(true);
-//	printf("%s\n",ByteConverter::bytesToString(varReg.getValue()));
-
 }
