@@ -58,7 +58,9 @@ int Hash::getNumberOfBucket(int key) {
 bool Hash::existsElement(StringInputData* sid) {
 	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
-	return bucket->existsRegister(sid->getKey());
+	bool result = bucket->existsRegister(sid->getKey());
+	delete bucket;
+	return result;
 }
 
 int Hash::add(StringInputData* sid) {
