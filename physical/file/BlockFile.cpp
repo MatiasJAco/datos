@@ -16,6 +16,13 @@ BlockFile::BlockFile()
 
 }
 
+BlockFile::BlockFile(std::string fileName, float loadFactor=DEFAULT_LOAD_FACTOR)
+{
+	m_LoadFactor=loadFactor;
+	open(fileName);
+}
+
+
 BlockFile::~BlockFile()
 {
 	close();
@@ -114,7 +121,7 @@ Block *BlockFile::getNewBlock()
 		blockNumber=m_LastBlock;
 	}
 
-	block=new Block(blockNumber, m_blockSize);
+	block=new Block(blockNumber, m_blockSize, m_LoadFactor);
 
 	return block;
 }
@@ -128,7 +135,7 @@ Block *BlockFile::getBlock(const unsigned int blockNumber)
 
 	if(blockNumber>0&&blockNumber<=m_LastBlock&&m_FileHandler.is_open())
 	{
-		block=new Block(blockNumber, m_blockSize);
+		block=new Block(blockNumber, m_blockSize, m_LoadFactor);
 		offset=m_FirstBlockOffset+(blockNumber-1)*m_blockSize;
 
 		char * blockStream= new char[m_blockSize];

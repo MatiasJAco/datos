@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Block::Block(unsigned int blocknumber, unsigned int blocksize)
+Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 {
 	m_FirstRegisterOffset= sizeof(m_registerCount)+sizeof(m_usedBytes);
 
@@ -21,13 +21,13 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize)
 	m_blockSize = blocksize;
 	m_usedBytes=m_FirstRegisterOffset;
 	m_registerCount=0;
+	m_LoadFactor=loadFactor;
 
 
 }
 
 Block::~Block()
 {
-	// TODO Auto-generated destructor stub
 }
 
 void Block::restartCounter()
@@ -38,14 +38,26 @@ void Block::restartCounter()
 
 
 
-VarRegister Block::getNextRegister()
+VarRegister Block::getNextRegister(bool foward)
 {
-	VarRegister current(*m_actualReg);
-	m_actualReg++;
+	RegisterListIt it;
+	it=m_actualReg;
+
+	VarRegister current;
+	if(m_registers.size()>0)
+	{
+		if(it!=m_registers.end())
+		{
+			current=*it;
+			it++;
+
+			if(foward)
+				m_actualReg =it;
+		}
+	}
 
 	return current;
 }
-
 
 
 bool Block::serialize(char *streamChar)
@@ -97,6 +109,7 @@ bool Block::deserialize(char *streamChar)
 			temp.deserialize(p);
 			regSize = temp.getDiskSize();
 			m_registers.push_back(temp);
+			m_registerCount++;
 		}
 
 		retVal=true;
@@ -150,16 +163,29 @@ bool Block::SaveBlockAtributes(char *streamChar)
 
 bool Block::addRegister(const VarRegister & reg)
 {
-	bool retVal=false;
+	loadEnum carga;
+	return addRegister(reg, carga);
+}
 
-	if(m_usedBytes+reg.getDiskSize()<=m_blockSize)
+bool Block::addRegister(const VarRegister & reg, loadEnum &load)
+{
+	bool retVal=false;
+	unsigned int newSize;
+
+	newSize = m_usedBytes+reg.getDiskSize();
+
+	load = evaluateLoad(newSize);
+
+	if(load == NORMAL_LOAD)
 	{
+		//Si ya hay algo en la lista de registros
 		if(m_registers.size()>0)
 			m_registers.insert(m_actualReg, reg);
+		//Si no hay nada, el iterador apunta a cualquier cosa
 		else
 		{
 			m_registers.push_back(reg);
-			restartCounter();
+			m_actualReg = m_registers.end();
 		}
 
 		m_registerCount++;
@@ -169,11 +195,119 @@ bool Block::addRegister(const VarRegister & reg)
 	return retVal;
 }
 
+bool Block::modifyRegister(const VarRegister & reg)
+{
+	loadEnum carga;
+	return modifyRegister(reg,carga);
+}
+
+bool Block::modifyRegister(const VarRegister & reg, loadEnum &load)
+{
+	bool retVal=false;
+	VarRegister temp;
+	unsigned int tamActual;
+	unsigned int newSize;
+
+
+	if(m_registers.size()>0&&m_actualReg!=m_registers.end())
+	{
+		temp = getNextRegister(false);
+		tamActual= m_usedBytes-temp.getDiskSize();
+
+		newSize =tamActual + reg.getDiskSize();
+
+		load= evaluateLoad(newSize);
+
+		if(load ==NORMAL_LOAD)
+		{
+			deleteRegister();
+			addRegister(reg);
+			m_usedBytes = tamActual+reg.getDiskSize();
+
+			retVal=true;
+		}
+
+	}
+
+	return retVal;
+}
+
+loadEnum Block::evaluateLoad(unsigned int bytes)
+{
+	loadEnum load = NORMAL_LOAD;
+
+	if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
+	{
+		if(bytes>m_blockSize)
+			load = OVERFLOW;
+		else
+			if(calculateFraction(bytes)<m_LoadFactor)
+				load = UNDERFLOW;
+	}
+
+	return load;
+}
+
+bool Block::deleteRegister()
+{
+	loadEnum carga;
+	return deleteRegister(carga);
+}
+
+bool Block::deleteRegister(loadEnum &load)
+{
+	bool retVal=false;
+	RegisterListIt it = m_actualReg;
+	it++;
+
+	if(m_registers.size()>0&&m_actualReg!=m_registers.end())
+	{
+		//Calculo el tamaño que tendria despues de eliminar
+		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
+
+		if(load==NORMAL_LOAD)
+		{
+			m_registers.erase(m_actualReg);
+
+			if(m_registers.size()>0)
+				m_actualReg=it;
+
+			m_registerCount--;
+		}
+
+		retVal=true;
+	}
+	else
+		throw "Error al eliminar el bloque";
+
+	return retVal;
+}
+
+float Block::calculateFraction(unsigned int value)
+{
+	float retVar= value/m_blockSize;
+	return retVar;
+}
+
+unsigned int Block::getUsedSpace()
+{
+	return m_usedBytes;
+}
+
+void Block::setLoadFactor(float factor)
+{
+	m_LoadFactor = factor;
+}
+
+float Block::getActualLoad()
+{
+	return (m_usedBytes/m_blockSize);
+}
+
 unsigned int Block::getBlockNumber()
 {
 	return m_blockNumber;
 }
-
 
 unsigned int Block::getRegisterAmount()
 {

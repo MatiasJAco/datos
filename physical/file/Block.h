@@ -13,8 +13,12 @@
 #include <sstream>
 #include <list>
 
+typedef enum {UNDERFLOW, NORMAL_LOAD ,OVERFLOW} loadEnum;
+
+
 /**
  * Block
+ * TODO recorrer hasta una posicion y recuperar espacio
  */
 class Block {
 public:
@@ -29,41 +33,107 @@ public:
 	 */
 	typedef RegisterList::iterator RegisterListIt;
 
+private:
+	static const float UNDEFINED_LOAD_FACTOR=-1;
 
+public:
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	/**
 	 * Constructor
 	 * @param blocknumber numero del bloque a crear
 	 * @param blockSize tama�o del bloque
+	 * @param loadFactor factor de carga del bloque
 	 */
-	Block(unsigned int blocknumber, unsigned int blockSize);
+	Block(unsigned int blocknumber, unsigned int blockSize,float loadFactor);
 	~Block();
 
 	//-------------------------METODOS-----------------------------------//
 
 	/**
-	 * Inserta un registro en la posicion actual.
-	 * @see Register
+	 * Inserta un registro en la posicion actual del iterador, en caso de producirse
+	 * overflow, no inserta.
+	 * @return bool true en caso de exito, false en caso contrario
+	 * @see VarRegister
 	 */
 	bool addRegister(const VarRegister &reg);
 
 	/**
-	 * Obtiene el proximo Register, siendo este de longitud variable.
+	 * Inserta un registro en la posicion actual, en caso de producirse
+	 * overflow, no inserta y devuelve en load estado OVERFLOW
+	 * @param load devuelve un factor de balance que indica cual seria el resultado
+	 * 		   de la operacion
+	 * @return bool true en caso de exito, false en caso contrario
+	 * @see VarRegister, loadEnum
+	 */
+	bool addRegister(const VarRegister &reg, loadEnum &load);
+
+	/**
+	 * Elimina el registro que se encuentra en la posicion
+	 * actual del iterador. Si al eliminar el registro se fuera a producir underflow,
+	 * no realiza la operacion.
+	 * @return bool true en caso de exito
+	 */
+	bool deleteRegister();
+
+	/**
+	 * Elimina el registro que se encuentra en la posicion
+	 * actual del iterador.Si al eliminar el registro se fuera a producir underflow,
+	 * no realiza la operacion, y de
+	 * @param load devuelve un factor de balance que indica cual seria el resultado
+	 * 		   de la operacion
+	 * @return bool true en caso de exito
+	 * @see loadEnum
+	 */
+	bool deleteRegister(loadEnum &load);
+
+
+	/**
+	 * Modifica el registro que se encuentra en la posicion actual del iterador
+	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
+	 * @param reg, valor de registro que se va a colocar.
+	 * @return bool true en caso de ok, false en caso contrario
+	 */
+	bool modifyRegister(const VarRegister & reg);
+
+	/**
+	 * Modifica el registro que se encuentra en la posicion actual del iterador
+	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
+	 * @param load devuelve un factor de balance que indica cual seria el resultado
+	 * 		   de la operacion
+	 * @param reg, valor de registro que se va a colocar.
+	 * @return bool true en caso de ok, false en caso contrario
+	 * @see loadEnum
+	 */
+	bool modifyRegister(const VarRegister & reg, loadEnum & load);
+
+
+	/**
+	 * Obtiene el proximo Register,  siendo este de longitud variable.
 	 * La informacion de la longitud del Register no es necesario pasarla,
 	 * ya que se encuentra persistida en disco.
+	 * @param foward, indica si avanza el iterador despues de obtener un registro
+	 * @return VarRegister el registro
 	 *
 	 */
-	VarRegister getNextRegister();
+	VarRegister getNextRegister(bool foward=true);
+
 
 	/**
 	 * Devuelve el contador al principio del bloque
 	 */
 	void restartCounter();
 
-	//TODO poner un delete registro, y un modificar
+
+	/**
+	 * Setea el factor de carga a utilizar
+	 * @param factor factor de carga a colocar
+	 */
+	void setLoadFactor(float factor);
+
 
 	/**
 	 * Obtiene la cantidad de registros.
+	 * @return unsigned int cantidad de registros
 	 */
 	unsigned int getRegisterAmount();
 
@@ -72,6 +142,24 @@ public:
 	 * @return numero de bloque
 	 */
 	unsigned int getBlockNumber();
+
+	/**
+	 * Obtiene el porcentaje del bloque ocupado actualmente
+	 * @return float oorcentaje de carga actual
+	 */
+	float  getActualLoad();
+
+	/**
+	 * Sirve para obtener la cantidad de bytes libres que quedan en el bloque.
+	 * @return Devuelve la cantidad de bytes libres del bloque.
+	 */
+	unsigned int getUsedSpace();
+
+	/**
+	 * Sirve para obtener la cantidad de bytes libres que quedan en el bloque.
+	 * @return Devuelve la cantidad de bytes libres del bloque.
+	 */
+	unsigned int getRemainingSpace();
 
 	/**
 	 * Muestra por pantalla el contenido del bloque. Se usa para debug
@@ -94,13 +182,11 @@ public:
 	 */
 	bool deserialize(char *streamChar);
 
-	/**
-	 * Sirve para obtener la cantidad de bytes libres que quedan en el bloque.
-	 * @return Devuelve la cantidad de bytes libres del bloque.
-	 */
-	unsigned int getRemainingSpace();
-
 private:
+
+	float calculateFraction(unsigned int);
+
+	loadEnum evaluateLoad(unsigned int bytes);
 
 	bool LoadBlockAtributes(char *streamChar);
 
@@ -114,6 +200,7 @@ private:
 
 	unsigned int m_FirstRegisterOffset;
 
+	float m_LoadFactor;
 	/**
 	 * Espacio usado por el bloque
 	 */

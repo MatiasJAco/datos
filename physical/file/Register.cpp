@@ -13,5 +13,4 @@ Register::Register()
 }
 
 Register::~Register() {
-	// TODO Auto-generated destructor stub
 }

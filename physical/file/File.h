@@ -10,6 +10,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <sys/types.h>
+#include <iostream>
 
 /**
  * Clase abstracta de la cual derivan los archivos
