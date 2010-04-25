@@ -143,6 +143,44 @@ loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdat
 	return result;
 }
 
+loadResultEnum LeafNode::modify(const InputData & data)
+{
+	loadResultEnum result = NORMAL_LOAD;
+	bool found = false;
+
+	VarRegister currentRegister;
+	InputData* currentData = data.newInstance();
+
+	// Creo el registro para poder insertarlo en el bloque.
+	char* valueReg = new char[data.size()];
+	VarRegister regNuevo(data.toStream(valueReg),data.size());
+
+	/// Busco el dato dentro del bloque de hoja.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+	VarRegister pointers = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->getNextRegister();
+
+		/// Transformo el registro a un InputData
+		currentData->toData(currentRegister.getValue());
+		if (currentData->getKey() == data.getKey())
+		{
+			found = true;
+			m_block->modifyRegister(regNuevo,result);
+		}
+	}
+
+	if (!found)
+		throw "No existe el elemento a modificar";
+
+	return result;
+}
+
 
 unsigned int LeafNode::getUsedSpace()
 {
