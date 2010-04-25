@@ -91,7 +91,10 @@ int Hash::calculateHashFunction(StringInputData* sid){
 }
 
 int Hash::getNumberOfBucket(StringInputData* sid){
-	return this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
+	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
+	int result = 1;
+	result += result + this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
+	return result;
 }
 
 
@@ -100,7 +103,9 @@ bool Hash::existsElement(StringInputData* sid){
 	return false;
 }
 
+
 int Hash::add(StringInputData* sid) {
+	//TODO: por ahora solo llama al add del bucket. Ver si falta algo mas
 
 	// Verifico unicidad
 	if (existsElement(sid)){
@@ -109,15 +114,6 @@ int Hash::add(StringInputData* sid) {
 
 	unsigned int bucketNumber = this->getNumberOfBucket(sid);
 
-	VarRegister* varRegister = new VarRegister();
-
-
-	//hay que ver como hacemos para pasarle (clave+valor) en el primer parametro. ¿Como lo "desparseamos" desp?
-	//algo asi:
-	// char* valor = sid->getKey().c_str() + sid->getValue().c_str();
-	//varRegister->setValue(valor, sizeof(valor));      //usar el sizeof()
-	//TODO: este renglon de aca abajo esta mal, ver explicacion de arriba
-	varRegister->setValue((char*)sid->getValue().c_str(), sid->getValue().size()+1);
 
 	// Se obtiene el bloque desde el disco
 	Block* block = this->hashFile->getBlock(bucketNumber);
@@ -126,16 +122,27 @@ int Hash::add(StringInputData* sid) {
 		return -1;
 	}
 
+	Bucket* bucket = new Bucket(block);
 
-	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-	//TODO: cambiar este metodo por el nuevo q esta haciendo alex (mail que envio el 24/04/10)
-	if (block->getRemainingSpace() >= varRegister->getDiskSize()) {
-		block->addRegister(*varRegister);
-		this->hashFile->saveBlock(block);
-	} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
-
-		//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
+	//si se pudo agregar en el bucket lo guardo
+	if ( bucket->add(sid) ){
+		this->hashFile->saveBlock(bucket->getBlock());
 	}
+	else{  //hubo desborde
+
+
+
+	}
+
+	delete bucket;
+
+
+
+
+
+
+
+
 
 	return 0;
 }

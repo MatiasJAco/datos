@@ -43,6 +43,7 @@ private:
 	 */
 	bool existsElement(StringInputData* sid);
 
+
 public:
 
 	Hash();
