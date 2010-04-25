@@ -20,10 +20,6 @@ LeafNode::~LeafNode()
 {
 }
 
-bool LeafNode::find(const InputData & dato,const InputData & dato2) const
-{
-	return true;
-}
 
 loadResultEnum LeafNode::insert(const InputData & dato)
 {
@@ -179,6 +175,44 @@ loadResultEnum LeafNode::modify(const InputData & data)
 		throw "No existe el elemento a modificar";
 
 	return result;
+}
+
+
+bool LeafNode::find(const InputData & key,InputData & data) const
+{
+	bool found = false;
+
+	VarRegister currentRegister;
+	InputData* currentData = data.newInstance();
+
+	/// Busco el dato dentro del bloque de hoja.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+	VarRegister pointers = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->getNextRegister();
+
+		/// Transformo el registro a un InputData
+		currentData->toData(currentRegister.getValue());
+		if (currentData->getKey() == key.getKey())
+		{
+			found = true;
+
+			if (data.size() > currentData->size())
+			{
+				data.setKey(currentData->getKey());
+//				data.setValue(currentData->getValue());
+			}
+			else
+				throw "Espacio insuficiente para guardar el dato buscado";
+		}
+	}
+
+	return found;
 }
 
 

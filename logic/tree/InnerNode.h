@@ -73,7 +73,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& key, const InputData& dato) const;
+	bool find(const InputData& key,InputData& data) const;
 
 	/**
 	 * Modifica el nodo identificado por la clave

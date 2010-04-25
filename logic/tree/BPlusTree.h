@@ -76,15 +76,22 @@ public:
 	 */
 	void saveNode(Node* node);
 
-	 /**
-	 * Devuelve un bloque para ser almacenado en un nodo.
+	/**
+	 * Devuelve un nodo interno,
 	 * Como crea la instancia internamente, luego es necesario destruir desde afuera
 	 * el nodo creado
-	 * @param nodeNumber identificador del nodo devuelto.
-	 * @return instancia de un bloque.
+	 * @param level Nivel del nodo interno.
+	 * @return El nodo. NULL en caso de algun error.
 	 */
+	Node* newInnerNode(unsigned int level);
 
-	Block* getNewNodeBlock(unsigned int& nodeNumber);
+	/**
+	 * Devuelve un nodo hoja
+	 * Como crea la instancia internamente, luego es necesario destruir desde afuera
+	 * el nodo creado
+	 * @return El nodo. NULL en caso de algun error.
+	 */
+	Node* newLeafNode();
 
 
 	int getNodeQuantity();
