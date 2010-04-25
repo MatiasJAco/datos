@@ -22,6 +22,9 @@
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos internos.
  */
+
+class BPlusTree;
+
 class InnerNode: public Node {
 
 public:

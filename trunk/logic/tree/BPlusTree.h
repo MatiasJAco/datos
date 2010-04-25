@@ -15,7 +15,7 @@
 #include "../physical/file/Block.h"
 #include "../physical/file/BlockFile.h"
 #include "Node.h"
-//#include "NodeFactory.h"
+#include "NodeFactory.h"
 
 
 class BPlusTree {
