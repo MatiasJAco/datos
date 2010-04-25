@@ -20,16 +20,15 @@ private:
 	Table* hashTable;
 	BlockFile* hashFile;
 
-
 	/**
 	 * Retorna el resultado de la funcion Hash. En este caso estamos usando el metodo de "bits sufijos"
 	 */
-	int calculateHashFunction(StringInputData* sid);
+	int calculateHashFunction(int key);
 
 	/**
 	 * Retorna el numero de Bucket del HashFile
 	 */
-	int getNumberOfBucket(StringInputData* sid);
+	int getNumberOfBucket(int key);
 
 	/**
 	 * Crea un bucket (bucket numero 0). Este bucket solo tiene como campo de control el
