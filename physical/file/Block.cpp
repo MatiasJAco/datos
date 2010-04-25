@@ -91,6 +91,19 @@ bool Block::isLastRegister()
 
 }
 
+bool Block::hasNextRegister()
+{
+	if (m_registers.size() == 0)
+		return false;
+	else if(m_registers.size() == 1)
+		if (m_actualReg == m_registers.end())
+			return false;
+		else
+			return true;
+	else
+		return m_actualReg != m_registers.end();
+}
+
 bool Block::serialize(char *streamChar)
 {
 	bool retVal=false;
@@ -204,7 +217,7 @@ bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 	bool retVal=false;
 	unsigned int newSize;
 
-	//Calculo el tamaño que va a tener
+	//Calculo el tamaï¿½o que va a tener
 	newSize = m_usedBytes+reg.getDiskSize();
 
 	//Me fijo en que estado va a quedar la carga despues de la insercion
@@ -302,7 +315,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 
 	if(m_registers.size()>0&&m_actualReg!=m_registers.end())
 	{
-		//Calculo el tamaño que tendria despues de eliminar
+		//Calculo el tamaï¿½o que tendria despues de eliminar
 		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
 
 		//Si no va a haber underflow elimino

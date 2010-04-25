@@ -135,6 +135,11 @@ public:
 	bool isLastRegister();
 
 	/**
+	 * Indica si puede continuar iterando, dado que quedan registros en el bloque.
+	 */
+	bool hasNextRegister();
+
+	/**
 	 * Devuelve el contador al principio del bloque
 	 */
 	void restartCounter();
