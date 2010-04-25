@@ -56,6 +56,13 @@ public:
 	 * Imprime el bucket entero
 	 */
 	void print();
+
+private:
+
+	/**
+	 * Para posicionarse al final del bucket
+	 */
+	void positionateAtEnd();
 };
 
 #endif /* BUCKET_H_ */
