@@ -13,7 +13,7 @@
 #include <sstream>
 #include <list>
 
-typedef enum {UNDERFLOW, NORMAL_LOAD ,OVERFLOW} loadResultEnum;
+typedef enum {UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD} loadResultEnum;
 
 
 /**
@@ -62,7 +62,7 @@ public:
 
 	/**
 	 * Inserta un registro en la posicion actual, en caso de producirse
-	 * overflow, no inserta y devuelve en load estado OVERFLOW
+	 * overflow, no inserta y devuelve en load estado OVERFLOW_LOAD
 	 * @param reg registro a insertar
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
 	 * 		   de la operacion
@@ -93,7 +93,7 @@ public:
 
 	/**
 	 * Modifica el registro que se encuentra en la posicion actual del iterador
-	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
+	 * En caso de producirse OVERFLOW_LOAD o UNDERFLOW_LOAD, no realiza la modificacion.
 	 * @param reg valor de registro que se va a colocar.
 	 * @return bool true en caso de ok, false en caso contrario
 	 */
@@ -101,7 +101,7 @@ public:
 
 	/**
 	 * Modifica el registro que se encuentra en la posicion actual del iterador
-	 * En caso de producirse OVERFLOW o UNDERFLOW, no realiza la modificacion.
+	 * En caso de producirse OVERFLOW_LOAD o UNDERFLOW_LOAD, no realiza la modificacion.
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
 	 * 		   de la operacion
 	 * @param reg valor de registro que se va a colocar.
