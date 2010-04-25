@@ -32,7 +32,7 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,double branchFactor)
 		block = file.getNewBlock();
 	}
 	///TODO ver cuando es creada por primera vez.
-	m_root = NodeFactory::newNode(block);
+
 }
 
 BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
@@ -49,7 +49,23 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 	Block* block = file.getBlock(nodeNumber);
 
 	if (block!=NULL)
-		node = NodeFactory::newNode(block);
+	{
+		Node* node = NULL;
+
+		unsigned int nodeNumber = block->getBlockNumber();
+		unsigned int level = Node::readLevel(*block);
+
+		if (level == Node::LEAF_LEVEL)
+		{
+			node = new LeafNode(nodeNumber);
+		}
+		else
+		{
+			node = new InnerNode(nodeNumber,level);
+		}
+
+		node->setBlock(block);
+	}
 
 	return node;
 }
@@ -59,6 +75,14 @@ void BPlusTree::saveNode(Node* node)
 	Block* block = node->getBlock();
 
 	file.saveBlock(block);
+}
+
+Block* BPlusTree::getNewNodeBlock(unsigned int& nodeNumber)
+{
+	Block* block = file.getNewBlock();
+	nodeNumber = block->getBlockNumber();
+
+	return block;
 }
 
 

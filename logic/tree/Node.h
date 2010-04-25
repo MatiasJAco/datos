@@ -21,7 +21,6 @@ class Node{
 
 public:
 
-	friend class NodeFactory;
 	friend class BPlusTree;
 
 public:
@@ -177,6 +176,8 @@ protected:
 	void setBlock(Block* block);
 
 	Block* getBlock();
+
+	static unsigned int readLevel(Block block);
 
 	void save();
 };
