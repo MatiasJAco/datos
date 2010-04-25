@@ -19,55 +19,34 @@ Bucket::Bucket(Block* block) {
 	this->depth=1;
 }
 
-
 Bucket::~Bucket() {
 }
 
-void Bucket::setNumber(unsigned int number){
+void Bucket::setNumber(unsigned int number) {
 	this->number = number;
 }
 
-unsigned int Bucket::getNumber(){
+unsigned int Bucket::getNumber() {
 	return this->number;
 }
 
-void Bucket::setDepth(unsigned int depth){
+void Bucket::setDepth(unsigned int depth) {
 	this->depth = depth;
 }
 
-unsigned int Bucket::getDepth(){
+unsigned int Bucket::getDepth() {
 	return this->depth;
 }
 
-//TODO revisar que funcionen bien los operadores
-bool operator<(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.number < bucket2.number;
-}
-bool operator>(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.number > bucket2.number;
-}
-bool operator==(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.number == bucket2.number;
-}
-bool operator!=(const Bucket &bucket1, const Bucket &bucket2) {
-	return bucket1.number != bucket2.number;
-}
-
-
-void Bucket::setBlock(Block* block){
+void Bucket::setBlock(Block* block) {
 	this->block = block;
 }
 
-Block* Bucket::getBlock(){
+Block* Bucket::getBlock() {
 	return this->block;
 }
 
-
-
-bool Bucket::add(StringInputData* sid){
-
-
-
+bool Bucket::add(StringInputData* sid) {
 	VarRegister* varRegister = new VarRegister();
 
 
@@ -91,4 +70,8 @@ bool Bucket::add(StringInputData* sid){
 	}
 
 	return true;
+}
+
+bool Bucket::existsRegister(int key) {
+	return false;
 }

@@ -28,15 +28,8 @@ public:
 	unsigned int getNumber();
 	void setDepth(unsigned int depth);
 	unsigned int getDepth();
-
-	friend bool operator<(const Bucket &object1, const Bucket &object2);
-	friend bool operator>(const Bucket &object1, const Bucket &object2);
-	friend bool operator==(const Bucket &object1, const Bucket &object2);
-	friend bool operator!=(const Bucket &object1, const Bucket &object2);
-
 	void setBlock(Block* block);
 	Block* getBlock();
-
 
 	/**
 	 * Agrega un elemento nuevo al bucket.
@@ -44,6 +37,8 @@ public:
 	 * Si hubo desborde en el bucket este metodo retorna false;
 	 */
 	bool add(StringInputData* sid);
+
+	bool existsRegister(int key);
 };
 
 #endif /* BUCKET_H_ */
