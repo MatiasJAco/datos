@@ -15,8 +15,8 @@
 #include "../physical/file/Block.h"
 #include "../physical/file/BlockFile.h"
 #include "Node.h"
-#include "NodeFactory.h"
-
+#include "InnerNode.h"
+#include "LeafNode.h"
 
 class BPlusTree {
 
@@ -75,6 +75,16 @@ public:
 	 * @param nodeNumber El nodo a guardar en disco.
 	 */
 	void saveNode(Node* node);
+
+	 /**
+	 * Devuelve un bloque para ser almacenado en un nodo.
+	 * Como crea la instancia internamente, luego es necesario destruir desde afuera
+	 * el nodo creado
+	 * @param nodeNumber identificador del nodo devuelto.
+	 * @return instancia de un bloque.
+	 */
+
+	Block* getNewNodeBlock(unsigned int& nodeNumber);
 
 
 	int getNodeQuantity();

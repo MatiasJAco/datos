@@ -28,6 +28,18 @@ unsigned int Node::getLevel()const
 	return m_level;
 }
 
+unsigned int Node::readLevel(Block block)
+{
+	block.restartCounter();
+
+	VarRegister firstReg = block.getNextRegister();
+
+	unsigned int level = ByteConverter::bytesToUInt(firstReg.getValue());
+
+	return level;
+}
+
+
 void Node::setLevel(const unsigned int level)
 {
 	m_level = level;
