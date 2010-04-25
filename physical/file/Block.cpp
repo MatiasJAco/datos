@@ -59,6 +59,37 @@ VarRegister Block::getNextRegister(bool foward)
 	return current;
 }
 
+VarRegister Block::peekRegister()
+{
+	RegisterListIt it;
+	VarRegister current;
+
+	if(m_registers.size()>0&&it!=m_registers.end())
+	{
+		it++;
+		if(it!=m_registers.end())
+		{
+			current=*it;
+		}
+		else
+			throw "No se puede hacer peek";
+	}
+	else
+		throw "No se puede hacer peek";
+
+	return current;
+}
+
+bool Block::isLastRegister()
+{
+	bool retVal=true;
+
+	if(m_registers.size() > 0)
+		retVal = m_actualReg !=m_registers.end();
+
+	return retVal;
+
+}
 
 bool Block::serialize(char *streamChar)
 {
@@ -85,6 +116,7 @@ bool Block::serialize(char *streamChar)
 			p++;
 		}
 		retVal=true;
+
 	}
 	return retVal;
 }
@@ -163,24 +195,32 @@ bool Block::SaveBlockAtributes(char *streamChar)
 
 bool Block::addRegister(const VarRegister & reg)
 {
-	loadEnum carga;
+	loadResultEnum carga;
 	return addRegister(reg, carga);
 }
 
-bool Block::addRegister(const VarRegister & reg, loadEnum &load)
+bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 {
 	bool retVal=false;
 	unsigned int newSize;
 
+	//Calculo el tamaño que va a tener
 	newSize = m_usedBytes+reg.getDiskSize();
 
+	//Me fijo en que estado va a quedar la carga despues de la insercion
 	load = evaluateLoad(newSize);
 
-	if(load == NORMAL_LOAD)
+	//Valido que el registro a insertar no sea mas grande que un bloque
+	if(reg.getDiskSize()> m_blockSize-m_FirstRegisterOffset)
+		throw "Registro demasiado grande";
+
+	//Si no va a haber overflow
+	if(load != OVERFLOW)
 	{
 		//Si ya hay algo en la lista de registros
 		if(m_registers.size()>0)
 			m_registers.insert(m_actualReg, reg);
+
 		//Si no hay nada, el iterador apunta a cualquier cosa
 		else
 		{
@@ -197,11 +237,11 @@ bool Block::addRegister(const VarRegister & reg, loadEnum &load)
 
 bool Block::modifyRegister(const VarRegister & reg)
 {
-	loadEnum carga;
+	loadResultEnum carga;
 	return modifyRegister(reg,carga);
 }
 
-bool Block::modifyRegister(const VarRegister & reg, loadEnum &load)
+bool Block::modifyRegister(const VarRegister & reg, loadResultEnum &load)
 {
 	bool retVal=false;
 	VarRegister temp;
@@ -232,9 +272,9 @@ bool Block::modifyRegister(const VarRegister & reg, loadEnum &load)
 	return retVal;
 }
 
-loadEnum Block::evaluateLoad(unsigned int bytes)
+loadResultEnum Block::evaluateLoad(unsigned int bytes)
 {
-	loadEnum load = NORMAL_LOAD;
+	loadResultEnum load = NORMAL_LOAD;
 
 	if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
 	{
@@ -250,11 +290,11 @@ loadEnum Block::evaluateLoad(unsigned int bytes)
 
 bool Block::deleteRegister()
 {
-	loadEnum carga;
+	loadResultEnum carga;
 	return deleteRegister(carga);
 }
 
-bool Block::deleteRegister(loadEnum &load)
+bool Block::deleteRegister(loadResultEnum &load)
 {
 	bool retVal=false;
 	RegisterListIt it = m_actualReg;
@@ -265,7 +305,8 @@ bool Block::deleteRegister(loadEnum &load)
 		//Calculo el tamaño que tendria despues de eliminar
 		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
 
-		if(load==NORMAL_LOAD)
+		//Si no va a haber underflow elimino
+		if(load!=UNDERFLOW)
 		{
 			m_registers.erase(m_actualReg);
 
@@ -288,6 +329,7 @@ float Block::calculateFraction(unsigned int value)
 	float retVar= value/m_blockSize;
 	return retVar;
 }
+
 
 unsigned int Block::getUsedSpace()
 {

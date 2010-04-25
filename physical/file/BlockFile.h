@@ -31,6 +31,8 @@ public:
 	/**
 	 * Construye con ese nombre de archivo. Llama al open al crear
 	 * @param fileName
+	 * @param loadFactor factor de carga del archivo, por default no se usa
+	 *
 	 */
 	BlockFile(std::string fileName, float loadFactor);
 	~BlockFile();
