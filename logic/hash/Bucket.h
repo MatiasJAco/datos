@@ -36,7 +36,7 @@ public:
 	 * Si el StringInputData fue guardado exitosamente retorna true;
 	 * Si hubo desborde en el bucket este metodo retorna false;
 	 */
-	bool add(StringInputData* sid);
+	loadResultEnum insert(StringInputData* sid);
 
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
@@ -51,6 +51,11 @@ public:
 	 * @return Devuelve el registro cuya clave es la pasada por parametro.
 	 */
 	VarRegister getRegister(int key);
+
+	/**
+	 * Imprime el bucket entero
+	 */
+	void print();
 };
 
 #endif /* BUCKET_H_ */
