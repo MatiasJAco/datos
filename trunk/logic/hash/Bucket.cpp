@@ -55,14 +55,8 @@ void Bucket::positionateAtEnd(){
 }
 
 loadResultEnum Bucket::insert(StringInputData* sid) {
-	VarRegister* varRegister = new VarRegister();
-
-	char* stream;
-	unsigned int size = sizeof(*sid);
-
-	varRegister->setValue(5555);
-	//varRegister->setValue(sid->toStream(stream),size);
-
+	char* valueReg = new char[sid->size()];
+	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg), sid->size());
 	//me paro al final del bucket
 	positionateAtEnd();
 
