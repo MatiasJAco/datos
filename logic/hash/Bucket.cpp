@@ -107,5 +107,15 @@ VarRegister Bucket::getRegister(int key) {
 
 
 void Bucket::print(){
-	this->block->printRegisters();
+	//this->block->printRegisters();
+	VarRegister varRegister;
+	this->getBlock()->restartCounter();
+	//while (!this->block->isLastRegister()) {
+		varRegister = this->getBlock()->getNextRegister(true);
+		char* registerValue = varRegister.getValue();
+		StringInputData* sid = new StringInputData();
+		sid->toData(registerValue);
+		cout << "Key: " << sid->getKey() << endl;
+		cout << "Value: " << sid->getValue() << endl;
+	//}
 }
