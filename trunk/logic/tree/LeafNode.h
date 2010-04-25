@@ -70,6 +70,14 @@ public:
 	loadResultEnum modify(const InputData& dato, const InputData& dato2);
 
 	/**
+	 * Modifica el nodo identificado por la clave de data
+	 * Si lo encuentra escribe el contenido de data en el nodo.
+	 * @param data valor que se colocara en el nodo.
+	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
+	 */
+	loadResultEnum modify(const InputData& data);
+
+	/**
 	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
 	 * registros y viendo el tamaño de cada elemento.
 	 * @return unsigned int espacio en uso

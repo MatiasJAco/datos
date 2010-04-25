@@ -84,6 +84,14 @@ public:
 	 */
 	loadResultEnum modify(const InputData& key, const InputData& dato);
 
+	/**
+	 * Modifica el nodo identificado por la clave de data
+	 * Si lo encuentra escribe el contenido de data en el nodo.
+	 * @param data valor que se colocara en el nodo.
+	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
+	 */
+	loadResultEnum modify(const InputData& data);
+
 
 	/// Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!
 	unsigned int getUsedSpace();

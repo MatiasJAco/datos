@@ -96,6 +96,14 @@ public:
 	virtual loadResultEnum modify(const InputData& data1, const InputData& data2) = 0;
 
 	/**
+	 * Modifica el nodo identificado por la clave de data
+	 * Si lo encuentra escribe el contenido de data en el nodo.
+	 * @param data valor que se colocara en el nodo.
+	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
+	 */
+	virtual loadResultEnum modify(const InputData& data) = 0;
+
+	/**
 	 * Evalua si el nodo esta vacio.
 	 * @return bool TRUE si esta vacio FALSE en caso contrario
 	 */

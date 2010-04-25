@@ -137,6 +137,12 @@ loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2
 	return NORMAL_LOAD;
 }
 
+loadResultEnum InnerNode::modify(const InputData& data)
+{
+	return NORMAL_LOAD;
+}
+
+
 unsigned int InnerNode::getUsedSpace()
 {
 	throw "Hay que quitar este metodo! se hace control desde el Block";
