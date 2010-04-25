@@ -93,7 +93,7 @@ int Hash::calculateHashFunction(StringInputData* sid){
 int Hash::getNumberOfBucket(StringInputData* sid){
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
-	result += result + this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
+	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
 	return result;
 }
 
