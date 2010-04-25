@@ -12,20 +12,10 @@ Node::Node()
 	m_nodeNumber = UNDEFINED_NODE_NUMBER;
 }
 
-Node::Node(unsigned int level,unsigned int size,double branchFactor)
-{
-	m_nodeNumber = UNDEFINED_NODE_NUMBER;
-	m_level = level;
-	m_size = size;
-	m_branchFactor = branchFactor;
-}
-
-Node::Node(unsigned int nodeNumber,unsigned int level,unsigned int size,double branchFactor)
+Node::Node(unsigned int nodeNumber,unsigned int level)
 {
 	m_nodeNumber = nodeNumber;
 	m_level = level;
-	m_size = size;
-	m_branchFactor = branchFactor;
 }
 
 Node::~Node()
@@ -45,7 +35,10 @@ void Node::setLevel(const unsigned int level)
 
 unsigned int Node::getSize() const
 {
-	return m_size;
+	throw "Hay que quitar este constructor! Nodo no va a tener mas el tamaño!";
+
+//	return m_size;
+	return 0;
 }
 
 unsigned int Node::getNodeNumber()const
@@ -60,12 +53,17 @@ void Node::setNodeNumber(unsigned int number)
 
 double Node::getBranchFactor() const
 {
-	return m_branchFactor;
+	throw "Hay que quitar este constructor! Nodo no va a tener mas el factor de carga!";
+
+//	return m_branchFactor;
+	return 0;
 }
 
 void Node::setBranchFactor(double branchFactor)
 {
-	m_branchFactor = branchFactor;
+	throw "Hay que quitar este constructor! Nodo no va a tener mas el factor de carga!";
+
+//	m_branchFactor = branchFactor;
 }
 
 
@@ -83,4 +81,25 @@ bool Node::overflow()
 bool Node::underflow()
 {
 	return true;
+}
+
+bool Node::isLeaf()
+{
+	return (m_level == LEAF_LEVEL);
+}
+
+
+void Node::setBlock(Block* block)
+{
+	m_block = block;
+}
+
+Block* Node::getBlock()
+{
+	return m_block;
+}
+
+void Node::save()
+{
+
 }

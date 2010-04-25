@@ -16,30 +16,19 @@
  */
 class LeafNode: public Node {
 
-private:
-	/// Puntero al nodo anterior.
-	unsigned int m_prevNode;
-	/// Puntero al nodo siguiente.
-	unsigned int m_nextNode;
+public:
 
+//	friend class BPlusTree::NodeFactory;
 
 public:
 	/// Constructor
 	LeafNode();
-	/**
-	 * Constructor
-	 * @param size Tamaño del nodo hoja.
-	 * @param branchFactor Factor de carga del nodo hoja.
-	 */
-	LeafNode(unsigned int size,double branchFactor);
 
 	/**
-	 * Constructor
-	 * @param nodeNumber Identificador del nodo hoja.
-	 * @param size Tamaño del nodo hoja.
-	 * @param branchFactor Factor de carga del nodo hoja.
+	 * Constructor.
+	 * @param nodeNumber Identificador del nodo.
 	 */
-	LeafNode(unsigned int nodeNumber,unsigned int size,double branchFactor);
+	LeafNode(unsigned int nodeNumber);
 
 	/// Destructor.
 	~LeafNode();
@@ -53,14 +42,14 @@ public:
 	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	bool insert(const InputData& dato);
+	loadResultEnum insert(const InputData& dato);
 
 	/**
 	 * Elimina el elemento identificado por la clave
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	bool remove(const InputData& dato);
+	loadResultEnum remove(const InputData& dato);
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -78,7 +67,7 @@ public:
 	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	bool modify(const InputData& dato, const InputData& dato2);
+	loadResultEnum modify(const InputData& dato, const InputData& dato2);
 
 	/**
 	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
@@ -106,8 +95,6 @@ public:
 	virtual void donate(Node* destNode,unsigned int toDonate);
 
 protected:
-
-
 
 	void save();
 

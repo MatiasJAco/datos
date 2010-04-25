@@ -10,16 +10,12 @@
 using namespace std;
 
 
-InnerNode::InnerNode(){};
+InnerNode::InnerNode(){}
 
-InnerNode::InnerNode(unsigned int level,unsigned int size,double branch)
-:Node(level,size,branch){
-};
-
-InnerNode::InnerNode(unsigned int number,unsigned int level,unsigned int size,double branch)
-:Node(number,level,size,branch){
-
-};
+InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level)
+:Node(nodeNumber,level)
+{
+}
 
 bool InnerNode::find(const InputData & dato,const InputData & dato2) const
 {
@@ -27,7 +23,7 @@ bool InnerNode::find(const InputData & dato,const InputData & dato2) const
 }
 
 
-bool InnerNode::insert(const InputData & dato){
+loadResultEnum InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
 
 	int claveInt;
@@ -36,16 +32,16 @@ bool InnerNode::insert(const InputData & dato){
 	int claveBuscada=dato.getKey();
 //encuentra al sucesor que puede tener el dato
 	//Itera una vez para obviar el dato de control.
-	this->m_bloque->getNextRegister();
+	this->m_block->getNextRegister();
 
 	do{
-		reg=this->m_bloque->getNextRegister().getValue();
+		reg=this->m_block->getNextRegister().getValue();
 		punteroIzq=	ByteConverter::bytesToInt(reg);
 		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
 
 	}while((claveBuscada > claveInt ) );
 
-	this->m_bloque->restartCounter();
+	this->m_block->restartCounter();
 
 	INodeData* contenido=new INodeData(punteroIzq,claveInt);
 
@@ -66,11 +62,11 @@ bool InnerNode::insert(const InputData & dato){
 		VarRegister regActual;
 
 		//Itera una vez para obviar el dato de control.
-		this->m_bloque->getNextRegister();
+		this->m_block->getNextRegister();
 		do{
 
 
-			regActual=this->m_bloque->getNextRegister();
+			regActual=this->m_block->getNextRegister();
 
 			claveInt = ByteConverter::bytesToInt(regActual.getValue()+sizeof(int));
 
@@ -83,14 +79,14 @@ bool InnerNode::insert(const InputData & dato){
 				regActual.setValue(contenido->toStream(stream),sizeof(*contenido));
 				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(stream),sizeof(*nuevoContenido));
 
-				this->m_bloque->addRegister(*nuevoRegistro);
+				this->m_block->addRegister(*nuevoRegistro);
 		};
 	}
 
-	return true;
+	return NORMAL_LOAD;
 }
 
-bool InnerNode::remove(const InputData & dato){
+loadResultEnum InnerNode::remove(const InputData & dato){
 	//	comparo el dato con las claves
 
 	int claveInt;
@@ -99,14 +95,14 @@ bool InnerNode::remove(const InputData & dato){
 	int claveBuscada=dato.getKey();
 	//encuentra al sucesor que puede tener el dato
 	//Itera una vez para obviar el dato de control.
-	this->m_bloque->getNextRegister();
+	this->m_block->getNextRegister();
 	do{
-		reg=this->m_bloque->getNextRegister().getValue();
+		reg=this->m_block->getNextRegister().getValue();
 		punteroIzq=	ByteConverter::bytesToInt(reg);
 		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
 	}while((claveBuscada > claveInt ) );
 
-	this->m_bloque->restartCounter();
+	this->m_block->restartCounter();
 
 	INodeData* contenido=new INodeData(punteroIzq,claveInt);
 
@@ -116,7 +112,7 @@ bool InnerNode::remove(const InputData & dato){
 	if (sucesor->underflow()){
 	//		//intentar balancear con el hermano derecho
 
-			reg=this->m_bloque->getNextRegister().getValue();
+			reg=this->m_block->getNextRegister().getValue();
 			punteroIzq=	ByteConverter::bytesToInt(reg);
 			claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
 			int cantNecesaria=sucesor->getBranchFactor()-sucesor->getUsedSpace();
@@ -133,27 +129,38 @@ bool InnerNode::remove(const InputData & dato){
 		//
 	//
 	}
-	return true;
+	return NORMAL_LOAD;
 }
 
-bool InnerNode::modify(const InputData & dato, const InputData & dato2)
+loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
 {
-	return true;
+	return NORMAL_LOAD;
 }
 
 unsigned int InnerNode::getUsedSpace()
 {
+	throw "Hay que quitar este metodo! se hace control desde el Block";
 	return 0;
 }
 
 
-bool InnerNode::isLeaf(){
-	return false;
-	};
-
 void InnerNode::divide(Node* destNode){
-};
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
 
 
 void InnerNode::join(Node* fusionNode){
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
+
+void InnerNode::donate(Node* destNode,unsigned int toDonate)
+{
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
+
+bool InnerNode::falseRemove(unsigned int toRemove)
+{
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
+
+
