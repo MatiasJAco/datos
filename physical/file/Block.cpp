@@ -215,7 +215,7 @@ bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 		throw "Registro demasiado grande";
 
 	//Si no va a haber overflow
-	if(load != OVERFLOW)
+	if(load != OVERFLOW_LOAD)
 	{
 		//Si ya hay algo en la lista de registros
 		if(m_registers.size()>0)
@@ -279,10 +279,10 @@ loadResultEnum Block::evaluateLoad(unsigned int bytes)
 	if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
 	{
 		if(bytes>m_blockSize)
-			load = OVERFLOW;
+			load = OVERFLOW_LOAD;
 		else
 			if(calculateFraction(bytes)<m_LoadFactor)
-				load = UNDERFLOW;
+				load = UNDERFLOW_LOAD;
 	}
 
 	return load;
@@ -306,7 +306,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
 
 		//Si no va a haber underflow elimino
-		if(load!=UNDERFLOW)
+		if(load!=UNDERFLOW_LOAD)
 		{
 			m_registers.erase(m_actualReg);
 
