@@ -36,7 +36,6 @@ StringInputData* Hash::get(int key) {
 void Hash::inicializeHashFile(){
 	int depth=1;
 	VarRegister* varRegister = new VarRegister();
-	//varRegister->setValue((char*)&depth, sizeof(depth));
 	varRegister->setValue(depth);
 	Block* block = this->hashFile->getNewBlock();
 	block->addRegister(*varRegister);
@@ -71,7 +70,6 @@ int Hash::add(StringInputData* sid) {
 
 	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
 
-
 	// Se obtiene el bloque desde el disco
 	Block* block = this->hashFile->getBlock(bucketNumber);
 	if (block == NULL) {
@@ -84,7 +82,7 @@ int Hash::add(StringInputData* sid) {
 
 	//si se pudo agregar en el bucket lo guardo
 	if ( bucket->insert(sid) ){
-		//this->hashFile->saveBlock(bucket->getBlock());
+		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
 

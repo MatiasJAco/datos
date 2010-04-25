@@ -46,16 +46,27 @@ Block* Bucket::getBlock() {
 	return this->block;
 }
 
+void Bucket::positionateAtEnd(){
+	this->block->restartCounter();
+	while (!this->getBlock()->isLastRegister()) {
+		this->getBlock()->getNextRegister(true);
+	}
+	this->getBlock()->getNextRegister(true);
+}
+
 loadResultEnum Bucket::insert(StringInputData* sid) {
 	VarRegister* varRegister = new VarRegister();
 
 	char* stream;
 	unsigned int size = sizeof(*sid);
-	varRegister->setValue(sid->toStream(stream),size);
 
+	varRegister->setValue(5555);
+	//varRegister->setValue(sid->toStream(stream),size);
+
+	//me paro al final del bucket
+	positionateAtEnd();
 
 	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-
 	this->block->addRegister(*varRegister);
 
 	delete varRegister;
@@ -107,15 +118,37 @@ VarRegister Bucket::getRegister(int key) {
 
 
 void Bucket::print(){
-	//this->block->printRegisters();
-	VarRegister varRegister;
-	this->getBlock()->restartCounter();
-	//while (!this->block->isLastRegister()) {
-		varRegister = this->getBlock()->getNextRegister(true);
-		char* registerValue = varRegister.getValue();
-		StringInputData* sid = new StringInputData();
-		sid->toData(registerValue);
-		cout << "Key: " << sid->getKey() << endl;
-		cout << "Value: " << sid->getValue() << endl;
-	//}
+	VarRegister varReg;
+
+	//todo: revisar este metodo getRegisterAmount()
+	//unsigned int cant = this->block->getRegisterAmount();
+//	unsigned int cant = 2;
+//	printf("cantidad de registros en el bucket HARDCODEADA: %i\n", cant);
+
+	this->block->restartCounter();
+
+	//imprimo td del bucket
+	varReg=this->block->getNextRegister(true);
+	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+//	varReg=this->block->getNextRegister(true);
+//	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+
+	while (!this->block->isLastRegister()) {
+		varReg=this->block->getNextRegister(true);
+		printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+	}
+	//imprimo el ultimo
+	varReg=this->block->getNextRegister(true);
+	printf("%i\n",ByteConverter::bytesToInt(varReg.getValue()));
+
+
+//	for(int i=2; i <= cant; i++)
+//	{
+//		varReg=this->block->getNextRegister(true);
+//
+//	}
+
+
+
+
 }
