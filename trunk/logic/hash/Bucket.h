@@ -11,6 +11,7 @@
 #include "../../physical/file/Block.h"
 #include "../../physical/file/BlockFile.h"
 #include "../input/StringInputData.h"
+#include "stdlib.h"
 
 class Bucket {
 
@@ -63,6 +64,11 @@ private:
 	 * Para posicionarse al final del bucket
 	 */
 	void positionateAtEnd();
+
+	/**
+	 * lee el primer registro del bucket, el cual tiene la informacion del td de si mismo
+	 */
+	unsigned int getDepthFromHashFile();
 };
 
 #endif /* BUCKET_H_ */
