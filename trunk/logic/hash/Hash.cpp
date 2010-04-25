@@ -99,6 +99,7 @@ bool Hash::existsElement(StringInputData* sid){
 	//TODO: implementar este metodo
 	return false;
 }
+
 int Hash::add(StringInputData* sid) {
 
 	// Verifico unicidad
@@ -132,15 +133,7 @@ int Hash::add(StringInputData* sid) {
 		block->addRegister(*varRegister);
 		this->hashFile->saveBlock(block);
 	} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
-		list<Bucket>::iterator bucket = this->buckets.begin();
-		bool found = false;
-		while((!found) && (bucket != this->buckets.end())) {
-			if (bucket->getNumber() == bucketNumber) {
-				bucket->setDepth(2); // TODO ver que valor vá acá.
-			}
-			found = true;
-			bucket++;
-		}
+
 		//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
 	}
 
