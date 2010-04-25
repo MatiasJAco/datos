@@ -49,7 +49,7 @@ FILE* Table::createTemporalFile(){
 
 FILE * Table::createFile(){
 	FILE* archTabla = openFileForWrite();
-	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "0\n0" );"
+	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "1\n0" );"
 	//fprintf( archTabla, "10\n21\n0\n23\n24\n25\n21\n22\n23\n24\n25" );
 	fprintf( archTabla, "1\n0" );
 
@@ -177,7 +177,11 @@ void Table::modifyRegister(int numReg,int newValue){
 	}
 }
 
-void Table::print(int * listElementsTable,int sizeOfTable){
+void Table::print(){
+	int sizeOfTable = this->getSize();
+	int listElementsTable[sizeOfTable];
+	this->parse(listElementsTable);
+
 	printf("\nTabla (de tamaño = %i):\n ",sizeOfTable);
 	for (int i = 0; i<sizeOfTable;i++){
 		printf("%i",listElementsTable[i]);

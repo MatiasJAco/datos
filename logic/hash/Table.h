@@ -53,9 +53,9 @@ public:
 	void modifyRegister(int numReg,int newValue);
 
 	/**
-	 * Se le pasa una lista de elementos y el tamaño de la tabla para imprimir la tabla por consola
+	 * para imprimir la tabla por consola
 	 */
-	void print(int * listElementsTable,int sizeOfTable);
+	void print();
 
 	/**
 	 * Duplica la tabla con los mismos contenidos que posee
