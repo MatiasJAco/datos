@@ -277,13 +277,15 @@ void testFile()
 	block->restartCounter();
 	for(int i=0; i < 10; i++)
 	{
-		varR->setValue((char*)&i, sizeof(i));
+		varR->setValue(i);
 		if(!block->addRegister(*varR))
 			cout << "Se acabo el espacio"<<endl;
 
 	}
+	block->printRegisters();
+
 	string valorString="tu madre!";
-	varR->setValue((char*)valorString.c_str(),valorString.size()+1);
+	varR->setValue(valorString);
 
 	block->addRegister(*varR);
 
@@ -291,7 +293,7 @@ void testFile()
 	varR->setValue((char*)&j,sizeof(long));
 
 	block->addRegister(*varR);
-	//block->printRegisters();
+	block->printRegisters();
 
 	VarRegister var2;
 
@@ -334,15 +336,9 @@ void testFile()
 			cout << "Error en getNextRegister()"<<endl;
 	}
 
-	//bool isUnder;
 
-	cout << "espacio usado"<< block->getUsedSpace()<<endl;
-	block->restartCounter();
-	block->getNextRegister();
 
-	block->modifyRegister(var2);
-	block->printRegisters();
-	//archivo2->resize(1032);
+
 	delete block;
 	delete archivo2;
 
