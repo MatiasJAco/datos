@@ -26,6 +26,8 @@ public:
 	void toData(const char* stream);
 
 	unsigned int size();
+
+	InputData* newInstance();
 };
 
 #endif /* STRINGINPUTDATA_H_ */
