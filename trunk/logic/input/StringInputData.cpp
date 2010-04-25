@@ -46,12 +46,12 @@ void StringInputData::toData(const char* stream)
 	value << ByteConverter::bytesToString(stream);
 }
 
-unsigned int StringInputData::size()
+unsigned int StringInputData::size()const
 {
 	return (sizeof(key)+value.str().size());
 }
 
-InputData* StringInputData::newInstance()
+InputData* StringInputData::newInstance()const
 {
 	return new StringInputData();
 }

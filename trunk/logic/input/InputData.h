@@ -50,14 +50,14 @@ public:
 	/**
 	 * Tamaño del dato.
 	 */
-	virtual unsigned int size() = 0;
+	virtual unsigned int size() const = 0;
 
 	/**
 	 * Devuelve una instancia de InputData. Necesario, porque esta clase es abstracta
 	 * Desde donde es instanciada deberia destruirse el objeto.
 	 * @return InputData.
 	 */
-	virtual InputData* newInstance() = 0;
+	virtual InputData* newInstance() const = 0;
 
 };
 
