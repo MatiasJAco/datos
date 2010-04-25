@@ -46,8 +46,6 @@ void testAdd() {
 	//hash->add(sid);
 	hash->print();
 
-
-
 }
 
 int main(){
