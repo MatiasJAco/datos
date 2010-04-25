@@ -13,7 +13,7 @@ BlockFile::BlockFile()
 {
 	m_FirstBlockOffset=sizeof(unsigned int);
 	m_blockSize=DEFAULT_BLOCK_SIZE;
-
+	m_LoadFactor=DEFAULT_LOAD_FACTOR;
 }
 
 BlockFile::BlockFile(std::string fileName, float loadFactor=DEFAULT_LOAD_FACTOR)
