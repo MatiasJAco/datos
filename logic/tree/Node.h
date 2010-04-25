@@ -22,6 +22,7 @@ class Node{
 public:
 
 	friend class NodeFactory;
+	friend class BPlusTree;
 
 public:
 
