@@ -22,13 +22,15 @@ Hash::~Hash() {
 }
 
 StringInputData* Hash::get(int key) {
-	int size = this->hashTable->getSize();
-	int blockPositionInTable = key % size;
-	int blockNumber = this->hashTable->getNumberOfBucketInHash(blockPositionInTable);
-
-	/* Obtendrá el registro que tiene el dato deseado. */
-	//file.getRegister(blockNumber);
-	return new StringInputData();
+	unsigned int bucketNumber = this->getNumberOfBucket(key);
+	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
+	if (bucket->existsRegister(key)) {
+		VarRegister varRegister = bucket->getRegister(key);
+		StringInputData* stringInputData = new StringInputData();
+		stringInputData->toData(varRegister.getValue());
+		return stringInputData;
+	}
+	return NULL;
 }
 
 void Hash::inicializeHashFile(){
@@ -42,20 +44,19 @@ void Hash::inicializeHashFile(){
 	delete varRegister;
 }
 
-
-int Hash::calculateHashFunction(StringInputData* sid) {
-	return 	sid->getKey() % this->hashTable->getSize();
+int Hash::calculateHashFunction(int key) {
+	return key % this->hashTable->getSize();
 }
 
-int Hash::getNumberOfBucket(StringInputData* sid) {
+int Hash::getNumberOfBucket(int key) {
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
-	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(sid));
+	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
 
 bool Hash::existsElement(StringInputData* sid) {
-	unsigned int bucketNumber = this->getNumberOfBucket(sid);
+	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
 	return bucket->existsRegister(sid->getKey());
 }
@@ -68,7 +69,7 @@ int Hash::add(StringInputData* sid) {
 		return 1;
 	}
 
-	unsigned int bucketNumber = this->getNumberOfBucket(sid);
+	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
 
 
 	// Se obtiene el bloque desde el disco
