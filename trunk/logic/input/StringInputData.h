@@ -18,8 +18,14 @@ public:
 
 	void setKey(int key);
 	void setValue(std::stringstream& value);
-	 int getKey()const;
+	int getKey()const;
 	string getValue();
+
+
+	char* toStream(char* stream) const;
+	void toData(const char* stream);
+
+	unsigned int size();
 };
 
 #endif /* STRINGINPUTDATA_H_ */

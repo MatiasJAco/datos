@@ -29,3 +29,24 @@ int StringInputData::getKey()const {
 string StringInputData::getValue() {
 	return this->value.str();
 }
+
+char* StringInputData::toStream(char* stream) const
+{
+	ByteConverter::intToBytes(key,stream);
+	stream += sizeof(key);
+	ByteConverter::stringToBytes(value.str(),stream);
+
+	return stream;
+}
+
+void StringInputData::toData(const char* stream)
+{
+	key = ByteConverter::bytesToInt(stream);
+	stream += sizeof(key);
+	value << ByteConverter::bytesToString(stream);
+}
+
+unsigned int StringInputData::size()
+{
+	return (sizeof(key)+value.str().size());
+}
