@@ -50,7 +50,7 @@ public:
 	 */
 	bool setValue(int);
 
-	bool setValue(std::string value);
+	bool setValue(std::string &value);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro

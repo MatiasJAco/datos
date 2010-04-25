@@ -36,35 +36,9 @@ VarRegister::~VarRegister()
 {
 	if(m_value !=NULL)
 		delete [] m_value;
+	m_value =NULL;
 }
 
-bool VarRegister::setValue(char * valor, unsigned int size)
-{
-		bool retVal=true;
-
-		if(valor !=NULL)
-		{
-			if(m_value !=NULL)
-				delete [] m_value;
-
-			m_value = new char[size+sizeof(size)];
-			char *p=m_value;
-
-			memcpy(p,&size,sizeof(size));
-			p+=sizeof(size);
-
-			unsigned int temp =size*sizeof(char);
-			temp++;
-			memcpy(p,valor,size*sizeof(char));
-
-			retVal=true;
-		}
-		else
-			retVal=false;
-
-		return true;
-
-}
 
 bool VarRegister::serialize(char *stream)
 {
@@ -113,7 +87,7 @@ unsigned int VarRegister::getSize() const
 
 unsigned int VarRegister::getDiskSize() const
 {
-	unsigned int size = getSize() + sizeof(unsigned int);
+	unsigned int size = VarRegister::getSize() + sizeof(unsigned int);
 	return size;
 }
 
@@ -140,12 +114,40 @@ char *VarRegister::getValue()
 
 bool VarRegister::setValue(int int1)
 {
-	return setValue((char*)&int1, sizeof(int));
+	return VarRegister::setValue((char*)&int1, sizeof(int));
 }
 
-bool VarRegister::setValue(string value)
+bool VarRegister::setValue(string &value)
 {
-	return setValue((char*)value.c_str(),value.size()+1);
+	return VarRegister::setValue((char*)value.c_str(),value.size()+1);
+}
+
+bool VarRegister::setValue(char * valor, unsigned int size)
+{
+		bool retVal=true;
+
+		if(valor !=NULL)
+		{
+			if(m_value !=NULL)
+				delete [] m_value;
+
+			m_value = new char[size+sizeof(size)];
+			char *p=m_value;
+
+			memcpy(p,&size,sizeof(size));
+			p+=sizeof(size);
+
+			unsigned int temp =size*sizeof(char);
+			temp++;
+			memcpy(p,valor,size*sizeof(char));
+
+			retVal=true;
+		}
+		else
+			retVal=false;
+
+		return true;
+
 }
 
 VarRegister & VarRegister::operator=(const VarRegister &orig)
