@@ -22,8 +22,17 @@ class BlockFile:public File
 {
 public:
 
+private:
+	static const float DEFAULT_LOAD_FACTOR=-1;
+
+public:
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
 	BlockFile();
+	/**
+	 * Construye con ese nombre de archivo. Llama al open al crear
+	 * @param fileName
+	 */
+	BlockFile(std::string fileName, float loadFactor);
 	~BlockFile();
 
 	//-------------------------METODOS-----------------------------------//
@@ -134,12 +143,14 @@ private:
 	 */
 	unsigned int m_FirstBlockOffset;
 
+	float m_LoadFactor;
 	/**
 	 * Archivo que contiene los bloques libres, a fin de reutilizar espacio.
 	 * Antes de poner un bloque nuevo al final se pregunta si este archivo
 	 * tiene algun bloque para usar.
 	 */
 	FreeBlockFile m_FreeBlockFile;
+
 
 };
 

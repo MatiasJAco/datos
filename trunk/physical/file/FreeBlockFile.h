@@ -18,7 +18,6 @@
  * Guarda una pila con los bloques liberados en disco
  * Los bloques se almacenan como unsigned int
  * Se guarda internamente la cantidad de bloques libres dentro del archivo
- * TODO ver si hacer truncate
  */
 class FreeBlockFile:public File
 {
