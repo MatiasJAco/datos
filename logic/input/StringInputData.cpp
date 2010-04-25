@@ -50,3 +50,8 @@ unsigned int StringInputData::size()
 {
 	return (sizeof(key)+value.str().size());
 }
+
+InputData* StringInputData::newInstance()
+{
+	return new StringInputData();
+}
