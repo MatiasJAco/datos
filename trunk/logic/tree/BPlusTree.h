@@ -60,14 +60,21 @@ public:
 	/// Destructor
 	virtual ~BPlusTree();
 
+/// TODO Estos deberian ser privates? o friends?
 	/**
 	 * Recibe un numero de nodo y devuelve el nodo almacenado en disco.
 	 * Como crea la instancia internamente, luego es necesario destruir desde afuera
 	 * el nodo creado
 	 * @param nodeNumber identificador del nodo.
-	 * @return El nodo.
+	 * @return El nodo. Si no lo encuentra devuelve NULL.
 	 */
 	Node* getNode(const unsigned int nodeNumber);
+
+	/**
+	 * Recibe un numero de nodo y guarda el mismo en disco.
+	 * @param nodeNumber El nodo a guardar en disco.
+	 */
+	void saveNode(Node* node);
 
 
 	int getNodeQuantity();

@@ -22,6 +22,17 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,double branchFactor)
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
 	file.open(FILENAME_DEFAULT,sizeNodes);
+
+	/// Creo la raiz y la guardo, o la leo de disco.
+	/// Obtengo el block 0 que es la raiz
+	Block* block = file.getBlock(0);
+
+	if (block==NULL)
+	{
+		block = file.getNewBlock();
+	}
+	///TODO ver cuando es creada por primera vez.
+	m_root = NodeFactory::newNode(block);
 }
 
 BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
@@ -41,7 +52,13 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 		node = NodeFactory::newNode(block);
 
 	return node;
+}
 
+void BPlusTree::saveNode(Node* node)
+{
+	Block* block = node->getBlock();
+
+	file.saveBlock(block);
 }
 
 
