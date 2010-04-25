@@ -98,22 +98,16 @@ int Hash::add(StringInputData* sid) {
 }
 
 
-void Hash::print(){
-
-	//TODO: Faltar implementar este metodo
-
+void Hash::print() {
 	unsigned int i = 1;
 	Bucket* bucket;
-	Block* actualBlock;
-	actualBlock = this->hashFile->getBlock(i);
+	Block* actualBlock = this->hashFile->getBlock(i);
 
-	while (actualBlock!= NULL){
+	while (actualBlock!= NULL) {
 		bucket = new Bucket(actualBlock);
 		bucket->print();
 		delete bucket;
 		i++;
 		actualBlock = this->hashFile->getBlock(i);
 	}
-
-
 }
