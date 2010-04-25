@@ -11,13 +11,9 @@ LeafNode::LeafNode()
 {
 }
 
-LeafNode::LeafNode(unsigned int size,double branch)
-:Node(Node::LEAF_LEVEL,size,branch){
-}
-
-LeafNode::LeafNode(unsigned int number,unsigned int size,double branch)
-:Node(number,Node::LEAF_LEVEL,size,branch){
-
+LeafNode::LeafNode(unsigned int nodeNumber)
+:Node(nodeNumber,Node::LEAF_LEVEL)
+{
 }
 
 LeafNode::~LeafNode()
@@ -29,46 +25,50 @@ bool LeafNode::find(const InputData & dato,const InputData & dato2) const
 	return true;
 }
 
-bool LeafNode::insert(const InputData & dato)
+loadResultEnum LeafNode::insert(const InputData & dato)
 {
-	return true;
+	return NORMAL_LOAD;
 }
 
-bool LeafNode::remove(const InputData & dato)
+loadResultEnum LeafNode::remove(const InputData & dato)
 {
-	return true;
+	return NORMAL_LOAD;
 }
 
-bool LeafNode::modify(const InputData & dato, const InputData & dato2)
+loadResultEnum LeafNode::modify(const InputData & dato, const InputData & dato2)
 {
-	return true;
+	return NORMAL_LOAD;
 }
+
 
 unsigned int LeafNode::getUsedSpace()
 {
+	throw "Hay que quitar este metodo! se hace control desde el Block";
 	return 0;
 }
 
-void divide(Node* destNode){
+
+void LeafNode::divide(Node* destNode){
 //	LeafNode* nodoNuevo = new LeafNode();
 	while(destNode->getUsedSpace()<50){
 		//TODO Implementar traslado de registros de un bloque a otro.
 	}
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 
 }
 
 void LeafNode::join(Node* fusionNode){
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-void LeafNode::save()
+void LeafNode::donate(Node* destNode,unsigned int toDonate)
 {
-
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-bool LeafNode::isLeaf(){
-	return true;
-};
-
-
+bool LeafNode::falseRemove(unsigned int toRemove)
+{
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
 
 

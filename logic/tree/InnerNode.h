@@ -7,44 +7,40 @@
 #ifndef INNERNODE_H_
 #define INNERNODE_H_
 
-#include "Node.h"
 #include <iostream>
 #include <sstream>
+
+#include "Node.h"
+#include "LeafNode.h"
+
 #include "../logic/tree/dataNode/INodeData.h"
 #include "../../physical/utils/ByteConverter.h"
-#include "LeafNode.h"
-#include "../logic/tree/BPlusTree.h"
+
+#include "BPlusTree.h"
+
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos internos.
  */
 class InnerNode: public Node {
 
-private:
-	BPlusTree* m_tree;
+public:
 
-	bool castear(INodeData& content ,char* stream);
+//	friend class BPlusTree::NodeFactory;
+
+
+	BPlusTree* m_tree;
 
 public:
 	/// Constructor.
 	InnerNode();
 
 	/**
-	 * Constructor
-	 * @param level Nivel en donde se encuentra el nodo interno.
-	 * @param size Tamaño del nodo.
-	 * @param branchFactor Factor de carga del nodo.
-	 */
-	InnerNode(unsigned int level,unsigned int size,double branchFactor);
-
-	/**
-	 * Constructor
+	 * Constructor.
 	 * @param nodeNumber Identificador del nodo.
-	 * @param level Nivel en donde se encuentra el nodo.
-	 * @param size Tamaño del nodo hoja.
-	 * @param branchFactor Factor de carga del nodo hoja.
+	 * @param level Nivel en el que se encuentra el nodo.
 	 */
-	InnerNode(unsigned int nodeNumber,unsigned int level,unsigned int size,double branchFactor);
+	InnerNode(unsigned int nodeNumber,unsigned int level);
 
 	/// Destructor.
 	~InnerNode();
@@ -58,14 +54,14 @@ public:
 	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	bool insert(const InputData& dato);
+	loadResultEnum insert(const InputData& dato);
 
 	/**
 	 * Elimina el elemento identificado por la clave
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	bool remove(const InputData& key);
+	loadResultEnum remove(const InputData& key);
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -83,11 +79,11 @@ public:
 	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	bool modify(const InputData& key, const InputData& dato);
+	loadResultEnum modify(const InputData& key, const InputData& dato);
 
+
+	/// Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!
 	unsigned int getUsedSpace();
-
-	bool isLeaf();
 
 	void divide(Node* destNode);
 
@@ -103,14 +99,7 @@ public:
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	virtual void donate(Node* destNode,unsigned int toDonate);
-
-protected:
-
-
-
-	void save();
-
+	void donate(Node* destNode,unsigned int toDonate);
 
 };
 
