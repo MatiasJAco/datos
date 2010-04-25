@@ -38,8 +38,7 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 	Block* block = file.getBlock(nodeNumber);
 
 	if (block!=NULL)
-//		node = NodeFactory::newNode(block);
-		node = NULL;
+		node = NodeFactory::newNode(block);
 
 	return node;
 
