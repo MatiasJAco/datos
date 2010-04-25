@@ -46,30 +46,33 @@ Block* Bucket::getBlock() {
 	return this->block;
 }
 
-bool Bucket::add(StringInputData* sid) {
+loadResultEnum Bucket::insert(StringInputData* sid) {
 	VarRegister* varRegister = new VarRegister();
 
-
-	//hay que ver como hacemos para pasarle (clave+valor) en el primer parametro. ¿Como lo "desparseamos" desp?
-	//algo asi:
-	// char* valor = sid->getKey().c_str() + sid->getValue().c_str();
-	//varRegister->setValue(valor, sizeof(valor));      //usar el sizeof()
-	//TODO: este renglon de aca abajo esta mal, ver explicacion de arriba
-	varRegister->setValue((char*)sid->getValue().c_str(), sid->getValue().size()+1);
+	char* stream;
+	unsigned int size = sizeof(*sid);
+	varRegister->setValue(sid->toStream(stream),size);
 
 
 	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-	//TODO: cambiar este metodo por el nuevo q esta haciendo alex (mail que envio el 24/04/10)
-	if (this->block->getRemainingSpace() >= varRegister->getDiskSize()) {
-		this->block->addRegister(*varRegister);
-		//this->hashFile->saveBlock(this->block);
-	} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
+
+	this->block->addRegister(*varRegister);
+
+	delete varRegister;
+	return NORMAL_LOAD;
 
 
-		//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
-	}
+//	//TODO: cambiar este metodo por el nuevo q esta haciendo alex (mail que envio el 24/04/10)
+//	if (this->block->getRemainingSpace() >= varRegister->getDiskSize()) {
+//		this->block->addRegister(*varRegister);
+//		//this->hashFile->saveBlock(this->block);
+//	} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
+//
+//
+//		//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
+//	}
 
-	return true;
+//	return true;
 }
 
 bool Bucket::existsRegister(int key) {
@@ -100,4 +103,9 @@ VarRegister Bucket::getRegister(int key) {
 		}
 	}
 	return varRegister;
+}
+
+
+void Bucket::print(){
+	this->block->printRegisters();
 }

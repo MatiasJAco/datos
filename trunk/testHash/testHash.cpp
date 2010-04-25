@@ -34,7 +34,7 @@ void testTable() {
 	myTable.print();
 }
 
-void test2() {
+void testAdd() {
 	/* Se toma el dato que ingresa el usuario. */
 	stringstream ss (stringstream::in | stringstream::out);
 	ss.str("paytiti");
@@ -43,13 +43,16 @@ void test2() {
 	sid->setValue(ss);
 
 	Hash* hash = new Hash();
-	hash->add(sid);
+	//hash->add(sid);
+	hash->print();
+
 
 
 }
 
 int main(){
 	//testTable();
-	test2();
+	testAdd();
+	printf("paso!");
 	return 0;
 }

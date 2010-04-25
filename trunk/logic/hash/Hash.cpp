@@ -36,7 +36,8 @@ StringInputData* Hash::get(int key) {
 void Hash::inicializeHashFile(){
 	int depth=1;
 	VarRegister* varRegister = new VarRegister();
-	varRegister->setValue((char*)&depth, sizeof(depth));
+	//varRegister->setValue((char*)&depth, sizeof(depth));
+	varRegister->setValue(depth);
 	Block* block = this->hashFile->getNewBlock();
 	block->addRegister(*varRegister);
 	this->hashFile->saveBlock(block);
@@ -62,7 +63,6 @@ bool Hash::existsElement(StringInputData* sid) {
 }
 
 int Hash::add(StringInputData* sid) {
-	//TODO: por ahora solo llama al add del bucket. Ver si falta algo mas
 
 	// Verifico unicidad
 	if (existsElement(sid)){
@@ -83,8 +83,8 @@ int Hash::add(StringInputData* sid) {
 	//agregar td al bloque en el 1er reg del block
 
 	//si se pudo agregar en el bucket lo guardo
-	if ( bucket->add(sid) ){
-		this->hashFile->saveBlock(bucket->getBlock());
+	if ( bucket->insert(sid) ){
+		//this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
 
@@ -100,7 +100,20 @@ int Hash::add(StringInputData* sid) {
 
 void Hash::print(){
 
-	//TODO: Faltar implementar este metodo en el BlockFile
-	//this->hashFile->print();
+	//TODO: Faltar implementar este metodo
+
+	unsigned int i = 1;
+	Bucket* bucket;
+	Block* actualBlock;
+	actualBlock = this->hashFile->getBlock(i);
+
+	while (actualBlock!= NULL){
+		bucket = new Bucket(actualBlock);
+		bucket->print();
+		delete bucket;
+		i++;
+		actualBlock = this->hashFile->getBlock(i);
+	}
+
 
 }
