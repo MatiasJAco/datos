@@ -10,7 +10,9 @@
 #include "Block.h"
 #include <iostream>
 
-
+/**
+ * Clase encargada de hacer las operacione de redistribucion en los nodos
+ */
 class BlockManager
 {
 public:

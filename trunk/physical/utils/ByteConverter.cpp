@@ -78,11 +78,9 @@ char *ByteConverter::floatToBytes(const float decimalf, char *bytes)
 char *ByteConverter::stringToBytes(const std::string str, char *bytes)
 {
 	int size_str = str.size();
-	memcpy(bytes,&size_str,sizeof(int));
-	bytes+=sizeof(size_str);
 
 	const char* c_str = str.c_str();
-	memcpy(bytes,c_str,size_str*sizeof(char));
+	memcpy(bytes,c_str,size_str*sizeof(char)+1);
 
 	return bytes;
 }
