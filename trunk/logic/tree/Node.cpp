@@ -107,8 +107,3 @@ Block* Node::getBlock()
 {
 	return m_block;
 }
-
-void Node::save()
-{
-
-}

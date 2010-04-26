@@ -113,6 +113,8 @@ public:
 	bool donate(Node* destNode,const InputData& deletedData);
 
 	void insertINodeData(INodeData* contBuscado);
+
+	void save();
 };
 
 #endif /* INNERNODE_H_ */
