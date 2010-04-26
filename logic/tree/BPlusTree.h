@@ -25,6 +25,9 @@
 class BPlusTree {
 
 private:
+	static const unsigned int ROOT_NODENUMBER = 1;
+
+private:
 	/// Atributos propios del arbol por default cuando no son ingresados.
 	static const unsigned int SIZENODE_DEFAULT = 512;
 	static const double BRANCHFACTOR_DEFAULT = 0.5;
@@ -96,9 +99,6 @@ public:
 	 * @return El nodo. NULL en caso de algun error.
 	 */
 	Node* newLeafNode();
-
-
-	int getNodeQuantity();
 
 };
 

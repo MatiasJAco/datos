@@ -26,7 +26,7 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,double branchFactor)
 	/// Creo la raiz y la guardo, o la leo de disco.
 	/// Obtengo el block 0 que es la raiz
 
-	m_root = getNode(1);
+	m_root = getNode(ROOT_NODENUMBER);
 
 	if (m_root == NULL)
 	{
@@ -49,7 +49,7 @@ BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
 	m_branchFactor = branchFactor;
 	file.open(nameFile,sizeNodes);
 
-	m_root = getNode(1);
+	m_root = getNode(ROOT_NODENUMBER);
 
 	if (m_root == NULL)
 	{
@@ -58,6 +58,7 @@ BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
 		saveNode(m_root);
 	}
 }
+
 
 Node *BPlusTree::getNode(const unsigned int nodeNumber)
 {
@@ -74,14 +75,12 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 
 		if (level == Node::LEAF_LEVEL)
 		{
-			node = new LeafNode(nodeNumber);
+			node = new LeafNode(nodeNumber,block);
 		}
 		else
 		{
-			node = new InnerNode(nodeNumber,level);
+			node = new InnerNode(nodeNumber,level,block,this);
 		}
-
-		node->setBlock(block);
 	}
 
 	return node;
@@ -99,8 +98,7 @@ Node* BPlusTree::newInnerNode(unsigned int level)
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	Node* node = new InnerNode(nodeNumber,level);
-	node->setBlock(block);
+	Node* node = new InnerNode(nodeNumber,level,block,this);
 
 	return node;
 }
@@ -110,17 +108,7 @@ Node* BPlusTree::newLeafNode()
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	Node* node = new LeafNode(nodeNumber);
-	node->setBlock(block);
+	Node* node = new LeafNode(nodeNumber,block);
 
 	return node;
 }
-
-int BPlusTree::getNodeQuantity()
-{
-	throw "Hay que sacarlo, no es necesario!";
-}
-
-
-
-

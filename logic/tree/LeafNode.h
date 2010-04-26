@@ -16,9 +16,11 @@
  */
 class LeafNode: public Node {
 
-public:
+	friend class BPlusTree;
 
-//	friend class BPlusTree::NodeFactory;
+private:
+	//--------------Constructor/Destructor----------------//
+	LeafNode(unsigned int nodeNumber,Block* block);
 
 public:
 	/// Constructor
@@ -77,16 +79,6 @@ public:
 	 */
 	loadResultEnum modify(const InputData& data);
 
-	/**
-	 * Obtiene el espacio utilizado del nodo, tomando el mapa de
-	 * registros y viendo el tamaño de cada elemento.
-	 * @return unsigned int espacio en uso
-	 */
-	unsigned int getUsedSpace();
-
-	bool isLeaf();
-
-	void divide(Node* destNode,const InputData& newData);
 
 	/**
 	 * Imprime el contenido del nodo por pantalla.
@@ -94,6 +86,9 @@ public:
 	 * tenemos
 	 */
 	void printContent(InputData & data);
+
+
+	void divide(Node* destNode,const InputData& newData);
 
 	/**
 	 * Simula la eliminacion de una determinada cantidad de bytes.

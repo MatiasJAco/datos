@@ -12,11 +12,16 @@ using namespace std;
 
 InnerNode::InnerNode(){}
 
-InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level)
-:Node(nodeNumber,level)
+InnerNode::InnerNode(unsigned int nodeNumber)
+:Node(nodeNumber)
 {
 }
 
+InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
+:Node(nodeNumber,level,block)
+{
+	m_tree = pointerTree;
+}
 
 loadResultEnum InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
@@ -41,7 +46,7 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 		}
 		this->m_block->getNextRegister();
 
-	};
+	}
 
 //Se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
@@ -62,7 +67,7 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 			InnerNode* nuevoNodo=(InnerNode*)this->m_tree->newInnerNode(sucesor->getLevel());
 			sucesor->divide(nuevoNodo,dato);
 			newNodeNumber=nuevoNodo->getNodeNumber();
-		};
+		}
 
 
 		//Itera una vez para obviar el dato de control.
@@ -87,15 +92,15 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 				contenido->setKey(dato.getKey());
 
 				char* valueReg = new char[contenido->getSize()];
-				reg.setValue(contenido->toStream(valueReg),sizeof(contenido->getSize()));
+				reg.setValue(contenido->toStream(valueReg),contenido->getSize());
 				this->m_block->modifyRegister(reg);
 				//Itera nuevamente para posicionarse al lado de la referemcia a nodo desbordado.
 				this->m_block->getNextRegister();
-				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),sizeof(*nuevoContenido));
+				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),nuevoContenido->getSize());
 				this->m_block->addRegister(*nuevoRegistro,result);
-		};
+		}
 
-	};
+	}
 	return result;
 }
 
@@ -158,7 +163,7 @@ loadResultEnum InnerNode::remove(const InputData & dato){
 
 				VarRegister registroModificado;
 				char* valueReg = new char[contenido->getSize()];
-				registroModificado.setValue(contenido->toStream(valueReg),sizeof(contenido->getSize()));
+				registroModificado.setValue(contenido->toStream(valueReg),contenido->getSize());
 				this->m_block->modifyRegister(reg);
 
 				this->m_block->deleteRegister(resultOperation);
@@ -186,17 +191,14 @@ bool InnerNode::find(const InputData & key,InputData & data) const
 	return true;
 }
 
-unsigned int InnerNode::getUsedSpace()
-{
-	throw "Hay que quitar este metodo! se hace control desde el Block";
-	return 0;
-}
-
 
 void InnerNode::divide(Node* destNode,const InputData& newData){
 	InnerNode* nodoReceptor=(InnerNode*)destNode;
-	Block* nuevoBloque=new Block(nodoReceptor->getNodeNumber(),this->m_block->getRemainingSpace()+this->m_block->getUsedSpace(),this->getBranchFactor());
-	BlockManager::split(this->getBlock(),nuevoBloque);
+	Block* nuevoBloque = nodoReceptor->getBlock();
+
+//	Block* nuevoBloque=new Block(nodoReceptor->getNodeNumber(),this->m_block->getRemainingSpace()+this->m_block->getUsedSpace(),this->getBranchFactor());
+//	BlockManager::split(this->getBlock(),nuevoBloque);
+	BlockManager::split(m_block,nuevoBloque);
 	//Recorro el bloque y le voy pasando todos los registros al bloque del nodo.
 	//Itera para oviar el primer registro de control.
 	nuevoBloque->restartCounter();
@@ -241,7 +243,7 @@ bool InnerNode::falseRemove(unsigned int toRemove)
 
 void InnerNode::insertINodeData(INodeData* toInsert){
 	char* valueReg = new char[toInsert->getSize()];
-	VarRegister* nuevoRegistro=new VarRegister(toInsert->toStream(valueReg),sizeof(*toInsert));
+	VarRegister* nuevoRegistro=new VarRegister(toInsert->toStream(valueReg),toInsert->getSize());
 	loadResultEnum result;
 	while(!this->m_block->isLastRegister()){
 		this->m_block->getNextRegister();
