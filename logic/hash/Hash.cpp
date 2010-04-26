@@ -87,6 +87,14 @@ int Hash::add(StringInputData* sid) {
 	}
 	else{  //hubo desborde
 
+//		if (td==tamTabla){
+//			//lo hace pablo
+//		}
+//
+//		else{
+//			//lo hace adrian
+//		}
+
 	}
 
 	delete bucket;

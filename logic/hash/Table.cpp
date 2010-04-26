@@ -50,7 +50,7 @@ FILE* Table::createTemporalFile(){
 FILE * Table::createFile(){
 	FILE* archTabla = openFileForWrite();
 	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "1\n0" );"
-	//fprintf( archTabla, "10\n21\n0\n23\n24\n25\n21\n22\n23\n24\n25" );
+	//fprintf( archTabla, "10\n0\n1\n2\n3\n4\n5\n6\n7\n8\n3" );
 	fprintf( archTabla, "1\n0" );
 
 	closeFile(archTabla);
@@ -275,4 +275,36 @@ bool Table::changeFirstTimeInTable(int value, int newValue){
 	int position = getFirstTimeInTable(value);
 	this->modifyRegister(position,newValue);
 	return true;
+}
+
+int Table::verifyJumps(int position, int jump){
+	int element1,element2;
+	int sizeOfTable = this->getSize();
+	int listElementsTable[sizeOfTable];
+	this->parse(listElementsTable);
+	int i;
+
+	/* Me muevo para adelante */
+	i =  position+jump;
+	if ( i <= (sizeOfTable-1) ){
+		element1 = listElementsTable[i];
+	}
+	else{   //se paso del final y hay que volver al ppio
+		i = i -sizeOfTable ;
+		element1 = listElementsTable[i];
+	}
+
+	/* Me muevo para atras */
+	i =  position-jump;
+	if ( i >= 0 ){
+		element2 = listElementsTable[i];
+	}
+	else{   //se paso del ppio y hay que volver desde atras
+		i = i + sizeOfTable;
+		element2 = listElementsTable[i];
+	}
+
+	if (element1==element2)	return element1;
+
+	return -1;
 }
