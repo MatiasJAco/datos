@@ -55,6 +55,8 @@ public:
 
 	virtual ~Hash();
 
+	int reHash(Bucket* bucket);
+
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
 	 * Si el StringInputData ya existe en el HashFile retorna 1;
