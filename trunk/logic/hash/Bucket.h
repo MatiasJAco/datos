@@ -34,10 +34,10 @@ public:
 
 	/**
 	 * Agrega un elemento nuevo al bucket.
-	 * Si el StringInputData fue guardado exitosamente retorna true;
-	 * Si hubo desborde en el bucket este metodo retorna false;
+	 * @param sid Es el dato ingresado por el usuario.
+	 * @return Devuelve el numero de bucket desbordado, o bien -1 si se inserto correctamente.
 	 */
-	loadResultEnum insert(StringInputData* sid);
+	int insert(StringInputData* sid);
 
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
