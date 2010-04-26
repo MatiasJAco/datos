@@ -81,8 +81,9 @@ int Hash::add(StringInputData* sid) {
 	Bucket* bucket = new Bucket(block);
 	//agregar td al bloque en el 1er reg del block
 
+	int bloqueDesbordado = bucket->insert(sid);
 	//si se pudo agregar en el bucket lo guardo
-	if ( bucket->insert(sid) ){
+	if ( bloqueDesbordado==-1 ){
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
