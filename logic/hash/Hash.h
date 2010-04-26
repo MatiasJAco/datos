@@ -43,11 +43,10 @@ private:
 	bool existsElement(StringInputData* sid);
 
 	/**
-	 * crea un bloque nuevo en el archivo pasandole el tamaño de dispersion y retorna
-	 * su numero de bloque
+	 * crea un bucket nuevo pasandole el tamaño de dispersion y retorna
+	 * un puntero al bucket nuevo
 	 */
-	int createNewBlock(int depth);
-
+	Bucket* createNewBucket(int depth);
 
 public:
 

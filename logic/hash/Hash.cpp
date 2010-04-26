@@ -34,7 +34,7 @@ StringInputData* Hash::get(int key) {
 }
 
 void Hash::inicializeHashFile(){
-	createNewBlock(1);
+	createNewBucket(1);
 }
 
 int Hash::calculateHashFunction(int key) {
@@ -71,16 +71,14 @@ int Hash::reHash(Bucket* bucket) {
 	return -1;
 }
 
-int Hash::createNewBlock(int depth){
+Bucket* Hash::createNewBucket(int depth){
 	VarRegister* varRegister = new VarRegister();
 	varRegister->setValue(depth);
 	Block* block = this->hashFile->getNewBlock();
 	block->addRegister(*varRegister);
 	this->hashFile->saveBlock(block);
-	int bloqueNuevo = block->getBlockNumber();
-	delete block;
 	delete varRegister;
-	return bloqueNuevo;
+	return new Bucket(block);
 }
 
 int Hash::add(StringInputData* sid) {
@@ -101,9 +99,9 @@ int Hash::add(StringInputData* sid) {
 	Bucket* bucket = new Bucket(block);
 	//agregar td al bloque en el 1er reg del block
 
-	int numeroBloqueDesbordado = bucket->insert(sid);
+
 	//si se pudo agregar en el bucket lo guardo
-	if ( numeroBloqueDesbordado==-1 ){
+	if ( bucket->insert(sid) ){
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
@@ -114,23 +112,31 @@ int Hash::add(StringInputData* sid) {
 			int nuevoTamTabla = tamTabla * 2;
 			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
 
-			int bloqueNuevo = createNewBlock(nuevoTamTabla);
+			Bucket *bucketNuevo = createNewBucket(nuevoTamTabla);
 
-			this->hashTable->changeFirstTimeInTable(numeroBloqueDesbordado,bloqueNuevo);
+			this->hashTable->changeFirstTimeInTable(bucket->getBlock()->getBlockNumber(),bucketNuevo->getBlock()->getBlockNumber());
+
+			bucket->duplicateDepth();
+
+			//TODO aca hay que calcular todas las ctas de nuevo
+
+			this->hashFile->saveBlock(bucket->getBlock());
+			this->hashFile->saveBlock(bucketNuevo->getBlock());
+			delete bucketNuevo;
 
 		}
 
 		else{
-			bucket->setDepth(bucket->getDepth()*2);
-			Block* block2 = this->hashFile->getNewBlock();
-			Bucket* bucket2 = new Bucket(block2);
-			bucket2->setDepth(bucket2->getDepth()*2);
+			bucket->duplicateDepth();
+			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 
-			this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucket2->getDepth() / 2);
+			//TODO en realidad no se usa este metodo, hay que hacer uno nuevo, dsp preguntame adrian cualq cosa
+			this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucketNuevo->getDepth() / 2);
 
+			//TODO revisar esto del rehash (ni lo mire= soy pablo)
 			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
 			this->add(sid);
-			delete bucket2;
+			delete bucketNuevo;
 		}
 
 

@@ -35,9 +35,9 @@ public:
 	/**
 	 * Agrega un elemento nuevo al bucket.
 	 * @param sid Es el dato ingresado por el usuario.
-	 * @return Devuelve el numero de bucket desbordado, o bien -1 si se inserto correctamente.
+	 * @return Devuelve false si el bloque se desbordo, o bien true si se inserto correctamente.
 	 */
-	int insert(StringInputData* sid);
+	bool insert(StringInputData* sid);
 
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
@@ -57,6 +57,16 @@ public:
 	 * Imprime el bucket entero
 	 */
 	void print();
+
+	/**
+	 * se encarga de duplicar el td
+	 */
+	void duplicateDepth();
+
+	/**
+	 * se encarga de dividir por 2 el td
+	 */
+	void divideDepth();
 
 private:
 
