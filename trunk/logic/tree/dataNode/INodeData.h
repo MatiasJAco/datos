@@ -64,6 +64,11 @@ public:
 	void toNodeData(const char* stream);
 
 
+	/**
+	 * Tama�o del dato.
+	 */
+	virtual unsigned int getSize();
+
 };
 
 #endif /* INODEDATA_H_ */
