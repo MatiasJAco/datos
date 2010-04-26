@@ -47,7 +47,7 @@ void testAdd() {
 	ss.str("paytiti");
 	StringInputData* sid = new StringInputData();
 	sid->setKey(34);
-	sid->setValue(ss);
+	sid->setValue(ss.str());
 
 	Hash* hash = new Hash();
 	hash->add(sid);
