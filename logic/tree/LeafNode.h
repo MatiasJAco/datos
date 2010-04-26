@@ -89,6 +89,13 @@ public:
 	void divide(Node* destNode);
 
 	/**
+	 * Imprime el contenido del nodo por pantalla.
+	 * @param data un dato del tipo que se emplea internamente, para saber que tipos de dato
+	 * tenemos
+	 */
+	void printContent(InputData & data);
+
+	/**
 	 * Simula la eliminacion de una determinada cantidad de bytes.
 	 *
 	 * **/
