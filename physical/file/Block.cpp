@@ -34,6 +34,8 @@ void Block::restartCounter()
 {
 	if(m_registers.size()>0)
 		m_actualReg = m_registers.begin();
+	else
+		m_actualReg = m_registers.end();
 }
 
 
@@ -85,7 +87,7 @@ bool Block::isLastRegister()
 	bool retVal=true;
 
 	if(m_registers.size() > 0)
-		retVal = m_actualReg !=m_registers.end();
+		retVal = m_actualReg ==m_registers.end();
 
 	return retVal;
 
@@ -191,6 +193,15 @@ void Block::printRegisters()
 
 
 }
+
+void Block::clear()
+{
+	m_registers.clear();
+	m_registerCount=0;
+	m_usedBytes=m_FirstRegisterOffset;
+	m_actualReg=m_registers.end();
+}
+
 
 bool Block::SaveBlockAtributes(char *streamChar)
 {
@@ -339,7 +350,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 
 float Block::calculateFraction(unsigned int value)
 {
-	float retVar= value/m_blockSize;
+	float retVar= (float)value/m_blockSize;
 	return retVar;
 }
 
@@ -367,6 +378,13 @@ unsigned int Block::getBlockNumber()
 unsigned int Block::getRegisterAmount()
 {
 	return m_registerCount;
+}
+
+unsigned int Block::getMinimalLoad()
+{
+	unsigned int retVal = m_LoadFactor*m_blockSize;
+
+	return retVal;
 }
 
 unsigned int Block::getRemainingSpace()

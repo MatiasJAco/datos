@@ -158,6 +158,8 @@ public:
 	 */
 	unsigned int getRegisterAmount();
 
+	unsigned int getMinimalLoad();
+
 	/**
 	 * Obtiene el numero del bloque actual
 	 * @return numero de bloque
@@ -186,6 +188,9 @@ public:
 	 * Muestra por pantalla el contenido del bloque. Se usa para debug
 	 */
 	void printRegisters();
+
+
+	void clear();
 
 	//--------------------SERIALIZE/DESERIALIZE-------------------//
 	/**
