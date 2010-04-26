@@ -8,13 +8,14 @@
 
 
 #include "../logic/input/StringInputData.h"
+#include "../physical/utils/ByteConverter.h"
 
 int main( int argc, char **argv)
 {
 	StringInputData *fixture = new StringInputData();
 
 	int key = 3;
-    string value = "paytiti";
+    string value = "algo";
 
 	fixture->setKey(key);
 	fixture->setValue(value);
@@ -25,6 +26,9 @@ int main( int argc, char **argv)
 
 	StringInputData data;
 	data.toData(streamData);
+
+	cout << "new key "<<data.getKey()<<endl;
+	cout << "new data "<<data.getValue()<<endl;
 
 	bool eqkey = key==data.getKey();
 	bool eqvalue = value==data.getValue();
