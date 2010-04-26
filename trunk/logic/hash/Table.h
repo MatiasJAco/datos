@@ -75,6 +75,14 @@ public:
 	 */
 	bool changeFirstTimeInTable(int value, int newValue);
 
+	/**
+	 * Recorro la tabla circularmente (me muevo para atras "jump" lugares y para adelante "jump" lugares
+	 * y verifico si los elementos son iguales,
+	 * si los elementos son iguales retorno el elemento
+	 * si los elementos son distintos retorno -1
+	 */
+	int verifyJumps(int position, int jump);
+
 private:
 	/**
 	 * Se encarga de abrir el archivo de la Tabla segun el formato (lectura,escritura) que se
