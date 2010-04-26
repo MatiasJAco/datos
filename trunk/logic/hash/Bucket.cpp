@@ -61,7 +61,7 @@ void Bucket::positionateAtEnd(){
 	}
 }
 
-int Bucket::insert(StringInputData* sid) {
+bool Bucket::insert(StringInputData* sid) {
 	char* valueReg = new char[sid->size()];
 	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg), sid->size());
 	//me paro al final del bucket
@@ -121,12 +121,6 @@ VarRegister Bucket::getRegister(int key) {
 
 void Bucket::print(){
 	VarRegister varReg;
-
-	//todo: revisar este metodo getRegisterAmount()
-	//unsigned int cant = this->block->getRegisterAmount();
-//	unsigned int cant = 2;
-//	printf("cantidad de registros en el bucket HARDCODEADA: %i\n", cant);
-
 	this->block->restartCounter();
 
 	//imprimo td del bucket
@@ -136,4 +130,12 @@ void Bucket::print(){
 		sid->toData(varReg.getValue());
 		cout << "Key: " << sid->getKey() << " Value: " << sid->getValue() << endl;
 	}
+}
+
+void Bucket::duplicateDepth(){
+	this->depth =this->depth * 2;
+}
+
+void Bucket::divideDepth(){
+	this->depth =this->depth / 2;
 }
