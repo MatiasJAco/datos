@@ -56,6 +56,20 @@ bool Hash::existsElement(StringInputData* sid) {
 	return result;
 }
 
+int Hash::reHash(Bucket* bucket) {
+	VarRegister varRegister;
+	bucket->getBlock()->restartCounter();
+
+	while (bucket->getBlock()->hasNextRegister()) {
+		varRegister = bucket->getBlock()->getNextRegister(true);
+		char* registerValue = varRegister.getValue();
+		StringInputData* sid = new StringInputData();
+		sid->toData(registerValue);
+		this->add(sid);
+		bucket->getBlock()->deleteRegister();
+	}
+	return -1;
+}
 
 int Hash::createNewBlock(int depth){
 	VarRegister* varRegister = new VarRegister();
@@ -107,14 +121,22 @@ int Hash::add(StringInputData* sid) {
 		}
 
 		else{
-			//lo hace adrian
+			bucket->setDepth(bucket->getDepth()*2);
+			Block* block2 = this->hashFile->getNewBlock();
+			Bucket* bucket2 = new Bucket(block2);
+			bucket2->setDepth(bucket2->getDepth()*2);
+
+			this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucket2->getDepth() / 2);
+
+			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
+			this->add(sid);
+			delete bucket2;
 		}
 
 
 	}
 
 	delete bucket;
-
 	return 0;
 }
 
