@@ -21,99 +21,115 @@ InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level)
 loadResultEnum InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
 
-	int claveInt;
-	int punteroIzq;
-	char* reg;
+	VarRegister reg;
 	int claveBuscada=dato.getKey();
-//encuentra al sucesor que puede tener el dato
+	bool found=false;
+
+	//Busca al sucesor que puede tener el dato
+	m_block->restartCounter();
 	//Itera una vez para obviar el dato de control.
-	this->m_block->getNextRegister();
+	VarRegister level = this->m_block->getNextRegister();
+	INodeData* contenido=new INodeData(0,0);
 
-	do{
-		reg=this->m_block->getNextRegister().getValue();
-		punteroIzq=	ByteConverter::bytesToInt(reg);
-		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
+	while(!m_block->isLastRegister()&& !found ){
 
-	}while((claveBuscada > claveInt ) );
+		reg=this->m_block->getNextRegister();
+		// Transformo el registro a un INodeData
+		contenido->toNodeData(reg.getValue());
+		if(contenido->getKey()<dato.getKey()){
+			found=true;
+		}
 
-	this->m_block->restartCounter();
+	};
 
-	INodeData* contenido=new INodeData(punteroIzq,claveInt);
-
-//se lo pide al arbol
+//Se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
-	sucesor->insert(dato);
-	if (sucesor->overflow()){
-//crear nodo y redistribuir
+	loadResultEnum result=sucesor->insert(dato);
 
+	if (result==OVERFLOW_LOAD){
+
+	//crear nodo y redistribuir
+		int newNodeNumber=0;
 		if(sucesor->isLeaf()){
-			LeafNode* nuevoNodo=NULL;
+
+
+			LeafNode* nuevoNodo=(LeafNode*)this->m_tree->newLeafNode();
 			sucesor->divide(nuevoNodo);
+			newNodeNumber=nuevoNodo->getNodeNumber();
 
 		}else{
-			InnerNode* nuevoNodo=NULL;
+			InnerNode* nuevoNodo=(InnerNode*)this->m_tree->newInnerNode(sucesor->getLevel());
 			sucesor->divide(nuevoNodo);
+			newNodeNumber=nuevoNodo->getNodeNumber();
 		};
 		VarRegister regActual;
 
 		//Itera una vez para obviar el dato de control.
+		this->m_block->restartCounter();
 		this->m_block->getNextRegister();
-		do{
 
+		while(!m_block->isLastRegister()&& !found ){
 
-			regActual=this->m_block->getNextRegister();
-
-			claveInt = ByteConverter::bytesToInt(regActual.getValue()+sizeof(int));
-
-		}while((claveBuscada > claveInt ));
+			reg=this->m_block->getNextRegister();
+			// Transformo el registro a un INodeData
+			contenido->toNodeData(reg.getValue());
+			if(contenido->getKey()<dato.getKey()){
+				found=true;
+			}
+		}
 
 		if (claveBuscada<contenido->getKey()){
-				INodeData* nuevoContenido= new INodeData(m_tree->getNodeQuantity(),contenido->getKey());
+				INodeData* nuevoContenido= new INodeData(newNodeNumber,contenido->getKey());
 				contenido->setKey(dato.getKey());
 				char* stream;
-				regActual.setValue(contenido->toStream(stream),sizeof(*contenido));
+				reg.setValue(contenido->toStream(stream),sizeof(*contenido));
 				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(stream),sizeof(*nuevoContenido));
 
 				this->m_block->addRegister(*nuevoRegistro);
 		};
-	}
 
+	};
 	return NORMAL_LOAD;
 }
 
 loadResultEnum InnerNode::remove(const InputData & dato){
 	//	comparo el dato con las claves
 
-	int claveInt;
-	int punteroIzq;
-	char* reg;
-	int claveBuscada=dato.getKey();
-	//encuentra al sucesor que puede tener el dato
-	//Itera una vez para obviar el dato de control.
-	this->m_block->getNextRegister();
-	do{
-		reg=this->m_block->getNextRegister().getValue();
-		punteroIzq=	ByteConverter::bytesToInt(reg);
-		claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
-	}while((claveBuscada > claveInt ) );
+		VarRegister reg;
 
-	this->m_block->restartCounter();
+		bool found=false;
 
-	INodeData* contenido=new INodeData(punteroIzq,claveInt);
+		//Busca al sucesor que puede tener el dato
+		m_block->restartCounter();
+		//Itera una vez para obviar el dato de control.
+		VarRegister level = this->m_block->getNextRegister();
+		INodeData* contenido=new INodeData(0,0);
+		INodeData* hermano=new INodeData(0,0);
 
-	//se lo pide al arbol
+		while(!m_block->isLastRegister()&& !found ){
+
+			reg=this->m_block->getNextRegister();
+			// Transformo el registro a un INodeData
+			contenido->toNodeData(reg.getValue());
+			if(contenido->getKey()<dato.getKey()){
+				found=true;
+			}
+
+		};
+
+	//Se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
-	sucesor->remove(dato);
-	if (sucesor->underflow()){
-	//		//intentar balancear con el hermano derecho
+		loadResultEnum result=sucesor->remove(dato);
+	if (result==UNDERFLOW_LOAD){
+	//intentar balancear con el hermano derecho
 
-			reg=this->m_block->getNextRegister().getValue();
-			punteroIzq=	ByteConverter::bytesToInt(reg);
-			claveInt = ByteConverter::bytesToInt(reg+sizeof(int));
-			int cantNecesaria=sucesor->getBranchFactor()-sucesor->getUsedSpace();
-			Node* hermanoEqui=this->m_tree->getNode(contenido->getLeftPointer());
-			if(hermanoEqui->falseRemove(cantNecesaria)){
-				hermanoEqui->donate(sucesor,cantNecesaria);
+			reg=this->m_block->getNextRegister();
+			hermano->toNodeData(reg.getValue());
+		//	int cantNecesaria=sucesor->getBranchFactor()-sucesor->getUsedSpace();
+			Node* hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
+
+			if(hermanoEqui->remove(dato)!=UNDERFLOW_LOAD){
+			//	hermanoEqui->donate(sucesor,cantNecesaria);
 
 			}else{
 			//sino fusionar
