@@ -236,6 +236,29 @@ void LeafNode::join(Node* fusionNode){
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
+void LeafNode::printContent(InputData & data)
+{
+	VarRegister varR;
+	unsigned int dataAmmount;
+	unsigned int i=0;
+
+	m_block->restartCounter();
+	dataAmmount = m_block->getRegisterAmount();
+
+	varR = m_block->getNextRegister(true);
+	cout << "Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
+	cout << "Datos "<<endl;
+
+	for(i=1; i < dataAmmount; i++)
+	{
+		varR = m_block->getNextRegister(true);
+		data.toData(varR.getValue());
+		cout<< "Clave:"<<data.getKey()<<" Datos:"<<data.getValue()<<endl;
+	}
+
+
+}
+
 bool LeafNode::donate(Node* destNode,const InputData& deletedData)
 {
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
