@@ -27,12 +27,15 @@ class BPlusTree;
 
 class InnerNode: public Node {
 
-public:
+	friend class BPlusTree;
 
-//	friend class BPlusTree::NodeFactory;
-
+private:
 
 	BPlusTree* m_tree;
+
+private:
+	//--------------Constructor/Destructor----------------//
+	InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree);
 
 public:
 	/// Constructor.
@@ -43,7 +46,7 @@ public:
 	 * @param nodeNumber Identificador del nodo.
 	 * @param level Nivel en el que se encuentra el nodo.
 	 */
-	InnerNode(unsigned int nodeNumber,unsigned int level);
+	InnerNode(unsigned int nodeNumber);
 
 	/// Destructor.
 	~InnerNode();
@@ -92,9 +95,6 @@ public:
 	 */
 	loadResultEnum modify(const InputData& data);
 
-
-	/// Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!
-	unsigned int getUsedSpace();
 
 	void divide(Node* destNode,const InputData& newData);
 

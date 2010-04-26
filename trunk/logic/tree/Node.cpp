@@ -12,10 +12,20 @@ Node::Node()
 	m_nodeNumber = UNDEFINED_NODE_NUMBER;
 }
 
-Node::Node(unsigned int nodeNumber,unsigned int level)
+Node::Node(unsigned int nodeNumber)
 {
 	m_nodeNumber = nodeNumber;
-	m_level = level;
+}
+
+Node::Node(unsigned int nodeNumber,unsigned int level,Block* block)
+{
+	m_nodeNumber = nodeNumber;
+	m_block = block;
+	VarRegister regLevel;
+	regLevel.setValue(level);
+
+	m_block->restartCounter();
+	m_block->addRegister(regLevel);
 }
 
 Node::~Node()
@@ -23,18 +33,32 @@ Node::~Node()
 }
 
 
-unsigned int Node::getLevel()const
+unsigned int Node::getLevel()
 {
-	return m_level;
+	unsigned int level = UNDEFINED_NODE_LEVEL;
+
+	m_block->restartCounter();
+
+	if (!m_block->isLastRegister())
+	{
+		VarRegister regLevel = m_block->getNextRegister();
+		level = ByteConverter::bytesToUInt(regLevel.getValue());
+	}
+
+	return level;
 }
 
 unsigned int Node::readLevel(Block block)
 {
+	unsigned int level = UNDEFINED_NODE_LEVEL;
+
 	block.restartCounter();
 
-	VarRegister firstReg = block.getNextRegister();
-
-	unsigned int level = ByteConverter::bytesToUInt(firstReg.getValue());
+	if (!block.isLastRegister())
+	{
+		VarRegister regLevel = block.getNextRegister();
+		level = ByteConverter::bytesToUInt(regLevel.getValue());
+	}
 
 	return level;
 }
@@ -42,15 +66,12 @@ unsigned int Node::readLevel(Block block)
 
 void Node::setLevel(const unsigned int level)
 {
-	m_level = level;
-}
+	m_block->restartCounter();
 
-unsigned int Node::getSize() const
-{
-	throw "Hay que quitar este constructor! Nodo no va a tener mas el tamaño!";
+	VarRegister regLevel;
+	regLevel.setValue(level);
 
-//	return m_size;
-	return 0;
+	m_block->modifyRegister(regLevel);
 }
 
 unsigned int Node::getNodeNumber()const
@@ -63,41 +84,17 @@ void Node::setNodeNumber(unsigned int number)
 	m_nodeNumber = number;
 }
 
-double Node::getBranchFactor() const
-{
-	throw "Hay que quitar este constructor! Nodo no va a tener mas el factor de carga!";
-
-//	return m_branchFactor;
-	return 0;
-}
-
-void Node::setBranchFactor(double branchFactor)
-{
-	throw "Hay que quitar este constructor! Nodo no va a tener mas el factor de carga!";
-
-//	m_branchFactor = branchFactor;
-}
-
 
 bool Node::isEmpty()
 {
 	return true;
 }
 
-bool Node::overflow()
-{
-	return true;
-}
-
-
-bool Node::underflow()
-{
-	return true;
-}
-
 bool Node::isLeaf()
 {
-	return (m_level == LEAF_LEVEL);
+	unsigned int level = getLevel();
+
+	return (level == LEAF_LEVEL);
 }
 
 

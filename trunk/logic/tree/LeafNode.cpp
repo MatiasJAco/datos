@@ -12,9 +12,15 @@ LeafNode::LeafNode()
 }
 
 LeafNode::LeafNode(unsigned int nodeNumber)
-:Node(nodeNumber,Node::LEAF_LEVEL)
+:Node(nodeNumber)
 {
 }
+
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block)
+:Node(nodeNumber,Node::LEAF_LEVEL,block)
+{
+}
+
 
 LeafNode::~LeafNode()
 {
@@ -205,7 +211,7 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 			if (data.size() > currentData->size())
 			{
 				data.setKey(currentData->getKey());
-//				data.setValue(currentData->getValue());
+				data.setValue(currentData->getValue());
 			}
 			else
 				throw "Espacio insuficiente para guardar el dato buscado";
@@ -216,18 +222,11 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 }
 
 
-unsigned int LeafNode::getUsedSpace()
-{
-	throw "Hay que quitar este metodo! se hace control desde el Block";
-	return 0;
-}
-
-
 void LeafNode::divide(Node* destNode,const InputData& newData){
 //	LeafNode* nodoNuevo = new LeafNode();
-	while(destNode->getUsedSpace()<50){
-		//TODO Implementar traslado de registros de un bloque a otro.
-	}
+//	while(destNode->getUsedSpace()<50){
+//		//TODO Implementar traslado de registros de un bloque a otro.
+//	}
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 
 }
