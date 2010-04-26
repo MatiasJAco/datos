@@ -36,6 +36,13 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,double branchFactor)
 	}
 }
 
+
+BPlusTree::~BPlusTree()
+{
+	file.close();
+}
+
+
 BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
 {
 	m_sizeNodes = sizeNodes;
