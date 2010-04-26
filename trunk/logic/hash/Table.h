@@ -68,6 +68,13 @@ public:
 	*/
 	int verifyAndDivide();
 
+	/**
+	 * recorre la tabla, se posiciona en la primer posicion en donde aparece el valor de value
+	 * y lo reemplaza por newValue
+	 * Retorna false, si no pudo realizar la operacion
+	 */
+	bool changeFirstTimeInTable(int value, int newValue);
+
 private:
 	/**
 	 * Se encarga de abrir el archivo de la Tabla segun el formato (lectura,escritura) que se
@@ -95,6 +102,11 @@ private:
 	 * Crea archivo temporario para uso de modificacion de datos
 	 */
 	FILE* createTemporalFile();
+
+	/**
+	 * retorna la primera posicion de la tabla donde aparece el valor del value
+	 */
+	int getFirstTimeInTable(int value);
 
 
 };

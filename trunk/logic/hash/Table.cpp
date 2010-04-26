@@ -258,3 +258,21 @@ int Table::verifyAndDivide(){
 	return 0;
 }
 
+int Table::getFirstTimeInTable(int value){
+	int sizeOfTable = this->getSize();
+	int listElementsTable[sizeOfTable];
+	this->parse(listElementsTable);
+	int result = 0;
+	for (int i = 0; i<sizeOfTable;i++){
+		if(listElementsTable[i]!=value)
+			result++;
+		else return result;
+	}
+
+}
+
+bool Table::changeFirstTimeInTable(int value, int newValue){
+	int position = getFirstTimeInTable(value);
+	this->modifyRegister(position,newValue);
+	return true;
+}
