@@ -34,14 +34,7 @@ StringInputData* Hash::get(int key) {
 }
 
 void Hash::inicializeHashFile(){
-	int depth=1;
-	VarRegister* varRegister = new VarRegister();
-	varRegister->setValue(depth);
-	Block* block = this->hashFile->getNewBlock();
-	block->addRegister(*varRegister);
-	this->hashFile->saveBlock(block);
-	delete block;
-	delete varRegister;
+	createNewBlock(1);
 }
 
 int Hash::calculateHashFunction(int key) {
@@ -63,6 +56,19 @@ bool Hash::existsElement(StringInputData* sid) {
 	return result;
 }
 
+
+int Hash::createNewBlock(int depth){
+	VarRegister* varRegister = new VarRegister();
+	varRegister->setValue(depth);
+	Block* block = this->hashFile->getNewBlock();
+	block->addRegister(*varRegister);
+	this->hashFile->saveBlock(block);
+	int bloqueNuevo = block->getBlockNumber();
+	delete block;
+	delete varRegister;
+	return bloqueNuevo;
+}
+
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
 	if (existsElement(sid)){
@@ -81,9 +87,9 @@ int Hash::add(StringInputData* sid) {
 	Bucket* bucket = new Bucket(block);
 	//agregar td al bloque en el 1er reg del block
 
-	int bloqueDesbordado = bucket->insert(sid);
+	int numeroBloqueDesbordado = bucket->insert(sid);
 	//si se pudo agregar en el bucket lo guardo
-	if ( bloqueDesbordado==-1 ){
+	if ( numeroBloqueDesbordado==-1 ){
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
@@ -94,19 +100,16 @@ int Hash::add(StringInputData* sid) {
 			int nuevoTamTabla = tamTabla * 2;
 			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
 
-			VarRegister* varRegister = new VarRegister();
-			varRegister->setValue(nuevoTamTabla);
-			Block* block = this->hashFile->getNewBlock();
-			block->addRegister(*varRegister);
-			this->hashFile->saveBlock(block);
-			delete block;
-			delete varRegister;
+			int bloqueNuevo = createNewBlock(nuevoTamTabla);
+
+			this->hashTable->changeFirstTimeInTable(numeroBloqueDesbordado,bloqueNuevo);
 
 		}
 
 		else{
 			//lo hace adrian
 		}
+
 
 	}
 

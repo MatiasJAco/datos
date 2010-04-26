@@ -42,6 +42,12 @@ private:
 	 */
 	bool existsElement(StringInputData* sid);
 
+	/**
+	 * crea un bloque nuevo en el archivo pasandole el tamaño de dispersion y retorna
+	 * su numero de bloque
+	 */
+	int createNewBlock(int depth);
+
 
 public:
 
