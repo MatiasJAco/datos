@@ -96,7 +96,7 @@ public:
 	/// Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!
 	unsigned int getUsedSpace();
 
-	void divide(Node* destNode);
+	void divide(Node* destNode,const InputData& newData);
 
 	void join(Node* fusionNode);
 
@@ -112,6 +112,7 @@ public:
 	***/
 	bool donate(Node* destNode,const InputData& deletedData);
 
+	void insertINodeData(INodeData* contBuscado);
 };
 
 #endif /* INNERNODE_H_ */

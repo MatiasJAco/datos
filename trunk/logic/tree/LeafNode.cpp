@@ -223,7 +223,7 @@ unsigned int LeafNode::getUsedSpace()
 }
 
 
-void LeafNode::divide(Node* destNode){
+void LeafNode::divide(Node* destNode,const InputData& newData){
 //	LeafNode* nodoNuevo = new LeafNode();
 	while(destNode->getUsedSpace()<50){
 		//TODO Implementar traslado de registros de un bloque a otro.
