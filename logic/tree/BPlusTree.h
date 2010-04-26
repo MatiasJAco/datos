@@ -18,6 +18,10 @@
 #include "InnerNode.h"
 #include "LeafNode.h"
 
+/**
+ * Implementacion de arbol B+ guardado en disco
+ *
+ */
 class BPlusTree {
 
 private:
