@@ -41,6 +41,15 @@ void testTable2(){
 	myTable.changeFirstTimeInTable(24,444);
 	myTable.print();
 }
+
+void testTable3(){
+	Table myTable;
+	myTable.createFile();
+	myTable.print();
+	int result = myTable.verifyJumps(1,2);
+	printf("\nRESULT : %i",result);
+}
+
 void testAdd() {
 	/* Se toma el dato que ingresa el usuario. */
 	stringstream ss (stringstream::in | stringstream::out);
@@ -58,6 +67,7 @@ void testAdd() {
 int main(){
 	//testTable();
 	//testTable2();
+	//testTable3();
 	testAdd();
 	printf("paso!");
 	return 0;
