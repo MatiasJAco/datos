@@ -22,14 +22,14 @@ class InputData {
 
 protected:
 	int key;
-	stringstream value;
+	string value;
 
 public:
 	InputData();
 	virtual ~InputData();
 
 	virtual void setKey(int key) = 0;
-	virtual void setValue(std::stringstream& value) = 0;
+	virtual void setValue(std::string value) = 0;
 	virtual  int getKey()const = 0;
 	virtual string getValue() = 0;
 

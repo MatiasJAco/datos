@@ -18,8 +18,8 @@ void StringInputData::setKey(int key) {
 	this->key = key;
 }
 
-void StringInputData::setValue(std::stringstream& value) {
-	this->value << value.str();
+void StringInputData::setValue(std::string value) {
+	this->value = value;
 }
 
 int StringInputData::getKey()const {
@@ -27,14 +27,14 @@ int StringInputData::getKey()const {
 }
 
 string StringInputData::getValue() {
-	return this->value.str();
+	return this->value;
 }
 
 char* StringInputData::toStream(char* stream) const
 {
 	ByteConverter::intToBytes(key,stream);
 	stream += sizeof(key);
-	ByteConverter::stringToBytes(value.str(),stream);
+	ByteConverter::stringToBytes(value,stream);
 
 	return stream;
 }
@@ -43,12 +43,12 @@ void StringInputData::toData(const char* stream)
 {
 	key = ByteConverter::bytesToInt(stream);
 	stream += sizeof(key);
-	value << ByteConverter::bytesToString(stream);
+	value = ByteConverter::bytesToString(stream);
 }
 
 unsigned int StringInputData::size()const
 {
-	return (sizeof(key)+value.str().size());
+	return (sizeof(key)+value.size()+1);
 }
 
 InputData* StringInputData::newInstance()const
