@@ -32,13 +32,14 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 	INodeData* contenido=new INodeData(0,0);
 
 	while(!m_block->isLastRegister()&& !found ){
+		reg=this->m_block->peekRegister();
 
-		reg=this->m_block->getNextRegister();
 		// Transformo el registro a un INodeData
 		contenido->toNodeData(reg.getValue());
 		if(contenido->getKey()<dato.getKey()){
 			found=true;
 		}
+		this->m_block->getNextRegister();
 
 	};
 
@@ -62,41 +63,48 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 			sucesor->divide(nuevoNodo);
 			newNodeNumber=nuevoNodo->getNodeNumber();
 		};
-		VarRegister regActual;
+
 
 		//Itera una vez para obviar el dato de control.
 		this->m_block->restartCounter();
 		this->m_block->getNextRegister();
-
+		found=false;
 		while(!m_block->isLastRegister()&& !found ){
 
-			reg=this->m_block->getNextRegister();
+			reg=this->m_block->peekRegister();
 			// Transformo el registro a un INodeData
 			contenido->toNodeData(reg.getValue());
 			if(contenido->getKey()<dato.getKey()){
 				found=true;
+			}else{
+				this->m_block->getNextRegister();
 			}
 		}
 
 		if (claveBuscada<contenido->getKey()){
 				INodeData* nuevoContenido= new INodeData(newNodeNumber,contenido->getKey());
+				//Dato es devuelto con la clave del primer elemento del nuevo nodo.
 				contenido->setKey(dato.getKey());
-				char* stream;
-				reg.setValue(contenido->toStream(stream),sizeof(*contenido));
-				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(stream),sizeof(*nuevoContenido));
 
-				this->m_block->addRegister(*nuevoRegistro);
+				char* valueReg = new char[contenido->getSize()];
+				reg.setValue(contenido->toStream(valueReg),sizeof(contenido->getSize()));
+				this->m_block->modifyRegister(reg);
+				//Itera nuevamente para posicionarse al lado de la referemcia a nodo desbordado.
+				this->m_block->getNextRegister();
+				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),sizeof(*nuevoContenido));
+				this->m_block->addRegister(*nuevoRegistro,result);
+
 		};
 
 	};
-	return NORMAL_LOAD;
+	return result;
 }
 
 loadResultEnum InnerNode::remove(const InputData & dato){
 	//	comparo el dato con las claves
 
 		VarRegister reg;
-
+		loadResultEnum resultOperation=NORMAL_LOAD;
 		bool found=false;
 
 		//Busca al sucesor que puede tener el dato
@@ -125,22 +133,43 @@ loadResultEnum InnerNode::remove(const InputData & dato){
 
 			reg=this->m_block->getNextRegister();
 			hermano->toNodeData(reg.getValue());
-		//	int cantNecesaria=sucesor->getBranchFactor()-sucesor->getUsedSpace();
+
 			Node* hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
 
-			if(hermanoEqui->remove(dato)!=UNDERFLOW_LOAD){
-			//	hermanoEqui->donate(sucesor,cantNecesaria);
 
-			}else{
+		    if(!hermanoEqui->donate(sucesor,dato)){
 			//sino fusionar
 				sucesor->join(hermanoEqui);
+				//Reemplazo la clave del nodo siguiente a ambos en el nodo fusionado.
+
+				contenido->setKey(hermano->getKey());
+				INodeData* contBuscado=new INodeData(0,0);
+				//Busco el registro correspondiente al nodo fusionado y lo modifico.
+				while(!m_block->isLastRegister()&& !found ){
+					reg=this->m_block->peekRegister();
+					// Transformo el registro a un INodeData
+					contBuscado->toNodeData(reg.getValue());
+					if(contenido->getKey()<contBuscado->getKey()){
+						found=true;
+					}else{
+							this->m_block->getNextRegister();
+					};
+
+				};
+
+				VarRegister registroModificado;
+				char* valueReg = new char[contenido->getSize()];
+				registroModificado.setValue(contenido->toStream(valueReg),sizeof(contenido->getSize()));
+				this->m_block->modifyRegister(reg);
+
+				this->m_block->deleteRegister(resultOperation);
 			}
 
 
 		//
 	//
 	}
-	return NORMAL_LOAD;
+	return resultOperation;
 }
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
@@ -174,7 +203,7 @@ void InnerNode::join(Node* fusionNode){
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-void InnerNode::donate(Node* destNode,unsigned int toDonate)
+bool InnerNode::donate(Node* destNode,const InputData& deletedData)
 {
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }

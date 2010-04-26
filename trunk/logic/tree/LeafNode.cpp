@@ -236,7 +236,7 @@ void LeafNode::join(Node* fusionNode){
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-void LeafNode::donate(Node* destNode,unsigned int toDonate)
+bool LeafNode::donate(Node* destNode,const InputData& deletedData)
 {
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
