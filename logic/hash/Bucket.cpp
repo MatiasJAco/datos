@@ -61,17 +61,17 @@ void Bucket::positionateAtEnd(){
 	}
 }
 
-loadResultEnum Bucket::insert(StringInputData* sid) {
+int Bucket::insert(StringInputData* sid) {
 	char* valueReg = new char[sid->size()];
 	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg), sid->size());
 	//me paro al final del bucket
 	positionateAtEnd();
 
 	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-	this->block->addRegister(*varRegister);
+	bool inserted = this->block->addRegister(*varRegister);
 
 	delete varRegister;
-	return NORMAL_LOAD;
+	return inserted;
 
 
 //	//TODO: cambiar este metodo por el nuevo q esta haciendo alex (mail que envio el 24/04/10)
