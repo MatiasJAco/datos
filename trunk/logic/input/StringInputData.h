@@ -17,7 +17,7 @@ public:
 	virtual ~StringInputData();
 
 	void setKey(int key);
-	void setValue(std::stringstream& value);
+	void setValue(std::string value);
 	int getKey()const;
 	string getValue();
 
