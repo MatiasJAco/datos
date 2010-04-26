@@ -23,6 +23,10 @@ InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPl
 	m_tree = pointerTree;
 }
 
+InnerNode::~InnerNode()
+{
+}
+
 loadResultEnum InnerNode::insert(const InputData & dato){
 //	comparo el dato con las claves
 
@@ -249,5 +253,10 @@ void InnerNode::insertINodeData(INodeData* toInsert){
 		this->m_block->getNextRegister();
 	};
 	this->m_block->addRegister(*nuevoRegistro,result);
+}
+
+void InnerNode::save()
+{
+
 }
 

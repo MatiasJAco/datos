@@ -67,7 +67,7 @@ public:
 	/**
 	 * Tama�o del dato.
 	 */
-	virtual unsigned int getSize();
+	unsigned int getSize()const;
 
 };
 

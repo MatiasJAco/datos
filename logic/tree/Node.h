@@ -154,7 +154,6 @@ protected:
 
 	static unsigned int readLevel(Block block);
 
-	void save();
 };
 
 

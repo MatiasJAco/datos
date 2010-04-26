@@ -60,6 +60,11 @@ void INodeData::toNodeData(const char *stream)
 	m_leftPointer = ByteConverter::bytesToUInt(stream);
 }
 
+unsigned int INodeData::getSize() const
+{
+	return (sizeof(int)*2);
+}
+
 
 
 
