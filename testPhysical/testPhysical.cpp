@@ -9,6 +9,7 @@
 #include "../physical/file/BlockFile.h"
 #include "../physical/file/FreeBlockFile.h"
 #include "../physical/utils/ByteConverter.h"
+#include "../physical/file/BlockManager.h"
 #include <sstream>
 #include <fstream>
 
@@ -366,12 +367,31 @@ void testBlock()
 		cout << "Error al pedir bloque nuevo"<<endl;
 	block = archivo->getNewBlock();
 
+	if(block->getMinimalLoad() != 256)
+		cout << "Error de getMinimalLoad(), resultado:"<<block->getMinimalLoad()<<endl;
+
 	block2=archivo->getNewBlock();
 	if(block2==NULL)
 		cout << "Error al pedir bloque nuevo"<<endl;
 
 	block2->restartCounter();
-	for(int i=0; i < 63; i++)
+	for(int i=0; i < 31; i++)
+	{
+		varR->setValue(i);
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	string stringLargo = "esto la rompe seguro";
+	varR->setValue(stringLargo);
+
+	if(!block2->addRegister(*varR, loadResult))
+		cout << "Se acabo el espacio"<<endl;
+
+	for(int i=33; i < 61; i++)
 	{
 		varR->setValue(i);
 		if(!block2->addRegister(*varR, loadResult))
@@ -386,6 +406,16 @@ void testBlock()
 
 	if(loadResult!=OVERFLOW_LOAD)
 		cout << "No se detecto overflow"<<endl;
+
+
+	cout << "-----------SPLIT------------------"<<endl;
+	BlockManager::split(block2, block);
+
+	block->printRegisters();
+	block2->printRegisters();
+	cout << "-----------fin SPLIT------------------"<<endl;
+
+
 
 	delete block2;
 
@@ -425,7 +455,7 @@ void testBlock()
 	}
 
 	cout <<"Guardado bloque"<<endl;
-	delete varR;
+
 
 	try{
 		string enorme = "sadlnaslndsak,ndskljanñkljndaLKJNSDAÑKLASNKLJDASNKLJSD"
@@ -447,7 +477,17 @@ void testBlock()
 
 	}
 
+	block->clear();
 
+	varR->setValue(valorString);
+
+
+	block->addRegister(*varR);
+
+	block->printRegisters();
+
+
+	delete varR;
 	delete block;
 	delete archivo;
 	block=NULL;
