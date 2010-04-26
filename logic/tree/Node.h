@@ -13,7 +13,7 @@
 
 #include "../logic/input/InputData.h"
 #include "../physical/file/Block.h"
-//#include "BPlusTree.h"
+#include "../physical/file/BlockManager.h"
 
 
 
@@ -155,7 +155,7 @@ public:
 	 */
 	virtual unsigned int getUsedSpace() = 0;
 
-	virtual void divide(Node* destNode) = 0;
+	virtual void divide(Node* destNode,const InputData& newData) = 0;
 
 	virtual void join(Node* fusionNode) = 0;
 	/**

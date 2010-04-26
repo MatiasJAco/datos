@@ -55,12 +55,12 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 
 
 			LeafNode* nuevoNodo=(LeafNode*)this->m_tree->newLeafNode();
-			sucesor->divide(nuevoNodo);
+			sucesor->divide(nuevoNodo,dato);
 			newNodeNumber=nuevoNodo->getNodeNumber();
 
 		}else{
 			InnerNode* nuevoNodo=(InnerNode*)this->m_tree->newInnerNode(sucesor->getLevel());
-			sucesor->divide(nuevoNodo);
+			sucesor->divide(nuevoNodo,dato);
 			newNodeNumber=nuevoNodo->getNodeNumber();
 		};
 
@@ -93,7 +93,6 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 				this->m_block->getNextRegister();
 				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),sizeof(*nuevoContenido));
 				this->m_block->addRegister(*nuevoRegistro,result);
-
 		};
 
 	};
@@ -194,7 +193,34 @@ unsigned int InnerNode::getUsedSpace()
 }
 
 
-void InnerNode::divide(Node* destNode){
+void InnerNode::divide(Node* destNode,const InputData& newData){
+	InnerNode* nodoReceptor=(InnerNode*)destNode;
+	Block* nuevoBloque=new Block(nodoReceptor->getNodeNumber(),this->m_block->getRemainingSpace()+this->m_block->getUsedSpace(),this->getBranchFactor());
+	BlockManager::split(this->getBlock(),nuevoBloque);
+	//Recorro el bloque y le voy pasando todos los registros al bloque del nodo.
+	//Itera para oviar el primer registro de control.
+	nuevoBloque->restartCounter();
+	nuevoBloque->getNextRegister();
+	VarRegister reg;
+	INodeData* contBuscado=new INodeData(0,0);
+	while(!nuevoBloque->isLastRegister()){
+		reg=nuevoBloque->peekRegister();
+		// Transformo el registro a un INodeData
+		contBuscado->toNodeData(reg.getValue());
+		nodoReceptor->insertINodeData(contBuscado);
+		nuevoBloque->getNextRegister();
+	};
+	//Devuelvo el primer dato para tratar el overflow.
+	nuevoBloque->restartCounter();
+	nuevoBloque->getNextRegister();
+	reg=nuevoBloque->getNextRegister();
+	contBuscado->toNodeData(reg.getValue());
+//	&newData=new StringInputData();
+	//newData.setKey(contBuscado->getKey());
+//	newData.setValue("");
+
+
+
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
@@ -213,4 +239,13 @@ bool InnerNode::falseRemove(unsigned int toRemove)
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
+void InnerNode::insertINodeData(INodeData* toInsert){
+	char* valueReg = new char[toInsert->getSize()];
+	VarRegister* nuevoRegistro=new VarRegister(toInsert->toStream(valueReg),sizeof(*toInsert));
+	loadResultEnum result;
+	while(!this->m_block->isLastRegister()){
+		this->m_block->getNextRegister();
+	};
+	this->m_block->addRegister(*nuevoRegistro,result);
+}
 

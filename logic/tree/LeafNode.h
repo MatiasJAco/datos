@@ -86,7 +86,7 @@ public:
 
 	bool isLeaf();
 
-	void divide(Node* destNode);
+	void divide(Node* destNode,const InputData& newData);
 
 	/**
 	 * Imprime el contenido del nodo por pantalla.
