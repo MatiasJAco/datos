@@ -162,7 +162,7 @@ public:
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	virtual void donate(Node* destNode,unsigned int toDonate) = 0;
+	virtual bool donate(Node* destNode,const InputData& deletedData) = 0;
 
 	/**
 	 * Simula la eliminacion de una determinada cantidad de bytes.

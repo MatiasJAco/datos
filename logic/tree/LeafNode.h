@@ -100,7 +100,7 @@ public:
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	virtual void donate(Node* destNode,unsigned int toDonate);
+	virtual bool donate(Node* destNode,const InputData& deletedData);
 
 protected:
 

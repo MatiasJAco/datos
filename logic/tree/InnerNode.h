@@ -110,7 +110,7 @@ public:
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	void donate(Node* destNode,unsigned int toDonate);
+	bool donate(Node* destNode,const InputData& deletedData);
 
 };
 
