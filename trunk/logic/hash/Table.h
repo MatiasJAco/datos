@@ -83,6 +83,12 @@ public:
 	 */
 	int verifyJumps(int position, int jump);
 
+	/**
+	 * Recorro la tabla circularmente (me muevo para atras "jump" lugares y para adelante "jump" lugares
+	 * y reemplazo los lugares en donde caigo con el elemento que paso como parametro: element
+	 */
+	void jumpAndReplace(int position, int jump, int element);
+
 private:
 	/**
 	 * Se encarga de abrir el archivo de la Tabla segun el formato (lectura,escritura) que se

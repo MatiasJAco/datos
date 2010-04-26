@@ -50,6 +50,17 @@ void testTable3(){
 	printf("\nRESULT : %i",result);
 }
 
+
+void testTable4(){
+	Table myTable;
+	myTable.createFile();
+	myTable.print();
+	myTable.jumpAndReplace(6,5,23);
+	myTable.print();
+}
+
+
+
 void testAdd() {
 	/* Se toma el dato que ingresa el usuario. */
 	stringstream ss (stringstream::in | stringstream::out);
@@ -68,7 +79,9 @@ int main(){
 	//testTable();
 	//testTable2();
 	//testTable3();
-	testAdd();
+	testTable4();
+
+	//testAdd();
 	printf("paso!");
 	return 0;
 }

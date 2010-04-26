@@ -105,9 +105,11 @@ int Hash::add(StringInputData* sid) {
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
+		printf("\nHubo desborde en el bucket: %i. ",bucket->getBlock()->getBlockNumber());
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla){
+			printf("Y td==tamTabla==%i.\n",td);
 			this->hashTable->duplicate();
 			int nuevoTamTabla = tamTabla * 2;
 			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
@@ -127,11 +129,13 @@ int Hash::add(StringInputData* sid) {
 		}
 
 		else{
+			printf("Y td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 
 			//TODO en realidad no se usa este metodo, hay que hacer uno nuevo, dsp preguntame adrian cualq cosa
-			this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucketNuevo->getDepth() / 2);
+			//this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucketNuevo->getDepth() / 2);
+			this->hashTable->jumpAndReplace(bucketNumber,bucketNuevo->getDepth(),bucketNuevo->getBlock()->getBlockNumber());
 
 			//TODO revisar esto del rehash (ni lo mire= soy pablo)
 			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
