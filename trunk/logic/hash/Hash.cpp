@@ -86,14 +86,26 @@ int Hash::add(StringInputData* sid) {
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
+		int tamTabla = this->hashTable->getSize();
+		int td = bucket->getDepth();
+		if (td==tamTabla){
+			this->hashTable->duplicate();
+			int nuevoTamTabla = tamTabla * 2;
+			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
 
-//		if (td==tamTabla){
-//			//lo hace pablo
-//		}
-//
-//		else{
-//			//lo hace adrian
-//		}
+			VarRegister* varRegister = new VarRegister();
+			varRegister->setValue(nuevoTamTabla);
+			Block* block = this->hashFile->getNewBlock();
+			block->addRegister(*varRegister);
+			this->hashFile->saveBlock(block);
+			delete block;
+			delete varRegister;
+
+		}
+
+		else{
+			//lo hace adrian
+		}
 
 	}
 
