@@ -79,9 +79,9 @@ int main(){
 	//testTable();
 	//testTable2();
 	//testTable3();
-	testTable4();
+	//testTable4();
 
-	//testAdd();
+	testAdd();
 	printf("paso!");
 	return 0;
 }
