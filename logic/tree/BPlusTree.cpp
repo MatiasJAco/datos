@@ -68,8 +68,6 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 
 	if (block!=NULL)
 	{
-		Node* node = NULL;
-
 		unsigned int nodeNumber = block->getBlockNumber();
 		unsigned int level = Node::readLevel(*block);
 

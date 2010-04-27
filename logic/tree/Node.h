@@ -139,12 +139,6 @@ public:
 	***/
 	virtual bool donate(Node* destNode,const InputData& deletedData) = 0;
 
-	/**
-	 * Simula la eliminacion de una determinada cantidad de bytes.
-	 * Devuelve true si se puede hacer si que se de underflow.
-	 * **/
-	virtual bool falseRemove(unsigned int toRemove) = 0;
-
 
 protected:
 

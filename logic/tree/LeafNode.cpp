@@ -19,6 +19,13 @@ LeafNode::LeafNode(unsigned int nodeNumber)
 LeafNode::LeafNode(unsigned int nodeNumber,Block* block)
 :Node(nodeNumber,Node::LEAF_LEVEL,block)
 {
+	VarRegister prevPointer,nextPointer;
+
+	prevPointer.setValue(UNDEFINED_NODE_NUMBER);
+	nextPointer.setValue(UNDEFINED_NODE_NUMBER);
+
+	m_block->addRegister(prevPointer);
+	m_block->addRegister(nextPointer);
 }
 
 
@@ -263,9 +270,35 @@ bool LeafNode::donate(Node* destNode,const InputData& deletedData)
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-bool LeafNode::falseRemove(unsigned int toRemove)
+unsigned int LeafNode::getNext()
 {
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+	unsigned int nextLeaf = UNDEFINED_NODE_NUMBER;
+
+	m_block->restartCounter();
+	m_block->getNextRegister();
+
+	VarRegister prevReg,nextReg;
+	prevReg = m_block->getNextRegister();
+	nextReg = m_block->getNextRegister();
+
+	nextLeaf = ByteConverter::bytesToUInt(nextReg.getValue());
+
+	return nextLeaf;
 }
 
+unsigned int LeafNode::getPrevious()
+{
+	unsigned int prevLeaf = UNDEFINED_NODE_NUMBER;
+
+	m_block->restartCounter();
+	m_block->getNextRegister();
+
+	VarRegister prevReg,nextReg;
+	prevReg = m_block->getNextRegister();
+	nextReg = m_block->getNextRegister();
+
+	prevLeaf = ByteConverter::bytesToUInt(prevReg.getValue());
+
+	return prevLeaf;
+}
 

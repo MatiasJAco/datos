@@ -79,6 +79,18 @@ public:
 	 */
 	loadResultEnum modify(const InputData& data);
 
+	/**
+	 * Devuelve el puntero a la siguiente hoja.
+	 * @return Numero de nodo o identificador.
+	 */
+	unsigned int getNext();
+
+	/**
+	 * Devuelve el puntero a la hoja anterior.
+	 * @return Numero de nodo o identificador.
+	 */
+	unsigned int getPrevious();
+
 
 	/**
 	 * Imprime el contenido del nodo por pantalla.
@@ -90,11 +102,6 @@ public:
 
 	void divide(Node* destNode,const InputData& newData);
 
-	/**
-	 * Simula la eliminacion de una determinada cantidad de bytes.
-	 *
-	 * **/
-	bool falseRemove(unsigned int toRemove);
 
 	void join(Node* fusionNode);
 
