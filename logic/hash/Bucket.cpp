@@ -122,13 +122,21 @@ VarRegister Bucket::getRegister(int key) {
 void Bucket::print(){
 	VarRegister varReg;
 	this->block->restartCounter();
+	varReg=this->block->getNextRegister(true);
 
 	//imprimo td del bucket
+	StringInputData* sid = new StringInputData();
+	sid->toData(varReg.getValue());
+	cout << "(" << sid->getKey() << ") ";
+	delete sid;
+
+	//imprimo resto del bucket
 	while (this->block->hasNextRegister()) {
 		varReg=this->block->getNextRegister(true);
 		StringInputData* sid = new StringInputData();
 		sid->toData(varReg.getValue());
-		cout << "Key: " << sid->getKey() << " Value: " << sid->getValue() << endl;
+		cout << sid->getKey() << "-" << sid->getValue() << " | ";
+		delete sid;
 	}
 }
 
