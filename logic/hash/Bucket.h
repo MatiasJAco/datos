@@ -35,9 +35,9 @@ public:
 	/**
 	 * Agrega un elemento nuevo al bucket.
 	 * @param sid Es el dato ingresado por el usuario.
-	 * @return Devuelve false si el bloque se desbordo, o bien true si se inserto correctamente.
+	 * @return Devuelve 1 si hubo overflow, 2 si hubo otro tipo de error de I/O, y 0 si pudo insertar el registro en el bloque.
 	 */
-	bool insert(StringInputData* sid);
+	int insert(StringInputData* sid);
 
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
