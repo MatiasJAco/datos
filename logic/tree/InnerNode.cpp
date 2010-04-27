@@ -27,11 +27,10 @@ InnerNode::~InnerNode()
 {
 }
 
-loadResultEnum InnerNode::insert(const InputData & dato){
+INodeData*  InnerNode::insert(const InputData & dato,loadResultEnum& result){
 //	comparo el dato con las claves
 
 	VarRegister reg;
-	int claveBuscada=dato.getKey();
 	bool found=false;
 
 	//Busca al sucesor que puede tener el dato
@@ -45,7 +44,7 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 
 		// Transformo el registro a un INodeData
 		contenido->toNodeData(reg.getValue());
-		if(contenido->getKey()<dato.getKey()){
+		if(contenido->getKey()>dato.getKey()){
 			found=true;
 		}
 		this->m_block->getNextRegister();
@@ -54,58 +53,60 @@ loadResultEnum InnerNode::insert(const InputData & dato){
 
 //Se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
-	loadResultEnum result=sucesor->insert(dato);
+	result=NORMAL_LOAD;
+	INodeData* overflowData=sucesor->insert(dato,result);
 
 	if (result==OVERFLOW_LOAD){
 
 	//crear nodo y redistribuir
-		int newNodeNumber=0;
+		INodeData* primerElemento=NULL;
 		if(sucesor->isLeaf()){
-
-
 			LeafNode* nuevoNodo=(LeafNode*)this->m_tree->newLeafNode();
-			sucesor->divide(nuevoNodo,dato);
-			newNodeNumber=nuevoNodo->getNodeNumber();
+			primerElemento=this->divideLeaf(sucesor,nuevoNodo,dato);
 
 		}else{
 			InnerNode* nuevoNodo=(InnerNode*)this->m_tree->newInnerNode(sucesor->getLevel());
-			sucesor->divide(nuevoNodo,dato);
-			newNodeNumber=nuevoNodo->getNodeNumber();
+			primerElemento=this->divideInner(sucesor,nuevoNodo,*overflowData);
 		}
+
 
 
 		//Itera una vez para obviar el dato de control.
 		this->m_block->restartCounter();
 		this->m_block->getNextRegister();
 		found=false;
-		while(!m_block->isLastRegister()&& !found ){
-
+		unsigned int iterador=0;
+		while(iterador<m_block->getRegisterAmount()&& !found ){
+			iterador++;
 			reg=this->m_block->peekRegister();
 			// Transformo el registro a un INodeData
 			contenido->toNodeData(reg.getValue());
-			if(contenido->getKey()<dato.getKey()){
+			if(contenido->getKey()>primerElemento->getKey()){
 				found=true;
 			}else{
 				this->m_block->getNextRegister();
 			}
 		}
 
-		if (claveBuscada<contenido->getKey()){
-				INodeData* nuevoContenido= new INodeData(newNodeNumber,contenido->getKey());
-				//Dato es devuelto con la clave del primer elemento del nuevo nodo.
-				contenido->setKey(dato.getKey());
-
-				char* valueReg = new char[contenido->getSize()];
-				reg.setValue(contenido->toStream(valueReg),contenido->getSize());
-				this->m_block->modifyRegister(reg);
-				//Itera nuevamente para posicionarse al lado de la referemcia a nodo desbordado.
-				this->m_block->getNextRegister();
-				VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),nuevoContenido->getSize());
-				this->m_block->addRegister(*nuevoRegistro,result);
+		///Intercambio de claves.
+		INodeData* nuevoContenido= new INodeData(primerElemento->getLeftPointer(),contenido->getKey());
+		//Dato es devuelto con la clave del primer elemento del nuevo nodo.
+		contenido->setKey(primerElemento->getKey());
+		char* valueReg = new char[contenido->getSize()];
+		reg.setValue(contenido->toStream(valueReg),contenido->getSize());
+		this->m_block->modifyRegister(reg);
+		//Itera nuevamente para posicionarse al lado de la referemcia a nodo desbordado.
+		this->m_block->getNextRegister();
+		VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),nuevoContenido->getSize());
+		this->m_block->addRegister(*nuevoRegistro,result);
+		if(result==OVERFLOW_LOAD){
+			overflowData=nuevoContenido;
 		}
 
 	}
-	return result;
+
+
+	return overflowData;
 }
 
 loadResultEnum InnerNode::remove(const InputData & dato){
@@ -127,7 +128,7 @@ loadResultEnum InnerNode::remove(const InputData & dato){
 			reg=this->m_block->getNextRegister();
 			// Transformo el registro a un INodeData
 			contenido->toNodeData(reg.getValue());
-			if(contenido->getKey()<dato.getKey()){
+			if(contenido->getKey()>dato.getKey()){
 				found=true;
 			}
 
@@ -145,9 +146,9 @@ loadResultEnum InnerNode::remove(const InputData & dato){
 			Node* hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
 
 
-		    if(!hermanoEqui->donate(sucesor,dato)){
+		    if(!this->balanceLeaf(sucesor,hermanoEqui,dato)){
 			//sino fusionar
-				sucesor->join(hermanoEqui);
+				this->join(sucesor,hermanoEqui,dato);
 				//Reemplazo la clave del nodo siguiente a ambos en el nodo fusionado.
 
 				contenido->setKey(hermano->getKey());
@@ -196,57 +197,119 @@ bool InnerNode::find(const InputData & key,InputData & data) const
 }
 
 
-void InnerNode::divide(Node* destNode,const InputData& newData){
-	InnerNode* nodoReceptor=(InnerNode*)destNode;
-	Block* nuevoBloque = nodoReceptor->getBlock();
-
-//	Block* nuevoBloque=new Block(nodoReceptor->getNodeNumber(),this->m_block->getRemainingSpace()+this->m_block->getUsedSpace(),this->getBranchFactor());
-//	BlockManager::split(this->getBlock(),nuevoBloque);
-	BlockManager::split(m_block,nuevoBloque);
-	//Recorro el bloque y le voy pasando todos los registros al bloque del nodo.
-	//Itera para oviar el primer registro de control.
-	nuevoBloque->restartCounter();
-	nuevoBloque->getNextRegister();
+INodeData* InnerNode::divideLeaf(Node* aPartir,Node* destNode,const InputData& newData){
+	//Para hijos hoja
+	LeafNode* nodoAPartir=(LeafNode*)aPartir;
+	char* valueReg = new char[newData.size()];
 	VarRegister reg;
-	INodeData* contBuscado=new INodeData(0,0);
-	while(!nuevoBloque->isLastRegister()){
-		reg=nuevoBloque->peekRegister();
-		// Transformo el registro a un INodeData
-		contBuscado->toNodeData(reg.getValue());
-		nodoReceptor->insertINodeData(contBuscado);
-		nuevoBloque->getNextRegister();
+	nodoAPartir->getBlock()->getNextRegister();
+	reg.setValue(newData.toStream(valueReg),newData.size());
+	//Recorro para obtener la posicion.
+    unsigned int posicion=buscarPosicionLeaf(nodoAPartir,newData);
+
+	BlockManager::redistributeOverflow(aPartir->getBlock(),destNode->getBlock(),reg,posicion);
+	//Devuelvo el primer elemento del nuevo nodo.
+	destNode->getBlock()->restartCounter();
+	//Saltea datos de control.
+	destNode->getBlock()->getNextRegister();
+	//Recupera primer registro.
+	VarRegister regBuscado;
+	InputData* conteBuscado;
+	regBuscado=destNode->getBlock()->getNextRegister();
+	conteBuscado->toData(regBuscado.getValue());
+	INodeData* datoADevolver =new INodeData(destNode->getNodeNumber(),conteBuscado->getKey());
+	return datoADevolver;
+
+}
+
+unsigned int InnerNode::buscarPosicionLeaf(LeafNode *& nodoAPartir,const InputData & newData){
+	nodoAPartir->getBlock()->restartCounter();
+	nodoAPartir->getBlock()->getNextRegister();
+	bool found=false;
+	unsigned int posicion=0;
+	VarRegister regBuscado;
+	InputData* conteBuscado;
+	while(posicion<nodoAPartir->getBlock()->getRegisterAmount()&& !found ){
+		posicion++;
+		regBuscado=nodoAPartir->getBlock()->peekRegister();
+		//Transformo el registro a un InputData
+		conteBuscado->toData(regBuscado.getValue());
+		if(newData.getKey()<conteBuscado->getKey()){
+			found=true;
+		}else{
+			nodoAPartir->getBlock()->getNextRegister();
+		};
 	};
-	//Devuelvo el primer dato para tratar el overflow.
-	nuevoBloque->restartCounter();
-	nuevoBloque->getNextRegister();
-	reg=nuevoBloque->getNextRegister();
-	contBuscado->toNodeData(reg.getValue());
-//	&newData=new StringInputData();
-	//newData.setKey(contBuscado->getKey());
-//	newData.setValue("");
-
-
-
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+	nodoAPartir->getBlock()->restartCounter();
+	return posicion;
 }
 
-void InnerNode::insertINodeData(INodeData* toInsert){
-	char* valueReg = new char[toInsert->getSize()];
-	VarRegister* nuevoRegistro=new VarRegister(toInsert->toStream(valueReg),toInsert->getSize());
-	loadResultEnum result;
-	while(!this->m_block->isLastRegister()){
-		this->m_block->getNextRegister();
-	};
-	this->m_block->addRegister(*nuevoRegistro,result);
-}
 
-void InnerNode::join(Node* fusionNode){
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
-
-bool InnerNode::donate(Node* destNode,const InputData& deletedData)
+unsigned int InnerNode::buscarPosicionInner(InnerNode *& nodoAPartir,INodeData & newData)
 {
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+	nodoAPartir->getBlock()->restartCounter();
+	nodoAPartir->getBlock()->getNextRegister();
+	bool found = false;
+	unsigned int posicion = 0;
+	VarRegister regBuscado;
+	INodeData *conteBuscado;
+    while(posicion < nodoAPartir->getBlock()->getRegisterAmount() && !found){
+        posicion++;
+        regBuscado = nodoAPartir->getBlock()->peekRegister();
+        conteBuscado->toNodeData(regBuscado.getValue());
+        if(newData.getKey() < conteBuscado->getKey()){
+            found = true;
+        }else{
+            nodoAPartir->getBlock()->getNextRegister();
+        };
+    };
+    nodoAPartir->getBlock()->restartCounter();
+    return posicion;
+}
+
+INodeData* InnerNode::divideInner(Node* aPartir,Node* destNode,INodeData& newData){
+    InnerNode *nodoAPartir = (InnerNode*)(aPartir);
+    char *valueReg = new char[newData.getSize()];
+    VarRegister reg;
+    nodoAPartir->getBlock()->getNextRegister();
+    reg.setValue(newData.toStream(valueReg), newData.getSize());
+    unsigned int posicion=buscarPosicionInner(nodoAPartir,newData);
+    BlockManager::redistributeOverflow(aPartir->getBlock(), destNode->getBlock(), reg, posicion);
+    destNode->getBlock()->restartCounter();
+    destNode->getBlock()->getNextRegister();
+    VarRegister regBuscado;
+    INodeData* conteBuscado=new INodeData(0,0);
+    regBuscado=destNode->getBlock()->getNextRegister();
+	conteBuscado->toNodeData(regBuscado.getValue());
+	INodeData* datoADevolver =new INodeData(destNode->getNodeNumber(),conteBuscado->getKey());
+	return datoADevolver;
+
+}
+
+
+void InnerNode::join(Node* toDivide,Node* destNode,const InputData& newData){
+
+}
+
+bool InnerNode::balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData){
+	LeafNode* nodoUnderflow=(LeafNode*)underNode;
+	char *valueReg = new char[newData.size()];
+	VarRegister reg;
+    reg.setValue(newData.toStream(valueReg), newData.size());
+	//Busca Posicion
+	unsigned int posicion=this->buscarPosicionLeaf(nodoUnderflow,newData);
+	return BlockManager::redistributeUnderflow(underNode->getBlock(),toDonate->getBlock(),reg,posicion);
+
+}
+
+bool InnerNode::balanceInner(Node* underNode,Node* toDonate,INodeData& newData){
+	InnerNode* nodoUnderflow=(InnerNode*)underNode;
+	char *valueReg = new char[newData.getSize()];
+	VarRegister reg;
+	reg.setValue(newData.toStream(valueReg), newData.getSize());
+	//Busca Posicion
+	unsigned int posicion=this->buscarPosicionInner(nodoUnderflow,newData);
+	return BlockManager::redistributeUnderflow(underNode->getBlock(),toDonate->getBlock(),reg,posicion);
 }
 
 void InnerNode::save(Node* node)

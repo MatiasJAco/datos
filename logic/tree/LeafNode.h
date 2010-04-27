@@ -44,7 +44,7 @@ public:
 	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	loadResultEnum insert(const InputData& dato);
+	INodeData* insert(const InputData & dato,loadResultEnum& result);
 
 	/**
 	 * Elimina el elemento identificado por la clave
@@ -100,16 +100,16 @@ public:
 	void printContent(InputData & data);
 
 
-	void divide(Node* destNode,const InputData& newData);
+	//void divide (Node* toDivide,Node* destNode,const InputData& newData);
 
 
-	void join(Node* fusionNode);
+	//void join(Node* fusionNode);
 
 	/**
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	bool donate(Node* destNode,const InputData& deletedData);
+	//bool balance(Node* destNode,const InputData& deletedData);
 
 
 };

@@ -14,6 +14,7 @@
 #include "../logic/input/InputData.h"
 #include "../physical/file/Block.h"
 #include "../physical/file/BlockManager.h"
+#include "../logic/tree/dataNode/INodeData.h"
 
 
 
@@ -69,7 +70,7 @@ public:
 	 * @param data par clave-valor a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	virtual loadResultEnum insert(const InputData &data) = 0;
+	virtual INodeData* insert(const InputData & dato,loadResultEnum& result)= 0;
 
 	/**
 	 * Elimina el elemento identificado por la clave
@@ -130,21 +131,22 @@ public:
 
 
 
-	virtual void divide(Node* destNode,const InputData& newData) = 0;
+	//virtual void divide (Node* toDivide,Node* destNode,const InputData& newData) = 0;
 
-	virtual void join(Node* fusionNode) = 0;
+//	virtual void join(Node* fusionNode) = 0;
 	/**
 	*Dona una cantidad minima determinada de bytes a otro nodo.
 	*
 	***/
-	virtual bool donate(Node* destNode,const InputData& deletedData) = 0;
+//	virtual bool balance(Node* destNode,const InputData& deletedData) = 0;
 
+	Block* getBlock();
 
 protected:
 
 	void setBlock(Block* block);
 
-	Block* getBlock();
+
 
 	static unsigned int readLevel(Block block);
 
