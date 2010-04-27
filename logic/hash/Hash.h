@@ -54,7 +54,13 @@ public:
 
 	virtual ~Hash();
 
-	int reHash(Bucket* bucket);
+	/**
+	 * Basicamente borra el bucket pasado por parametro de disco, luego lo recupera de la lista de bloques libres (esto se
+	 * hace para que se borren sus registros) y luego redispersa los registros.
+	 * @param bucket Es el bucket desbordado
+	 * @return Devuelve 0 si realizo la operacion correctamente.
+	 */
+	int reHash(Bucket* bucketDesbordado);
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.

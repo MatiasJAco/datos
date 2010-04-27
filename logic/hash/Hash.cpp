@@ -56,19 +56,26 @@ bool Hash::existsElement(StringInputData* sid) {
 	return result;
 }
 
-int Hash::reHash(Bucket* bucket) {
-	VarRegister varRegister;
-	bucket->getBlock()->restartCounter();
+int Hash::reHash(Bucket* bucketDesbordado) {
+	this->hashFile->deleteBlock(bucketDesbordado->getNumber()+1); // Borro el bloque de disco.
+	Bucket* bucket = this->createNewBucket(bucketDesbordado->getDepth()); //recupero el bloque borrado de la lista de bloque libres (ahora esta sin registros de datos)
+	bucketDesbordado->positionateAtEnd();
 
-	while (bucket->getBlock()->hasNextRegister()) {
-		varRegister = bucket->getBlock()->getNextRegister(true);
-		char* registerValue = varRegister.getValue();
+	Block* block = bucketDesbordado->getBlock();
+
+	while (block->hasNextRegister()) {
+		VarRegister varRegister = block->getNextRegister(true);
 		StringInputData* sid = new StringInputData();
-		sid->toData(registerValue);
+		sid->toData(varRegister.getValue());
 		this->add(sid);
-		bucket->getBlock()->deleteRegister();
+		delete sid;
 	}
-	return -1;
+
+	this->hashFile->saveBlock(bucket->getBlock());
+	delete bucket->getBlock();
+	delete bucket;
+	delete bucketDesbordado;
+	return 0;
 }
 
 Bucket* Hash::createNewBucket(int depth){
@@ -106,21 +113,13 @@ int Hash::add(StringInputData* sid) {
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla) {
-			printf("Entro por td=tamTabla=%i.\n",td);
+			cout << "Entro por td=tamTabla=" << td << endl;
 			this->hashTable->duplicate();
-			int nuevoTamTabla = tamTabla * 2;
-			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
-
-			Bucket *bucketNuevo = createNewBucket(nuevoTamTabla);
-
+			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
-
 			bucket->duplicateDepth();
-
-			//TODO aca hay que calcular todas las ctas de nuevo
-
-			this->hashFile->saveBlock(bucket->getBlock());
 			this->hashFile->saveBlock(bucketNuevo->getBlock());
+			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			delete bucketNuevo;
 		} else {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
