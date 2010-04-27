@@ -93,32 +93,19 @@ int Hash::add(StringInputData* sid) {
 	Block* block = this->hashFile->getBlock(bucketNumber);
 	if (block == NULL) {
 		printf("Hubo un error al intentar leer un bloque que no existia");
-		return -1;
+		return 2;
 	}
 
 	Bucket* bucket = new Bucket(block);
+	int insertResult = bucket->insert(sid);
 
-//	loadResultEnum result = bucket->insert(sid);
-//	//UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD
-//	if (result == UNDERFLOW_LOAD)
-//		printf("hubo UNDERFLOW_LOAD");
-//	else if (result == OVERFLOW_LOAD)
-//		printf("hubo OVERFLOW_LOAD");
-//	else if (result == NORMAL_LOAD)
-//			printf("hubo NORMAL_LOAD");
-//
-//
-//	this->hashFile->saveBlock(bucket->getBlock());
-
-	//si se pudo agregar en el bucket lo guardo
-	if ( bucket->insert(sid) ){
+	if (insertResult == 0) { //si se pudo agregar en el bucket lo guardo
 		this->hashFile->saveBlock(bucket->getBlock());
-	}
-	else{  //hubo desborde
+	} else if (insertResult == 1) {  //hubo desborde
 		printf("\nHubo desborde en el bucket: %i. ",bucket->getNumber());
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
-		if (td==tamTabla){
+		if (td==tamTabla) {
 			printf("Entro por td=tamTabla=%i.\n",td);
 			this->hashTable->duplicate();
 			int nuevoTamTabla = tamTabla * 2;
@@ -135,10 +122,7 @@ int Hash::add(StringInputData* sid) {
 			this->hashFile->saveBlock(bucket->getBlock());
 			this->hashFile->saveBlock(bucketNuevo->getBlock());
 			delete bucketNuevo;
-
-		}
-
-		else{
+		} else {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
@@ -152,8 +136,8 @@ int Hash::add(StringInputData* sid) {
 			this->add(sid);
 			delete bucketNuevo;
 		}
-
-
+	} else {
+		return insertResult;
 	}
 
 	delete bucket;

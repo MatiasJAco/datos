@@ -51,10 +51,7 @@ FILE* Table::createTemporalFile(){
 
 FILE * Table::createFile(){
 	FILE* archTabla = openFileForWrite();
-	//TODO: cambiar el renglon de aca abajo por este: "fprintf( archTabla, "1\n0" );"
-	//fprintf( archTabla, "10\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9" );
-	fprintf( archTabla, "1\n0" );
-
+	fprintf( archTabla, "1\n0" ); // Se crea la tabla, con size 1.
 	closeFile(archTabla);
 	return archTabla;
 }

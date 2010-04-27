@@ -61,33 +61,26 @@ void Bucket::positionateAtEnd(){
 	}
 }
 
-bool Bucket::insert(StringInputData* sid) {
-	loadResultEnum result;
+int Bucket::insert(StringInputData* sid) {
+	loadResultEnum loadResult;
 	unsigned int dataSize = sid->size();
+	int result = 0; // Es el valor de retorno de esta función. Indica si se pudo insertar el registro al bloque, o no.
 
 	char* valueReg = new char[dataSize];
 	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
-	//me paro al final del bucket
+	//me paro al final del bloque.
 	positionateAtEnd();
 
-	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-	bool inserted = this->block->addRegister(*varRegister, result);
+	/* Intenta insertar el registro en el bloque. */
+	bool inserted = this->block->addRegister(*varRegister, loadResult);
 
+	if (loadResult == OVERFLOW_LOAD) {
+		result = 1;
+	} else if (inserted == false) {
+		result = 2;
+	}
 	delete varRegister;
-	return inserted;
-
-
-//	//TODO: cambiar este metodo por el nuevo q esta haciendo alex (mail que envio el 24/04/10)
-//	if (this->block->getRemainingSpace() >= varRegister->getDiskSize()) {
-//		this->block->addRegister(*varRegister);
-//		//this->hashFile->saveBlock(this->block);
-//	} else { /* En caso contrario, se duplica la tabla y se guarda el registro en un bloque nuevo. */
-//
-//
-//		//TODO completar qué hacer al dar de alta cuando se duplica la tabla.
-//	}
-
-//	return true;
+	return result;
 }
 
 bool Bucket::existsRegister(int key) {
