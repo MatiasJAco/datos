@@ -98,12 +98,24 @@ int Hash::add(StringInputData* sid) {
 
 	Bucket* bucket = new Bucket(block);
 
+//	loadResultEnum result = bucket->insert(sid);
+//	//UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD
+//	if (result == UNDERFLOW_LOAD)
+//		printf("hubo UNDERFLOW_LOAD");
+//	else if (result == OVERFLOW_LOAD)
+//		printf("hubo OVERFLOW_LOAD");
+//	else if (result == NORMAL_LOAD)
+//			printf("hubo NORMAL_LOAD");
+//
+//
+//	this->hashFile->saveBlock(bucket->getBlock());
+
 	//si se pudo agregar en el bucket lo guardo
 	if ( bucket->insert(sid) ){
 		this->hashFile->saveBlock(bucket->getBlock());
 	}
 	else{  //hubo desborde
-		printf("\nHubo desborde en el bucket: %i. ",bucket->getBlock()->getBlockNumber());
+		printf("\nHubo desborde en el bucket: %i. ",bucket->getNumber());
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla){
@@ -114,7 +126,7 @@ int Hash::add(StringInputData* sid) {
 
 			Bucket *bucketNuevo = createNewBucket(nuevoTamTabla);
 
-			this->hashTable->changeFirstTimeInTable(bucket->getBlock()->getBlockNumber(),bucketNuevo->getBlock()->getBlockNumber());
+			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
 
 			bucket->duplicateDepth();
 
@@ -133,7 +145,7 @@ int Hash::add(StringInputData* sid) {
 
 			//TODO en realidad no se usa este metodo, hay que hacer uno nuevo, dsp preguntame adrian cualq cosa
 			//this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucketNuevo->getDepth() / 2);
-			this->hashTable->jumpAndReplace(bucketNumber,bucketNuevo->getDepth(),bucketNuevo->getBlock()->getBlockNumber());
+			this->hashTable->jumpAndReplace(bucketNumber,bucketNuevo->getDepth(),bucketNuevo->getNumber());
 
 			//TODO revisar esto del rehash (ni lo mire= soy pablo)
 			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
