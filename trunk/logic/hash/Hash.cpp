@@ -154,12 +154,14 @@ void Hash::print() {
 	unsigned int i = 1;
 	Bucket* bucket;
 	Block* actualBlock = this->hashFile->getBlock(i);
-
+	printf("HashFile: \n",i);
 	while (actualBlock != NULL) {
+		printf("Bucket %i : ",i);
 		bucket = new Bucket(actualBlock);
 		bucket->print();
 		delete bucket;
 		i++;
 		actualBlock = this->hashFile->getBlock(i);
+		printf("\n");
 	}
 }
