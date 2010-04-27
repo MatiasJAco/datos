@@ -13,7 +13,7 @@
 #include "Node.h"
 #include "LeafNode.h"
 
-#include "../logic/tree/dataNode/INodeData.h"
+//#include "../logic/tree/dataNode/INodeData.h"
 #include "../../physical/utils/ByteConverter.h"
 
 #include "BPlusTree.h"
@@ -33,83 +33,33 @@ private:
 
 	BPlusTree* m_tree;
 
+	unsigned int buscarPosicionInner(InnerNode *& nodoAPartir,INodeData & newData);
+	unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir,const InputData & newData);
+
+
 private:
-	//--------------Constructor/Destructor----------------//
-	InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree);
-
+    InnerNode(unsigned int nodeNumber, unsigned int level, Block *block, BPlusTree *pointerTree);
 public:
-	/// Constructor.
-	InnerNode();
+    InnerNode();
+    InnerNode(unsigned int nodeNumber);
+    ~InnerNode();
+    INodeData *insert(const InputData & dato, loadResultEnum & result);
+    loadResultEnum remove(const InputData & key);
+    bool find(const InputData & key, InputData & data) const;
+    loadResultEnum modify(const InputData & key, const InputData & dato);
+    loadResultEnum modify(const InputData & data);
+    void insertINodeData(INodeData *contBuscado);
+    void join(Node *toDivide, Node *destNode, const InputData & newData);
+    void save(Node* node);
+private:
 
-	/**
-	 * Constructor.
-	 * @param nodeNumber Identificador del nodo.
-	 * @param level Nivel en el que se encuentra el nodo.
-	 */
-	InnerNode(unsigned int nodeNumber);
+	INodeData* divideLeaf (Node* toDivide,Node* destNode,const InputData& newData);
 
-	/// Destructor.
-	~InnerNode();
+	INodeData* divideInner(Node* aPartir,Node* destNode,INodeData& newData);
 
-	//-------------Metodos de operación basicos sobre registros ------------------------//
+	bool balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData);
 
-	/**
-	 * Inserta un Register en el nodo, puede superar la capacidad del nodo
-	 * por lo cual luego de una insercion hay que llamar al metodo overflow()
-	 * para no rebalsar el espacio en disco del nodo
-	 * @param registro registro a insertar
-	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
-	 */
-	loadResultEnum insert(const InputData& dato);
-
-	/**
-	 * Elimina el elemento identificado por la clave
-	 * @param key clave del elemento a eliminar
-	 * @return bool TRUE si se pudo eliminar
-	 */
-	loadResultEnum remove(const InputData& key);
-
-	/**
-	 * Busca el elemento identificado por la clave
-	 * Si lo encuentra guarda el registro en reg
-	 * @param key clave del elemento a buscar
-	 * @param registro refencia en la cual se va a almacenar el registro encontrado
-	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
-	 */
-	bool find(const InputData& key,InputData& data) const;
-
-	/**
-	 * Modifica el nodo identificado por la clave
-	 * Si lo encuentra escribe el contenido de reg en el registro
-	 * @param key clave del elemento a modificar
-	 * @param registro valor que se colocara en el registro
-	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
-	 */
-	loadResultEnum modify(const InputData& key, const InputData& dato);
-
-	/**
-	 * Modifica el nodo identificado por la clave de data
-	 * Si lo encuentra escribe el contenido de data en el nodo.
-	 * @param data valor que se colocara en el nodo.
-	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
-	 */
-	loadResultEnum modify(const InputData& data);
-
-	void insertINodeData(INodeData* contBuscado);
-
-
-
-	void divide(Node* destNode,const InputData& newData);
-
-	void join(Node* fusionNode);
-
-	/**
-	*Dona una cantidad minima determinada de bytes a otro nodo.
-	*
-	***/
-	bool donate(Node* destNode,const InputData& deletedData);
-
-	void save(Node* node);
+	bool balanceInner(Node* underNode,Node* toDonate, INodeData& newData);
 };
 
 #endif /* INNERNODE_H_ */

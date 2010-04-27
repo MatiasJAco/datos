@@ -34,9 +34,9 @@ LeafNode::~LeafNode()
 }
 
 
-loadResultEnum LeafNode::insert(const InputData & dato)
+INodeData*  LeafNode::insert(const InputData & dato,loadResultEnum& result)
 {
-	loadResultEnum result = NORMAL_LOAD;
+	result = NORMAL_LOAD;
 	bool found = false;
 
 	VarRegister currentRegister;
@@ -73,7 +73,7 @@ loadResultEnum LeafNode::insert(const InputData & dato)
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
-	return result;
+	return new INodeData(0,0);
 }
 
 loadResultEnum LeafNode::remove(const InputData & dato)
@@ -229,18 +229,9 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 }
 
 
-void LeafNode::divide(Node* destNode,const InputData& newData){
-//	LeafNode* nodoNuevo = new LeafNode();
-//	while(destNode->getUsedSpace()<50){
-//		//TODO Implementar traslado de registros de un bloque a otro.
-//	}
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 
-}
 
-void LeafNode::join(Node* fusionNode){
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
+
 
 void LeafNode::printContent(InputData & data)
 {
@@ -265,10 +256,7 @@ void LeafNode::printContent(InputData & data)
 
 }
 
-bool LeafNode::donate(Node* destNode,const InputData& deletedData)
-{
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
+
 
 unsigned int LeafNode::getNext()
 {
