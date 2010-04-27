@@ -26,11 +26,13 @@ FILE * Table::openFile(char format[2]){
 }
 
 FILE * Table::openFileForRead(){
-	return openFile("r");
+	char format[2]="r";
+	return openFile(format);
 }
 
 FILE * Table::openFileForWrite(){
-	return openFile("w");
+	char format[2]="w";
+	return openFile(format);
 }
 
 void Table::closeFile(FILE * tableFile){
@@ -40,7 +42,7 @@ void Table::closeFile(FILE * tableFile){
 
 FILE* Table::createTemporalFile(){
 	FILE * arch_tabla_temporal;
-	char * nombreArchTabla = "tablaTemporal.txt";
+	char nombreArchTabla[18] = "tablaTemporal.txt";
 	arch_tabla_temporal = fopen(nombreArchTabla,"w");
 	if( !arch_tabla_temporal )
 	  printf( "\nError: No se pudo abrir la tabla correctamente\n" );
@@ -143,7 +145,8 @@ void Table::modifyRegister(int numReg,int newValue){
 				fgets(linea,180,arch_tabla_a_borrar);
 				ptr = strtok(linea," \n\t");
 				strcpy(valorObtenido,ptr);
-				fprintf( archTemporal, valorObtenido );
+				char pepe[10]="pepe";
+				fprintf( archTemporal, pepe );
 				fprintf( archTemporal, "\n" );
 			}
 			else
@@ -263,12 +266,15 @@ int Table::getFirstTimeInTable(int value){
 	int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 	int result = 0;
-	for (int i = 0; i<sizeOfTable;i++){
+	bool continuar= true;
+	int i = 0;
+	while (continuar&&(i<sizeOfTable)){
 		if(listElementsTable[i]!=value)
 			result++;
-		else return result;
+		else
+			continuar=false;
 	}
-
+	return result;
 }
 
 bool Table::changeFirstTimeInTable(int value, int newValue){
