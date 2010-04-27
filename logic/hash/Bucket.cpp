@@ -92,8 +92,7 @@ bool Bucket::insert(StringInputData* sid) {
 
 bool Bucket::existsRegister(int key) {
 	this->getBlock()->restartCounter();
-	//TODO: arreglar este metodo
-	while (!this->getBlock()->isLastRegister()) {
+	while (this->block->hasNextRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
