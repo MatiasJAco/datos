@@ -54,4 +54,33 @@ bool BlockManager::split(Block *orig, Block *blank)
 
 }
 
+bool BlockManager::redistributeUnderflow(Block *block1, Block *block2, VarRegister & reg, unsigned int pos)
+{
+	bool retVal=false;
+
+	return retVal;
+}
+
+
+
+bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister & reg, unsigned int pos)
+{
+	bool retVal=false;
+
+	return retVal;
+}
+
+
+
+bool BlockManager::mergeBlocks(Block *block1, Block *block2, VarRegister & reg, unsigned int pos)
+{
+	bool retVal=false;
+
+	return retVal;
+}
+
+
+
+
+
 

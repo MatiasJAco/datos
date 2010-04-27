@@ -16,11 +16,28 @@
 class BlockManager
 {
 public:
+	/**
+	 * @deprecated
+	 */
 	static bool split(Block *orig, Block *blank);
 
+	/**
+	 * @deprecated
+	 */
 	static bool merge(Block *block1, Block *block2);
 
+	/**
+	 * @deprecated
+	 */
 	static bool balanceLoad(Block *block1, Block *block2);
+
+
+	//--------------------------NUEVOS METODOS-------------------------------//
+	static bool redistributeOverflow(Block *orig, Block *blank, VarRegister &reg, unsigned int pos);
+
+	static bool mergeBlocks(Block *block1, Block *block2,  VarRegister &reg, unsigned int pos);
+
+	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
 };
 
 #endif /* BLOCKMANAGER_H_ */

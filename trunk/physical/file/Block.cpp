@@ -235,7 +235,7 @@ bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 	load = evaluateLoad(newSize);
 
 	//Valido que el registro a insertar no sea mas grande que un bloque
-	if(reg.getDiskSize()> m_blockSize-m_FirstRegisterOffset)
+	if(reg.getDiskSize()> (m_blockSize-m_FirstRegisterOffset)/2)
 		throw "Registro demasiado grande";
 
 	//Si no va a haber overflow
