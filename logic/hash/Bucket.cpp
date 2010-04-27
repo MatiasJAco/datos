@@ -23,7 +23,7 @@ unsigned int Bucket::getDepthFromHashFile(){
 
 Bucket::Bucket(Block* block) {
 	this->block=block;
-	this->number = block->getBlockNumber();
+	this->number = block->getBlockNumber()-1;
 	this->depth=getDepthFromHashFile();
 }
 
@@ -62,7 +62,7 @@ void Bucket::positionateAtEnd(){
 }
 
 bool Bucket::insert(StringInputData* sid) {
-
+	loadResultEnum result;
 	unsigned int dataSize = sid->size();
 
 	char* valueReg = new char[dataSize];
@@ -71,7 +71,7 @@ bool Bucket::insert(StringInputData* sid) {
 	positionateAtEnd();
 
 	/* Si el bloque posee suficiente espacio para guardar un registro más, lo guarda: */
-	bool inserted = this->block->addRegister(*varRegister);
+	bool inserted = this->block->addRegister(*varRegister, result);
 
 	delete varRegister;
 	return inserted;
@@ -143,9 +143,24 @@ void Bucket::print(){
 }
 
 void Bucket::duplicateDepth(){
-	this->depth =this->depth * 2;
+	loadResultEnum result;
+	VarRegister varReg;
+	this->block->restartCounter();
+	varReg=this->block->getNextRegister(true);
+
+	StringInputData* sid = new StringInputData();
+	sid->toData(varReg.getValue());
+	varReg.setValue(sid->getKey()*2);
+	//TODO: Hay que hacer andar este metodo
+	this->block->modifyRegister(varReg,result);
+
+	delete sid;
+
+
+//	this->depth =this->depth * 2;
 }
 
 void Bucket::divideDepth(){
-	this->depth =this->depth / 2;
+//	this->depth =this->depth / 2;
+	//TODO implementar este metodo copiando el duplicateDepth
 }

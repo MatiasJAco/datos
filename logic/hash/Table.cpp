@@ -145,8 +145,7 @@ void Table::modifyRegister(int numReg,int newValue){
 				fgets(linea,180,arch_tabla_a_borrar);
 				ptr = strtok(linea," \n\t");
 				strcpy(valorObtenido,ptr);
-				char pepe[10]="pepe";
-				fprintf( archTemporal, pepe );
+				fprintf( archTemporal, valorObtenido );
 				fprintf( archTemporal, "\n" );
 			}
 			else
