@@ -18,7 +18,7 @@ Table::~Table() {
 
 FILE * Table::openFile(char format[2]){
 	FILE * arch_tabla;
-	char * nombreArchTabla = "tabla.txt";
+	char nombreArchTabla[10] = "tabla.txt";
 	arch_tabla = fopen(nombreArchTabla,format);
 	if( !arch_tabla )
 	  printf( "\nError: No se pudo abrir la tabla correctamente\n" );

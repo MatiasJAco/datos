@@ -97,8 +97,6 @@ int Hash::add(StringInputData* sid) {
 	}
 
 	Bucket* bucket = new Bucket(block);
-	//agregar td al bloque en el 1er reg del block
-
 
 	//si se pudo agregar en el bucket lo guardo
 	if ( bucket->insert(sid) ){
@@ -109,7 +107,7 @@ int Hash::add(StringInputData* sid) {
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla){
-			printf("Y td==tamTabla==%i.\n",td);
+			printf("Entro por td=tamTabla=%i.\n",td);
 			this->hashTable->duplicate();
 			int nuevoTamTabla = tamTabla * 2;
 			//TODO: aca ver en la lista de bqs libres si puedo rescatar algun bq, sino creo un bq nuevo
@@ -129,7 +127,7 @@ int Hash::add(StringInputData* sid) {
 		}
 
 		else{
-			printf("Y td!=tamTabla (%i!=%i).\n",td,tamTabla);
+			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 
@@ -154,7 +152,8 @@ void Hash::print() {
 	unsigned int i = 1;
 	Bucket* bucket;
 	Block* actualBlock = this->hashFile->getBlock(i);
-	printf("HashFile: \n",i);
+	this->hashTable->print();
+	printf("\nHashFile: \n");
 	while (actualBlock != NULL) {
 		printf("Bucket %i : ",i);
 		bucket = new Bucket(actualBlock);
