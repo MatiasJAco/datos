@@ -230,21 +230,6 @@ void InnerNode::divide(Node* destNode,const InputData& newData){
 	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
 }
 
-
-void InnerNode::join(Node* fusionNode){
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
-
-bool InnerNode::donate(Node* destNode,const InputData& deletedData)
-{
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
-
-bool InnerNode::falseRemove(unsigned int toRemove)
-{
-	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
-}
-
 void InnerNode::insertINodeData(INodeData* toInsert){
 	char* valueReg = new char[toInsert->getSize()];
 	VarRegister* nuevoRegistro=new VarRegister(toInsert->toStream(valueReg),toInsert->getSize());
@@ -255,8 +240,17 @@ void InnerNode::insertINodeData(INodeData* toInsert){
 	this->m_block->addRegister(*nuevoRegistro,result);
 }
 
-void InnerNode::save()
-{
+void InnerNode::join(Node* fusionNode){
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
 
+bool InnerNode::donate(Node* destNode,const InputData& deletedData)
+{
+	throw "Todos estos metodos hay que reveerlos con la interfaz BlockManager y Block!!";
+}
+
+void InnerNode::save(Node* node)
+{
+	m_tree->saveNode(node);
 }
 

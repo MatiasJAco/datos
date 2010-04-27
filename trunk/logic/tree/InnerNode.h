@@ -95,16 +95,13 @@ public:
 	 */
 	loadResultEnum modify(const InputData& data);
 
+	void insertINodeData(INodeData* contBuscado);
+
+
 
 	void divide(Node* destNode,const InputData& newData);
 
 	void join(Node* fusionNode);
-
-	/**
-	 * Simula la eliminacion de una determinada cantidad de bytes.
-	 *
-	 * **/
-	bool falseRemove(unsigned int toRemove);
 
 	/**
 	*Dona una cantidad minima determinada de bytes a otro nodo.
@@ -112,9 +109,7 @@ public:
 	***/
 	bool donate(Node* destNode,const InputData& deletedData);
 
-	void insertINodeData(INodeData* contBuscado);
-
-	void save();
+	void save(Node* node);
 };
 
 #endif /* INNERNODE_H_ */
