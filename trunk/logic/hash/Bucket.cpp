@@ -62,8 +62,11 @@ void Bucket::positionateAtEnd(){
 }
 
 bool Bucket::insert(StringInputData* sid) {
-	char* valueReg = new char[sid->size()];
-	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg), sid->size());
+
+	unsigned int dataSize = sid->size();
+
+	char* valueReg = new char[dataSize];
+	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
 	//me paro al final del bucket
 	positionateAtEnd();
 
