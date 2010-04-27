@@ -60,19 +60,33 @@ void testTable4(){
 }
 
 
+StringInputData* createSid( int key,char * value){
+	stringstream ss (stringstream::in | stringstream::out);
+	ss.str(value);
+	StringInputData* sid = new StringInputData();
+	sid->setKey(key);
+	sid->setValue(ss.str());
+	return sid;
+}
 
 void testAdd() {
-	/* Se toma el dato que ingresa el usuario. */
-	stringstream ss (stringstream::in | stringstream::out);
-	ss.str("paytiti");
-	StringInputData* sid = new StringInputData();
-	sid->setKey(34);
-	sid->setValue(ss.str());
-
 	Hash* hash = new Hash();
-	hash->add(sid);
-	hash->print();
 
+	/* Se toma el dato que ingresa el usuario. */
+	int key = 34;
+	char value1[8] = "paytiti";
+	StringInputData* sid1 = createSid(key,value1);
+
+	key = 5;
+	char value2[5] = "pepe";
+	StringInputData* sid2 = createSid(key,value2);
+
+
+	hash->add(sid1);
+	//hash->add(sid2);
+	hash->print();
+	delete sid1;
+	delete sid2;
 }
 
 int main(){
@@ -82,6 +96,7 @@ int main(){
 	//testTable4();
 
 	testAdd();
-	printf("paso!");
+	printf("\npaso test!");
+
 	return 0;
 }
