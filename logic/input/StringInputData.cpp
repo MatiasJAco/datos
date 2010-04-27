@@ -32,18 +32,20 @@ string StringInputData::getValue() {
 
 char* StringInputData::toStream(char* stream) const
 {
-	ByteConverter::intToBytes(key,stream);
-	stream += sizeof(key);
-	ByteConverter::stringToBytes(value,stream);
+	char *p=stream;
+	ByteConverter::intToBytes(key,p);
+	p += sizeof(key);
+	ByteConverter::stringToBytes(value,p);
 
 	return stream;
 }
 
 void StringInputData::toData(const char* stream)
 {
-	key = ByteConverter::bytesToInt(stream);
-	stream += sizeof(key);
-	value = ByteConverter::bytesToString(stream);
+	char *p=(char *)stream;
+	key = ByteConverter::bytesToInt(p);
+	p += sizeof(key);
+	value = ByteConverter::bytesToString(p);
 }
 
 unsigned int StringInputData::size()const
