@@ -30,77 +30,109 @@ InnerNode::~InnerNode()
 
 
 
-loadResultEnum InnerNode::remove(const InputData & dato){
+void InnerNode::getInPosition(INodeData *& contenido, unsigned int position)
+{
+	//Busca al sucesor que puede tener el dato
+	m_block->restartCounter();
+	//Itera una vez para obviar el dato de control.
+	VarRegister level = this->m_block->getNextRegister();
+	VarRegister reg;
+	unsigned int iterador=0;
+	bool found=false;
+    while(iterador < m_block->getRegisterAmount() && !found){
+        reg = this->m_block->peekRegister();
+        iterador++;
+        // Transformo el registro a un INodeData
+        contenido->toNodeData(reg.getValue());
+        if(iterador == position){
+            found = true;
+        }else
+        this->m_block->getNextRegister();
+    }
+
+}
+
+INodeData* InnerNode::remove(const InputData & dato, loadResultEnum & result){
 	//	comparo el dato con las claves
 
-		VarRegister reg;
-		loadResultEnum resultOperation=NORMAL_LOAD;
-		bool found=false;
-
-		//Busca al sucesor que puede tener el dato
-		m_block->restartCounter();
-		//Itera una vez para obviar el dato de control.
-		VarRegister level = this->m_block->getNextRegister();
-		INodeData* contenido=new INodeData(0,0);
-		INodeData* hermano=new INodeData(0,0);
-
-		while(!m_block->isLastRegister()&& !found ){
-
-			reg=this->m_block->getNextRegister();
-			// Transformo el registro a un INodeData
-			contenido->toNodeData(reg.getValue());
-			if(contenido->getKey()>dato.getKey()){
-				found=true;
-			}
-
-		};
-
-	//Se lo pide al arbol
-	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
-		loadResultEnum result=sucesor->remove(dato);
+	VarRegister reg;
+	 result=NORMAL_LOAD;
+	//Busca al sucesor que puede tener el dato
+	INodeData* contenidoSucesor=new INodeData(0,0);
+	INodeData* hermano=new INodeData(0,0);
+	this->buscarPorClave(contenidoSucesor,dato);
+    //Se lo pide al arbol
+	Node* sucesor=this->m_tree->getNode(contenidoSucesor->getLeftPointer());
+	INodeData* underflowData=sucesor->remove(dato,result);
+	bool successBalance=false;
+	bool notRightBrother=false;
+	bool leftJoin=true;
+	Node* hermanoEqui;
+	int claveDelBorrado=0;
 	if (result==UNDERFLOW_LOAD){
-	//intentar balancear con el hermano derecho
+		if(sucesor->isLeaf()){
+			//Si tiene hermano derecho lo recupera e intenta balancear.
+			notRightBrother=this->m_block->isLastRegister();
+			if(!notRightBrother){
+						VarRegister reg=this->m_block->getNextRegister();
+						hermano->toNodeData(reg.getValue());
+						hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
+						successBalance=this->balanceLeaf(sucesor,hermanoEqui,dato);
 
-			reg=this->m_block->getNextRegister();
-			hermano->toNodeData(reg.getValue());
-
-			Node* hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
-
-
-		    if(!this->balanceLeaf(sucesor,hermanoEqui,dato)){
-			//sino fusionar
-				this->join(sucesor,hermanoEqui,dato);
-				//Reemplazo la clave del nodo siguiente a ambos en el nodo fusionado.
-
-				contenido->setKey(hermano->getKey());
-				INodeData* contBuscado=new INodeData(0,0);
-				//Busco el registro correspondiente al nodo fusionado y lo modifico.
-				while(!m_block->isLastRegister()&& !found ){
-					reg=this->m_block->peekRegister();
-					// Transformo el registro a un INodeData
-					contBuscado->toNodeData(reg.getValue());
-					if(contenido->getKey()<contBuscado->getKey()){
-						found=true;
-					}else{
-							this->m_block->getNextRegister();
-					};
-
-				};
-
-				VarRegister registroModificado;
-				char* valueReg = new char[contenido->getSize()];
-				registroModificado.setValue(contenido->toStream(valueReg),contenido->getSize());
-				this->m_block->modifyRegister(reg);
-
-				this->m_block->deleteRegister(resultOperation);
+			};
+			if(!successBalance||notRightBrother){
+				//Recupera el hermano izquierdo e intenta balancear.
+				unsigned int posicionNodo=this->buscarPosicionInnerPorClave(dato.getKey());
+				if(posicionNodo!=1){
+				this->getInPosition(hermano,posicionNodo-1);
+				hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
+				}else
+					leftJoin=false;
+				if(!this->balanceLeaf(sucesor,hermanoEqui,dato))
+					this->joinLeaf(sucesor,hermanoEqui,dato);
 			}
 
+		}else{
+			//Si tiene hermano derecho lo recupera e intenta balancear.
+			notRightBrother=this->m_block->isLastRegister();
+			if(!notRightBrother){
+						VarRegister reg=this->m_block->getNextRegister();
+						hermano->toNodeData(reg.getValue());
+						hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
+						successBalance=this->balanceInner(sucesor,hermanoEqui,*underflowData);
 
-		//
-	//
-	}
-	return resultOperation;
+			};
+			if(!successBalance||notRightBrother){
+				//Recupera el hermano izquierdo e intenta balancear.
+				unsigned int posicionNodo=this->buscarPosicionInnerPorClave(underflowData->getKey());
+				if(posicionNodo!=1){
+				this->getInPosition(hermano,posicionNodo-1);
+				hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
+				}else
+					leftJoin=false;
+				if(!this->balanceInner(sucesor,hermanoEqui,*underflowData))
+					this->joinInner(sucesor,hermanoEqui,underflowData);
+			}
+
+		}
+		if(!leftJoin){
+			//Recupero clave del que borro y se a paso al que queda.
+			claveDelBorrado=this->buscarPosicionInnerPorClave(hermano->getKey());
+			this->buscarPosicionInnerPorClave(contenidoSucesor->getKey());
+			contenidoSucesor->setKey(claveDelBorrado);
+			char* valueReg = new char[contenidoSucesor->getSize()];
+			reg.setValue(contenidoSucesor->toStream(valueReg),contenidoSucesor->getSize());
+			this->m_block->modifyRegister(reg);
+		};
+		//Borro el registro correspondiente al nodo.
+		this->buscarPosicionInnerPorClave(hermano->getKey());
+		this->m_block->deleteRegister(result);
+		underflowData=hermano;
+	};
+
+	return underflowData;
 }
+
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
 {
@@ -188,6 +220,28 @@ unsigned int InnerNode::buscarPosicionInner(InnerNode *& nodoAPartir,INodeData &
     return posicion;
 }
 
+unsigned int InnerNode::buscarPosicionInnerPorClave(int key)
+{
+	this->getBlock()->restartCounter();
+	this->getBlock()->getNextRegister();
+	bool found = false;
+	unsigned int posicion = 0;
+	VarRegister regBuscado;
+	InputData *conteBuscado;
+    while(posicion < this->getBlock()->getRegisterAmount() && !found){
+        posicion++;
+        regBuscado = this->getBlock()->peekRegister();
+        conteBuscado->toData(regBuscado.getValue());
+        if(key < conteBuscado->getKey()){
+            found = true;
+        }else{
+            this->getBlock()->getNextRegister();
+        };
+    };
+    this->getBlock()->restartCounter();
+    return posicion;
+}
+
 INodeData* InnerNode::divideInner(Node* aPartir,Node* destNode,INodeData& newData){
     InnerNode *nodoAPartir = (InnerNode*)(aPartir);
     char *valueReg = new char[newData.getSize()];
@@ -233,10 +287,36 @@ bool InnerNode::balanceInner(Node* underNode,Node* toDonate,INodeData& newData){
 	return BlockManager::redistributeUnderflow(underNode->getBlock(),toDonate->getBlock(),reg,posicion);
 }
 
+
+
+
 void InnerNode::save(Node* node)
 {
 	m_tree->saveNode(node);
 }
+
+void InnerNode::joinLeaf(Node *underNode, Node *destNode, const InputData & newData){
+	LeafNode* nodoUnderflow=(LeafNode*)underNode;
+	char *valueReg = new char[newData.size()];
+	VarRegister reg;
+	reg.setValue(newData.toStream(valueReg), newData.size());
+	//Busca Posicion
+	unsigned int position=this->buscarPosicionLeaf(nodoUnderflow,newData);
+	BlockManager::mergeBlocks(underNode->getBlock(),destNode->getBlock(),reg,position);
+
+};
+
+void InnerNode::joinInner(Node *underNode, Node *destNode,  INodeData*  newData){
+	 	InnerNode* nodoUnderflow=(InnerNode*)underNode;
+		char *valueReg = new char[newData->getSize()];
+		VarRegister reg;
+		reg.setValue(newData->toStream(valueReg), newData->getSize());
+		//Busca Posicion
+		unsigned int position=this->buscarPosicionInner(nodoUnderflow,*newData);
+		BlockManager::mergeBlocks(underNode->getBlock(),destNode->getBlock(),reg,position);
+
+};
+
 
 
 /**********************************************************************************/

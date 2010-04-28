@@ -59,7 +59,8 @@ public:
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar
 	 */
-	loadResultEnum remove(const InputData& dato);
+	//loadResultEnum remove(const InputData& dato);
+	INodeData* remove(const InputData & dato, loadResultEnum & result);
 
 	/**
 	 * Busca el elemento identificado por la clave

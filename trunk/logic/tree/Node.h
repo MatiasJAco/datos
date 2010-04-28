@@ -81,8 +81,8 @@ public:
 	 * @param key clave del elemento a eliminar
 	 * @return bool TRUE si se pudo eliminar, FALSE de lo contrario.
 	 */
-	virtual loadResultEnum remove(const InputData &data) = 0;
-
+	//virtual loadResultEnum remove(const InputData &data) = 0;
+	virtual INodeData* remove(const InputData & dato, loadResultEnum & result) = 0;
 	/**
 	 * Busca el elemento identificado por la clave
 	 * Si lo encuentra guarda el registro en reg
