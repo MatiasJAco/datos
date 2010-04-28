@@ -60,7 +60,7 @@ INodeData* InnerNode::remove(const InputData & dato, loadResultEnum & result){
 	//Busca al sucesor que puede tener el dato
 	INodeData* contenidoSucesor=new INodeData(0,0);
 	INodeData* hermano=new INodeData(0,0);
-	this->buscarPorClave(contenidoSucesor,dato);
+//	this->buscarPorClave(contenidoSucesor,dato);
     //Se lo pide al arbol
 	Node* sucesor=this->m_tree->getNode(contenidoSucesor->getLeftPointer());
 	INodeData* underflowData=sucesor->remove(dato,result);
@@ -132,7 +132,6 @@ INodeData* InnerNode::remove(const InputData & dato, loadResultEnum & result){
 
 	return underflowData;
 }
-
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
 {
@@ -361,6 +360,68 @@ loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
 	return result;
 }
 
+loadResultEnum InnerNode::remove_(const InputData& data)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	// Crea un INodeData con la clave que llega, para realizar la busqueda, por donde ir recorriendo.
+	INodeData thiskey(UNDEFINED_NODE_NUMBER,data.getKey());
+
+	// Busca el nodo interno que referencia a esa clave
+	if (!findINodeData(thiskey))
+		throw "Error! llego una clave a una referencia invalida!";
+
+	// traigo el sucesor de este innerNode y lo elimino.
+	Node* sucesor = m_tree->getNode(thiskey.getLeftPointer());
+
+	result = sucesor->remove_(data);
+
+	if (result == UNDERFLOW_LOAD)
+	{
+		bool balanced = false;
+
+		// busco el hermano mayor a key para obtener el hijo derecho.
+		INodeData bigBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
+		findINodeData(bigBrother,false);
+
+		// Trato de balancear con el derecho.
+		// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
+		Node* rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
+		balanced = redistribute(rightSibling,sucesor,data,bigBrother);
+
+		if (balanced)
+			modifyINodeData(thiskey,bigBrother);
+
+		// Si no pudo, busco el sibling izquierdo, el hijo del hermano menor.
+		if (!balanced)
+		{
+			INodeData minorBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
+			findINodeData(minorBrother);
+
+			// Trato de balancear con el sibling izquierdo del sucesor.
+			Node* leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
+			balanced = redistribute(leftSibling,sucesor,data,minorBrother);
+
+			if (balanced)
+				modifyINodeData(thiskey,minorBrother);
+		}
+
+		// Si no pudo balancear, fusiona.
+		if (!balanced)
+		{
+			INodeData fusionatedNode;
+			merge(sucesor,rightSibling,data,fusionatedNode);
+
+			// Elimino thiskey y modifico el puntero de bigbrother que es quien ahora
+			// apunta al fusionado. Pudo haber quedado en underflow este nodo interno.
+			result = removeINodeData(thiskey); // se necesita que este metodo si elimine efectivamente la clave.
+		}
+
+	}
+
+	return result;
+}
+
 loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& promotedKey)
 {
 	/// Trata de insertar un elemento INodeData y si dio overflow hace el split.
@@ -476,8 +537,6 @@ loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
 			throw "No existe el elemento a remover";
 	}
 
-	// falta lo de la redistribucion o fusion.
-
 
 	return result;
 }
@@ -529,6 +588,54 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 	return result;
 }
 
+loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	bool found = false;
+
+	VarRegister currentRegister;
+	INodeData currentData;
+
+	// Creo el registro del segundo parametro para poder insertarlo en el bloque.
+	char* valueReg = new char[newINodeData.getSize()];
+	VarRegister regData(newINodeData.toStream(valueReg),newINodeData.getSize());
+
+	/// Busco donde insertar el dato dentro del bloque de nodo interno.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+//	VarRegister pointers = m_block->getNextRegister();
+	unsigned int iterador=0;
+	while (iterador<m_block->getRegisterAmount()&&!found)
+	{
+		iterador++;
+		currentRegister = m_block->peekRegister();
+
+		/// Transformo el registro a un INodeData
+		currentData.toNodeData(currentRegister.getValue());
+		if (currentData.getKey() == iNodeData.getKey())
+		{
+			// lo modifica
+			found = true;
+			m_block->modifyRegister(regData,result);
+		}else
+			this->m_block->getNextRegister();
+
+
+	}
+	if (!found)
+				throw "No existe el elemento a modificar";
+
+	if (result!= NORMAL_LOAD)
+		throw "Esta devolviendo estado de carga anormal. No deberia, es de tamaño fijo y ya existia!";
+
+
+	return result;
+
+}
+
 bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promotedKey)
 {
 	InnerNode* sibling = (InnerNode*)m_tree->newInnerNode(getLevel());
@@ -551,6 +658,68 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	promotedKey.setKey(firstKey.getKey());
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
 
-
 	return true;
+}
+
+bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify)
+{
+	bool retVal = false;
+	InputData* currentData = data.newInstance();
+
+	Block* blockNode = node->getBlock();
+	Block* blockSibling = siblingNode->getBlock();
+
+	retVal = BlockManager::balanceLoad(blockNode,blockSibling);
+
+	// paso el dato de control
+	blockSibling->getNextRegister();
+	VarRegister firstKey = blockSibling->getNextRegister();
+
+	if (node->isLeaf())
+	{
+		/// porque InputData es abstracto.
+		currentData->toData(firstKey.getValue());
+		keyToModify.setKey(data.getKey());
+	}
+	else
+	{
+		keyToModify.toNodeData(firstKey.getValue());
+	}
+	keyToModify.setLeftPointer(node->getNodeNumber());
+
+	delete currentData;
+
+	return retVal;
+}
+
+
+bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode)
+{
+	bool retVal = false;
+	InputData* currentData = data.newInstance();
+
+	Block* blockNode = node->getBlock();
+	Block* blockSibling = siblingNode->getBlock();
+
+	BlockManager::merge(blockNode,blockSibling);
+
+	// paso el dato de control
+	blockNode->getNextRegister();
+	VarRegister firstKey = blockNode->getNextRegister();
+
+	if (node->isLeaf())
+	{
+		/// porque InputData es abstracto.
+		currentData->toData(firstKey.getValue());
+		fusionatedNode.setKey(data.getKey());
+	}
+	else
+	{
+		fusionatedNode.toNodeData(firstKey.getValue());
+	}
+	fusionatedNode.setLeftPointer(node->getNodeNumber());
+
+	delete currentData;
+
+	return retVal;
 }

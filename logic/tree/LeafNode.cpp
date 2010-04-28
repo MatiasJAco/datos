@@ -125,6 +125,13 @@ INodeData* LeafNode::remove(const InputData & dato, loadResultEnum & result)
 	return NULL;
 }
 
+loadResultEnum LeafNode::remove_(const InputData& data)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	return result;
+}
+
 loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdata)
 {
 	loadResultEnum result = NORMAL_LOAD;

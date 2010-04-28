@@ -62,6 +62,8 @@ public:
 	//loadResultEnum remove(const InputData& dato);
 	INodeData* remove(const InputData & dato, loadResultEnum & result);
 
+	loadResultEnum remove_(const InputData& data);
+
 	/**
 	 * Busca el elemento identificado por la clave
 	 * Si lo encuentra guarda el registro en reg
