@@ -81,9 +81,10 @@ void testAdd() {
 	char value2[5] = "pepe";
 	StringInputData* sid2 = createSid(key,value2);
 
-
+	for (int i = 0; i<31;i++){
 	hash->add(sid1);
-	//hash->add(sid2);
+	}
+	hash->add(sid2);
 	hash->print();
 	delete sid1;
 	delete sid2;
