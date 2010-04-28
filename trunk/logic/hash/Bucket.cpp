@@ -138,11 +138,39 @@ void Bucket::print(){
 void Bucket::duplicateDepth(){
 	loadResultEnum result;
 	this->block->restartCounter();
-	VarRegister varReg = this->block->getNextRegister(true);
+	VarRegister varReg = this->block->getNextRegister(false);
 
 	StringInputData* sid = new StringInputData();
 	sid->toData(varReg.getValue());
-	varReg.setValue(sid->getKey()*2);
+	unsigned int dataSize = sid->size();
+	char* valueReg = new char[dataSize];
+	int valueKey = sid->getKey()*2;
+	sid->setKey(valueKey);
+	varReg.setValue(sid->toStream(valueReg),dataSize);
+
+	this->block->modifyRegister(varReg,result);
+
+	if (OVERFLOW_LOAD == result) {
+		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
+	}
+
+	delete sid;
+}
+
+void Bucket::divideDepth(){
+
+	//TODO : hay que hacer algo aca para que el divide y el duplicate no dupliquen codigo
+	loadResultEnum result;
+	this->block->restartCounter();
+	VarRegister varReg = this->block->getNextRegister(false);
+
+	StringInputData* sid = new StringInputData();
+	sid->toData(varReg.getValue());
+	unsigned int dataSize = sid->size();
+	char* valueReg = new char[dataSize];
+	int valueKey = sid->getKey()/2;
+	sid->setKey(valueKey);
+	varReg.setValue(sid->toStream(valueReg),dataSize);
 
 	this->block->modifyRegister(varReg,result);
 
@@ -152,9 +180,4 @@ void Bucket::duplicateDepth(){
 
 	this->depth = this->depth * 2;
 	delete sid;
-}
-
-void Bucket::divideDepth(){
-//	this->depth =this->depth / 2;
-	//TODO implementar este metodo copiando el duplicateDepth
 }

@@ -113,9 +113,10 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
-	if (existsElement(sid)){
-		return 1;
-	}
+	//TODO desconmmentar esto
+//	if (existsElement(sid)){
+//		return 1;
+//	}
 
 	int insertResult;
 	Bucket * bucket = tryToInsertNewSid(sid,insertResult);
@@ -131,9 +132,8 @@ int Hash::add(StringInputData* sid) {
 			this->hashTable->duplicate();
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
-			//TODO hacer el metodo de aca abajo
 			bucket->duplicateDepth();
-			this->hashFile->saveBlock(bucketNuevo->getBlock());
+//			this->print();
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
 			delete bucketNuevo;
