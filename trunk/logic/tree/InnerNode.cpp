@@ -377,12 +377,14 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
+	unsigned int pos = 0;
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
 	while (!m_block->isLastRegister()&&!found)
 	{
+		pos++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
@@ -401,7 +403,7 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 	m_block->addRegister(regData,result);
 
 	if (result == OVERFLOW_LOAD)
-		split(iNodeData,promotedKey);
+		split(iNodeData,pos,promotedKey);
 
 	return result;
 }
@@ -523,17 +525,14 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 	return result;
 }
 
-bool InnerNode::split(const INodeData& data,INodeData& promotedKey)
+bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promotedKey)
 {
 	InnerNode* sibling = (InnerNode*)m_tree->newInnerNode(getLevel());
 	Block* blockSibling = sibling->getBlock();
 
 	VarRegister reg = m_block->peekRegister();
-	// la que me de el contador del block. Por ahora seteo 1.
-	// En cualquier caso, se calculara.
-	unsigned int posicion = 1;
 
-	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
+	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 
 	blockSibling->restartCounter();
 	reg = blockSibling->getNextRegister();

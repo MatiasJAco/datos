@@ -69,30 +69,40 @@ bool BPlusTree::insert(const InputData& data)
 {
 	bool retVal = true;
 
-//	loadResultEnum result = NORMAL_LOAD;
-//
-//	if (m_root == NULL)
-//		throw "No hay elemento raiz";
-//
-//
-////	result = m_root->insert(data);
-//
-//	if (result == OVERFLOW_LOAD)
-//	{
-//
-//		/// La raiz se transforma en nodo interno.
-////		LeafNode* sibling = m_root;
-//		m_root = newInnerNode(m_root->getLevel()+1);
-//
-//		sibling->setNodeNumber(m_root->getNodeNumber());
-//		m_root->setNodeNumber(ROOT_NODENUMBER);
-//
-//		///copio el contenido de root en sibling.
-////		Block* block = sibling->getBlock();
-//
-//
-//	}
+	loadResultEnum result = NORMAL_LOAD;
 
+	unsigned int level = Node::UNDEFINED_NODE_LEVEL;
+	INodeData promotedKey;
+
+	if (m_root == NULL)
+		throw "No hay elemento raiz";
+
+
+	result = m_root->insert_(data,promotedKey);
+
+	if (result == OVERFLOW_LOAD)
+	{
+		level = m_root->getLevel();
+
+		/// La raiz se transforma en nodo interno.
+		Node* sucesor = m_root;
+		m_root = (InnerNode*)newInnerNode(level+1);
+
+		// le cambio el numero de nodo al sucesor y mantengo el definido para la raiz.
+		sucesor->setNodeNumber(m_root->getNodeNumber());
+		m_root->setNodeNumber(ROOT_NODENUMBER);
+
+		// Claves que se insertaran al nodo raiz.
+		INodeData firstKey(sucesor->getNodeNumber(),promotedKey.getKey());
+		INodeData newKey(promotedKey.getLeftPointer(),Node::UNDEFINED_KEY);
+
+		// habria que hacer casteo dinamico.
+		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);
+		result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
+
+		if (result == OVERFLOW_LOAD)
+			throw "Imposible, es el minimo de claves!!";
+	}
 
 	return retVal;
 }

@@ -52,6 +52,7 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 
 	/// Busco donde insertar el dato dentro del bloque de hoja.
 	m_block->restartCounter();
+	unsigned int pos = 0;
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
@@ -59,6 +60,7 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 
 	while (!m_block->isLastRegister()&&!found)
 	{
+		pos++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
@@ -78,7 +80,7 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 	m_block->addRegister(regData,result);
 
 	if (result == OVERFLOW_LOAD)
-		split(data,promotedKey);
+		split(data,pos,promotedKey);
 
 	return result;
 }
@@ -288,17 +290,14 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 	return found;
 }
 
-bool LeafNode::split(const InputData& data,INodeData& promotedKey)
+bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedKey)
 {
 	LeafNode* sibling = (LeafNode*)m_tree->newLeafNode();
 	Block* blockSibling = sibling->getBlock();
 
 	VarRegister reg = m_block->peekRegister();
-	// la que me de el contador del block. Por ahora seteo 1.
-	// En cualquier caso, se calculara.
-	unsigned int posicion = 1;
 
-	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
+	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 
 	blockSibling->restartCounter();
 	reg = blockSibling->getNextRegister();
