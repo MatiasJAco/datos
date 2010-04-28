@@ -99,10 +99,11 @@ private:
 	 * Separa la hoja en otra, quedando unida a la misma.
 	 * Devuelve la clave de promocion para el siguiente nivel.
 	 * @param data Elemento que produjo el split.
+	 * @param pos posicion donde va el dato.
 	 * @param promotedKey clave que se promueve a partir de esta operacion.
 	 * @return bool que indica si tuvo exito la operacion de split.
 	 */
-	bool split(const InputData& data,INodeData& promotedKey);
+	bool split(const InputData& data,unsigned int pos,INodeData& promotedKey);
 
 public:
 	/**
