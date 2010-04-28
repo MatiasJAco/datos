@@ -87,9 +87,10 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 
 
 
-loadResultEnum LeafNode::remove(const InputData & dato)
+//loadResultEnum LeafNode::remove(const InputData & dato)
+INodeData* LeafNode::remove(const InputData & dato, loadResultEnum & result)
 {
-	loadResultEnum result = NORMAL_LOAD;
+	 result = NORMAL_LOAD;
 	bool found = false;
 
 	VarRegister currentRegister;
@@ -120,7 +121,8 @@ loadResultEnum LeafNode::remove(const InputData & dato)
 
 	delete currentData;
 
-	return result;
+	//return result;
+	return NULL;
 }
 
 loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdata)

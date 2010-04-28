@@ -31,12 +31,11 @@ class InnerNode: public Node {
 
 private:
 	BPlusTree* m_tree;
-
-private:
-
-	unsigned int buscarPosicionInner(InnerNode *& nodoAPartir,INodeData & newData);
-	unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir,const InputData & newData);
-
+	void joinInner(Node *toDivide, Node *destNode, INodeData *newData);
+    void joinLeaf(Node *toDivide, Node *destNode, const InputData & newData);
+    void buscarPorClave(INodeData *& contenido, const InputData & dato);
+    unsigned int buscarPosicionInner(InnerNode *& nodoAPartir, INodeData & newData);
+    unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir, const InputData & newData);
 
 private:
     InnerNode(unsigned int nodeNumber, unsigned int level, Block *block, BPlusTree *pointerTree);
@@ -44,7 +43,8 @@ public:
     InnerNode();
     InnerNode(unsigned int nodeNumber);
     ~InnerNode();
-    loadResultEnum remove(const InputData & key);
+    //loadResultEnum remove(const InputData & key);
+    INodeData *remove(const InputData & dato, loadResultEnum & result);
     bool find(const InputData & key, InputData & data) const;
     loadResultEnum modify(const InputData & key, const InputData & dato);
     loadResultEnum modify(const InputData & data);
@@ -61,6 +61,10 @@ private:
 	bool balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData);
 
 	bool balanceInner(Node* underNode,Node* toDonate, INodeData& newData);
+
+	unsigned int buscarPosicionInnerPorClave(int key);
+
+	void getInPosition(INodeData *& contenido, unsigned int position);
 
 
 
