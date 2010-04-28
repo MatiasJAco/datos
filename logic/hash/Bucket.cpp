@@ -137,20 +137,21 @@ void Bucket::print(){
 
 void Bucket::duplicateDepth(){
 	loadResultEnum result;
-	VarRegister varReg;
 	this->block->restartCounter();
-	varReg=this->block->getNextRegister(true);
+	VarRegister varReg = this->block->getNextRegister(true);
 
 	StringInputData* sid = new StringInputData();
 	sid->toData(varReg.getValue());
 	varReg.setValue(sid->getKey()*2);
-	//TODO: Hay que hacer andar este metodo
+
 	this->block->modifyRegister(varReg,result);
 
+	if (OVERFLOW_LOAD == result) {
+		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
+	}
+
+	this->depth = this->depth * 2;
 	delete sid;
-
-
-//	this->depth =this->depth * 2;
 }
 
 void Bucket::divideDepth(){

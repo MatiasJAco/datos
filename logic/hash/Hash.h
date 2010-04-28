@@ -57,12 +57,6 @@ private:
 	 */
 	Bucket* tryToInsertNewSid(StringInputData* sid, int & result);
 
-public:
-
-	Hash();
-
-	virtual ~Hash();
-
 	/**
 	 * Basicamente borra el bucket pasado por parametro de disco, luego lo recupera de la lista de bloques libres (esto se
 	 * hace para que se borren sus registros) y luego redispersa los registros.
@@ -70,6 +64,12 @@ public:
 	 * @return Devuelve 0 si realizo la operacion correctamente.
 	 */
 	int reHash(Bucket* bucketDesbordado);
+
+public:
+
+	Hash();
+
+	virtual ~Hash();
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
@@ -83,6 +83,13 @@ public:
 	 * This method gets a Data object, giving it's key.
 	 */
 	StringInputData* get(int key);
+
+	/**
+	 * Cambia el valor de un key pasado por parámetro.
+	 * @param key Es el key al cual se le cambiará el valor.
+	 * @param value Es el valor nuevo que tomara la clave pasada por parametro.
+	 */
+	int modify(int key, string value);
 
 	/**
 	 * para imprimir el Hash por consola
