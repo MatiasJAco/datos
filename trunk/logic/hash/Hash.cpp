@@ -57,24 +57,32 @@ bool Hash::existsElement(StringInputData* sid) {
 }
 
 int Hash::reHash(Bucket* bucketDesbordado) {
-	this->hashFile->deleteBlock(bucketDesbordado->getNumber()+1); // Borro el bloque de disco.
-	Bucket* bucket = this->createNewBucket(bucketDesbordado->getDepth()); //recupero el bloque borrado de la lista de bloque libres (ahora esta sin registros de datos)
-	bucketDesbordado->positionateAtEnd();
-
 	Block* block = bucketDesbordado->getBlock();
+	block->restartCounter();
+	list<StringInputData> listaDatos;
+	bool deleteResult = true;
 
+	StringInputData* sid;
 	while (block->hasNextRegister()) {
 		VarRegister varRegister = block->getNextRegister(true);
-		StringInputData* sid = new StringInputData();
+		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
-		this->add(sid);
+		listaDatos.push_back(*sid);
 		delete sid;
+		deleteResult = block->deleteRegister();
+		if (deleteResult == false) {
+			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
+		}
 	}
 
-	this->hashFile->saveBlock(bucket->getBlock());
-	delete bucket->getBlock();
-	delete bucket;
-	delete bucketDesbordado;
+	this->hashFile->saveBlock(bucketDesbordado->getBlock());
+
+	while (!listaDatos.empty()) {
+		StringInputData sid = listaDatos.front();
+		this->add(&sid);
+		listaDatos.pop_front(); // Borro el primer sid de la lista.
+	}
+
 	return 0;
 }
 
