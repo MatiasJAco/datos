@@ -300,14 +300,14 @@ loadResultEnum Block::evaluateLoad(unsigned int bytes)
 {
 	loadResultEnum load = NORMAL_LOAD;
 
-	if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
-	{
-		if(bytes>m_blockSize)
-			load = OVERFLOW_LOAD;
-		else
+	if(bytes>m_blockSize)
+		load = OVERFLOW_LOAD;
+	else
+		if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
+		{
 			if(calculateFraction(bytes)<m_LoadFactor)
 				load = UNDERFLOW_LOAD;
-	}
+		}
 
 	return load;
 }
