@@ -132,7 +132,7 @@ int Hash::add(StringInputData* sid) {
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
 			//TODO hacer el metodo de aca abajo
-			//bucket->duplicateDepth();
+			bucket->duplicateDepth();
 			this->hashFile->saveBlock(bucketNuevo->getBlock());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
@@ -153,6 +153,10 @@ int Hash::add(StringInputData* sid) {
 	}
 	//TODO ver si hay que hacer el delete
 	//delete bucket;
+	return 0;
+}
+
+int modify(int key, string value) {
 	return 0;
 }
 
