@@ -22,7 +22,7 @@ INodeData::~INodeData() {
 	// TODO Auto-generated destructor stub
 }
 
-int INodeData::getKey()
+int INodeData::getKey()const
 {
 	return m_key;
 }
@@ -38,13 +38,13 @@ void INodeData::setLeftPointer(unsigned int leftPointer)
 }
 
 
-unsigned int INodeData::getLeftPointer()
+unsigned int INodeData::getLeftPointer()const
 {
 	return m_leftPointer;
 }
 
 
-char *INodeData::toStream(char* stream)
+char *INodeData::toStream(char* stream)const
 {
 	ByteConverter::intToBytes(m_key,stream);
 	stream+=sizeof(m_key);

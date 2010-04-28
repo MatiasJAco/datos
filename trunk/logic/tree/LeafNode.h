@@ -10,17 +10,24 @@
 #include <iostream>
 #include <sstream>
 
+#include "BPlusTree.h"
+
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos hojas.
  */
+class BPlusTree;
+
 class LeafNode: public Node {
 
 	friend class BPlusTree;
 
 private:
+	BPlusTree* m_tree;
+
+private:
 	//--------------Constructor/Destructor----------------//
-	LeafNode(unsigned int nodeNumber,Block* block);
+	LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree);
 
 public:
 	/// Constructor
@@ -79,6 +86,15 @@ public:
 	 */
 	loadResultEnum modify(const InputData& data);
 
+public:
+	/*********************************************************************************************/
+
+	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
+	bool split_(INodeData& promotedKey);
+
+	/*********************************************************************************************/
+
+
 	/**
 	 * Devuelve el puntero a la siguiente hoja.
 	 * @return Numero de nodo o identificador.
@@ -98,6 +114,7 @@ public:
 	 * tenemos
 	 */
 	void printContent(InputData & data);
+
 
 
 	//void divide (Node* toDivide,Node* destNode,const InputData& newData);

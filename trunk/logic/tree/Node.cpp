@@ -17,10 +17,13 @@ Node::Node(unsigned int nodeNumber)
 	m_nodeNumber = nodeNumber;
 }
 
+//Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
 Node::Node(unsigned int nodeNumber,unsigned int level,Block* block)
 {
 	m_nodeNumber = nodeNumber;
 	m_block = block;
+//	m_tree = pointerTree;
+
 	VarRegister regLevel;
 	regLevel.setValue(level);
 

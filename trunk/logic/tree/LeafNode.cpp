@@ -16,9 +16,12 @@ LeafNode::LeafNode(unsigned int nodeNumber)
 {
 }
 
-LeafNode::LeafNode(unsigned int nodeNumber,Block* block)
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree)
+//:Node(nodeNumber,Node::LEAF_LEVEL,block,pointerTree)
 :Node(nodeNumber,Node::LEAF_LEVEL,block)
 {
+	m_tree = pointerTree;
+
 	VarRegister prevPointer,nextPointer;
 
 	prevPointer.setValue(UNDEFINED_NODE_NUMBER);
@@ -73,6 +76,14 @@ INodeData*  LeafNode::insert(const InputData & dato,loadResultEnum& result)
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
+//	if (result == OVERFLOW_LOAD)
+//		split(promotedKey);
+
+
+	delete currentData;
+
+//	return promotedKey;
+
 	return new INodeData(0,0);
 }
 
@@ -106,6 +117,8 @@ loadResultEnum LeafNode::remove(const InputData & dato)
 
 	if (!found)
 		throw "No existe el elemento a remover";
+
+	delete currentData;
 
 	return result;
 }
@@ -149,6 +162,8 @@ loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdat
 	if (!found)
 		throw "No existe el elemento a modificar";
 
+	delete currentData;
+
 	return result;
 }
 
@@ -186,6 +201,8 @@ loadResultEnum LeafNode::modify(const InputData & data)
 
 	if (!found)
 		throw "No existe el elemento a modificar";
+
+	delete currentData;
 
 	return result;
 }
@@ -225,12 +242,21 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 		}
 	}
 
+	delete currentData;
+
 	return found;
 }
 
+bool LeafNode::split_(INodeData& promotedKey)
+{
+//	LeafNode* sibling = m_tree->newLeafNode();
+//	Block* blockSibling = sibling->getBlock();
 
 
+//	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
 
+	return true;
+}
 
 
 void LeafNode::printContent(InputData & data)

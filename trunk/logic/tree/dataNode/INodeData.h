@@ -38,13 +38,13 @@ public:
 	 */
 	//TODO revisar si no deberia ser generico, por el momento, no.
 	// Si fuera generico deberia hacerse ese cambio de implementacion sobre las claves, en todos los proyectos.
-	int getKey();
+	int getKey()const;
 
 	/**
 	 * Devuelve la referencia izquierda de la clave.
 	 * @return Puntero referencia a un numero de nodo.
 	 */
-	unsigned int getLeftPointer();
+	unsigned int getLeftPointer()const;
 
 	/// Set de la clave (separador).
     void setKey(int key);
@@ -56,7 +56,7 @@ public:
 	 * Devuelve un stream correspondiente al INodeData.
 	 * @return stream que representa a INodeData.
 	 */
-	char* toStream(char* stream);
+	char* toStream(char* stream)const;
 
 	/**
 	 * Recibe por parametro un stream y lo convierte a tipo INodeData, haciendo el inverso toStream.

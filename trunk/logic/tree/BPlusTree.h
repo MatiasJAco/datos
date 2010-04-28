@@ -14,9 +14,12 @@
 
 #include "../physical/file/Block.h"
 #include "../physical/file/BlockFile.h"
+
 #include "Node.h"
 #include "InnerNode.h"
 #include "LeafNode.h"
+
+class Node;
 
 /**
  * Implementacion de arbol B+ guardado en disco
@@ -63,6 +66,9 @@ public:
 	 * @param branchFactor factor de carga de los nodos.
 	 */
 	BPlusTree(std::string nameFile,unsigned int sizeNodes,double branchFactor);
+
+
+	bool insert(const InputData& data);
 
 	/// Destructor
 	virtual ~BPlusTree();
