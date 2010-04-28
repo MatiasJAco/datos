@@ -74,6 +74,8 @@ public:
 
 	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
 
+	loadResultEnum remove_(const InputData& data);
+
 	/*********************************************************************************************/
 
 private:
@@ -86,6 +88,25 @@ private:
 	 * @return bool que indica si tuvo exito la operacion de split.
 	 */
 	bool split(const INodeData& data,unsigned int pos,INodeData& promotedKey);
+
+	/**
+	 * Redistribuye el nodo que se encuentra en underflow con el hermano.
+	 * @param node Nodo que se encuentra en underflow.
+	 * @param siblingNode hermano del nodo con underflow.
+	 * @param keyToModify es la clave que se debe promover luego de la redistribucion.
+	 * @return bool TRUE si pudo efectuar la operacion. FALSE de lo contrario.
+	 */
+	bool redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify);
+
+	/**
+	 * Fusiona el nodo con su hermano.
+	 * @param node Nodo que se encuentra en underflow.
+	 * @param siblingNode Hermano del nodo con el cual va a hacer la fusion.
+	 * @param fusionatedNode Devuelve la clave principal y el numero de nodo del fusionado.
+	 * @return bool TRUE si pudo efectuar la operacion. FALSE de lo contrario.
+	 */
+	bool merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode);
+
 public:
 	/**
 	 * Se le pasa una clave y devuelve el INodeData que corresponde a esa clave.
@@ -120,6 +141,17 @@ public:
 	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
 	 */
 	loadResultEnum modifyINodeData(const INodeData& iNodeData);
+
+	/**
+	 * Modifica un elemento INodeData a partir de la clave pasada en el parametro, y lo sustituye por lo que
+	 * se encuentra en el segundo parametro.
+	 * @param iNodeData Elemento de InnerNode que se desea modificar.
+	 * @param newINodeData Elemento por el cual se va a modificar
+	 * @return dato de tipo loadResultEnum. Posibles valores: NORMAL_LOAD.
+	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
+	 */
+	loadResultEnum modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData);
+
 
 };
 

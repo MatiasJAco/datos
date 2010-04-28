@@ -83,6 +83,9 @@ public:
 	 */
 	//virtual loadResultEnum remove(const InputData &data) = 0;
 	virtual INodeData* remove(const InputData & dato, loadResultEnum & result) = 0;
+
+	virtual loadResultEnum remove_(const InputData& data) = 0;
+
 	/**
 	 * Busca el elemento identificado por la clave
 	 * Si lo encuentra guarda el registro en reg
