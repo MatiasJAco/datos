@@ -78,7 +78,7 @@ bool BPlusTree::insert(const InputData& data)
 		throw "No hay elemento raiz";
 
 
-	result = m_root->insert_(data,promotedKey);
+	result = m_root->insert(data,promotedKey);
 
 	if (result == OVERFLOW_LOAD)
 	{

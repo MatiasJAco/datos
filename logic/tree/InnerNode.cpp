@@ -28,87 +28,7 @@ InnerNode::~InnerNode()
 {
 }
 
-INodeData*  InnerNode::insert(const InputData & dato,loadResultEnum& result){
-//	comparo el dato con las claves
 
-	VarRegister reg;
-	bool found=false;
-
-	//Busca al sucesor que puede tener el dato
-	m_block->restartCounter();
-	//Itera una vez para obviar el dato de control.
-	VarRegister level = this->m_block->getNextRegister();
-	INodeData* contenido=new INodeData(0,0);
-
-	while(!m_block->isLastRegister()&& !found ){
-		reg=this->m_block->peekRegister();
-
-		// Transformo el registro a un INodeData
-		contenido->toNodeData(reg.getValue());
-		if(contenido->getKey()>dato.getKey()){
-			found=true;
-		}
-		this->m_block->getNextRegister();
-
-	}
-
-//Se lo pide al arbol
-	Node* sucesor=this->m_tree->getNode(contenido->getLeftPointer());
-	result=NORMAL_LOAD;
-	INodeData* overflowData=sucesor->insert(dato,result);
-
-	if (result==OVERFLOW_LOAD){
-
-	//crear nodo y redistribuir
-		INodeData* primerElemento=NULL;
-		if(sucesor->isLeaf()){
-			LeafNode* nuevoNodo=(LeafNode*)this->m_tree->newLeafNode();
-			primerElemento=this->divideLeaf(sucesor,nuevoNodo,dato);
-
-		}else{
-			InnerNode* nuevoNodo=(InnerNode*)this->m_tree->newInnerNode(sucesor->getLevel());
-			primerElemento=this->divideInner(sucesor,nuevoNodo,*overflowData);
-		}
-
-
-
-		//Itera una vez para obviar el dato de control.
-		this->m_block->restartCounter();
-		this->m_block->getNextRegister();
-		found=false;
-		unsigned int iterador=0;
-		while(iterador<m_block->getRegisterAmount()&& !found ){
-			iterador++;
-			reg=this->m_block->peekRegister();
-			// Transformo el registro a un INodeData
-			contenido->toNodeData(reg.getValue());
-			if(contenido->getKey()>primerElemento->getKey()){
-				found=true;
-			}else{
-				this->m_block->getNextRegister();
-			}
-		}
-
-		///Intercambio de claves.
-		INodeData* nuevoContenido= new INodeData(primerElemento->getLeftPointer(),contenido->getKey());
-		//Dato es devuelto con la clave del primer elemento del nuevo nodo.
-		contenido->setKey(primerElemento->getKey());
-		char* valueReg = new char[contenido->getSize()];
-		reg.setValue(contenido->toStream(valueReg),contenido->getSize());
-		this->m_block->modifyRegister(reg);
-		//Itera nuevamente para posicionarse al lado de la referemcia a nodo desbordado.
-		this->m_block->getNextRegister();
-		VarRegister* nuevoRegistro=new VarRegister(nuevoContenido->toStream(valueReg),nuevoContenido->getSize());
-		this->m_block->addRegister(*nuevoRegistro,result);
-		if(result==OVERFLOW_LOAD){
-			overflowData=nuevoContenido;
-		}
-
-	}
-
-
-	return overflowData;
-}
 
 loadResultEnum InnerNode::remove(const InputData & dato){
 	//	comparo el dato con las claves
@@ -321,12 +241,12 @@ void InnerNode::save(Node* node)
 
 /**********************************************************************************/
 
-loadResultEnum InnerNode::insert_(const InputData& data,INodeData& promotedKey)
+loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
 	// Elemento de nodo interno con referencia a la clave a insertar.
-	INodeData nodePointerKey(data.getKey(),Node::UNDEFINED_NODE_NUMBER);
+	INodeData nodePointerKey(Node::UNDEFINED_NODE_NUMBER,data.getKey());
 
 	// Busco el elemento de nodo interno que contiene la referencia a la clave de dato.
 	if (!findINodeData(nodePointerKey))
@@ -337,7 +257,7 @@ loadResultEnum InnerNode::insert_(const InputData& data,INodeData& promotedKey)
 
 
 	// Inserta en el hijo y regresa la clave a promover..
-	result = sucesor->insert_(data,promotedKey);
+	result = sucesor->insert(data,promotedKey);
 
 	// Si hubo overflow tuvo que promover una clave.
 	if (result == OVERFLOW_LOAD)
@@ -345,10 +265,10 @@ loadResultEnum InnerNode::insert_(const InputData& data,INodeData& promotedKey)
 		// Busca el INodeData mayor al promotedKey y es seteada dentro de la misma.
 
 		// Hace el intercambio de claves y punteros. Modifica el puntero de bigger
-		INodeData bigger(promotedKey.getKey(),UNDEFINED_NODE_NUMBER);
+		INodeData bigger(UNDEFINED_NODE_NUMBER,promotedKey.getKey());
 		findINodeData(bigger,false);
 
-		INodeData newINodeData(promotedKey.getKey(),bigger.getLeftPointer());
+		INodeData newINodeData(bigger.getLeftPointer(),promotedKey.getKey());
 		bigger.setLeftPointer(promotedKey.getLeftPointer());
 
 		modifyINodeData(bigger);
@@ -382,7 +302,7 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
-	while (!m_block->isLastRegister()&&!found)
+	while (pos<m_block->getRegisterAmount()&&!found)
 	{
 		pos++;
 		currentRegister = m_block->peekRegister();
@@ -394,7 +314,7 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 			found = true;
 			if (currentData.getKey() == iNodeData.getKey())
 				throw "Duplicado en insert de Nodo Interno";
-		}
+		}else
 
 		currentRegister = m_block->getNextRegister();
 	}
@@ -419,9 +339,10 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 	m_block->restartCounter();
 	//Itera una vez para obviar el dato de control.
 	VarRegister level = this->m_block->getNextRegister();
-
-	while(!m_block->isLastRegister()&& !found )
+	unsigned int iterador;
+	while(iterador<m_block->getRegisterAmount()&& !found )
 	{
+		iterador++;
 		reg = this->m_block->peekRegister();
 		// Transformo el registro a un INodeData
 		currentData.toNodeData(reg.getValue());
@@ -499,11 +420,12 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
-
-	while (!m_block->isLastRegister()&&!found)
+//	VarRegister pointers = m_block->getNextRegister();
+	unsigned int iterador=0;
+	while (iterador<m_block->getRegisterAmount()&&!found)
 	{
-		currentRegister = m_block->getNextRegister();
+		iterador++;
+		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
 		currentData.toNodeData(currentRegister.getValue());
@@ -512,11 +434,13 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 			// lo modifica
 			found = true;
 			m_block->modifyRegister(regData,result);
-		}
+		}else
+			this->m_block->getNextRegister();
 
-		if (!found)
-			throw "No existe el elemento a modificar";
+
 	}
+	if (!found)
+				throw "No existe el elemento a modificar";
 
 	if (result!= NORMAL_LOAD)
 		throw "Esta devolviendo estado de carga anormal. No deberia, es de tamaño fijo y ya existia!";
@@ -530,15 +454,18 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	InnerNode* sibling = (InnerNode*)m_tree->newInnerNode(getLevel());
 	Block* blockSibling = sibling->getBlock();
 
-	VarRegister reg = m_block->peekRegister();
+	char* valueReg = new char[data.getSize()];
+	VarRegister reg(data.toStream(valueReg),data.getSize());
 
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
-
+	//Recupera primer elemento del neuvo nodo.
 	blockSibling->restartCounter();
-	reg = blockSibling->getNextRegister();
+	//Saltea datos de control
+	blockSibling->getNextRegister();
 
+	reg=blockSibling->getNextRegister();
 	INodeData firstKey;
-	firstKey.toStream(reg.getValue());
+	firstKey.toNodeData(reg.getValue());
 
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey.getKey());
