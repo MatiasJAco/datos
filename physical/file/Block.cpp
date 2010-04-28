@@ -318,7 +318,7 @@ bool Block::deleteRegister()
 	return deleteRegister(carga);
 }
 
-bool Block::deleteRegister(loadResultEnum &load)
+bool Block::deleteRegister(loadResultEnum &load, bool deleteAnyway)
 {
 	bool retVal=false;
 	RegisterListIt it = m_actualReg;
@@ -330,7 +330,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
 
 		//Si no va a haber underflow elimino
-		if(load!=UNDERFLOW_LOAD)
+		if(load!=UNDERFLOW_LOAD&& !deleteAnyway)
 		{
 			m_registers.erase(m_actualReg);
 
@@ -382,7 +382,10 @@ unsigned int Block::getRegisterAmount()
 
 unsigned int Block::getMinimalLoad()
 {
-	unsigned int retVal = m_LoadFactor*m_blockSize;
+	unsigned int retVal = 0;
+
+	if(m_LoadFactor!=UNDEFINED_LOAD_FACTOR)
+		retVal =m_LoadFactor*m_blockSize;
 
 	return retVal;
 }

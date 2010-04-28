@@ -17,7 +17,7 @@ typedef enum {UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD} loadResultEnum;
 
 
 /**
- * Block
+ * Bloque, compuesto por registros variables. Maneja los temas de tamaño de los nodos.
  */
 class Block {
 
@@ -88,7 +88,7 @@ public:
 	 * @return bool true en caso de exito
 	 * @see loadResultEnum
 	 */
-	bool deleteRegister(loadResultEnum &load);
+	bool deleteRegister(loadResultEnum &load, bool deleteAnway=false);
 
 
 	/**
@@ -132,10 +132,15 @@ public:
 	VarRegister peekRegister();
 
 
+	/**
+	 * Se fija si es el ultimo registro...
+	 * TODO: ver si se vuela este o hasNextRegister... ya que hacen lo mismo
+	 */
 	bool isLastRegister();
 
 	/**
 	 * Indica si puede continuar iterando, dado que quedan registros en el bloque.
+	 * TODO: ver si se vuela este o isLastRegister
 	 */
 	bool hasNextRegister();
 
@@ -158,6 +163,12 @@ public:
 	 */
 	unsigned int getRegisterAmount();
 
+	/**
+	 * Obtiene la minima carga que puede tener el bloque sin estar en underflow
+	 * Solo devuelve un valor si esta seteado LOAD_FACTOR. En caso de no estar
+	 * seteado devuelve 0
+	 * @return unsigned int cantidad de bytes minima
+	 */
 	unsigned int getMinimalLoad();
 
 	/**
@@ -168,7 +179,7 @@ public:
 
 	/**
 	 * Obtiene el porcentaje del bloque ocupado actualmente
-	 * @return float oorcentaje de carga actual
+	 * @return float porcentaje de carga actual
 	 */
 	float  getActualLoad();
 
@@ -189,7 +200,9 @@ public:
 	 */
 	void printRegisters();
 
-
+	/**
+	 * Elimina todos los registros de un bloque.
+	 */
 	void clear();
 
 	//--------------------SERIALIZE/DESERIALIZE-------------------//
