@@ -65,7 +65,30 @@ bool BlockManager::redistributeUnderflow(Block *block1, Block *block2, VarRegist
 
 bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister & reg, unsigned int pos)
 {
-	bool retVal=false;
+	bool retVal=true;
+
+	blank->clear();
+
+	unsigned int cumSize;
+	unsigned int sizeFirst=orig->getMinimalLoad();
+
+	orig->restartCounter();
+	VarRegister varR;
+	VarRegister varR2;
+
+	for(cumSize=0;cumSize<sizeFirst&& !orig->isLastRegister(); cumSize+= varR.getDiskSize())
+	{
+		varR =orig->getNextRegister(true);
+	}
+
+	while(!orig->isLastRegister())
+	{
+		varR =orig->getNextRegister(false);
+		orig->deleteRegister();
+		blank->addRegister(varR);
+	}
+
+	blank->addRegister(reg);
 
 	return retVal;
 }

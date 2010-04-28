@@ -16,6 +16,9 @@
 /**
  * Archivo compuesto por bloques.
  * Es el encargado de crear bloques y escribirlos a disco
+ * El manejo de los bloques libres se maneja con un FreeBlockFile, que
+ * guarda los numeros de los bloques que se liberan. Mientras esos bloques
+ * esten eliminados y no se asignen a nada quedan con basura...
  *
  */
 class BlockFile:public File
@@ -107,7 +110,12 @@ public:
 	 */
 	Block *getBlock(const unsigned int blockNumber);
 
-
+	/**
+	 * Devuelve un array con todos los bloques del archivo de bloques libres.
+	 * Solo se usa para informar al usuario de los bloques libres
+	 * @return string array con los numeros de bloques libres separados por coma.
+	 */
+	std::string getFreeNodeString();
 
 private:
 	//-----------------------------Headers-----------------------------//
@@ -145,7 +153,13 @@ private:
 	 */
 	unsigned int m_FirstBlockOffset;
 
+	/**
+	 * Factor de carga del bloque. Establece un minimo porcentaje
+	 * por debajo del cual se esta en UNDERFLOW... Es opcional
+	 * en caso de no setearse desde afuera se setea por default en -1
+	 */
 	float m_LoadFactor;
+
 	/**
 	 * Archivo que contiene los bloques libres, a fin de reutilizar espacio.
 	 * Antes de poner un bloque nuevo al final se pregunta si este archivo

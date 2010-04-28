@@ -200,6 +200,15 @@ void FreeBlockFile::showFreeNodes()
 	cout << "Cantidad de bloques:"<<m_BlockCount<<endl;
 	cout << "Bloques:"<<endl;
 
+	cout << getFreeNodeString();
+
+	cout <<endl;
+}
+
+string FreeBlockFile::getFreeNodeString()
+{
+	stringstream ss;
+
 	unsigned int i;
 	char * charStream=new char[m_BlockCount*m_registerSize];
 	m_FileHandler.seekg (sizeof(m_BlockCount), ios::beg);
@@ -208,11 +217,13 @@ void FreeBlockFile::showFreeNodes()
 
 	for(i=0; i<m_BlockCount; i++)
 	{
-		cout <<ByteConverter::bytesToUInt(&charStream[i*m_registerSize])<<",";
+		ss << ByteConverter::bytesToUInt(&charStream[i*m_registerSize])<<",";
 	}
 	delete [] charStream;
-	cout <<endl;
+
+	return ss.str();
 }
+
 
 
 bool FreeBlockFile::close()
