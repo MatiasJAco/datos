@@ -415,6 +415,7 @@ loadResultEnum InnerNode::remove_(const InputData& data)
 			// Elimino thiskey y modifico el puntero de bigbrother que es quien ahora
 			// apunta al fusionado. Pudo haber quedado en underflow este nodo interno.
 			result = removeINodeData(thiskey); // se necesita que este metodo si elimine efectivamente la clave.
+			modifyINodeData(bigBrother,fusionatedNode);
 		}
 
 	}
