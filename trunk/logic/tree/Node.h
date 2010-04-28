@@ -74,7 +74,7 @@ public:
 	 * @param data par clave-valor a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	virtual INodeData* insert(const InputData & dato,loadResultEnum& result)= 0;
+	virtual loadResultEnum insert(const InputData& data,INodeData& promotedKey) = 0;
 
 	/**
 	 * Elimina el elemento identificado por la clave
@@ -109,12 +109,6 @@ public:
 	 */
 	virtual loadResultEnum modify(const InputData& data) = 0;
 
-
-	/*********************************************************************************************/
-
-	virtual loadResultEnum insert_(const InputData& data,INodeData& promotedKey) = 0;
-
-	/*********************************************************************************************/
 
 
 	/**

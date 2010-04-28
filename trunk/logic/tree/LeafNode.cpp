@@ -37,7 +37,7 @@ LeafNode::~LeafNode()
 }
 
 
-loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
+loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -58,7 +58,7 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 	VarRegister level = m_block->getNextRegister();
 	VarRegister pointers = m_block->getNextRegister();
 
-	while (!m_block->isLastRegister()&&!found)
+	while (pos<m_block->getRegisterAmount()&&!found)
 	{
 		pos++;
 		currentRegister = m_block->peekRegister();
@@ -71,10 +71,10 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 
 			if (currentData->getKey() == data.getKey())
 				throw "Duplicado en insert de Hoja";
-		}
+		}else
 		/// Seria mejor que en Block me pudiera correr en uno: algo asi como it++
 		/// con un metodo.
-		currentRegister = m_block->getNextRegister();
+		m_block->getNextRegister();
 	}
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
@@ -85,50 +85,7 @@ loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
 	return result;
 }
 
-INodeData*  LeafNode::insert(const InputData & dato,loadResultEnum& result)
-{
-	result = NORMAL_LOAD;
-	bool found = false;
 
-	VarRegister currentRegister;
-	InputData* currentData = dato.newInstance();
-
-	// Creo el registro para poder insertarlo en el bloque.
-	char* valueReg = new char[dato.size()];
-	VarRegister regData(dato.toStream(valueReg),dato.size());
-
-	/// Busco donde insertar el dato dentro del bloque de hoja.
-	m_block->restartCounter();
-	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
-	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
-
-	while (!m_block->isLastRegister()&&!found)
-	{
-		currentRegister = m_block->peekRegister();
-
-		/// Transformo el registro a un InputData
-		currentData->toData(currentRegister.getValue());
-		if (currentData->getKey() >= dato.getKey())
-		{
-			found = true;
-
-			if (currentData->getKey() == dato.getKey())
-				throw "Duplicado en insert de Hoja";
-		}
-		/// Seria mejor que en Block me pudiera correr en uno: algo asi como it++
-		/// con un metodo.
-		currentRegister = m_block->getNextRegister();
-	}
-	/// Lo agrega al final si no lo encontro
-	m_block->addRegister(regData,result);
-
-
-	delete currentData;
-
-	return new INodeData(0,0);
-}
 
 loadResultEnum LeafNode::remove(const InputData & dato)
 {
@@ -295,15 +252,20 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	LeafNode* sibling = (LeafNode*)m_tree->newLeafNode();
 	Block* blockSibling = sibling->getBlock();
 
-	VarRegister reg = m_block->peekRegister();
+	char* valueReg = new char[data.size()];
+	VarRegister reg(data.toStream(valueReg),data.size());
 
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 
 	blockSibling->restartCounter();
+	///Saltea datos de control.
+	blockSibling->getNextRegister();
+	blockSibling->getNextRegister();
+	//Recupera el primer registro.
 	reg = blockSibling->getNextRegister();
 
 	InputData* firstKey = data.newInstance();
-	firstKey->toStream(reg.getValue());
+	firstKey->toData(reg.getValue());
 
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey->getKey());

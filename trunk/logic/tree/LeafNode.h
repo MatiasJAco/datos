@@ -51,7 +51,8 @@ public:
 	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	INodeData* insert(const InputData & dato,loadResultEnum& result);
+	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
+
 
 	/**
 	 * Elimina el elemento identificado por la clave
@@ -89,10 +90,7 @@ public:
 public:
 	/*********************************************************************************************/
 
-	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
-
-
-	/*********************************************************************************************/
+		/*********************************************************************************************/
 
 private:
 	/**

@@ -44,7 +44,6 @@ public:
     InnerNode();
     InnerNode(unsigned int nodeNumber);
     ~InnerNode();
-    INodeData *insert(const InputData & dato, loadResultEnum & result);
     loadResultEnum remove(const InputData & key);
     bool find(const InputData & key, InputData & data) const;
     loadResultEnum modify(const InputData & key, const InputData & dato);
@@ -69,7 +68,7 @@ private:
 public:
 	/*********************************************************************************************/
 
-	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
+	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
 
 	/*********************************************************************************************/
 
