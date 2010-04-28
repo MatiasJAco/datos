@@ -88,23 +88,29 @@ Bucket* Hash::createNewBucket(int depth){
 	return new Bucket(block);
 }
 
+Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
+	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
+
+	// Se obtiene el bloque desde el disco
+	Block* block = this->hashFile->getBlock(bucketNumber);
+	if (block == NULL) {
+		cout<<"Hubo un error al intentar leer un bloque que no existia"<<endl;
+		result = 2;
+	}
+	Bucket* bucket = new Bucket(block);
+	result = bucket->insert(sid);
+	return bucket;
+}
+
+
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
 	if (existsElement(sid)){
 		return 1;
 	}
 
-	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
-
-	// Se obtiene el bloque desde el disco
-	Block* block = this->hashFile->getBlock(bucketNumber);
-	if (block == NULL) {
-		printf("Hubo un error al intentar leer un bloque que no existia");
-		return 2;
-	}
-
-	Bucket* bucket = new Bucket(block);
-	int insertResult = bucket->insert(sid);
+	int insertResult;
+	Bucket * bucket = tryToInsertNewSid(sid,insertResult);
 
 	if (insertResult == 0) { //si se pudo agregar en el bucket lo guardo
 		this->hashFile->saveBlock(bucket->getBlock());
@@ -117,20 +123,19 @@ int Hash::add(StringInputData* sid) {
 			this->hashTable->duplicate();
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
-			bucket->duplicateDepth();
+			//TODO hacer el metodo de aca abajo
+			//bucket->duplicateDepth();
 			this->hashFile->saveBlock(bucketNuevo->getBlock());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
+			this->add(sid);
 			delete bucketNuevo;
 		} else {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 
-			//TODO en realidad no se usa este metodo, hay que hacer uno nuevo, dsp preguntame adrian cualq cosa
-			//this->hashTable->verifyJumps(calculateHashFunction(sid->getKey()), bucketNuevo->getDepth() / 2);
-			this->hashTable->jumpAndReplace(bucketNumber,bucketNuevo->getDepth(),bucketNuevo->getNumber());
+			this->hashTable->jumpAndReplace(this->getNumberOfBucket(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
 
-			//TODO revisar esto del rehash (ni lo mire= soy pablo)
 			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
 			this->add(sid);
 			delete bucketNuevo;
@@ -138,8 +143,8 @@ int Hash::add(StringInputData* sid) {
 	} else {
 		return insertResult;
 	}
-
-	delete bucket;
+	//TODO ver si hay que hacer el delete
+	//delete bucket;
 	return 0;
 }
 
