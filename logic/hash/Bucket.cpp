@@ -154,6 +154,7 @@ void Bucket::duplicateDepth(){
 		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
 	}
 
+	this->depth = this->depth*2;
 	delete sid;
 }
 
@@ -178,6 +179,6 @@ void Bucket::divideDepth(){
 		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
 	}
 
-	this->depth = this->depth * 2;
+	this->depth = this->depth / 2;
 	delete sid;
 }
