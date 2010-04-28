@@ -69,14 +69,15 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		sid->toData(varRegister.getValue());
 		listaDatos.push_back(*sid);
 		delete sid;
-		deleteResult = block->deleteRegister();
+		loadResultEnum load = NORMAL_LOAD;
+		deleteResult = block->deleteRegister(load,false);
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
 		}
 	}
 
 	this->hashFile->saveBlock(bucketDesbordado->getBlock());
-
+print();
 	while (!listaDatos.empty()) {
 		StringInputData sid = listaDatos.front();
 		this->add(&sid);
