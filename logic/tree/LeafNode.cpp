@@ -37,6 +37,52 @@ LeafNode::~LeafNode()
 }
 
 
+loadResultEnum LeafNode::insert_(const InputData& data,INodeData& promotedKey)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	bool found = false;
+
+	VarRegister currentRegister;
+	InputData* currentData = data.newInstance();
+
+	// Creo el registro para poder insertarlo en el bloque.
+	char* valueReg = new char[data.size()];
+	VarRegister regData(data.toStream(valueReg),data.size());
+
+	/// Busco donde insertar el dato dentro del bloque de hoja.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+	VarRegister pointers = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->peekRegister();
+
+		/// Transformo el registro a un InputData
+		currentData->toData(currentRegister.getValue());
+		if (currentData->getKey() >= data.getKey())
+		{
+			found = true;
+
+			if (currentData->getKey() == data.getKey())
+				throw "Duplicado en insert de Hoja";
+		}
+		/// Seria mejor que en Block me pudiera correr en uno: algo asi como it++
+		/// con un metodo.
+		currentRegister = m_block->getNextRegister();
+	}
+	/// Lo agrega al final si no lo encontro
+	m_block->addRegister(regData,result);
+
+	if (result == OVERFLOW_LOAD)
+		split(data,promotedKey);
+
+	return result;
+}
+
 INodeData*  LeafNode::insert(const InputData & dato,loadResultEnum& result)
 {
 	result = NORMAL_LOAD;
@@ -76,13 +122,8 @@ INodeData*  LeafNode::insert(const InputData & dato,loadResultEnum& result)
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
-//	if (result == OVERFLOW_LOAD)
-//		split(promotedKey);
-
 
 	delete currentData;
-
-//	return promotedKey;
 
 	return new INodeData(0,0);
 }
@@ -247,13 +288,27 @@ bool LeafNode::find(const InputData & key,InputData & data) const
 	return found;
 }
 
-bool LeafNode::split_(INodeData& promotedKey)
+bool LeafNode::split(const InputData& data,INodeData& promotedKey)
 {
-//	LeafNode* sibling = m_tree->newLeafNode();
-//	Block* blockSibling = sibling->getBlock();
+	LeafNode* sibling = (LeafNode*)m_tree->newLeafNode();
+	Block* blockSibling = sibling->getBlock();
 
+	VarRegister reg = m_block->peekRegister();
+	// la que me de el contador del block. Por ahora seteo 1.
+	// En cualquier caso, se calculara.
+	unsigned int posicion = 1;
 
-//	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
+	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
+
+	blockSibling->restartCounter();
+	reg = blockSibling->getNextRegister();
+
+	InputData* firstKey = data.newInstance();
+	firstKey->toStream(reg.getValue());
+
+	// Obtiene la primer clave del sibling derecho y su numero de nodo.
+	promotedKey.setKey(firstKey->getKey());
+	promotedKey.setLeftPointer(sibling->getNodeNumber());
 
 	return true;
 }

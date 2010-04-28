@@ -361,14 +361,6 @@ loadResultEnum InnerNode::insert_(const InputData& data,INodeData& promotedKey)
 	return result;
 }
 
-bool InnerNode::split_(INodeData& promotedKey)
-{
-	return true;
-}
-
-
-/**********************************************************************************/
-
 loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& promotedKey)
 {
 	/// Trata de insertar un elemento INodeData y si dio overflow hace el split.
@@ -408,7 +400,8 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
-	// falta lo del split y setear promotedKey.
+	if (result == OVERFLOW_LOAD)
+		split(iNodeData,promotedKey);
 
 	return result;
 }
@@ -528,4 +521,30 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 
 
 	return result;
+}
+
+bool InnerNode::split(const INodeData& data,INodeData& promotedKey)
+{
+	InnerNode* sibling = (InnerNode*)m_tree->newInnerNode(getLevel());
+	Block* blockSibling = sibling->getBlock();
+
+	VarRegister reg = m_block->peekRegister();
+	// la que me de el contador del block. Por ahora seteo 1.
+	// En cualquier caso, se calculara.
+	unsigned int posicion = 1;
+
+	BlockManager::redistributeOverflow(m_block,blockSibling,reg,posicion);
+
+	blockSibling->restartCounter();
+	reg = blockSibling->getNextRegister();
+
+	INodeData firstKey;
+	firstKey.toStream(reg.getValue());
+
+	// Obtiene la primer clave del sibling derecho y su numero de nodo.
+	promotedKey.setKey(firstKey.getKey());
+	promotedKey.setLeftPointer(sibling->getNodeNumber());
+
+
+	return true;
 }

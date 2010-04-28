@@ -112,7 +112,6 @@ public:
 	/*********************************************************************************************/
 
 	virtual loadResultEnum insert_(const InputData& data,INodeData& promotedKey) = 0;
-	virtual bool split_(INodeData& promotedKey) = 0;
 
 	/*********************************************************************************************/
 
