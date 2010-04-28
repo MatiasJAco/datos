@@ -22,7 +22,7 @@
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
  *	Estructura que representa a los nodos internos.
  */
-
+class LeafNode;
 class BPlusTree;
 
 class InnerNode: public Node {
@@ -30,8 +30,9 @@ class InnerNode: public Node {
 	friend class BPlusTree;
 
 private:
-
 	BPlusTree* m_tree;
+
+private:
 
 	unsigned int buscarPosicionInner(InnerNode *& nodoAPartir,INodeData & newData);
 	unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir,const InputData & newData);
@@ -48,9 +49,10 @@ public:
     bool find(const InputData & key, InputData & data) const;
     loadResultEnum modify(const InputData & key, const InputData & dato);
     loadResultEnum modify(const InputData & data);
-    void insertINodeData(INodeData *contBuscado);
+//    void insertINodeData(INodeData *contBuscado);
     void join(Node *toDivide, Node *destNode, const InputData & newData);
     void save(Node* node);
+
 private:
 
 	INodeData* divideLeaf (Node* toDivide,Node* destNode,const InputData& newData);
@@ -60,6 +62,53 @@ private:
 	bool balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData);
 
 	bool balanceInner(Node* underNode,Node* toDonate, INodeData& newData);
+
+public:
+	/*********************************************************************************************/
+
+	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
+	bool split_(INodeData& promotedKey);
+
+	/*********************************************************************************************/
+
+public:
+	/**
+	 * Se le pasa una clave y devuelve el INodeData que corresponde a esa clave.
+	 * @param innerNodeElem Elemento INodeData que se busca.
+	 * @param less Si no encuentra el elemento devuelve el inmediatamente menor o mayor segun el valor
+	 * 				de este parametro opcional. El default es devolver el menor.
+	 * @return bool. TRUE si lo encontro, FALSE de lo contrario.
+	 */
+	bool findINodeData(INodeData& innerNodeElem,bool less = true);
+
+	/**
+	 * Inserta un elemento INodeData en forma ordenada dentro del InnerNode.
+	 * @param iNodeData Elemento de InnerNode que se desea insertar.
+	 * @param promotedKey devuelve el valor de la clave a promover como resultado de la insercion.
+	 * 					  se debe verificar el valor del return para analizar el dato de promotedKey.
+	 * 					  Solo tiene sentido si se devolvio un loadResultEnum distinto de NORMAL_LOAD.
+	 * @return dato de tipo loadResultEnum. Posibles valores: OVERFLOW_LOAD,NORMAL_LOAD.
+	 */
+	loadResultEnum insertINodeData(const INodeData& iNodeData,INodeData& promotedKey);
+
+	/**
+	 * Elimina un elemento INodeData dentro del InnerNode, a partir de la clave pasada en el parametro.
+	 * @param iNodeData Elemento de InnerNode que se desea eliminar.
+	 * @return dato de tipo loadResultEnum. Posibles valores: UNDERFLOW_LOAD,NORMAL_LOAD.
+	 */
+	loadResultEnum removeINodeData(const INodeData& iNodeData);
+
+	/**
+	 * Modifica un elemento INodeData a partir de la clave pasada en el parametro.
+	 * @param iNodeData Elemento de InnerNode que se desea modificar.
+	 * @param promotedKey devuelve el valor de la clave a promover como resultado de la insercion.
+	 * 					  se debe verificar el valor del return para analizar el dato de promotedKey.
+	 * 					  Solo tiene sentido si se devolvio un loadResultEnum distinto de NORMAL_LOAD.
+	 * @return dato de tipo loadResultEnum. Posibles valores: NORMAL_LOAD.
+	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
+	 */
+	loadResultEnum modifyINodeData(const INodeData& iNodeData);
+
 };
 
 #endif /* INNERNODE_H_ */

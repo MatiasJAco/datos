@@ -16,7 +16,7 @@
 #include "../physical/file/BlockManager.h"
 #include "../logic/tree/dataNode/INodeData.h"
 
-
+//#include "BPlusTree.h"
 
 class Node{
 
@@ -41,8 +41,11 @@ protected:
 
 	Block* m_block;
 
+//	BPlusTree* m_tree;
+
 protected:
 	//--------------Constructor/Destructor----------------//
+//	Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree);
 	Node(unsigned int nodeNumber,unsigned int level,Block* block);
 
 
@@ -104,6 +107,15 @@ public:
 	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
 	virtual loadResultEnum modify(const InputData& data) = 0;
+
+
+	/*********************************************************************************************/
+
+	virtual loadResultEnum insert_(const InputData& data,INodeData& promotedKey) = 0;
+	virtual bool split_(INodeData& promotedKey) = 0;
+
+	/*********************************************************************************************/
+
 
 	/**
 	 * Evalua si el nodo esta vacio.

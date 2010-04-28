@@ -18,6 +18,7 @@ InnerNode::InnerNode(unsigned int nodeNumber)
 }
 
 InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
+//:Node(nodeNumber,level,block,pointerTree)
 :Node(nodeNumber,level,block)
 {
 	m_tree = pointerTree;
@@ -317,3 +318,214 @@ void InnerNode::save(Node* node)
 	m_tree->saveNode(node);
 }
 
+
+/**********************************************************************************/
+
+loadResultEnum InnerNode::insert_(const InputData& data,INodeData& promotedKey)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	// Elemento de nodo interno con referencia a la clave a insertar.
+	INodeData nodePointerKey(data.getKey(),Node::UNDEFINED_NODE_NUMBER);
+
+	// Busco el elemento de nodo interno que contiene la referencia a la clave de dato.
+	if (!findINodeData(nodePointerKey))
+		throw "Error: llego clave a una referencia invalida";
+
+	// Se lo pide al arbol
+	Node* sucesor = this->m_tree->getNode(nodePointerKey.getLeftPointer());
+
+
+	// Inserta en el hijo y regresa la clave a promover..
+	result = sucesor->insert_(data,promotedKey);
+
+	// Si hubo overflow tuvo que promover una clave.
+	if (result == OVERFLOW_LOAD)
+	{
+		// Busca el INodeData mayor al promotedKey y es seteada dentro de la misma.
+
+		// Hace el intercambio de claves y punteros. Modifica el puntero de bigger
+		INodeData bigger(promotedKey.getKey(),UNDEFINED_NODE_NUMBER);
+		findINodeData(bigger,false);
+
+		INodeData newINodeData(promotedKey.getKey(),bigger.getLeftPointer());
+		bigger.setLeftPointer(promotedKey.getLeftPointer());
+
+		modifyINodeData(bigger);
+
+		/// Devuelve el resultado de haber insertado una clave,
+		/// promoted Key es modificado despues del insert.
+		result = insertINodeData(newINodeData,promotedKey);
+	}
+
+	return result;
+}
+
+bool InnerNode::split_(INodeData& promotedKey)
+{
+	return true;
+}
+
+
+/**********************************************************************************/
+
+loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& promotedKey)
+{
+	/// Trata de insertar un elemento INodeData y si dio overflow hace el split.
+	loadResultEnum result = NORMAL_LOAD;
+
+	bool found = false;
+
+	VarRegister currentRegister;
+	INodeData currentData;
+
+	// Creo el registro para poder insertarlo en el bloque.
+	char* valueReg = new char[iNodeData.getSize()];
+	VarRegister regData(iNodeData.toStream(valueReg),iNodeData.getSize());
+
+	/// Busco donde insertar el dato dentro del bloque de nodo interno.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->peekRegister();
+
+		/// Transformo el registro a un INodeData
+		currentData.toNodeData(currentRegister.getValue());
+		if (currentData.getKey() >= iNodeData.getKey())
+		{
+			found = true;
+			if (currentData.getKey() == iNodeData.getKey())
+				throw "Duplicado en insert de Nodo Interno";
+		}
+
+		currentRegister = m_block->getNextRegister();
+	}
+
+	/// Lo agrega al final si no lo encontro
+	m_block->addRegister(regData,result);
+
+	// falta lo del split y setear promotedKey.
+
+	return result;
+}
+
+
+bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
+{
+	bool found = false;
+	INodeData currentData;
+
+	VarRegister reg;
+	//Busca al sucesor que puede tener el dato
+	m_block->restartCounter();
+	//Itera una vez para obviar el dato de control.
+	VarRegister level = this->m_block->getNextRegister();
+
+	while(!m_block->isLastRegister()&& !found )
+	{
+		reg = this->m_block->peekRegister();
+		// Transformo el registro a un INodeData
+		currentData.toNodeData(reg.getValue());
+		if(currentData.getKey()>= innerNodeElem.getKey())
+		{
+			found = true;
+		}
+
+		if (!found||!less)
+			// Si no lo encontro sigue iterando. Si lo encontro pero se pide el mayor, avanza uno.
+			this->m_block->getNextRegister();
+	}
+
+	// Devuelve el menor a key o el mayor segun less.
+	innerNodeElem.setKey(currentData.getKey());
+	innerNodeElem.setLeftPointer(currentData.getLeftPointer());
+
+	return found;
+}
+
+
+loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	bool found = false;
+
+	VarRegister currentRegister;
+	INodeData currentData;
+
+	/// Busco donde insertar el dato dentro del bloque de nodo interno.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->getNextRegister();
+
+		/// Transformo el registro a un INodeData
+		currentData.toNodeData(currentRegister.getValue());
+		if (currentData.getKey() == iNodeData.getKey())
+		{
+			// lo elimino
+			found = true;
+			m_block->deleteRegister(result);
+		}
+
+		if (!found)
+			throw "No existe el elemento a remover";
+	}
+
+	// falta lo de la redistribucion o fusion.
+
+
+	return result;
+}
+
+loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
+{
+	loadResultEnum result = NORMAL_LOAD;
+
+	bool found = false;
+
+	VarRegister currentRegister;
+	INodeData currentData;
+
+	// Creo el registro para poder insertarlo en el bloque.
+	char* valueReg = new char[iNodeData.getSize()];
+	VarRegister regData(iNodeData.toStream(valueReg),iNodeData.getSize());
+
+	/// Busco donde insertar el dato dentro del bloque de nodo interno.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+	VarRegister pointers = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->getNextRegister();
+
+		/// Transformo el registro a un INodeData
+		currentData.toNodeData(currentRegister.getValue());
+		if (currentData.getKey() == iNodeData.getKey())
+		{
+			// lo modifica
+			found = true;
+			m_block->modifyRegister(regData,result);
+		}
+
+		if (!found)
+			throw "No existe el elemento a modificar";
+	}
+
+	if (result!= NORMAL_LOAD)
+		throw "Esta devolviendo estado de carga anormal. No deberia, es de tamaño fijo y ya existia!";
+
+
+	return result;
+}
