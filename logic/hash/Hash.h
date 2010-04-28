@@ -48,6 +48,15 @@ private:
 	 */
 	Bucket* createNewBucket(int depth);
 
+	/**
+	 * Intenta insertar un sid nuevo en su correspondiente bucket segun la funcion de hash seteada
+	 * Y la vez retorna por parametro el resultado de la operacion:
+	 * @param sid Es el dato ingresado por el usuario.
+	 * @param  result Devuelve 1 si hubo overflow, 2 si hubo otro tipo de error de I/O, y 0 si pudo insertar el registro en el bloque.
+	 * @return Devuelve un puntero al bucket donde se  intento insertar
+	 */
+	Bucket* tryToInsertNewSid(StringInputData* sid, int & result);
+
 public:
 
 	Hash();
