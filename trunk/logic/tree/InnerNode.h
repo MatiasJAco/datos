@@ -63,14 +63,25 @@ private:
 
 	bool balanceInner(Node* underNode,Node* toDonate, INodeData& newData);
 
+
+
+
 public:
 	/*********************************************************************************************/
 
 	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
-	bool split_(INodeData& promotedKey);
 
 	/*********************************************************************************************/
 
+private:
+	/**
+	 * Separa el nodo en otro.
+	 * Devuelve la clave de promocion para el siguiente nivel.
+	 * @param data Elemento que produjo el split.
+	 * @param promotedKey clave que se promueve a partir de esta operacion.
+	 * @return bool que indica si tuvo exito la operacion de split.
+	 */
+	bool split(const INodeData& data,INodeData& promotedKey);
 public:
 	/**
 	 * Se le pasa una clave y devuelve el INodeData que corresponde a esa clave.

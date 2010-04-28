@@ -90,11 +90,21 @@ public:
 	/*********************************************************************************************/
 
 	loadResultEnum insert_(const InputData& data,INodeData& promotedKey);
-	bool split_(INodeData& promotedKey);
+
 
 	/*********************************************************************************************/
 
+private:
+	/**
+	 * Separa la hoja en otra, quedando unida a la misma.
+	 * Devuelve la clave de promocion para el siguiente nivel.
+	 * @param data Elemento que produjo el split.
+	 * @param promotedKey clave que se promueve a partir de esta operacion.
+	 * @return bool que indica si tuvo exito la operacion de split.
+	 */
+	bool split(const InputData& data,INodeData& promotedKey);
 
+public:
 	/**
 	 * Devuelve el puntero a la siguiente hoja.
 	 * @return Numero de nodo o identificador.
@@ -114,20 +124,6 @@ public:
 	 * tenemos
 	 */
 	void printContent(InputData & data);
-
-
-
-	//void divide (Node* toDivide,Node* destNode,const InputData& newData);
-
-
-	//void join(Node* fusionNode);
-
-	/**
-	*Dona una cantidad minima determinada de bytes a otro nodo.
-	*
-	***/
-	//bool balance(Node* destNode,const InputData& deletedData);
-
 
 };
 
