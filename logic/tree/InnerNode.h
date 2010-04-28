@@ -101,9 +101,6 @@ public:
 	/**
 	 * Modifica un elemento INodeData a partir de la clave pasada en el parametro.
 	 * @param iNodeData Elemento de InnerNode que se desea modificar.
-	 * @param promotedKey devuelve el valor de la clave a promover como resultado de la insercion.
-	 * 					  se debe verificar el valor del return para analizar el dato de promotedKey.
-	 * 					  Solo tiene sentido si se devolvio un loadResultEnum distinto de NORMAL_LOAD.
 	 * @return dato de tipo loadResultEnum. Posibles valores: NORMAL_LOAD.
 	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
 	 */
