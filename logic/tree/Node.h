@@ -93,7 +93,7 @@ public:
 	 * @param reg refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	virtual bool find(const InputData &key,InputData &data)const = 0;
+	virtual bool find(const InputData &key,InputData &data) = 0;
 
 	/**
 	 * Modifica el nodo identificado por la clave

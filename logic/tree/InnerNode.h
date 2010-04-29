@@ -45,7 +45,7 @@ public:
     ~InnerNode();
     //loadResultEnum remove(const InputData & key);
     INodeData *remove(const InputData & dato, loadResultEnum & result);
-    bool find(const InputData & key, InputData & data) const;
+    bool find(const InputData & key, InputData & data);
     loadResultEnum modify(const InputData & key, const InputData & dato);
     loadResultEnum modify(const InputData & data);
 //    void insertINodeData(INodeData *contBuscado);
