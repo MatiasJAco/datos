@@ -88,7 +88,7 @@ public:
 	 * @return bool true en caso de exito
 	 * @see loadResultEnum
 	 */
-	bool deleteRegister(loadResultEnum &load, bool deleteAnway=false);
+	bool deleteRegister(loadResultEnum &load);
 
 
 	/**
