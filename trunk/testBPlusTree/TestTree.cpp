@@ -5,15 +5,15 @@
  *  @author: kira
  */
 
-#include "TestLeafNode.h"
+#include "TestTree.h"
 
-TestLeafNode::TestLeafNode() {
+TestTree::TestTree() {
 	// TODO Auto-generated constructor stub
 	mainFixture = new BPlusTree("arbol.dat",128,0.5);
 
 }
 
-TestLeafNode::~TestLeafNode() {
+TestTree::~TestTree() {
 	// TODO Auto-generated destructor stub
 	if (mainFixture!=NULL)
 		delete mainFixture;
@@ -21,12 +21,12 @@ TestLeafNode::~TestLeafNode() {
 
 
 
-void TestLeafNode::run()
+void TestTree::run()
 {
 	testRecoverLeaf();
 }
 
-void TestLeafNode::testRecoverLeaf()
+void TestTree::testRecoverLeaf()
 {
 	LeafNode* leaf = (LeafNode*)mainFixture->newLeafNode();
 	StringInputData data;
@@ -56,7 +56,7 @@ void TestLeafNode::testRecoverLeaf()
 
 }
 
-void TestLeafNode::testInsert()
+void TestTree::testInsert()
 {
 
 }
