@@ -30,7 +30,7 @@ InnerNode::~InnerNode()
 
 
 
-void InnerNode::getInPosition(INodeData *& contenido, unsigned int position)
+void InnerNode::getInPosition(INodeData * contenido, unsigned int position)
 {
 	//Busca al sucesor que puede tener el dato
 	m_block->restartCounter();
@@ -52,86 +52,7 @@ void InnerNode::getInPosition(INodeData *& contenido, unsigned int position)
 
 }
 
-INodeData* InnerNode::remove(const InputData & dato, loadResultEnum & result){
-	//	comparo el dato con las claves
 
-	VarRegister reg;
-	 result=NORMAL_LOAD;
-	//Busca al sucesor que puede tener el dato
-	INodeData* contenidoSucesor=new INodeData(0,0);
-	INodeData* hermano=new INodeData(0,0);
-//	this->buscarPorClave(contenidoSucesor,dato);
-    //Se lo pide al arbol
-	Node* sucesor=this->m_tree->getNode(contenidoSucesor->getLeftPointer());
-	INodeData* underflowData=sucesor->remove(dato,result);
-	bool successBalance=false;
-	bool notRightBrother=false;
-	bool leftJoin=true;
-	Node* hermanoEqui;
-	int claveDelBorrado=0;
-	if (result==UNDERFLOW_LOAD){
-		if(sucesor->isLeaf()){
-			//Si tiene hermano derecho lo recupera e intenta balancear.
-			notRightBrother=this->m_block->isLastRegister();
-			if(!notRightBrother){
-						VarRegister reg=this->m_block->getNextRegister();
-						hermano->toNodeData(reg.getValue());
-						hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
-						successBalance=this->balanceLeaf(sucesor,hermanoEqui,dato);
-
-			};
-			if(!successBalance||notRightBrother){
-				//Recupera el hermano izquierdo e intenta balancear.
-				unsigned int posicionNodo=this->buscarPosicionInnerPorClave(dato.getKey());
-				if(posicionNodo!=1){
-				this->getInPosition(hermano,posicionNodo-1);
-				hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
-				}else
-					leftJoin=false;
-				if(!this->balanceLeaf(sucesor,hermanoEqui,dato))
-					this->joinLeaf(sucesor,hermanoEqui,dato);
-			}
-
-		}else{
-			//Si tiene hermano derecho lo recupera e intenta balancear.
-			notRightBrother=this->m_block->isLastRegister();
-			if(!notRightBrother){
-						VarRegister reg=this->m_block->getNextRegister();
-						hermano->toNodeData(reg.getValue());
-						hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
-						successBalance=this->balanceInner(sucesor,hermanoEqui,*underflowData);
-
-			};
-			if(!successBalance||notRightBrother){
-				//Recupera el hermano izquierdo e intenta balancear.
-				unsigned int posicionNodo=this->buscarPosicionInnerPorClave(underflowData->getKey());
-				if(posicionNodo!=1){
-				this->getInPosition(hermano,posicionNodo-1);
-				hermanoEqui=this->m_tree->getNode(hermano->getLeftPointer());
-				}else
-					leftJoin=false;
-				if(!this->balanceInner(sucesor,hermanoEqui,*underflowData))
-					this->joinInner(sucesor,hermanoEqui,underflowData);
-			}
-
-		}
-		if(!leftJoin){
-			//Recupero clave del que borro y se a paso al que queda.
-			claveDelBorrado=this->buscarPosicionInnerPorClave(hermano->getKey());
-			this->buscarPosicionInnerPorClave(contenidoSucesor->getKey());
-			contenidoSucesor->setKey(claveDelBorrado);
-			char* valueReg = new char[contenidoSucesor->getSize()];
-			reg.setValue(contenidoSucesor->toStream(valueReg),contenidoSucesor->getSize());
-			this->m_block->modifyRegister(reg);
-		};
-		//Borro el registro correspondiente al nodo.
-		this->buscarPosicionInnerPorClave(hermano->getKey());
-		this->m_block->deleteRegister(result);
-		underflowData=hermano;
-	};
-
-	return underflowData;
-}
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
 {
@@ -355,7 +276,7 @@ loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
 	return result;
 }
 
-loadResultEnum InnerNode::remove_(const InputData& data)
+loadResultEnum InnerNode::remove(const InputData& data)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -369,20 +290,33 @@ loadResultEnum InnerNode::remove_(const InputData& data)
 	// traigo el sucesor de este innerNode y lo elimino.
 	Node* sucesor = m_tree->getNode(thiskey.getLeftPointer());
 
-	result = sucesor->remove_(data);
+	result = sucesor->remove(data);
 
 	if (result == UNDERFLOW_LOAD)
 	{
+		bool hasRightBrother=false;
+		bool leftJoin=true;
 		bool balanced = false;
+		Node* rightSibling;
+		Node* leftSibling;
+		INodeData joinBrother;
 
 		// busco el hermano mayor a key para obtener el hijo derecho.
 		INodeData bigBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
 		findINodeData(bigBrother,false);
+		//Verifico que tenga hermano derecho.
+		if(this->m_block->isLastRegister()){
+			hasRightBrother=false;
+		}
 
-		// Trato de balancear con el derecho.
-		// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
-		Node* rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
-		balanced = redistribute(rightSibling,sucesor,data,bigBrother);
+		if(hasRightBrother){
+			joinBrother.setKey(bigBrother.getKey());
+			joinBrother.setLeftPointer(bigBrother.getLeftPointer());
+			// Trato de balancear con el derecho.
+			// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
+			rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
+			balanced = redistribute(rightSibling,sucesor,data,bigBrother);
+		};
 
 		if (balanced)
 			modifyINodeData(thiskey,bigBrother);
@@ -390,12 +324,21 @@ loadResultEnum InnerNode::remove_(const InputData& data)
 		// Si no pudo, busco el sibling izquierdo, el hijo del hermano menor.
 		if (!balanced)
 		{
+			//Verifica que tenga hermano izquierdo.
 			INodeData minorBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
 			findINodeData(minorBrother);
+			unsigned int posicionNodo=this->buscarPosicionInnerPorClave(thiskey.getKey());
+			if(posicionNodo!=1){
+				this->getInPosition(&minorBrother,posicionNodo-1);
+				joinBrother.setKey(minorBrother.getKey());
+				joinBrother.setLeftPointer(minorBrother.getLeftPointer());
+				leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
+				// Trato de balancear con el sibling izquierdo del sucesor.
+				balanced = redistribute(leftSibling,sucesor,data,minorBrother);
+			}else
+				leftJoin=false;
 
-			// Trato de balancear con el sibling izquierdo del sucesor.
-			Node* leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
-			balanced = redistribute(leftSibling,sucesor,data,minorBrother);
+
 
 			if (balanced)
 				modifyINodeData(thiskey,minorBrother);
@@ -405,18 +348,28 @@ loadResultEnum InnerNode::remove_(const InputData& data)
 		if (!balanced)
 		{
 			INodeData fusionatedNode;
-			merge(sucesor,rightSibling,data,fusionatedNode);
+			if(leftJoin){
+				merge(sucesor,leftSibling,data,fusionatedNode);
+				result = removeINodeData(joinBrother);
+			}else{
+				merge(sucesor,rightSibling,data,fusionatedNode);
+				result = removeINodeData(joinBrother);
+				//Recupero clave del que borro y se a paso al que queda.
+				joinBrother.setLeftPointer(thiskey.getLeftPointer());
+				modifyINodeData(thiskey,joinBrother);
 
-			// Elimino thiskey y modifico el puntero de bigbrother que es quien ahora
-			// apunta al fusionado. Pudo haber quedado en underflow este nodo interno.
-			result = removeINodeData(thiskey); // se necesita que este metodo si elimine efectivamente la clave.
-			modifyINodeData(bigBrother,fusionatedNode);
+			};
+
 		}
 
 	}
 
 	return result;
 }
+
+
+
+
 
 bool InnerNode::find(const InputData & key, InputData & data)
 {
@@ -503,7 +456,7 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 		reg = this->m_block->peekRegister();
 		// Transformo el registro a un INodeData
 		currentData.toNodeData(reg.getValue());
-		if(currentData.getKey()>= innerNodeElem.getKey())
+		if(currentData.getKey()> innerNodeElem.getKey())
 		{
 			found = true;
 		}
@@ -513,6 +466,11 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 			this->m_block->getNextRegister();
 	}
 
+	if(!less){
+		reg = this->m_block->peekRegister();
+		// Transformo el registro a un INodeData
+		currentData.toNodeData(reg.getValue());
+	};
 	// Devuelve el menor a key o el mayor segun less.
 	innerNodeElem.setKey(currentData.getKey());
 	innerNodeElem.setLeftPointer(currentData.getLeftPointer());
