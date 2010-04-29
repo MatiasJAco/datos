@@ -63,9 +63,7 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	bool deleteResult = true;
 	StringInputData* sid;
 
-	//tiene q ser la misma cantidad de la que tiene de registros, desp el td se lo deja como quede
 	while (block->hasNextRegister()) {
-	//for (int i = 1; i<=31;i++){
 		VarRegister varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
@@ -78,6 +76,14 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		}
 		this->hashFile->saveBlock(block);
 	}
+	//almaceno el td del bloque
+	VarRegister* varReg = new VarRegister();
+	varReg->setValue(bucketDesbordado->getDepth());
+	block->addRegister(*varReg);
+	this->hashFile->saveBlock(block);
+	delete varReg;
+
+	//recorro toda la lista de sids y redisperso el bloque
 	while (!listaDatos.empty()) {
 		StringInputData sid = listaDatos.front();
 		this->add(&sid);
