@@ -128,6 +128,35 @@ INodeData* LeafNode::remove(const InputData & dato, loadResultEnum & result)
 loadResultEnum LeafNode::remove_(const InputData& data)
 {
 	loadResultEnum result = NORMAL_LOAD;
+	bool found = false;
+
+	VarRegister currentRegister;
+	InputData* currentData = dato.newInstance();
+
+	/// Busco el dato dentro del bloque de hoja.
+	m_block->restartCounter();
+	/// Tengo que avanzar primero los datos de control siempre.
+	/// TODO ver si poner esto dentro de un metodo de Nodo.
+	VarRegister level = m_block->getNextRegister();
+	VarRegister pointers = m_block->getNextRegister();
+
+	while (!m_block->isLastRegister()&&!found)
+	{
+		currentRegister = m_block->getNextRegister();
+
+		/// Transformo el registro a un InputData
+		currentData->toData(currentRegister.getValue());
+		if (currentData->getKey() == dato.getKey())
+		{
+			found = true;
+			m_block->deleteRegister(result);
+		}
+	}
+
+	if (!found)
+		throw "No existe el elemento a remover";
+
+	delete currentData;
 
 	return result;
 }

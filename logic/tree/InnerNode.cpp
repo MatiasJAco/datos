@@ -423,6 +423,26 @@ loadResultEnum InnerNode::remove_(const InputData& data)
 	return result;
 }
 
+bool InnerNode::find(const InputData & key, InputData & data)
+{
+	bool found = false;
+
+	// Elemento de nodo interno con referencia a la clave a insertar.
+	INodeData nodePointerKey(Node::UNDEFINED_NODE_NUMBER,data.getKey());
+
+	// Busca el nodo interno que referencia a esa clave
+	if (!findINodeData(nodePointerKey))
+		throw "Error! llego una clave a una referencia invalida!";
+
+	// traigo el sucesor de este innerNode.
+	Node* sucesor = m_tree->getNode(nodePointerKey.getLeftPointer());
+
+	found = sucesor->find(key,data);
+
+
+	return found;
+}
+
 loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& promotedKey)
 {
 	/// Trata de insertar un elemento INodeData y si dio overflow hace el split.
