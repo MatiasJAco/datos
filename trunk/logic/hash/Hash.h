@@ -73,9 +73,8 @@ public:
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
-	 * Si el StringInputData ya existe en el HashFile retorna 1;
-	 * Si el StringInputData fue guardado exitosamente retorna 0;
-	 * Si hubo algun problema al ejecutar este metodo retorna -1;
+	 * @param sid es el StringInputData que se desea agregar
+	 * @return int Retorna 1 si el sid ya existe;0 si fue agregado; -1 si hubo algun problema
 	 */
 	int add(StringInputData* sid);
 
@@ -87,9 +86,10 @@ public:
 	/**
 	 * Cambia el valor de un key pasado por parámetro.
 	 * @param key Es el key al cual se le cambiará el valor.
-	 * @param value Es el valor nuevo que tomara la clave pasada por parametro.
+	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
+	 * @return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
 	 */
-	int modify(int key, string value);
+	int modify(int key, string newValue);
 
 	/**
 	 * para imprimir el Hash por consola
