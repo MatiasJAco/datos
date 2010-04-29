@@ -484,7 +484,7 @@ void testBlock()
 
 	block->addRegister(*varR);
 
-	block->printRegisters();
+	//block->printRegisters();
 
 
 	delete varR;
