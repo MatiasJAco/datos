@@ -205,7 +205,7 @@ void testFreeBlockFile()
 		 }
 	 }
 
-	 archivo->showFreeNodes();
+	 //archivo->showFreeNodes();
 
 	 for(int i=0; i <99; i++)
 	 {
@@ -226,7 +226,7 @@ void testFreeBlockFile()
 		 cout << "error, no reporta archivo vacio"<<endl;
 	 }
 
-	 archivo->showFreeNodes();
+	 //archivo->showFreeNodes();
 
 	archivo->close();
 	delete archivo;
@@ -484,8 +484,54 @@ void testBlock()
 
 	block->addRegister(*varR);
 
+
 	//block->printRegisters();
 
+	block->clear();
+
+	unsigned int freeSpace = block->getRemainingSpace();
+	if(freeSpace != 512-8)
+		cout << "Error en el espacio libre del bloque"<< freeSpace<<endl;
+
+	for(int i=0; i < 63; i++)
+	{
+		varR->setValue(i);
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	if(block->addRegister(*varR, loadResult))
+		cout << "error de addRegister"<<endl;
+
+	if(loadResult!=OVERFLOW_LOAD)
+		cout << "No se detecto overflow"<<endl;
+
+	freeSpace = block->getRemainingSpace();
+
+	if(freeSpace!=0)
+		cout << "Error en el espacio libre del bloque"<< freeSpace<<endl;
+
+	block->restartCounter();
+
+	block->printRegisters();
+
+	varR->setValue(890);
+
+	block->modifyRegister(*varR, loadResult);
+
+	block->restartCounter();
+	var2 = block->getNextRegister();
+
+	if(ByteConverter::bytesToUInt(var2.getValue())!=890)
+		cout << "Error al modificar registro en caso de OVERFLOW"<<endl;
+
+	if(loadResult ==OVERFLOW_LOAD)
+		cout << "Falso Overflow"<<endl;
+
+	block->printRegisters();
 
 	delete varR;
 	delete block;
@@ -505,11 +551,11 @@ int main()
 {
 try
 {
-	testVarRegister();
-	testFixedRegister();
-	testFreeBlockFile();
+	//testVarRegister();
+	//testFixedRegister();
+	//testFreeBlockFile();
 	testBlock();
-	testFile();
+	//testFile();
 }
 catch (exception e)
 {
