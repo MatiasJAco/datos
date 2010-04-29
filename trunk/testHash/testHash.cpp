@@ -69,17 +69,20 @@ StringInputData* createSid( int key,char * value){
 	return sid;
 }
 
-void testAdd() {
+void tests() {
 	Hash* hash = new Hash();
-
 	/* Se toma el dato que ingresa el usuario. */
 	char value[8] = "paytiti";
-	for (int i = 1; i<=32;i++){
+	for (int i = 1; i<=62;i++){
 		StringInputData* sid = createSid(i,value);
 		hash->add(sid);
 		delete sid;
 	}
 	hash->print();
+
+	hash->modify(5,"pepe");
+	hash->print();
+
 }
 
 int main(){
@@ -87,8 +90,7 @@ int main(){
 	//testTable2();
 	//testTable3();
 	//testTable4();
-
-	testAdd();
+	tests();
 	printf("\npaso test!");
 
 	return 0;
