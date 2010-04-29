@@ -60,6 +60,13 @@ void Bucket::positionateAtEnd(){
 		this->block->getNextRegister(true);
 	}
 }
+void Bucket::positionateAt(int position){
+	this->block->restartCounter();
+	while (this->block->hasNextRegister()&& position!=0) {
+		this->block->getNextRegister(true);
+		position--;
+	}
+}
 
 int Bucket::insert(StringInputData* sid) {
 	loadResultEnum loadResult;
@@ -84,17 +91,24 @@ int Bucket::insert(StringInputData* sid) {
 }
 
 bool Bucket::existsRegister(int key) {
+	int aux = -1;
+	return this->existsRegister(key,aux);
+}
+bool Bucket::existsRegister(int key,int & position) {
+	position = -1;
 	this->getBlock()->restartCounter();
 
 	//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
 	if (this->block->hasNextRegister()) {
 			this->getBlock()->getNextRegister(true);
+			position++; //queda en cero
 	}
 	while (this->block->hasNextRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
+		position++;
 		if (sid->getKey() == key) {
 			return true;
 		}

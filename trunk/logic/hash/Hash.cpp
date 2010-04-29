@@ -47,11 +47,14 @@ int Hash::getNumberOfBucket(int key) {
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
-
 bool Hash::existsElement(StringInputData* sid) {
+	int aux = -1;
+	return (this->existsElement(sid,aux));
+}
+bool Hash::existsElement(StringInputData* sid, int & position) {
 	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
-	bool result = bucket->existsRegister(sid->getKey());
+	bool result = bucket->existsRegister(sid->getKey(),position);
 	delete bucket;
 	return result;
 }
@@ -163,14 +166,25 @@ int Hash::modify(int key, string newValue) {
 	StringInputData* sid1 = new StringInputData();
 	sid1->setKey(key);
 	sid1->setValue(newValue); // no importa el valor que le paso porque busca por key
+
+	int position;
 	// Verifico unicidad
-	if (!existsElement(sid1)){
+	if (!existsElement(sid1,position)){
 		return 1;
 	}
 	delete sid1;
+	if (position==-1)
+		return -1;  //esto no podria pasar, porque si se encontro el elemento, tiene que pasar una posicion
 
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Block* block = this->hashFile->getBlock(bucketNumber);
+
+	Bucket * bucket = new Bucket(block);
+
+	//TODO: Lo deje aca
+	//bucket->modifyRegister(position,)
+
+
 	block->restartCounter();
 	VarRegister varReg = block->getNextRegister(true);
 
