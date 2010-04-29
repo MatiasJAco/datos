@@ -394,3 +394,22 @@ unsigned int Block::getRemainingSpace()
 {
 	return m_blockSize - m_usedBytes;
 }
+
+VarRegister Block::getRegisterN(unsigned int number)
+{
+	VarRegister reg;
+
+	if(number > m_registers.size())
+		throw "El numero del registro no existe en el bloque";
+
+	unsigned int i;
+	restartCounter();
+
+	for(i=0; i < number; i++)
+		m_actualReg++;
+
+	reg = getNextRegister(false);
+
+	return reg;
+
+}

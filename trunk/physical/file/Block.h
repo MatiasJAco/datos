@@ -114,15 +114,18 @@ public:
 	VarRegister getNextRegister(bool foward=true);
 
 	/**
+	 *
+	 */
+	VarRegister getRegisterN(unsigned int number);
+
+	/**
 	 * Obtiene el proximo Register,  siendo este de longitud variable.
 	 * La informacion de la longitud del Register no es necesario pasarla,
 	 * ya que se encuentra persistida en disco.
-	 * @param foward indica si avanza el iterador despues de obtener un registro
 	 * @return VarRegister el registro
 	 *
 	 */
 	VarRegister peekRegister();
-
 
 	/**
 	 * Se fija si es el ultimo registro...
@@ -141,7 +144,17 @@ public:
 	 */
 	void restartCounter();
 
+	/**
+	 * Muestra por pantalla el contenido del bloque. Se usa para debug
+	 */
+	void printRegisters();
 
+	/**
+	 * Elimina todos los registros de un bloque.
+	 */
+	void clear();
+
+	//-----------------------------GET/SET--------------------------------------//
 	/**
 	 * Setea el factor de carga a utilizar
 	 * @param factor factor de carga a colocar
@@ -186,16 +199,6 @@ public:
 	 * @return Devuelve la cantidad de bytes libres del bloque.
 	 */
 	unsigned int getRemainingSpace();
-
-	/**
-	 * Muestra por pantalla el contenido del bloque. Se usa para debug
-	 */
-	void printRegisters();
-
-	/**
-	 * Elimina todos los registros de un bloque.
-	 */
-	void clear();
 
 	//--------------------SERIALIZE/DESERIALIZE-------------------//
 	/**
