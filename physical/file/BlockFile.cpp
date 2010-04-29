@@ -157,9 +157,9 @@ Block *BlockFile::getBlock(const unsigned int blockNumber)
 	return block;
 }
 
-string BlockFile::getFreeNodeString()
+string BlockFile::getFreeBlockString()
 {
-	return m_FreeBlockFile.getFreeNodeString();
+	return m_FreeBlockFile.getFreeBlockString();
 }
 
 bool BlockFile::close()
