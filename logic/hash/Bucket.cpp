@@ -116,21 +116,21 @@ VarRegister Bucket::getRegister(int key) {
 
 void Bucket::print(){
 	VarRegister varReg;
+	bool primeraVez = true;
+
 	this->block->restartCounter();
-	varReg=this->block->getNextRegister(true);
 
-	//imprimo td del bucket
-	StringInputData* sid = new StringInputData();
-	sid->toData(varReg.getValue());
-	cout << "(" << sid->getKey() << ") ";
-	delete sid;
-
-	//imprimo resto del bucket
 	while (this->block->hasNextRegister()) {
 		varReg=this->block->getNextRegister(true);
 		StringInputData* sid = new StringInputData();
 		sid->toData(varReg.getValue());
-		cout << sid->getKey() << "-" << sid->getValue() << " | ";
+		if (primeraVez){
+			cout << "(" << sid->getKey() << ") ";
+			primeraVez=false;
+		}
+		else
+			cout << sid->getKey() << "-" << sid->getValue() << " | ";
+
 		delete sid;
 	}
 }
@@ -142,7 +142,7 @@ void Bucket::duplicateDepth(){
 
 	StringInputData* sid = new StringInputData();
 	sid->toData(varReg.getValue());
-	unsigned int dataSize = sid->size();
+	unsigned int dataSize = sizeof(int);
 	char* valueReg = new char[dataSize];
 	int valueKey = sid->getKey()*2;
 	sid->setKey(valueKey);
@@ -167,7 +167,7 @@ void Bucket::divideDepth(){
 
 	StringInputData* sid = new StringInputData();
 	sid->toData(varReg.getValue());
-	unsigned int dataSize = sid->size();
+	unsigned int dataSize = sizeof(int);
 	char* valueReg = new char[dataSize];
 	int valueKey = sid->getKey()/2;
 	sid->setKey(valueKey);
