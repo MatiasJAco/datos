@@ -38,7 +38,7 @@ public:
 	 * Retorna la cant de elementos que tiene la tabla segun el primer renglon
 	 * el cual contiene el tamaño de la misma
 	 */
-	int getSize();
+	unsigned int getSize();
 
 	/**
 	 * Retorna el bloque a apuntar en el archivo de Hash segun la posicion en la tabla

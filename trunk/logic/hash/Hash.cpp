@@ -209,23 +209,26 @@ int Hash::erase(int key) {
 	if (exists) {
 		unsigned int bucketNumber = this->getNumberOfBucket(key);
 		Block* block = this->hashFile->getBlock(bucketNumber);
-		Bucket* bucket = this->createNewBucket(1); // TODO como se sabe el depth aca
+		Bucket* bucket = new Bucket(block);
 		bucket->setDepth(bucket->getDepthFromHashFile());
 		result = bucket->deleteRegister(key);
 		if (result == false) {
 			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;
 		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
-			if (bucket->getDepth() == this->hashTable->getSize()) {
-				// Agregar codigo.
+			unsigned int registerAmount = block->getRegisterAmount();
+
+			int element = this->hashTable->verifyJumps(this->calculateHashFunction(key), bucket->getDepth());
+
+			if ((registerAmount == 0) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
+				this->hashTable->verifyAndDivide();
+				this->hashFile->deleteBlock(bucketNumber);
 			}
 		}
-
-		unsigned int registerAmount = block->getRegisterAmount();
-
 	} else {
 		cout << "No existe la clave: " << key << endl;
 		return 1;
 	}
+	return 0;
 }
 
 void Hash::print() {

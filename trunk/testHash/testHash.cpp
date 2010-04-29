@@ -69,6 +69,29 @@ StringInputData* createSid( int key,char * value){
 	return sid;
 }
 
+void testDelete() {
+	Hash* hash = new Hash();
+	char value[8] = "paytiti";
+	char value2[5] = "pepe";
+	char value3[5] = "luis";
+
+	StringInputData* sid = createSid(22, value);
+	hash->add(sid);
+
+	StringInputData* sid2 = createSid(33, value2);
+	hash->add(sid2);
+
+	StringInputData* sid3 = createSid(44, value3);
+	hash->add(sid3);
+
+	hash->print();
+
+//	hash->erase(11);
+	hash->erase(22);
+
+	hash->print();
+}
+
 void tests() {
 	Hash* hash = new Hash();
 	/* Se toma el dato que ingresa el usuario. */
@@ -90,7 +113,8 @@ int main(){
 	//testTable2();
 	//testTable3();
 	//testTable4();
-	tests();
+	testDelete();
+	//tests();
 	printf("\npaso test!");
 
 	return 0;
