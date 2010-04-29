@@ -17,7 +17,7 @@ typedef enum {UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD} loadResultEnum;
 
 
 /**
- * Bloque, compuesto por registros variables. Maneja los temas de tamaño de los nodos.
+ * Bloque, compuesto por registros variables. Maneja los temas de tamaï¿½o de los nodos.
  */
 class Block {
 
@@ -216,8 +216,6 @@ public:
 	 */
 	bool deserialize(char *streamChar);
 
-private:
-
 	/**
 	 * Elimina el registro que se encuentra en la posicion
 	 * actual del iterador. Si al eliminar el registro se fuera a producir underflow,
@@ -225,6 +223,8 @@ private:
 	 * @return bool true en caso de exito
 	 */
 	bool deleteRegister();
+
+private:
 
 	float calculateFraction(unsigned int);
 
