@@ -415,19 +415,21 @@ void testBlock()
 		cout << "Error en el getRegisterN()"<<endl;
 
 
-	var2.setValue(23132123);
+
+
+
 	block->clear();
+	var2.setValue(1234);
+	block->addRegister(var2);
+
+	var2.setValue(23132123);
 	BlockManager::redistributeOverflow(block2, block, var2, 1);
 
-	block2->printRegisters();
-	block->printRegisters();
+/*	block2->printRegisters();
+	block->printRegisters();*/
+
+
 	cout << "-----------fin SPLIT------------------"<<endl;
-
-
-
-	delete block2;
-
-
 	cout << "Insercion"<<endl;
 
 	block->restartCounter();
@@ -537,8 +539,39 @@ void testBlock()
 	if(loadResult ==OVERFLOW_LOAD)
 		cout << "Falso Overflow"<<endl;
 
+	cout << "-----------Merge----------------------"<<endl;
+
+
+	block->clear();
+	block2->clear();
+
+	for(int i=0; i < 31; i++)
+	{
+		varR->setValue(i);
+
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	BlockManager::merge(block, block2);
+
+	block2->printRegisters();
+	block->printRegisters();
+
+
+
 	delete varR;
 	delete block;
+	delete block2;
 	delete archivo;
 	block=NULL;
 
