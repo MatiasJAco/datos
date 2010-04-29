@@ -19,13 +19,18 @@ public:
 
 	/**
 	 * Se encarga de fusionar 2 bloques
+	 * @param block1 bloque en el que van a quedar los registros
+	 * @param block2 bloque que se va a vaciar.
 	 * @return bool true en caso de OK false en caso contrario
+	 * @throw exception en caso de pasarle puntero a NULL
 	 */
 
 	static bool merge(Block *block1, Block *block2);
 
 	/**
 	 * Se encarga de balancear la carga de 2 bloques
+	 * @param block1
+	 * @param block2
 	 * @return bool true en caso de OK false en caso contrario
 	 */
 
@@ -34,6 +39,8 @@ public:
 	/**
 	 * Se encarga de redistrbuir la carga de 2 bloques en caso de overflow...
 	 * Ademas inserta en una posicion dada el elemento que provoco el overflow.
+	 * Conserva los registros que se encuentran en blank, es decir coloca los elementos
+	 * provenientes del overflow del bloque original al final del bloque blank
 	 * @param orig bloque que esta en overflow
 	 * @param blank bloque en el cual se van a acomodar los registros sobrantes del otro bloque
 	 * @param reg registro que produjo el overflow
@@ -43,6 +50,7 @@ public:
 	 */
 	static bool redistributeOverflow(Block *orig, Block *blank, VarRegister &reg, unsigned int pos);
 
+	//--------------------------------deprecated---------------------------------------//
 	/**
 	 * @deprecated
 	 */
