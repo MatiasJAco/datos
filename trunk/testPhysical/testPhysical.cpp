@@ -391,7 +391,7 @@ void testBlock()
 	if(!block2->addRegister(*varR, loadResult))
 		cout << "Se acabo el espacio"<<endl;
 
-	for(int i=33; i < 61; i++)
+	for(int i=32; i < 60; i++)
 	{
 		varR->setValue(i);
 		if(!block2->addRegister(*varR, loadResult))
@@ -409,10 +409,18 @@ void testBlock()
 
 
 	cout << "-----------SPLIT------------------"<<endl;
-	BlockManager::split(block2, block);
 
-	block->printRegisters();
+	var2 = block2->getRegisterN(31);
+	if(ByteConverter::bytesToString(var2.getValue())!= stringLargo)
+		cout << "Error en el getRegisterN()"<<endl;
+
+
+	var2.setValue(23132123);
+	block->clear();
+	BlockManager::redistributeOverflow(block2, block, var2, 1);
+
 	block2->printRegisters();
+	block->printRegisters();
 	cout << "-----------fin SPLIT------------------"<<endl;
 
 
@@ -516,8 +524,6 @@ void testBlock()
 
 	block->restartCounter();
 
-	block->printRegisters();
-
 	varR->setValue(890);
 
 	block->modifyRegister(*varR, loadResult);
@@ -530,8 +536,6 @@ void testBlock()
 
 	if(loadResult ==OVERFLOW_LOAD)
 		cout << "Falso Overflow"<<endl;
-
-	block->printRegisters();
 
 	delete varR;
 	delete block;
