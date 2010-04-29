@@ -106,7 +106,7 @@ VarRegister Bucket::getRegister(int key) {
 	VarRegister varRegister;
 	this->getBlock()->restartCounter();
 	bool found = false;
-	while ((!found) && (!this->getBlock()->isLastRegister())) {
+	while ((!found) && (this->getBlock()->hasNextRegister())) {
 		varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
@@ -119,11 +119,16 @@ VarRegister Bucket::getRegister(int key) {
 }
 
 bool Bucket::deleteRegister(int key) {
-	VarRegister varRegister;
 	this->getBlock()->restartCounter();
+	VarRegister varRegister = this->getBlock()->getNextRegister(true); // Salteo el primer registro que es de control.
+
+	char* registerValue2 = varRegister.getValue();
+	StringInputData* sid2 = new StringInputData();
+	sid2->toData(registerValue2);
+
 	bool result = false;
 
-	while (!this->getBlock()->isLastRegister()) {
+	while (this->getBlock()->hasNextRegister()) {
 		varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();

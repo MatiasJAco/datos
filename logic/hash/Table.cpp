@@ -86,8 +86,8 @@ int Table::parse(int * listElementsTable){
 	return sizeOfTable;
 }
 
-int Table::getSize(){
-	int sizeOfTable;
+unsigned int Table::getSize(){
+	unsigned int sizeOfTable;
 	char linea[180];
 	char * ptr = NULL;
 	FILE * arch_tabla;
