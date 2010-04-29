@@ -91,6 +91,14 @@ public:
 	 */
 	int modify(int key, string newValue);
 
+
+	/**
+	 * Elimina la clave pasada por parametro.
+	 * @param key Es la clave que se desea borrar.
+	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar la clave.
+	 */
+	int erase(int key);
+
 	/**
 	 * para imprimir el Hash por consola
 	 */
