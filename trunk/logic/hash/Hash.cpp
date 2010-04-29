@@ -114,10 +114,9 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
-	//TODO desconmmentar esto
-//	if (existsElement(sid)){
-//		return 1;
-//	}
+	if (existsElement(sid)){
+		return 1;
+	}
 
 	int insertResult;
 	Bucket * bucket = tryToInsertNewSid(sid,insertResult);
