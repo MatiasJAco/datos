@@ -118,6 +118,23 @@ VarRegister Bucket::getRegister(int key) {
 	return varRegister;
 }
 
+bool Bucket::deleteRegister(int key) {
+	VarRegister varRegister;
+	this->getBlock()->restartCounter();
+	bool result = false;
+
+	while (!this->getBlock()->isLastRegister()) {
+		varRegister = this->getBlock()->getNextRegister(true);
+		char* registerValue = varRegister.getValue();
+		StringInputData* sid = new StringInputData();
+		sid->toData(registerValue);
+		if (sid->getKey() == key) {
+			result = this->getBlock()->deleteRegister();
+			return result;
+		}
+	}
+	return result;
+}
 
 void Bucket::print(){
 	VarRegister varReg;

@@ -54,6 +54,13 @@ public:
 	VarRegister getRegister(int key);
 
 	/**
+	 * Este metodo borra un registro del bloque que contiene el bucket, dada su clave.
+	 * @param key Es la clave del registro que se desea eliminar.
+	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
+	 */
+	bool deleteRegister(int key);
+
+	/**
 	 * Imprime el bucket entero
 	 */
 	void print();
