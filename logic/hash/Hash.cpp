@@ -129,7 +129,7 @@ int Hash::add(StringInputData* sid) {
 	if (insertResult == 0) { //si se pudo agregar en el bucket lo guardo
 		this->hashFile->saveBlock(bucket->getBlock());
 	} else if (insertResult == 1) {  //hubo desborde
-		printf("\nHubo desborde en el bucket: %i. ",bucket->getNumber());
+		printf("Hubo desborde en el bucket: %i. ",bucket->getNumber());
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla) {
@@ -146,10 +146,8 @@ int Hash::add(StringInputData* sid) {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
-
 			this->hashTable->jumpAndReplace(this->getNumberOfBucket(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
-
-			this->reHash(bucket); // Redispersa los registros del bloque del bucket.
+			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
 			delete bucketNuevo;
 		}
@@ -161,7 +159,44 @@ int Hash::add(StringInputData* sid) {
 	return 0;
 }
 
-int modify(int key, string value) {
+int Hash::modify(int key, string newValue) {
+	StringInputData* sid1 = new StringInputData();
+	sid1->setKey(key);
+	sid1->setValue(newValue); // no importa el valor que le paso porque busca por key
+	// Verifico unicidad
+	if (!existsElement(sid1)){
+		return 1;
+	}
+	delete sid1;
+
+	unsigned int bucketNumber = this->getNumberOfBucket(key);
+	Block* block = this->hashFile->getBlock(bucketNumber);
+	block->restartCounter();
+	VarRegister varReg = block->getNextRegister(true);
+
+	StringInputData* sid = new StringInputData();
+	sid->toData(varReg.getValue());
+	unsigned int dataSize = newValue.size();;
+	char* valueReg = new char[dataSize];
+	sid->setValue(newValue);
+	varReg.setValue(sid->toStream(valueReg),dataSize);
+
+	loadResultEnum result;
+	bool result2 = block->modifyRegister(varReg,result);
+
+	if (OVERFLOW_LOAD == result) {
+		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
+		return -1;
+	}
+	else if (UNDERFLOW_LOAD == result) {
+		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
+		return -1;
+	}
+
+	delete sid;
+	if (!this->hashFile->saveBlock(block))
+		return -1;
+
 	return 0;
 }
 
