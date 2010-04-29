@@ -61,10 +61,12 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	block->restartCounter();
 	list<StringInputData> listaDatos;
 	bool deleteResult = true;
-
 	StringInputData* sid;
+
+	//tiene q ser la misma cantidad de la que tiene de registros, desp el td se lo deja como quede
 	while (block->hasNextRegister()) {
-		VarRegister varRegister = block->getNextRegister(true);
+	//for (int i = 1; i<=31;i++){
+		VarRegister varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
 		listaDatos.push_back(*sid);
@@ -74,10 +76,8 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
 		}
+		this->hashFile->saveBlock(block);
 	}
-
-	this->hashFile->saveBlock(bucketDesbordado->getBlock());
-print();
 	while (!listaDatos.empty()) {
 		StringInputData sid = listaDatos.front();
 		this->add(&sid);
@@ -121,7 +121,6 @@ int Hash::add(StringInputData* sid) {
 
 	int insertResult;
 	Bucket * bucket = tryToInsertNewSid(sid,insertResult);
-
 	if (insertResult == 0) { //si se pudo agregar en el bucket lo guardo
 		this->hashFile->saveBlock(bucket->getBlock());
 	} else if (insertResult == 1) {  //hubo desborde
@@ -134,7 +133,7 @@ int Hash::add(StringInputData* sid) {
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			this->hashTable->changeFirstTimeInTable(bucket->getNumber(),bucketNuevo->getNumber());
 			bucket->duplicateDepth();
-//			this->print();
+			this->hashFile->saveBlock(bucket->getBlock());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
 			delete bucketNuevo;
