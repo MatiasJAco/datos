@@ -10,13 +10,13 @@
 #include "../logic/input/InputData.h"
 #include "../logic/input/StringInputData.h"
 
-#ifndef TESTLEAFNODE_H_
-#define TESTLEAFNODE_H_
+#ifndef TESTTREE_H_
+#define TESTTREE_H_
 
-class TestLeafNode {
+class TestTree {
 public:
-	TestLeafNode();
-	virtual ~TestLeafNode();
+	TestTree();
+	virtual ~TestTree();
 
 public:
 	void run();

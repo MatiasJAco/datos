@@ -9,14 +9,14 @@
 #include "../logic/tree/BPlusTree.h"
 
 
-#include "TestLeafNode.h"
+#include "TestTree.h"
 
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-	TestLeafNode* test1 = new TestLeafNode();
+	TestTree* test1 = new TestTree();
 
 	test1->run();
 
