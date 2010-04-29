@@ -135,7 +135,7 @@ void Bucket::print(){
 	}
 }
 
-void Bucket::duplicateDepth(){
+bool Bucket::modifyDepth(int depth){
 	loadResultEnum result;
 	this->block->restartCounter();
 	VarRegister varReg = this->block->getNextRegister(false);
@@ -144,41 +144,33 @@ void Bucket::duplicateDepth(){
 	sid->toData(varReg.getValue());
 	unsigned int dataSize = sizeof(int);
 	char* valueReg = new char[dataSize];
-	int valueKey = sid->getKey()*2;
-	sid->setKey(valueKey);
+	sid->setKey(depth);
 	varReg.setValue(sid->toStream(valueReg),dataSize);
 
-	this->block->modifyRegister(varReg,result);
+	bool result2 = this->block->modifyRegister(varReg,result);
 
 	if (OVERFLOW_LOAD == result) {
-		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
+		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
+	}
+	else if (UNDERFLOW_LOAD == result) {
+		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
 	}
 
-	this->depth = this->depth*2;
 	delete sid;
+	return result2;
 }
 
-void Bucket::divideDepth(){
+bool Bucket::duplicateDepth(){
+	bool result = modifyDepth(this->depth*2);
+		if (result) this->depth = this->depth*2;
+	return result;
+}
 
-	//TODO : hay que hacer algo aca para que el divide y el duplicate no dupliquen codigo
-	loadResultEnum result;
-	this->block->restartCounter();
-	VarRegister varReg = this->block->getNextRegister(false);
-
-	StringInputData* sid = new StringInputData();
-	sid->toData(varReg.getValue());
-	unsigned int dataSize = sizeof(int);
-	char* valueReg = new char[dataSize];
-	int valueKey = sid->getKey()/2;
-	sid->setKey(valueKey);
-	varReg.setValue(sid->toStream(valueReg),dataSize);
-
-	this->block->modifyRegister(varReg,result);
-
-	if (OVERFLOW_LOAD == result) {
-		cout << "El cambio en el registro hace que se sobrepase el tamaño del bloque y no puede modificarse." << endl;
+bool Bucket::divideDepth(){
+	if (this->depth > 1){
+		bool result = modifyDepth(this->depth/2);
+			if (result) this->depth = this->depth/2;
+		return result;
 	}
-
-	this->depth = this->depth / 2;
-	delete sid;
+	else return false;
 }

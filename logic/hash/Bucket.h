@@ -59,14 +59,23 @@ public:
 	void print();
 
 	/**
-	 * se encarga de duplicar el td
+	 * Se encarga de modificar el tamaño de dispersion del bucket al pasado por parametro
+	 * @param depth es el nuevo valor del tamaño de dispersion
+	 * @return bool retorna true si se pudo realizar, false en caso contrario
 	 */
-	void duplicateDepth();
+	bool modifyDepth(int depth);
 
 	/**
-	 * se encarga de dividir por 2 el td
+	 * Se encarga de duplicar el tamaño de dispersion del bucket
+	 * @return bool retorna true si se pudo realizar, false en caso contrario
 	 */
-	void divideDepth();
+	bool duplicateDepth();
+
+	/**
+	 * Se encarga de dividir en 2 el tamaño de dispersion del bucket
+	 * @return bool retorna true si se pudo realizar, false en caso contrario
+	 */
+	bool divideDepth();
 
 	/**
 	 * Para posicionarse al final del bucket
