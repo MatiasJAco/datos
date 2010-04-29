@@ -85,6 +85,11 @@ int Bucket::insert(StringInputData* sid) {
 
 bool Bucket::existsRegister(int key) {
 	this->getBlock()->restartCounter();
+
+	//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
+	if (this->block->hasNextRegister()) {
+			this->getBlock()->getNextRegister(true);
+	}
 	while (this->block->hasNextRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
