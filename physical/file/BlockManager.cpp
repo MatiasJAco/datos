@@ -29,6 +29,8 @@ bool BlockManager::split(Block *orig, Block *blank)
 {
 	bool retVal=true;
 
+
+	throw "DEPRECATED";
 	blank->clear();
 
 	unsigned int cumSize;
@@ -58,27 +60,35 @@ bool BlockManager::redistributeUnderflow(Block *block1, Block *block2, VarRegist
 {
 	bool retVal=false;
 
+	throw "DEPRECATED";
 	return retVal;
 }
 
 
 
-bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister & reg, unsigned int pos)
+bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister & regIns, unsigned int pos)
 {
 	bool retVal=true;
 
-	blank->clear();
-
-	unsigned int cumSize;
+	unsigned int cumSize=0;
 	unsigned int sizeFirst=orig->getMinimalLoad();
+	unsigned int i=0;
 
 	orig->restartCounter();
 	VarRegister varR;
 	VarRegister varR2;
 
-	for(cumSize=0;cumSize<sizeFirst&& !orig->isLastRegister(); cumSize+= varR.getDiskSize())
+
+	while(!orig->isLastRegister()&&cumSize<sizeFirst)
 	{
 		varR =orig->getNextRegister(true);
+		if(pos!=i)
+		{
+			cumSize+= varR.getDiskSize();
+		}
+		else
+			cumSize+= regIns.getDiskSize();
+		i++;
 	}
 
 	while(!orig->isLastRegister())
@@ -88,7 +98,17 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 		blank->addRegister(varR);
 	}
 
-	blank->addRegister(reg);
+
+	if(pos<i)
+	{
+		orig->getRegisterN(pos);
+		orig->addRegister(regIns);
+	}
+	else
+	{
+		blank->getRegisterN(pos-i);
+		blank->addRegister(regIns);
+	}
 
 	return retVal;
 }
@@ -99,6 +119,7 @@ bool BlockManager::mergeBlocks(Block *block1, Block *block2, VarRegister & reg, 
 {
 	bool retVal=false;
 
+	throw "DEPRECATED";
 	return retVal;
 }
 
