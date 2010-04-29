@@ -200,12 +200,12 @@ void FreeBlockFile::showFreeNodes()
 	cout << "Cantidad de bloques:"<<m_BlockCount<<endl;
 	cout << "Bloques:"<<endl;
 
-	cout << getFreeNodeString();
+	cout << getFreeBlockString();
 
 	cout <<endl;
 }
 
-string FreeBlockFile::getFreeNodeString()
+string FreeBlockFile::getFreeBlockString()
 {
 	stringstream ss;
 

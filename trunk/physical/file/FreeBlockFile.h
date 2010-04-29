@@ -63,7 +63,7 @@ public:
 	 * Muestra por pantalla los nodos libres, se usa para debug
 	 * @return string un string con todos los numeros de bloques
 	 */
-	std::string getFreeNodeString();
+	std::string getFreeBlockString();
 
 
 private:

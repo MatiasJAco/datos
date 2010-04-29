@@ -115,7 +115,7 @@ public:
 	 * Solo se usa para informar al usuario de los bloques libres
 	 * @return string array con los numeros de bloques libres separados por coma.
 	 */
-	std::string getFreeNodeString();
+	std::string getFreeBlockString();
 
 private:
 	//-----------------------------Headers-----------------------------//
