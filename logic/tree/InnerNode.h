@@ -44,7 +44,7 @@ public:
     InnerNode(unsigned int nodeNumber);
     ~InnerNode();
     //loadResultEnum remove(const InputData & key);
-    INodeData *remove(const InputData & dato, loadResultEnum & result);
+
     bool find(const InputData & key, InputData & data);
     loadResultEnum modify(const InputData & key, const InputData & dato);
     loadResultEnum modify(const InputData & data);
@@ -64,7 +64,7 @@ private:
 
 	unsigned int buscarPosicionInnerPorClave(int key);
 
-	void getInPosition(INodeData *& contenido, unsigned int position);
+	void getInPosition(INodeData * contenido, unsigned int position);
 
 
 
@@ -74,7 +74,7 @@ public:
 
 	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
 
-	loadResultEnum remove_(const InputData& data);
+	loadResultEnum remove(const InputData& data);
 
 	/*********************************************************************************************/
 
