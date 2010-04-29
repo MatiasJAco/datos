@@ -212,11 +212,13 @@ int Hash::erase(int key) {
 		Bucket* bucket = new Bucket(block);
 		bucket->setDepth(bucket->getDepthFromHashFile());
 		result = bucket->deleteRegister(key);
+
 		if (result == false) {
 			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;
 		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
-			unsigned int registerAmount = block->getRegisterAmount();
 
+			this->hashFile->saveBlock(bucket->getBlock());
+			unsigned int registerAmount = block->getRegisterAmount();
 			int element = this->hashTable->verifyJumps(this->calculateHashFunction(key), bucket->getDepth());
 
 			if ((registerAmount == 0) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
