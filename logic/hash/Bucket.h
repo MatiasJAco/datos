@@ -47,6 +47,14 @@ public:
 	bool existsRegister(int key);
 
 	/**
+	 * Este metodo indica si existe un registro fisico, con la clave dada.
+	 * @param key Es la clave a buscar.
+	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro)
+	 * @return Devuelve true si encuentra un registro con la clave pasada por parametro. En caso contrario devuelve false.
+	 */
+	bool existsRegister(int key, int & position);
+
+	/**
 	 * Este metodo devuelve un registro variable, en base a una clave pasada por parametro.
 	 * @param key Es la clave que sirve para encontrar el registro deseado.
 	 * @return Devuelve el registro cuya clave es la pasada por parametro.
@@ -88,6 +96,12 @@ public:
 	 * Para posicionarse al final del bucket
 	 */
 	void positionateAtEnd();
+
+	/**
+	 * Para posicionarse en una posicion
+	 * @param position es la posicion en la cual me quiero parar
+	 */
+	void positionateAt(int position);
 
 	/**
 	 * lee el primer registro del bucket, el cual tiene la informacion del td de si mismo

@@ -38,9 +38,19 @@ private:
 	void inicializeHashFile();
 
 	/**
-	 * Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
+	 * Verifica existencia de un elemento en un bloque
+	 * @param sid es el sid que contiene la key a buscar
+	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
 	 */
 	bool existsElement(StringInputData* sid);
+
+	/**
+	 * Verifica existencia de un elemento en un bloque
+	 * @param sid es el sid que contiene la key a buscar
+	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro)
+	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
+	 */
+	bool existsElement(StringInputData* sid, int & position);
 
 	/**
 	 * crea un bucket nuevo pasandole el tamaño de dispersion y retorna
