@@ -143,11 +143,6 @@ loadResultEnum InnerNode::modify(const InputData& data)
 	return NORMAL_LOAD;
 }
 
-bool InnerNode::find(const InputData & key,InputData & data) const
-{
-	return true;
-}
-
 
 INodeData* InnerNode::divideLeaf(Node* aPartir,Node* destNode,const InputData& newData){
 	//Para hijos hoja

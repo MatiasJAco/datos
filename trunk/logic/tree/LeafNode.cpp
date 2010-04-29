@@ -131,7 +131,7 @@ loadResultEnum LeafNode::remove_(const InputData& data)
 	bool found = false;
 
 	VarRegister currentRegister;
-	InputData* currentData = dato.newInstance();
+	InputData* currentData = data.newInstance();
 
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
@@ -146,7 +146,7 @@ loadResultEnum LeafNode::remove_(const InputData& data)
 
 		/// Transformo el registro a un InputData
 		currentData->toData(currentRegister.getValue());
-		if (currentData->getKey() == dato.getKey())
+		if (currentData->getKey() == data.getKey())
 		{
 			found = true;
 			m_block->deleteRegister(result);
@@ -246,7 +246,7 @@ loadResultEnum LeafNode::modify(const InputData & data)
 }
 
 
-bool LeafNode::find(const InputData & key,InputData & data) const
+bool LeafNode::find(const InputData & key,InputData & data)
 {
 	bool found = false;
 
