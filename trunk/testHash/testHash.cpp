@@ -73,21 +73,13 @@ void testAdd() {
 	Hash* hash = new Hash();
 
 	/* Se toma el dato que ingresa el usuario. */
-	int key = 34;
-	char value1[8] = "paytiti";
-	StringInputData* sid1 = createSid(key,value1);
-
-	key = 5;
-	char value2[5] = "pepe";
-	StringInputData* sid2 = createSid(key,value2);
-
-	for (int i = 0; i<31;i++){
-	hash->add(sid1);
+	char value[8] = "paytiti";
+	for (int i = 1; i<=32;i++){
+		StringInputData* sid = createSid(i,value);
+		hash->add(sid);
+		delete sid;
 	}
-	hash->add(sid2);
 	hash->print();
-	delete sid1;
-	delete sid2;
 }
 
 int main(){
