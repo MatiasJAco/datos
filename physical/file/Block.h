@@ -73,14 +73,6 @@ public:
 
 	/**
 	 * Elimina el registro que se encuentra en la posicion
-	 * actual del iterador. Si al eliminar el registro se fuera a producir underflow,
-	 * no realiza la operacion.
-	 * @return bool true en caso de exito
-	 */
-	bool deleteRegister();
-
-	/**
-	 * Elimina el registro que se encuentra en la posicion
 	 * actual del iterador.Y devuelve un parametro que indica el estado del bloque despues
 	 * de realizar la operacion
 	 * @param load devuelve un factor de balance que indica cual seria el resultado
@@ -222,6 +214,14 @@ public:
 	bool deserialize(char *streamChar);
 
 private:
+
+	/**
+	 * Elimina el registro que se encuentra en la posicion
+	 * actual del iterador. Si al eliminar el registro se fuera a producir underflow,
+	 * no realiza la operacion.
+	 * @return bool true en caso de exito
+	 */
+	bool deleteRegister();
 
 	float calculateFraction(unsigned int);
 

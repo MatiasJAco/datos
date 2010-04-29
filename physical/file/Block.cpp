@@ -322,14 +322,14 @@ bool Block::deleteRegister(loadResultEnum &load)
 {
 	bool retVal=false;
 	RegisterListIt it = m_actualReg;
+	unsigned int regSize=m_actualReg->getDiskSize();
 	it++;
 
 	if(m_registers.size()>0&&m_actualReg!=m_registers.end())
 	{
 		//Calculo el tama�o que tendria despues de eliminar
-		load= evaluateLoad(m_usedBytes-m_actualReg->getDiskSize());
-
-
+		regSize=m_actualReg->getDiskSize();
+		load= evaluateLoad(m_usedBytes-regSize);
 
 		m_registers.erase(m_actualReg);
 
@@ -338,6 +338,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 
 		m_registerCount--;
 
+		m_usedBytes-=regSize;
 
 		retVal=true;
 	}
