@@ -210,7 +210,7 @@ int Hash::erase(int key) {
 		unsigned int bucketNumber = this->getNumberOfBucket(key);
 		Block* block = this->hashFile->getBlock(bucketNumber);
 		Bucket* bucket = this->createNewBucket(1); // TODO como se sabe el depth aca
-		bucket->setDepth(bucket->getDepthFromHashFile);
+		bucket->setDepth(bucket->getDepthFromHashFile());
 		result = bucket->deleteRegister(key);
 		if (result == false) {
 			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;

@@ -89,13 +89,11 @@ public:
 	 */
 	void positionateAtEnd();
 
-
-private:
-
 	/**
 	 * lee el primer registro del bucket, el cual tiene la informacion del td de si mismo
 	 */
 	unsigned int getDepthFromHashFile();
+
 };
 
 #endif /* BUCKET_H_ */
