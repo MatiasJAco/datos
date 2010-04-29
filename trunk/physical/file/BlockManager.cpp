@@ -18,7 +18,32 @@ bool BlockManager::balanceLoad(Block *block1, Block *block2)
 
 bool BlockManager::merge(Block *block1, Block *block2)
 {
-	bool retVal=true;
+	bool retVal=false;
+
+	if(block1!=NULL &&block2!=NULL)
+	{
+		unsigned int minSize=block1->getMinimalLoad();
+
+		if(block1->getUsedSpace()<= minSize && block2->getUsedSpace()<= minSize)
+		{
+			VarRegister varR;
+			unsigned int lastReg=block1->getRegisterAmount()-1;
+
+			block1->getRegisterN(lastReg);
+
+			block2->restartCounter();
+
+			while(!block2->isLastRegister())
+			{
+				varR = block2->getNextRegister(true);
+				block1->addRegister(varR);
+			}
+
+			block2->clear();
+		}
+	}
+	else
+		throw "Se pasaron punteros a NULL";
 
 	return retVal;
 }
@@ -106,7 +131,9 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 	}
 	else
 	{
-		blank->getRegisterN(pos-i);
+		unsigned int lastReg=blank->getRegisterAmount()-1;
+
+		blank->getRegisterN(lastReg+pos-i);
 		blank->addRegister(regIns);
 	}
 
