@@ -70,7 +70,7 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		listaDatos.push_back(*sid);
 		delete sid;
 		loadResultEnum load = NORMAL_LOAD;
-		deleteResult = block->deleteRegister(load,false);
+		deleteResult = block->deleteRegister(load);
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
 		}
