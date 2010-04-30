@@ -11,6 +11,12 @@
 StringInputData::StringInputData() {
 }
 
+StringInputData::StringInputData(int key,std::string value)
+{
+	this->key = key;
+	this->value = value;
+}
+
 StringInputData::~StringInputData() {
 }
 
