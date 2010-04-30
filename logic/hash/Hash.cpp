@@ -183,7 +183,7 @@ int Hash::add(StringInputData* sid) {
 	return 0;
 }
 
-int Hash::modify(int key, char* newValue) {
+/*int Hash::modify(int key, char* newValue) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
 	//sid->setValue(newValue); // no importa el valor que le paso porque busca por key
@@ -235,6 +235,22 @@ int Hash::modify(int key, char* newValue) {
 	delete bucketA;
 	//delete bucket;
 	//this->print();
+
+	return 0;
+}*/
+
+int Hash::modify(int key, char* newValue) {
+	StringInputData* sid = new StringInputData();
+	sid->setKey(key);
+	bool exists = this->existsElement(sid->getKey());
+
+	if (!exists) {
+		return 1;
+	} else {
+		sid->setValue(newValue);
+		this->erase(key);
+		this->add(sid);
+	}
 
 	return 0;
 }
