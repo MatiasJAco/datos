@@ -134,7 +134,7 @@ public:
 	VarRegister peekRegister();
 
 	/**
-	 * Se fija si es el ultimo registro...
+	 * Se fija si es el primer registro...
 	 */
 	bool isFirstRegister();
 
@@ -156,7 +156,7 @@ public:
 	void restartCounter();
 
 	/**
-	 * Devuelve el contador al principio del bloque
+	 * Devuelve el contador al final del bloque
 	 */
 	void jumpEndCounter();
 
@@ -177,6 +177,7 @@ public:
 	 */
 	void setLoadFactor(float factor);
 
+	unsigned int getPosActual();
 
 	/**
 	 * Obtiene la cantidad de registros.
@@ -280,6 +281,7 @@ private:
 	 */
 	RegisterList m_registers;
 
+	unsigned int m_posActual;
 
 };
 

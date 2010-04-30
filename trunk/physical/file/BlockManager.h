@@ -72,7 +72,7 @@ public:
 	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
 
 private:
-	static bool redistributeLeft(Block *blockA, Block *blockB, sideEnum side, bool simulate);
+	static bool innerRedistribute(Block *blockA, Block *blockB, sideEnum side, bool simulate);
 
 };
 
