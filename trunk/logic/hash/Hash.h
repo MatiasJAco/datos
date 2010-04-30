@@ -13,6 +13,12 @@
 #include "Table.h"
 #include "Bucket.h"
 
+/**
+ * Clase que permite modelar un Hash.
+ * Maneja una tabla que contiene buckets.
+ * Cada bucket a su vez posee registros, y en cada registro hay un dato.
+ * El usuario puede ingresar, modificar, eliminar o consultar datos.
+ */
 class Hash {
 
 private:
