@@ -22,7 +22,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 	m_usedBytes=m_FirstRegisterOffset;
 	m_registerCount=0;
 	m_LoadFactor=loadFactor;
-	m_posActual=-1;
+
 }
 
 Block::~Block()
@@ -31,11 +31,17 @@ Block::~Block()
 
 void Block::restartCounter()
 {
-	m_posActual=0;
+
 	if(m_registers.size()>0)
+	{
+		m_posActual=0;
 		m_actualReg = m_registers.begin();
+	}
 	else
+	{
+		m_posActual=-1;
 		m_actualReg = m_registers.end();
+	}
 }
 
 void Block::jumpEndCounter()
@@ -80,9 +86,10 @@ VarRegister Block::peekRegister()
 bool Block::isLastRegister()
 {
 	bool retVal=true;
+	RegisterListIt it=m_registers.end();
 
 	if(m_registers.size() > 0)
-		retVal = m_actualReg ==m_registers.end();
+		retVal = (m_actualReg ==it);
 
 	return retVal;
 
@@ -330,18 +337,21 @@ bool Block::deleteRegister(loadResultEnum &load)
 {
 	bool retVal=false;
 	RegisterListIt it = m_actualReg;
-	unsigned int regSize=m_actualReg->getDiskSize();
+	unsigned int regSize=0;
+	RegisterListIt lastReg;
 	it++;
 
-	if(m_registers.size()>0)
+	if(m_registers.size()>0&&m_actualReg!=m_registers.end())
 	{
+		regSize=m_actualReg->getDiskSize();
+		lastReg = m_registers.end();
+		lastReg--;
 
-/*		if(m_actualReg==m_registers.end())
+		if(m_actualReg==lastReg)
 		{
-			it--;
-			it--;
-			m_posActual--;
-		}*/
+			it=m_registers.end();
+			m_posActual=-1;
+		}
 
 		//Calculo el tama�o que tendria despues de eliminar
 		regSize=m_actualReg->getDiskSize();
@@ -363,6 +373,56 @@ bool Block::deleteRegister(loadResultEnum &load)
 
 	return retVal;
 }
+
+VarRegister Block::getRegisterN(unsigned int number)
+{
+	VarRegister reg;
+
+	if(number > m_registers.size())
+		throw "El numero del registro no existe en el bloque";
+
+	unsigned int i;
+	restartCounter();
+
+	for(i=0; i < number; i++)
+	{
+		m_posActual++;
+		m_actualReg++;
+	}
+
+	reg = getNextRegister(false);
+
+	return reg;
+
+}
+
+VarRegister Block::getPreviousRegister(bool backward)
+{
+	VarRegister current;
+	RegisterListIt it;
+	it=m_actualReg;
+
+	if(m_registers.size()>0)
+	{
+		if(it!=m_registers.end())
+		{
+			current=*it;
+			it--;
+
+			if(backward)
+			{
+				m_actualReg =it;
+				m_posActual--;
+			}
+		}
+	}
+
+	return current;
+}
+
+
+
+
 
 float Block::calculateFraction(unsigned int value)
 {
@@ -413,52 +473,6 @@ unsigned int Block::getMinimalLoad()
 unsigned int Block::getRemainingSpace()
 {
 	return m_blockSize - m_usedBytes;
-}
-
-VarRegister Block::getRegisterN(unsigned int number)
-{
-	VarRegister reg;
-
-	if(number > m_registers.size())
-		throw "El numero del registro no existe en el bloque";
-
-	unsigned int i;
-	restartCounter();
-
-	for(i=0; i < number; i++)
-	{
-		m_posActual++;
-		m_actualReg++;
-	}
-
-	reg = getNextRegister(false);
-
-	return reg;
-
-}
-
-VarRegister Block::getPreviousRegister(bool backward)
-{
-	VarRegister current;
-	RegisterListIt it;
-	it=m_actualReg;
-
-	if(m_registers.size()>0)
-	{
-		if(it!=m_registers.begin())
-		{
-			current=*it;
-			it--;
-
-			if(backward)
-			{
-				m_actualReg =it;
-				m_posActual--;
-			}
-		}
-	}
-
-	return current;
 }
 
 

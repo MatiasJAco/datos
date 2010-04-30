@@ -99,7 +99,7 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 	return retVal;
 }
 
-bool BlockManager::merge(Block *block1, Block *block2)
+bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 {
 	bool retVal=false;
 
@@ -128,6 +128,9 @@ bool BlockManager::merge(Block *block1, Block *block2)
 	else
 		throw "Se pasaron punteros a NULL";
 
+	block1->restartCounter();
+	block2->restartCounter();
+
 	return retVal;
 }
 
@@ -146,7 +149,8 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 	VarRegister varR;
 	VarRegister varR2;
 
-
+	//Obtenemos la cantidad de elementos
+	//a dejar en el bloque original para hacer el split
 	while(!orig->isLastRegister()&&cumSize<sizeFirst)
 	{
 		varR =orig->getNextRegister(true);
@@ -154,10 +158,14 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 		{
 			cumSize+= varR.getDiskSize();
 		}
+		//Si el reg a insertar va en la primera mitad
+		//se contabiliza su tamaño en el primer bloque.
 		else
 			cumSize+= regIns.getDiskSize();
 		i++;
 	}
+
+	//Lo que quedo después de la mitad se redistribuye a blank
 
 	while(!orig->isLastRegister())
 	{
@@ -187,30 +195,8 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 
 bool BlockManager::split(Block *orig, Block *blank)
 {
-	bool retVal=true;
-
-
+	bool retVal=false;
 	throw "DEPRECATED";
-	blank->clear();
-
-	unsigned int cumSize;
-	unsigned int sizeFirst=orig->getMinimalLoad();
-
-	orig->restartCounter();
-	VarRegister varR;
-	VarRegister varR2;
-
-	for(cumSize=0;cumSize<sizeFirst&& !orig->isLastRegister(); cumSize+= varR.getDiskSize())
-	{
-		varR =orig->getNextRegister(true);
-	}
-
-	while(!orig->isLastRegister())
-	{
-		varR =orig->getNextRegister(false);
-		orig->deleteRegister();
-		blank->addRegister(varR);
-	}
 
 	return retVal;
 
