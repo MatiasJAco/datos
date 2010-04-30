@@ -14,6 +14,8 @@ class StringInputData: public InputData {
 
 public:
 	StringInputData();
+	StringInputData(int key,std::string value);
+
 	virtual ~StringInputData();
 
 	void setKey(int key);
