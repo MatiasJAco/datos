@@ -52,12 +52,15 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 
 	/// Busco donde insertar el dato dentro del bloque de hoja.
 	m_block->restartCounter();
-	unsigned int pos = 0;
+
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
+	VarRegister pointerprev = m_block->getNextRegister();
+	VarRegister pointernext = m_block->getNextRegister();
 
+	/// TODO usar el getCounter de block que falta implementar y corregirle en todos lados.
+	unsigned int pos = 3;
 	while (pos<m_block->getRegisterAmount()&&!found)
 	{
 		pos++;
@@ -256,7 +259,8 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	Block* blockSibling = sibling->getBlock();
 
 	char* valueReg = new char[data.size()];
-	VarRegister reg(data.toStream(valueReg),data.size());
+	data.toStream(valueReg);
+	VarRegister reg(valueReg,data.size());
 
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 
