@@ -68,7 +68,7 @@ void Bucket::positionateAt(int position){
 	}
 }
 
-int Bucket::insert(StringInputData* sid) {
+int Bucket::insertRegister(StringInputData* sid) {
 	loadResultEnum loadResult;
 	unsigned int dataSize = sid->size();
 	int result = 0; // Es el valor de retorno de esta función. Indica si se pudo insertar el registro al bloque, o no.
@@ -89,6 +89,32 @@ int Bucket::insert(StringInputData* sid) {
 	delete varRegister;
 	return result;
 }
+
+/*bool Bucket::insertRegister(int key,char* newValue){
+stringstream ss (stringstream::in | stringstream::out);
+		ss.str(newValue);
+	StringInputData* sid = new StringInputData();
+	sid->setKey(key);
+	sid->setValue(ss.str());
+
+	unsigned int dataSize = sid->size();
+	cout <<sid->getKey()<<"--"<< sid->getValue()<<"----"<<dataSize<<"------------------------------------------";
+	char* valueReg = new char[dataSize];
+	//varReg.setValue(sid->toStream(valueReg),dataSize);
+	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
+	delete sid;
+	loadResultEnum loadResult;
+	bool inserted = this->block->addRegister(*varRegister, loadResult);
+
+	if (loadResult == OVERFLOW_LOAD) {
+		//result = 1;
+		return false;
+	} else if (inserted == false) {
+		//result = 2;
+		return false;
+	}
+}
+*/
 
 bool Bucket::existsRegister(int key) {
 	int aux = -1;
@@ -150,6 +176,79 @@ bool Bucket::deleteRegister(int key) {
 	}
 	return result;
 }
+
+bool Bucket::deleteRegisterAtPosition(int position){
+	positionateAt(position);
+	loadResultEnum load = NORMAL_LOAD;
+	bool deleteResult = block->deleteRegister(load);
+	if (deleteResult == false) {
+		cout << "No pudo borrarse el registro: ";
+		return false;
+	}
+	return true;
+}
+
+
+
+//bool Bucket::modifyRegister(int key, int position,char* newValue){
+//	//borro el elemento
+//
+//
+//	/*
+//	loadResultEnum loadResult;
+//	unsigned int dataSize = sid->size();
+//	int result = 0; // Es el valor de retorno de esta función. Indica si se pudo insertar el registro al bloque, o no.
+//	char* valueReg = new char[dataSize];
+//	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
+//	//me paro al final del bloque.
+//	positionateAtEnd();
+//	bool inserted = this->block->addRegister(*varRegister, loadResult);
+//
+//	if (loadResult == OVERFLOW_LOAD) {
+//		result = 1;
+//	} else if (inserted == false) {
+//		result = 2;
+//	}
+//	delete varRegister;
+//	return result;
+//	*/
+//
+//	stringstream ss (stringstream::in | stringstream::out);
+//		ss.str(newValue);
+//	StringInputData* sid = new StringInputData();
+//	sid->setKey(key);
+//	sid->setValue(ss.str());
+//
+//	unsigned int dataSize = sid->size();
+//	cout <<sid->getKey()<<"--"<< sid->getValue()<<"----"<<dataSize<<"------------------------------------------";
+//	char* valueReg = new char[dataSize];
+//	//varReg.setValue(sid->toStream(valueReg),dataSize);
+//	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
+//	delete sid;
+//	loadResultEnum loadResult;
+//	bool inserted = this->block->addRegister(*varRegister, loadResult);
+//
+//	if (loadResult == OVERFLOW_LOAD) {
+//		//result = 1;
+//		return false;
+//	} else if (inserted == false) {
+//		//result = 2;
+//		return false;
+//	}
+//
+////	if (OVERFLOW_LOAD == result) {
+////		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
+////		return -1;
+////	}
+////	else if (UNDERFLOW_LOAD == result) {
+////		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
+////		return -1;
+////	}
+////
+////	delete sid;
+//
+//	return inserted;
+//}
 
 void Bucket::print(){
 	VarRegister varReg;

@@ -118,7 +118,7 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 		result = 2;
 	}
 	Bucket* bucket = new Bucket(block);
-	result = bucket->insert(sid);
+	result = bucket->insertRegister(sid);
 	return bucket;
 }
 
@@ -164,12 +164,13 @@ int Hash::add(StringInputData* sid) {
 	return 0;
 }
 
-int Hash::modify(int key, string newValue) {
+int Hash::modify(int key, char* newValue) {
 	StringInputData* sid1 = new StringInputData();
 	sid1->setKey(key);
 	sid1->setValue(newValue); // no importa el valor que le paso porque busca por key
 
 	int position;
+	//TODO esto del existElement se puede mejorar, y en vez de pasar el sid pasarle la key sola
 	// Verifico unicidad
 	if (!existsElement(sid1,position)){
 		return 1;
@@ -183,34 +184,33 @@ int Hash::modify(int key, string newValue) {
 
 	Bucket * bucket = new Bucket(block);
 
-	//TODO: Lo deje aca
-	//bucket->modifyRegister(position,)
+	if (!bucket->deleteRegister(position))
+		return -1;
 
+	if (!this->hashFile->saveBlock(bucket->getBlock()))
+		return -1;
 
-	block->restartCounter();
-	VarRegister varReg = block->getNextRegister(true);
+	delete bucket;
 
+//	this->print();
+//
+	stringstream ss (stringstream::in | stringstream::out);
+		ss.str(newValue);
 	StringInputData* sid = new StringInputData();
-	sid->toData(varReg.getValue());
-	unsigned int dataSize = newValue.size();;
-	char* valueReg = new char[dataSize];
-	sid->setValue(newValue);
-	varReg.setValue(sid->toStream(valueReg),dataSize);
+	sid->setKey(key);
+	sid->setValue(ss.str());
 
-	loadResultEnum result;
-	bool result2 = block->modifyRegister(varReg,result);
+//	if (!bucket->insertRegister(sid))
+//		return -1;
 
-	if (OVERFLOW_LOAD == result) {
-		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
+	int insertResult;
+	Bucket * bucketA = tryToInsertNewSid(sid,insertResult);
+	if (insertResult != 0) //si no se pudo agregar en el bucket lo guardo
 		return -1;
-	}
-	else if (UNDERFLOW_LOAD == result) {
-		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
-		return -1;
-	}
-
 	delete sid;
-	if (!this->hashFile->saveBlock(block))
+
+
+	if (!this->hashFile->saveBlock(bucketA->getBlock()))
 		return -1;
 
 	return 0;
