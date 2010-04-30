@@ -104,7 +104,7 @@ private:
 	 * @param fusionatedNode Devuelve la clave principal y el numero de nodo del fusionado.
 	 * @return bool TRUE si pudo efectuar la operacion. FALSE de lo contrario.
 	 */
-	bool merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode);
+	bool merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode,sideEnum side);
 
 public:
 	/**
