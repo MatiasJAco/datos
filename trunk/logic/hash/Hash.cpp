@@ -278,7 +278,8 @@ void Hash::print() {
 
 	printf("\nHashFile: \n");
 	while (actualBlock != NULL) {
-		printf("Bucket %i : ",i);
+		int numeroReal = i-1;
+		cout<<"Bucket "<< numeroReal<<": ";
 		bucket = new Bucket(actualBlock);
 		bucket->print();
 		delete bucket;

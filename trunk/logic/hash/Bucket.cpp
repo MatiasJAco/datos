@@ -49,12 +49,12 @@ Block* Bucket::getBlock() {
 	return this->block;
 }
 
-void Bucket::positionateAtEnd(){
-	this->block->restartCounter();
-	while (this->block->hasNextRegister()) {
-		this->block->getNextRegister(true);
-	}
-}
+//void Bucket::positionateAtEnd(){
+//	this->block->restartCounter();
+//	while (this->block->hasNextRegister()) {
+//		this->block->getNextRegister(true);
+//	}
+//}
 void Bucket::positionateAt(int position){
 	this->block->restartCounter();
 	while (this->block->hasNextRegister()&& position!=0) {
@@ -156,16 +156,16 @@ bool Bucket::deleteRegister(int key) {
 	return result;
 }
 
-bool Bucket::deleteRegisterAtPosition(int position){
-	positionateAt(position);
-	loadResultEnum load = NORMAL_LOAD;
-	bool deleteResult = block->deleteRegister(load);
-	if (deleteResult == false) {
-		cout << "No pudo borrarse el registro: ";
-		return false;
-	}
-	return true;
-}
+//bool Bucket::deleteRegisterAtPosition(int position){
+//	positionateAt(position);
+//	loadResultEnum load = NORMAL_LOAD;
+//	bool deleteResult = block->deleteRegister(load);
+//	if (deleteResult == false) {
+//		cout << "No pudo borrarse el registro: ";
+//		return false;
+//	}
+//	return true;
+//}
 
 
 
