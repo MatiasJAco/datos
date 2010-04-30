@@ -96,20 +96,24 @@ void tests() {
 	Hash* hash = new Hash();
 	/* Se toma el dato que ingresa el usuario. */
 	char value[8] = "paytiti";
-	for (int i = 1; i<=60;i++){
+	for (int i = 1; i<=61;i++){
 		StringInputData* sid = createSid(i,value);
 		hash->add(sid);
-		delete sid;
-	}
-	for (int i = 61; i<=62;i++){
-		StringInputData* sid = createSid(i,value);
-		hash->add(sid);
+		hash->print();
 		delete sid;
 	}
 	hash->print();
+	for (int i = 62; i<=70;i++){
+		StringInputData* sid = createSid(i,value);
+		hash->add(sid);
+		hash->print();
+		delete sid;
+	}
+//	hash->print();
 
-	hash->modify(5,"pepe");
-	hash->print();
+//	if (hash->modify(12,"12345678")==-1)
+//		cout<<endl<<"NOOOOOOOOOOOOOO!!!!!!!!!!!"<<endl;
+//	hash->print();
 
 }
 
