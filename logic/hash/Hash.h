@@ -12,7 +12,6 @@
 #include "../../physical/file/BlockFile.h"
 #include "Table.h"
 #include "Bucket.h"
-#include <list>
 
 class Hash {
 
@@ -21,56 +20,58 @@ private:
 	BlockFile* hashFile;
 
 	/**
-	 * Retorna el resultado de la funcion Hash. En este caso estamos usando el metodo de "bits sufijos"
+	 * Retorna el resultado de la funcion Hash. En este caso estamos usando el metodo de "bits sufijos".
+	 * @param key Es la clave sobre la cual se aplicará la función de hash.
+	 * @return Devuelve un entero que surge de aplicar la función de hash a la clave pasada por parámetro.
 	 */
 	int calculateHashFunction(int key);
 
 	/**
-	 * Retorna el numero de Bucket del HashFile
+	 * Retorna el numero de Bucket del archivo de hash.
+	 * @param key Es la clave que se usa para calcular el número de bucket.
+	 * @return Devuelve el número de bucket que contiene al dato que posee la clave pasada por parámetro.
 	 */
 	int getNumberOfBucket(int key);
 
 	/**
-	 * Crea un bucket (bucket numero 0). Este bucket solo tiene como campo de control el
-	 * tamaño de dispersion inicial (1).
-	 * Es decir que va a insertarle un primer registro variable que indica el tam de disp del bucket
+	 * Crea un bucket (bucket numero 0). Este bucket solo tiene como campo de control el tamaño de dispersion inicial (1).
+	 * Es decir que va a insertarle un primer registro variable que indica el tam de disp del bucket.
 	 */
 	void inicializeHashFile();
 
 	/**
-	 * Verifica existencia de un elemento en un bloque
-	 * @param key es la key a buscar
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
 	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
 	 */
 	bool existsElement(int key);
 
 	/**
-	 * Verifica existencia de un elemento en un bloque
-	 * @param key es la key a buscar
-	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro)
-	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
+	 * Verifica si existe un dato en un bloque, e indica en qué posición.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @param position Devuelve la posicion en donde se encontro la clave, o -1 si no se encontró.
+	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro.
 	 */
 	bool existsElement(int key, int & position);
 
 	/**
-	 * crea un bucket nuevo pasandole el tamaño de dispersion y retorna
-	 * un puntero al bucket nuevo
+	 * Crea un bucket nuevo.
+	 * @param depth Es el tamaño de dispersión que tendrá el bloque a crearse.
+	 * @return Devuelve un puntero al bucket creado.
 	 */
 	Bucket* createNewBucket(int depth);
 
 	/**
-	 * Intenta insertar un sid nuevo en su correspondiente bucket segun la funcion de hash seteada
-	 * Y la vez retorna por parametro el resultado de la operacion:
+	 * Intenta insertar un sid nuevo en su correspondiente bucket segun la funcion de hash y la vez retorna por parametro el resultado de la operacion.
 	 * @param sid Es el dato ingresado por el usuario.
-	 * @param  result Devuelve 1 si hubo overflow, 2 si hubo otro tipo de error de I/O, y 0 si pudo insertar el registro en el bloque.
+	 * @param result Devuelve 1 si hubo overflow, 2 si hubo otro tipo de error de I/O, y 0 si pudo insertar el registro en el bloque.
 	 * @return Devuelve un puntero al bucket donde se  intento insertar
 	 */
 	Bucket* tryToInsertNewSid(StringInputData* sid, int & result);
 
 	/**
-	 * Basicamente borra el bucket pasado por parametro de disco, luego lo recupera de la lista de bloques libres (esto se
-	 * hace para que se borren sus registros) y luego redispersa los registros.
-	 * @param bucket Es el bucket desbordado
+	 * Borra los registros del bucket pasado por parametro (de disco), y luego redispersa dichos registros en el hash.
+	 * @param bucket Es el bucket desbordado cuyos registros deben redispersarse.
 	 * @return Devuelve 0 si realizo la operacion correctamente.
 	 */
 	int reHash(Bucket* bucketDesbordado);
@@ -83,8 +84,8 @@ public:
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
-	 * @param sid es el StringInputData que se desea agregar
-	 * @return int Retorna 1 si el sid ya existe;0 si fue agregado; -1 si hubo algun problema
+	 * @param sid Es el dato que se desea agregar.
+	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
 	 */
 	int add(StringInputData* sid);
 
@@ -97,20 +98,19 @@ public:
 	 * Cambia el valor de un key pasado por parámetro.
 	 * @param key Es el key al cual se le cambiará el valor.
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
-	 * @return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
+	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado; -1 si hubo algun problema.
 	 */
 	int modify(int key, char* newValue);
 
-
 	/**
-	 * Elimina la clave pasada por parametro.
-	 * @param key Es la clave que se desea borrar.
-	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar la clave.
+	 * Elimina el dato, cuya clave es la pasada por parametro.
+	 * @param key Es la clave del dato que se desea borrar.
+	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar el dato.
 	 */
 	int erase(int key);
 
 	/**
-	 * para imprimir el Hash por consola
+	 * Imprime el hash por consola.
 	 */
 	void print();
 };
