@@ -10,6 +10,8 @@
 #include "Block.h"
 #include <iostream>
 
+
+typedef enum {LEFT_SIDE, RIGHT_SIDE} sideEnum;
 /**
  * Clase encargada de hacer las operacione de redistribucion en los nodos
  */
@@ -34,7 +36,7 @@ public:
 	 * @return bool true en caso de OK false en caso contrario
 	 */
 
-	static bool balanceLoad(Block *block1, Block *block2);
+	static bool balanceLoad(Block *block1, Block *block2, sideEnum side=RIGHT_SIDE);
 
 	/**
 	 * Se encarga de redistrbuir la carga de 2 bloques en caso de overflow...
@@ -49,6 +51,9 @@ public:
 	 * @throws exception en caso de que pos supere la cantidad de elementos total.
 	 */
 	static bool redistributeOverflow(Block *orig, Block *blank, VarRegister &reg, unsigned int pos);
+
+
+
 
 	//--------------------------------deprecated---------------------------------------//
 	/**
@@ -65,6 +70,10 @@ public:
 	 * @deprecated
 	 */
 	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
+
+private:
+	static bool redistributeLeft(Block *blockA, Block *blockB, sideEnum side, bool simulate);
+
 };
 
 #endif /* BLOCKMANAGER_H_ */

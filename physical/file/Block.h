@@ -115,6 +115,12 @@ public:
 
 	/**
 	 *
+	 * @param foward indica si se retrocede el iterador despues de obtener un registro
+	 */
+	VarRegister getPreviousRegister(bool foward=true);
+
+	/**
+	 *
 	 */
 	VarRegister getRegisterN(unsigned int number);
 
@@ -126,6 +132,11 @@ public:
 	 *
 	 */
 	VarRegister peekRegister();
+
+	/**
+	 * Se fija si es el ultimo registro...
+	 */
+	bool isFirstRegister();
 
 	/**
 	 * Se fija si es el ultimo registro...
@@ -143,6 +154,11 @@ public:
 	 * Devuelve el contador al principio del bloque
 	 */
 	void restartCounter();
+
+	/**
+	 * Devuelve el contador al principio del bloque
+	 */
+	void jumpEndCounter();
 
 	/**
 	 * Muestra por pantalla el contenido del bloque. Se usa para debug
