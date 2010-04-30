@@ -50,6 +50,14 @@ void Block::jumpEndCounter()
 	m_posActual = m_registers.size()-1;
 }
 
+void Block::jumpLastRegister()
+{
+	m_actualReg = m_registers.end();
+	m_actualReg--;
+	m_posActual = m_registers.size()-1;
+}
+
+
 VarRegister Block::getNextRegister(bool foward)
 {
 	RegisterListIt it;
