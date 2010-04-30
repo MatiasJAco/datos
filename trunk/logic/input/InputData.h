@@ -31,7 +31,7 @@ public:
 	virtual void setKey(int key) = 0;
 	virtual void setValue(std::string value) = 0;
 	virtual  int getKey()const = 0;
-	virtual string getValue() = 0;
+	virtual string getValue()const = 0;
 
 	/**
 	 * Devuelve el stream correspondiente al dato.
@@ -48,7 +48,7 @@ public:
 	virtual void toData(const char* stream) = 0;
 
 	/**
-	 * Tamaño del dato.
+	 * Tamaï¿½o del dato.
 	 */
 	virtual unsigned int size() const = 0;
 
@@ -58,6 +58,9 @@ public:
 	 * @return InputData.
 	 */
 	virtual InputData* newInstance() const = 0;
+
+
+	virtual std::string toString()const = 0;
 
 };
 
