@@ -139,6 +139,9 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 	unsigned int sizeFirst=orig->getMinimalLoad();
 	unsigned int i=0;
 
+	if(sizeFirst == 0)
+		throw "No se seteo el load factor";
+
 	orig->restartCounter();
 	VarRegister varR;
 	VarRegister varR2;

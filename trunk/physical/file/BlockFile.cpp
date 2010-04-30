@@ -35,6 +35,13 @@ bool BlockFile::deleteBlock(const unsigned int blockNumber)
 	return m_FreeBlockFile.pushFreeBlock(blockNumber);
 }
 
+bool BlockFile::open(const std::string fileName, unsigned int blocksize, float branchFactor)
+{
+	m_LoadFactor=branchFactor;
+	m_blockSize=blocksize;
+	return open(fileName);
+}
+
 bool BlockFile::open(const std::string fileName, unsigned int blocksize)
 {
 	m_blockSize=blocksize;

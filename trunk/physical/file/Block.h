@@ -177,6 +177,9 @@ public:
 	 */
 	void setLoadFactor(float factor);
 
+	/**
+	 *
+	 */
 	int getPosActual();
 
 	/**

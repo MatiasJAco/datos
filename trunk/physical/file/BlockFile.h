@@ -59,6 +59,14 @@ public:
 	bool open(const std::string fileName, unsigned int blocksize);
 
 	/**
+	 * Abre el archivo y asigna el tamaño de bloque. Si no existe se crea.
+	 * @param fileName nombre del archivo.
+	 * @param blocksize tamaño de los bloques del archivo
+	 * @return bool true en caso de exito, false en caso contrario
+	 */
+	bool open(const std::string fileName, unsigned int blocksize, float branchFactor);
+
+	/**
 	 * Cierra el archivo, libera los FD, escribe la info de control a
 	 * disco antes de cerrar el archivo
 	 * @return bool true en caso de exito, false en caso contrario
