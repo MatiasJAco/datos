@@ -139,14 +139,12 @@ public:
 	bool isFirstRegister();
 
 	/**
-	 * Se fija si es el ultimo registro...
-	 * TODO: ver si se vuela este o hasNextRegister... ya que hacen lo mismo
+	 * Se fija si se paso el ultimo registro
 	 */
 	bool isLastRegister();
 
 	/**
 	 * Indica si puede continuar iterando, dado que quedan registros en el bloque.
-	 * TODO: ver si se vuela este o isLastRegister
 	 */
 	bool hasNextRegister();
 

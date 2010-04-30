@@ -23,11 +23,12 @@ public:
 	 * Se encarga de fusionar 2 bloques
 	 * @param block1 bloque en el que van a quedar los registros
 	 * @param block2 bloque que se va a vaciar.
+	 * @param side bloque que va a desaparacer
 	 * @return bool true en caso de OK false en caso contrario
 	 * @throw exception en caso de pasarle puntero a NULL
 	 */
 
-	static bool merge(Block *block1, Block *block2);
+	static bool merge(Block *block1, Block *block2, sideEnum side=RIGHT_SIDE);
 
 	/**
 	 * Se encarga de balancear la carga de 2 bloques
