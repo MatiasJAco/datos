@@ -13,6 +13,11 @@
 #include "../input/StringInputData.h"
 #include "stdlib.h"
 
+/**
+ * Clase que modela un cubo de un hash.
+ * Este cubo posee una cantidad indeterminada de registros.
+ * La cantidad de registros es proporcional al espacio del cubo.
+ */
 class Bucket {
 
 private:
@@ -21,7 +26,6 @@ private:
 	Block* block;
 
 public:
-	//Bucket(unsigned int number, unsigned int depth);
 	Bucket(Block* block);
 	virtual ~Bucket();
 
@@ -49,7 +53,7 @@ public:
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
 	 * @param key Es la clave a buscar.
-	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro)
+	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro).
 	 * @return Devuelve true si encuentra un registro con la clave pasada por parametro. En caso contrario devuelve false.
 	 */
 	bool existsRegister(int key, int & position);
@@ -77,50 +81,51 @@ public:
 
 //	/**
 //	 * Este metodo modifica el registro del bloque que contiene el bucket, dada su clave y su posicion.
-//	 * @param key Es la clave del registro que se desea modificar (se modifica solo el valor, no la clave)
-//	 * @param position Es la posicion del registro a borrar en el bloque
-//	 * @param newValue Es el nuevo valor
+//	 * @param key Es la clave del registro que se desea modificar (se modifica solo el valor, no la clave).
+//	 * @param position Es la posicion del registro a borrar en el bloque.
+//	 * @param newValue Es el nuevo valor.
 //	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
 //	 */
 //	bool modifyRegister(int key, int position,char* newValue);
 
 	/**
-	 * Imprime el bucket entero
+	 * Imprime el bucket entero.
 	 */
 	void print();
 
 	/**
-	 * Se encarga de modificar el tamaño de dispersion del bucket al pasado por parametro
-	 * @param depth es el nuevo valor del tamaño de dispersion
-	 * @return bool retorna true si se pudo realizar, false en caso contrario
+	 * Se encarga de modificar el tamaño de dispersion del bucket al pasado por parametro.
+	 * @param depth es el nuevo valor del tamaño de dispersion.
+	 * @return bool retorna true si se pudo realizar, false en caso contrario.
 	 */
 	bool modifyDepth(int depth);
 
 	/**
-	 * Se encarga de duplicar el tamaño de dispersion del bucket
-	 * @return bool retorna true si se pudo realizar, false en caso contrario
+	 * Se encarga de duplicar el tamaño de dispersion del bucket.
+	 * @return bool retorna true si se pudo realizar, false en caso contrario.
 	 */
 	bool duplicateDepth();
 
 	/**
-	 * Se encarga de dividir en 2 el tamaño de dispersion del bucket
-	 * @return bool retorna true si se pudo realizar, false en caso contrario
+	 * Se encarga de dividir en 2 el tamaño de dispersion del bucket.
+	 * @return bool retorna true si se pudo realizar, false en caso contrario.
 	 */
 	bool divideDepth();
 
 	/**
-	 * Para posicionarse al final del bucket
+	 * Sirve para posicionarse al final del bucket.
 	 */
 	void positionateAtEnd();
 
 	/**
-	 * Para posicionarse en una posicion
-	 * @param position es la posicion en la cual me quiero parar
+	 * Se encarga de posicionarse en un lugar dado.
+	 * @param position Es la posicion en la cual me quiero parar.
 	 */
 	void positionateAt(int position);
 
 	/**
-	 * lee el primer registro del bucket, el cual tiene la informacion del td de si mismo
+	 * Lee el primer registro del bucket, y devuelve su tamaño de dispersión.
+	 * @return Devuelve un entero positivo, que representa la dispersión del cubo.
 	 */
 	unsigned int getDepthFromHashFile();
 
