@@ -13,7 +13,6 @@
 #include "Node.h"
 #include "LeafNode.h"
 
-//#include "../logic/tree/dataNode/INodeData.h"
 #include "../../physical/utils/ByteConverter.h"
 
 #include "BPlusTree.h"
@@ -96,7 +95,7 @@ private:
 	 * @param keyToModify es la clave que se debe promover luego de la redistribucion.
 	 * @return bool TRUE si pudo efectuar la operacion. FALSE de lo contrario.
 	 */
-	bool redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify);
+	bool redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify,sideEnum side=RIGHT_SIDE);
 
 	/**
 	 * Fusiona el nodo con su hermano.
