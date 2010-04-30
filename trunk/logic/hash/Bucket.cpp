@@ -7,11 +7,6 @@
 
 #include "Bucket.h"
 
-//Bucket::Bucket(unsigned int number, unsigned int depth) {
-//	this->number = number;
-//	this->depth = depth;
-//}
-
 unsigned int Bucket::getDepthFromHashFile(){
 	this->block->restartCounter();
 
@@ -91,32 +86,6 @@ int Bucket::insertRegister(StringInputData* sid) {
 	return result;
 }
 
-/*bool Bucket::insertRegister(int key,char* newValue){
-stringstream ss (stringstream::in | stringstream::out);
-		ss.str(newValue);
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
-	sid->setValue(ss.str());
-
-	unsigned int dataSize = sid->size();
-	cout <<sid->getKey()<<"--"<< sid->getValue()<<"----"<<dataSize<<"------------------------------------------";
-	char* valueReg = new char[dataSize];
-	//varReg.setValue(sid->toStream(valueReg),dataSize);
-	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
-	delete sid;
-	loadResultEnum loadResult;
-	bool inserted = this->block->addRegister(*varRegister, loadResult);
-
-	if (loadResult == OVERFLOW_LOAD) {
-		//result = 1;
-		return false;
-	} else if (inserted == false) {
-		//result = 2;
-		return false;
-	}
-}
-*/
-
 bool Bucket::existsRegister(int key) {
 	int aux = -1;
 	return this->existsRegister(key,aux);
@@ -170,9 +139,6 @@ bool Bucket::deleteRegister(int key) {
 	this->getBlock()->restartCounter();
 	VarRegister varRegister = this->getBlock()->getNextRegister(true); // Salteo el primer registro que es de control.
 	bool result = false;
-
-	//positionateAt(1); //salteo el primer reg de td
-	//VarRegister varRegister ;
 
 	while (this->getBlock()->hasNextRegister()) {
 		varRegister = this->getBlock()->getNextRegister(false);
