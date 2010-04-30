@@ -65,9 +65,10 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	list<StringInputData> listaDatos;
 	bool deleteResult = true;
 	StringInputData* sid;
+	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
 
 	while (block->hasNextRegister()) {
-		VarRegister varRegister = block->getNextRegister(false);
+		varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
 		listaDatos.push_back(*sid);
