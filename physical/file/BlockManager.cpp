@@ -176,6 +176,8 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 		blank->getRegisterN(lastReg+pos-i);
 		blank->addRegister(regIns);
 	}
+	orig->restartCounter();
+	blank->restartCounter();
 
 	return retVal;
 }

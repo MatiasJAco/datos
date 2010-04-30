@@ -22,9 +22,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 	m_usedBytes=m_FirstRegisterOffset;
 	m_registerCount=0;
 	m_LoadFactor=loadFactor;
-	m_posActual=0;
-
-
+	m_posActual=-1;
 }
 
 Block::~Block()
@@ -364,7 +362,7 @@ float Block::calculateFraction(unsigned int value)
 	return retVar;
 }
 
-unsigned int Block::getPosActual()
+int Block::getPosActual()
 {
 	return m_posActual;
 }
