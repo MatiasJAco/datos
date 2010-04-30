@@ -166,6 +166,7 @@ int Hash::add(StringInputData* sid) {
 		} else {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
+			this->hashFile->saveBlock(bucket->getBlock());
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 			this->hashTable->jumpAndReplace(this->getNumberOfBucket(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
