@@ -47,14 +47,14 @@ int Hash::getNumberOfBucket(int key) {
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
-bool Hash::existsElement(StringInputData* sid) {
+bool Hash::existsElement(int key) {
 	int aux = -1;
-	return (this->existsElement(sid,aux));
+	return (this->existsElement(key,aux));
 }
-bool Hash::existsElement(StringInputData* sid, int & position) {
-	unsigned int bucketNumber = this->getNumberOfBucket(sid->getKey());
+bool Hash::existsElement(int key, int & position) {
+	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
-	bool result = bucket->existsRegister(sid->getKey(),position);
+	bool result = bucket->existsRegister(key,position);
 	delete bucket;
 	return result;
 }
@@ -135,7 +135,7 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
-	if (existsElement(sid)){
+	if (existsElement(sid->getKey())){
 		return 1;
 	}
 
@@ -184,17 +184,17 @@ int Hash::add(StringInputData* sid) {
 }
 
 int Hash::modify(int key, char* newValue) {
-	StringInputData* sid1 = new StringInputData();
-	sid1->setKey(key);
-	sid1->setValue(newValue); // no importa el valor que le paso porque busca por key
+	StringInputData* sid = new StringInputData();
+	sid->setKey(key);
+	//sid->setValue(newValue); // no importa el valor que le paso porque busca por key
 
 	int position;
 	//TODO esto del existElement se puede mejorar, y en vez de pasar el sid pasarle la key sola
 	// Verifico unicidad
-	if (!existsElement(sid1,position)){
+	if (!existsElement(key,position)){
 		return 1;
 	}
-	delete sid1;
+//	delete sid;
 	if (position==-1)
 		return -1;  //esto no podria pasar, porque si se encontro el elemento, tiene que pasar una posicion
 
@@ -202,27 +202,28 @@ int Hash::modify(int key, char* newValue) {
 	Block* block = this->hashFile->getBlock(bucketNumber);
 
 	Bucket * bucket = new Bucket(block);
-
-	if (!bucket->deleteRegister(position))
+	this->print();
+	if (!bucket->deleteRegister(key))
 		return -1;
 
 	if (!this->hashFile->saveBlock(bucket->getBlock()))
 		return -1;
 
-	delete bucket;
+	//delete bucket;
 
-//	this->print();
+	this->print();
 //
 	stringstream ss (stringstream::in | stringstream::out);
 		ss.str(newValue);
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
+	//StringInputData* sid = new StringInputData();
+	//sid->setKey(key);
 	sid->setValue(ss.str());
 
 //	if (!bucket->insertRegister(sid))
 //		return -1;
 
 	int insertResult;
+	delete bucket;
 	Bucket * bucketA = tryToInsertNewSid(sid,insertResult);
 	if (insertResult != 0) //si no se pudo agregar en el bucket lo guardo
 		return -1;
@@ -231,6 +232,9 @@ int Hash::modify(int key, char* newValue) {
 
 	if (!this->hashFile->saveBlock(bucketA->getBlock()))
 		return -1;
+	delete bucketA;
+	//delete bucket;
+	this->print();
 
 	return 0;
 }
@@ -238,7 +242,7 @@ int Hash::modify(int key, char* newValue) {
 int Hash::erase(int key) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
-	bool exists = this->existsElement(sid);
+	bool exists = this->existsElement(key);
 	bool result = false;
 
 	if (exists) {

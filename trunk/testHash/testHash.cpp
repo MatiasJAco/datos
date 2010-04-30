@@ -111,9 +111,16 @@ void tests() {
 	}
 //	hash->print();
 
-//	if (hash->modify(12,"12345678")==-1)
-//		cout<<endl<<"NOOOOOOOOOOOOOO!!!!!!!!!!!"<<endl;
-//	hash->print();
+	//@return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
+	bool result = hash->modify(12,"_________________");
+	if (result==1)
+		cout<<endl<<"NO existe el sid"<<endl;
+	else if (result==-1)
+		cout<<endl<<"Hubo algun prob"<<endl;
+	else
+			cout<<endl<<"lo cambio!"<<endl;
+
+	hash->print();
 
 }
 
