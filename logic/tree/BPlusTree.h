@@ -44,7 +44,7 @@ private:
 	BlockFile file;
 
 	unsigned int m_sizeNodes;
-	double m_branchFactor;
+	float m_branchFactor;
 
 private:
 	/// Guardo una referencia a la raiz.
@@ -57,7 +57,7 @@ public:
 	BPlusTree();
 
 	/// Constructor que recibe el tamaño y factor de carga de los nodos.
-	BPlusTree(unsigned int sizeNodes,double branchFactor);
+	BPlusTree(unsigned int sizeNodes,float branchFactor);
 
 	/** Constructor que recibe el tamaño y factor de carga de los nodos, y el nombre
 	 * del archivo donde se almacena el arbol.
@@ -65,7 +65,7 @@ public:
 	 * @param sizeNodes tamaño de los nodos.
 	 * @param branchFactor factor de carga de los nodos.
 	 */
-	BPlusTree(std::string nameFile,unsigned int sizeNodes,double branchFactor);
+	BPlusTree(std::string nameFile,unsigned int sizeNodes,float branchFactor);
 
 
 	bool insert(const InputData& data);

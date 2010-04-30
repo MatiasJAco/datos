@@ -19,11 +19,11 @@ BPlusTree::BPlusTree()
 	m_currentNode = NULL;
 }
 
-BPlusTree::BPlusTree(unsigned int sizeNodes,double branchFactor)
+BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor)
 {
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
-	file.open(FILENAME_DEFAULT,sizeNodes);
+	file.open(FILENAME_DEFAULT,sizeNodes,branchFactor);
 
 	/// Creo la raiz y la guardo, o la leo de disco.
 	/// Obtengo el block 0 que es la raiz
@@ -47,11 +47,11 @@ BPlusTree::~BPlusTree()
 }
 
 
-BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,double branchFactor)
+BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor)
 {
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
-	file.open(nameFile,sizeNodes);
+	file.open(nameFile,sizeNodes, branchFactor);
 
 	m_root = getNode(ROOT_NODENUMBER);
 
