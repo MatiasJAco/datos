@@ -76,7 +76,8 @@ int Bucket::insertRegister(StringInputData* sid) {
 	char* valueReg = new char[dataSize];
 	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
 	//me paro al final del bloque.
-	positionateAtEnd();
+	//TODO es necesario pararse al final? para mi no ,soy pablo
+	//positionateAtEnd();
 
 	/* Intenta insertar el registro en el bloque. */
 	bool inserted = this->block->addRegister(*varRegister, loadResult);
@@ -121,14 +122,16 @@ bool Bucket::existsRegister(int key) {
 	return this->existsRegister(key,aux);
 }
 bool Bucket::existsRegister(int key,int & position) {
-	position = -1;
-	this->getBlock()->restartCounter();
+	//position = -1;
+	position = 0;
+	//this->getBlock()->restartCounter();
 
 	//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
-	if (this->block->hasNextRegister()) {
-			this->getBlock()->getNextRegister(true);
-			position++; //queda en cero
-	}
+//	if (this->block->hasNextRegister()) {
+//			this->getBlock()->getNextRegister(true);
+//			position++; //queda en cero
+//	}
+	positionateAt(1);
 	while (this->block->hasNextRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
@@ -136,11 +139,14 @@ bool Bucket::existsRegister(int key,int & position) {
 		sid->toData(registerValue);
 		position++;
 		if (sid->getKey() == key) {
+			delete sid;
 			return true;
 		}
+		delete sid;
 	}
 	return false;
 }
+
 
 VarRegister Bucket::getRegister(int key) {
 	VarRegister varRegister;
@@ -153,7 +159,9 @@ VarRegister Bucket::getRegister(int key) {
 		sid->toData(registerValue);
 		if (sid->getKey() == key) {
 			found = true;
+			delete sid;
 		}
+		delete sid;
 	}
 	return varRegister;
 }
@@ -163,6 +171,9 @@ bool Bucket::deleteRegister(int key) {
 	VarRegister varRegister = this->getBlock()->getNextRegister(true); // Salteo el primer registro que es de control.
 	bool result = false;
 
+	//positionateAt(1); //salteo el primer reg de td
+	//VarRegister varRegister ;
+
 	while (this->getBlock()->hasNextRegister()) {
 		varRegister = this->getBlock()->getNextRegister(false);
 		char* registerValue = varRegister.getValue();
@@ -170,9 +181,11 @@ bool Bucket::deleteRegister(int key) {
 		sid->toData(registerValue);
 		if (sid->getKey() == key) {
 			result = this->getBlock()->deleteRegister();
+			delete sid;
 			return result;
 		}
 		varRegister = this->getBlock()->getNextRegister(true);
+		delete sid;
 	}
 	return result;
 }
