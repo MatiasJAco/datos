@@ -60,6 +60,9 @@ bool Hash::existsElement(int key, int & position) {
 }
 
 int Hash::reHash(Bucket* bucketDesbordado) {
+	//TODO hacer funcion hash->saveBuquet(buquet); que adentro de ella este el saveBlock(blocK)
+	//porque hash se tiene que "desentender" de bloque
+
 	Block* block = bucketDesbordado->getBlock();
 	block->restartCounter();
 	list<StringInputData> listaDatos;
