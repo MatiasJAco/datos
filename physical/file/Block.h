@@ -159,6 +159,11 @@ public:
 	void jumpEndCounter();
 
 	/**
+	 * Devuelve el contador al final del bloque
+	 */
+	void jumpLastRegister();
+
+	/**
 	 * Muestra por pantalla el contenido del bloque. Se usa para debug
 	 */
 	void printRegisters();

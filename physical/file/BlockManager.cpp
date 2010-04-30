@@ -32,7 +32,6 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 	unsigned int sizeA;
 	unsigned int sizeB;
 	unsigned int minSize;
-	bool breakLoop=false;
 	VarRegister varR;
 
 	sizeA=blockA->getUsedSpace();
@@ -43,58 +42,80 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 
 	if(side ==LEFT_SIDE)
 	{
-		blockA->jumpEndCounter();
 
-		if(!simulate)
-			blockB->restartCounter();
-
-		while(relocateSize<missing)
+		if(minSize > sizeB)
 		{
-			varR = blockA->getPreviousRegister(true);
-			relocateSize+= varR.getDiskSize();
 
-			if(blockA->isFirstRegister())
-				breakLoop = true;
+			missing = minSize -sizeB;
 
-			if(!simulate)
-			{
-				blockB->addRegister(varR);
-				blockA->deleteRegister();
-			}
-			if(breakLoop)
-				break;
-		}
+			blockA->jumpLastRegister();
 
-		if((sizeB-relocateSize) >=minSize)
-			retVal =true;
-	}
-	else
-	{
-		blockA->jumpEndCounter();
-
+			//Si no estoy simulando procedo tambien sobre el bloque B
 			if(!simulate)
 				blockB->restartCounter();
 
 			while(relocateSize<missing)
 			{
-				varR = blockB->getNextRegister(true);
+				varR = blockA->getPreviousRegister(true);
+
+				//Ponemos como caso base que llegue al primer registro
+				//No se pueden sacar todos los registros a un bloque
+				if(blockA->isFirstRegister())
+					break;
+
 				relocateSize+= varR.getDiskSize();
 
+			}
+			if(!simulate)
+			{
+				while(!blockA->isLastRegister())
+				{
+					varR =blockA->peekRegister();
+					blockB->addRegister(varR);
+					blockA->deleteRegister();
+				}
+			}
+
+			if((sizeA-relocateSize) >=minSize)
+				retVal =true;
+		}
+	}
+	else
+	{
+		if(minSize > sizeA)
+		{
+			missing = minSize -sizeA;
+			blockB->restartCounter();
+
+			if(!simulate)
+				blockA->jumpEndCounter();
+
+			while(relocateSize<missing)
+			{
+				varR = blockB->peekRegister();
+
+				//Ponemos como caso base que llegue al primer registro
+				//No se pueden sacar todos los registros a un bloque
 				if(blockB->isLastRegister())
-					breakLoop = true;
+					break;
+
+				relocateSize+= varR.getDiskSize();
 
 				if(!simulate)
 				{
 					blockA->addRegister(varR);
 					blockB->deleteRegister();
 				}
-				if(breakLoop)
-					break;
+
 			}
 
-			if((sizeA-relocateSize) >=minSize)
+			if((sizeB-relocateSize) >=minSize)
 				retVal =true;
+		}
 	}
+
+	blockA->restartCounter();
+	blockB->restartCounter();
 
 	return retVal;
 }
