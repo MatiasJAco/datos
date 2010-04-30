@@ -66,42 +66,29 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	bool deleteResult = true;
 	StringInputData* sid;
 	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
-//this->print();
 	while (!block->isLastRegister()) {
 		varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
 		listaDatos.push_back(*sid);
-		//cout << "Clave: " << sid->getKey() << " Valor: " << sid->getValue() <<endl;
 		delete sid;
 		loadResultEnum load = NORMAL_LOAD;
 		deleteResult = block->deleteRegister(load);
-//		this->print();
+
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
 		}
 		this->hashFile->saveBlock(block);
 	}
 
-	//block->clear();
 	this->hashFile->saveBlock(block);
-//	this->print();
 
-	//almaceno el td del bloque //creo que no hace falta esto
-//	VarRegister* varReg = new VarRegister();
-//	varReg->setValue(bucketDesbordado->getDepth());
-//	block->addRegister(*varReg);
-//	this->hashFile->saveBlock(block);
-//	delete varReg;
-//	bucketDesbordado->modifyDepth(bucketDesbordado->getDepth());
-//	this->hashFile->saveBlock(block);
-//	this->print();
+	//no hace falta volver a guardar el td porque ya quedo guardado
 
 	//recorro toda la lista de sids y redisperso el bloque
 	while (!listaDatos.empty()) {
 		StringInputData sid = listaDatos.front();
 		this->add(&sid);
-//		this->print();
 		listaDatos.pop_front(); // Borro el primer sid de la lista.
 	}
 
@@ -184,17 +171,11 @@ int Hash::add(StringInputData* sid) {
 }
 
 /*int Hash::modify(int key, char* newValue) {
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
-	//sid->setValue(newValue); // no importa el valor que le paso porque busca por key
-
 	int position;
-	//TODO esto del existElement se puede mejorar, y en vez de pasar el sid pasarle la key sola
 	// Verifico unicidad
 	if (!existsElement(key,position)){
 		return 1;
 	}
-//	delete sid;
 	if (position==-1)
 		return -1;  //esto no podria pasar, porque si se encontro el elemento, tiene que pasar una posicion
 
@@ -202,39 +183,29 @@ int Hash::add(StringInputData* sid) {
 	Block* block = this->hashFile->getBlock(bucketNumber);
 
 	Bucket * bucket = new Bucket(block);
-	//this->print();
+
 	if (!bucket->deleteRegister(key))
 		return -1;
 
 	if (!this->hashFile->saveBlock(bucket->getBlock()))
 		return -1;
+	delete bucket;
 
-	//delete bucket;
-
-	//this->print();
-//
 	stringstream ss (stringstream::in | stringstream::out);
 		ss.str(newValue);
-	//StringInputData* sid = new StringInputData();
-	//sid->setKey(key);
+	StringInputData* sid = new StringInputData();
+	sid->setKey(key);
 	sid->setValue(ss.str());
-
-//	if (!bucket->insertRegister(sid))
-//		return -1;
-
 	int insertResult;
-	delete bucket;
+
 	Bucket * bucketA = tryToInsertNewSid(sid,insertResult);
 	if (insertResult != 0) //si no se pudo agregar en el bucket lo guardo
 		return -1;
 	delete sid;
 
-
 	if (!this->hashFile->saveBlock(bucketA->getBlock()))
 		return -1;
 	delete bucketA;
-	//delete bucket;
-	//this->print();
 
 	return 0;
 }*/
