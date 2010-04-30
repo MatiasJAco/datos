@@ -177,7 +177,7 @@ public:
 	 */
 	void setLoadFactor(float factor);
 
-	unsigned int getPosActual();
+	int getPosActual();
 
 	/**
 	 * Obtiene la cantidad de registros.
@@ -281,7 +281,7 @@ private:
 	 */
 	RegisterList m_registers;
 
-	unsigned int m_posActual;
+	int m_posActual;
 
 };
 
