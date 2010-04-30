@@ -374,6 +374,10 @@ void testBlock()
 	if(block2==NULL)
 		cout << "Error al pedir bloque nuevo"<<endl;
 
+	if(block2->getPosActual()!= -1)
+		cout << "Error en pos actual1 "<<endl;
+
+
 	block2->restartCounter();
 	for(int i=0; i < 31; i++)
 	{
@@ -384,6 +388,10 @@ void testBlock()
 		if(loadResult ==OVERFLOW_LOAD)
 			cout << "Falso Overflow"<<endl;
 	}
+
+	if(block2->getPosActual()!= 30)
+		cout << "Error en pos actual2 "<< block2->getPosActual()<< endl;
+
 
 	string stringLargo = "esto la rompe seguro";
 	varR->setValue(stringLargo);
@@ -400,6 +408,10 @@ void testBlock()
 		if(loadResult ==OVERFLOW_LOAD)
 			cout << "Falso Overflow"<<endl;
 	}
+	//block2->printRegisters();
+
+	if(block2->getPosActual()!= 0x3b)
+		cout << "Error en pos actual3 "<< block2->getPosActual()<< endl;
 
 	if(block2->addRegister(*varR, loadResult))
 		cout << "error de addRegister"<<endl;
@@ -409,13 +421,21 @@ void testBlock()
 
 
 	cout << "-----------SPLIT------------------"<<endl;
+	block2->getRegisterN(block2->getRegisterAmount()-1);
+
+	var2=block2->getNextRegister(false);
+
+	cout << "actual"<< ByteConverter::bytesToInt(var2.getValue())<<endl;
+
+	block2->deleteRegister();
+
+	var2=block2->getNextRegister(false);
+
+	cout << "actual"<< ByteConverter::bytesToInt(var2.getValue())<<endl;
 
 	var2 = block2->getRegisterN(31);
 	if(ByteConverter::bytesToString(var2.getValue())!= stringLargo)
 		cout << "Error en el getRegisterN()"<<endl;
-
-
-
 
 
 	block->clear();
@@ -425,8 +445,8 @@ void testBlock()
 	var2.setValue(23132123);
 	BlockManager::redistributeOverflow(block2, block, var2, 1);
 
-/*	block2->printRegisters();
-	block->printRegisters();*/
+	block2->printRegisters();
+	block->printRegisters();
 
 
 	cout << "-----------fin SPLIT------------------"<<endl;
@@ -564,8 +584,177 @@ void testBlock()
 
 	BlockManager::merge(block, block2);
 
+	//block2->printRegisters();
+	block->printRegisters();
+
+
+
+	block->restartCounter();
+
+	var2 = block->peekRegister();
+	cout << "PEEK"<< ByteConverter::bytesToUInt(var2.getValue())<<endl;
+
+	block->deleteRegister();
+
+	//block->deleteRegister();
+
+	if(block->getPosActual()!= 0)
+		cout << "Error en pos actual2 "<< block->getPosActual()<< endl;
+
+/*	block->jumpEndCounter();
+	block->deleteRegister();*/
+
+	int pos = block->getPosActual();
+	int regAmount = block->getRegisterAmount();
+
+	if(pos!= regAmount-1)
+		cout << "Error en pos actual2 "<< pos<< endl;
+	//block->printRegisters();
+
+
+	cout << "-----------Redistribute----------------------"<<endl;
+
+
+	block->clear();
+	block2->clear();
+
+	for(int i=0; i < 31; i++)
+	{
+		varR->setValue(i);
+
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+
+	for(int i=0; i < 16; i++)
+	{
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	if(BlockManager::balanceLoad(block, block2,LEFT_SIDE))
+		cout << "Error en balance lft 1"<<endl;
+
+/*	block2->printRegisters();
+	block->printRegisters();*/
+
+	block->clear();
+	block2->clear();
+
+	for(int i=0; i < 63; i++)
+	{
+		varR->setValue(i);
+
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+
+	for(int i=63; i < 79; i++)
+	{
+		varR->setValue(i);
+
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
 	block2->printRegisters();
 	block->printRegisters();
+	cout << "-------------redistribute left----------"<<endl;
+
+	if(!BlockManager::balanceLoad(block, block2,LEFT_SIDE))
+		cout << "Error en balance lft 2"<<endl;
+
+	block2->printRegisters();
+	block->printRegisters();
+
+
+	cout << "-----------Redistribute-Right---------------------"<<endl;
+
+
+	block->clear();
+	block2->clear();
+
+	for(int i=0; i < 16; i++)
+	{
+		varR->setValue(i);
+
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+
+	for(int i=0; i < 32; i++)
+	{
+		varR->setValue(i);
+
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	if(BlockManager::balanceLoad(block, block2,RIGHT_SIDE))
+		cout << "Error en balance RGT 1"<<endl;
+
+	block2->printRegisters();
+	block->printRegisters();
+
+
+	block->clear();
+	block2->clear();
+
+	for(int i=0; i < 16; i++)
+	{
+		varR->setValue(i);
+
+		if(!block->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+
+	for(int i=16; i < 79; i++)
+	{
+		varR->setValue(i);
+
+		if(!block2->addRegister(*varR, loadResult))
+			cout << "Se acabo el espacio"<<endl;
+
+		if(loadResult ==OVERFLOW_LOAD)
+			cout << "Falso Overflow"<<endl;
+	}
+
+	block2->printRegisters();
+	block->printRegisters();
+	cout << "-------------redistribute left----------"<<endl;
+
+	if(!BlockManager::balanceLoad(block, block2,RIGHT_SIDE))
+		cout << "Error en balance lft 2"<<endl;
+
+	block2->printRegisters();
+	block->printRegisters();
+
+
 
 
 
