@@ -99,26 +99,31 @@ void tests() {
 	for (int i = 1; i<=61;i++){
 		StringInputData* sid = createSid(i,value);
 		hash->add(sid);
-		hash->print();
-		delete sid;
-	}
-	hash->print();
-	for (int i = 62; i<=70;i++){
-		StringInputData* sid = createSid(i,value);
-		hash->add(sid);
-		hash->print();
 		delete sid;
 	}
 //	hash->print();
+	for (int i = 62; i<=70;i++){
+		StringInputData* sid = createSid(i,value);
+		hash->add(sid);
+		delete sid;
+	}
+
+
+
+	hash->print();
+
+
 
 	//@return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
-	bool result = hash->modify(12,"_________________");
+	char newValue[15]= "______________";
+	bool result = hash->modify(12,newValue);
 	if (result==1)
 		cout<<endl<<"NO existe el sid"<<endl;
 	else if (result==-1)
 		cout<<endl<<"Hubo algun prob"<<endl;
 	else
 			cout<<endl<<"lo cambio!"<<endl;
+
 
 	hash->print();
 

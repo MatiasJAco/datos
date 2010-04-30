@@ -202,7 +202,7 @@ int Hash::modify(int key, char* newValue) {
 	Block* block = this->hashFile->getBlock(bucketNumber);
 
 	Bucket * bucket = new Bucket(block);
-	this->print();
+	//this->print();
 	if (!bucket->deleteRegister(key))
 		return -1;
 
@@ -211,7 +211,7 @@ int Hash::modify(int key, char* newValue) {
 
 	//delete bucket;
 
-	this->print();
+	//this->print();
 //
 	stringstream ss (stringstream::in | stringstream::out);
 		ss.str(newValue);
@@ -234,7 +234,7 @@ int Hash::modify(int key, char* newValue) {
 		return -1;
 	delete bucketA;
 	//delete bucket;
-	this->print();
+	//this->print();
 
 	return 0;
 }
