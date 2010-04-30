@@ -124,7 +124,7 @@ int Table::getNumberOfBucketInHash(int NumOfRegToPointInTable){
 	return resultado;
 }
 
-void Table::modifyRegister(int numReg,int newValue){
+void Table::modifyRegister(int numReg,unsigned int newValue){
 	int numeroRenglon = numReg+1;
 	int tam_tabla_a_borrar = getSize();
 	if ((numReg<tam_tabla_a_borrar)&&(numReg>=0)){
@@ -257,7 +257,7 @@ int Table::verifyAndDivide(){
 	return 0;
 }
 
-int Table::getFirstTimeInTable(int value){
+int Table::getFirstTimeInTable(unsigned int value){
 	int sizeOfTable = this->getSize();
 	int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
@@ -269,11 +269,12 @@ int Table::getFirstTimeInTable(int value){
 			result++;
 		else
 			continuar=false;
+		i++;
 	}
 	return result;
 }
 
-bool Table::changeFirstTimeInTable(int value, int newValue){
+bool Table::changeFirstTimeInTable(unsigned int value, unsigned int newValue){
 	int position = getFirstTimeInTable(value);
 	this->modifyRegister(position,newValue);
 	return true;
