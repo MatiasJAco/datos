@@ -158,3 +158,16 @@ Node* BPlusTree::newLeafNode()
 
 	return node;
 }
+
+void BPlusTree::deleteNode(Node* node)
+{
+	if (node == NULL)
+		throw "Se intento eliminar un nodo nulo";
+
+	unsigned int nodeNumber = node->getNodeNumber();
+
+	file.deleteBlock(nodeNumber);
+
+	delete node;
+
+}

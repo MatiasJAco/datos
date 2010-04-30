@@ -106,6 +106,12 @@ public:
 	 */
 	Node* newLeafNode();
 
+	/**
+	 * Elimina un nodo del arbol. Permite que este disponible para usarlo.
+	 * @param node. Nodo a eliminar.
+	 */
+	void deleteNode(Node* node);
+
 };
 
 
