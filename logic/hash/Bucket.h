@@ -25,6 +25,19 @@ private:
 	unsigned int depth; // Dispersion del cubo.
 	Block* block;
 
+	/**
+	 * Se encarga de modificar el tamaño de dispersion del bucket al pasado por parametro.
+	 * @param depth es el nuevo valor del tamaño de dispersion.
+	 * @return bool retorna true si se pudo realizar, false en caso contrario.
+	 */
+	bool modifyDepth(int depth);
+
+	/**
+	 * Se encarga de posicionarse en un lugar dado.
+	 * @param position Es la posicion en la cual me quiero parar.
+	 */
+	void positionateAt(int position);
+
 public:
 	Bucket(Block* block);
 	virtual ~Bucket();
@@ -72,12 +85,12 @@ public:
 	 */
 	bool deleteRegister(int key);
 
-	/**
-	 * Este metodo borra el registro del bloque apuntado por la posicion pasada por parametro
-	 * @param position Es la posicion del registro que se desea eliminar.
-	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
-	 */
-	bool deleteRegisterAtPosition(int position);
+//	/**
+//	 * Este metodo borra el registro del bloque apuntado por la posicion pasada por parametro
+//	 * @param position Es la posicion del registro que se desea eliminar.
+//	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
+//	 */
+//	bool deleteRegisterAtPosition(int position);
 
 //	/**
 //	 * Este metodo modifica el registro del bloque que contiene el bucket, dada su clave y su posicion.
@@ -94,13 +107,6 @@ public:
 	void print();
 
 	/**
-	 * Se encarga de modificar el tamaño de dispersion del bucket al pasado por parametro.
-	 * @param depth es el nuevo valor del tamaño de dispersion.
-	 * @return bool retorna true si se pudo realizar, false en caso contrario.
-	 */
-	bool modifyDepth(int depth);
-
-	/**
 	 * Se encarga de duplicar el tamaño de dispersion del bucket.
 	 * @return bool retorna true si se pudo realizar, false en caso contrario.
 	 */
@@ -112,16 +118,10 @@ public:
 	 */
 	bool divideDepth();
 
-	/**
-	 * Sirve para posicionarse al final del bucket.
-	 */
-	void positionateAtEnd();
-
-	/**
-	 * Se encarga de posicionarse en un lugar dado.
-	 * @param position Es la posicion en la cual me quiero parar.
-	 */
-	void positionateAt(int position);
+//	/**
+//	 * Sirve para posicionarse al final del bucket.
+//	 */
+//	void positionateAtEnd();
 
 	/**
 	 * Lee el primer registro del bucket, y devuelve su tamaño de dispersión.
