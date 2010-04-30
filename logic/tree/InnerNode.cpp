@@ -56,6 +56,27 @@ void InnerNode::getInPosition(INodeData * contenido, unsigned int position)
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
 {
+
+	loadResultEnum result = NORMAL_LOAD;
+
+	// Elemento de nodo interno con referencia a la clave a insertar.
+	INodeData nodePointerKey(Node::UNDEFINED_NODE_NUMBER,dato.getKey());
+
+	// Busco el elemento de nodo interno que contiene la referencia a la clave de dato.
+	if (!findINodeData(nodePointerKey))
+		throw "Error: llego clave a una referencia invalida";
+
+	// Se lo pide al arbol
+	Node* sucesor = this->m_tree->getNode(nodePointerKey.getLeftPointer());
+	result=sucesor->modify(dato,dato2);
+	if (result==OVERFLOW_LOAD){
+		//TODO implementar este caso
+	}else{
+		if(result==UNDERFLOW_LOAD){
+			//TODO implementar este caso
+		};
+	};
+
 	return NORMAL_LOAD;
 }
 
@@ -305,7 +326,7 @@ loadResultEnum InnerNode::remove(const InputData& data)
 		INodeData bigBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
 		findINodeData(bigBrother,false);
 		//Verifico que tenga hermano derecho.
-		if(this->m_block->isLastRegister()){
+		if(!this->m_block->hasNextRegister()){
 			hasRightBrother=false;
 		}
 
@@ -349,10 +370,10 @@ loadResultEnum InnerNode::remove(const InputData& data)
 		{
 			INodeData fusionatedNode;
 			if(leftJoin){
-				merge(sucesor,leftSibling,data,fusionatedNode);
+				merge(sucesor,leftSibling,data,fusionatedNode,LEFT_SIDE);
 				result = removeINodeData(joinBrother);
 			}else{
-				merge(sucesor,rightSibling,data,fusionatedNode);
+				merge(sucesor,rightSibling,data,fusionatedNode,RIGHT_SIDE);
 				result = removeINodeData(joinBrother);
 				//Recupero clave del que borro y se a paso al que queda.
 				joinBrother.setLeftPointer(thiskey.getLeftPointer());
@@ -679,7 +700,7 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 }
 
 
-bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode)
+bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode,sideEnum side)
 {
 	bool retVal = false;
 	InputData* currentData = data.newInstance();
@@ -687,7 +708,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 	Block* blockNode = node->getBlock();
 	Block* blockSibling = siblingNode->getBlock();
 
-	BlockManager::merge(blockNode,blockSibling);
+	BlockManager::merge(blockNode,blockSibling,side);
 
 	// paso el dato de control
 	blockNode->getNextRegister();
