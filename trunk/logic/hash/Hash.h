@@ -98,14 +98,14 @@ public:
 	 * Cambia el valor de un key pasado por parámetro.
 	 * @param key Es el key al cual se le cambiará el valor.
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
-	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado; -1 si hubo algun problema.
+	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado, o -1 si hubo algun problema.
 	 */
 	int modify(int key, char* newValue);
 
 	/**
 	 * Elimina el dato, cuya clave es la pasada por parametro.
 	 * @param key Es la clave del dato que se desea borrar.
-	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar el dato.
+	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar el dato, o -1 si hubo algun problema.
 	 */
 	int erase(int key);
 

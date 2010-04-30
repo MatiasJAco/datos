@@ -189,6 +189,8 @@ void Table::print(){
 	}
 	if (sizeOfTable == 0)
 		printf("Sin elementos ..");
+
+	printf("\n");
 }
 
 void Table::duplicate(){
