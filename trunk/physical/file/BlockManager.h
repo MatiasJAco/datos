@@ -14,6 +14,7 @@
 typedef enum {LEFT_SIDE, RIGHT_SIDE} sideEnum;
 /**
  * Clase encargada de hacer las operacione de redistribucion en los nodos
+ * Su funcion es abstraer a la logica de temas del tamaño propio de los registros.
  */
 class BlockManager
 {
@@ -31,10 +32,16 @@ public:
 	static bool merge(Block *block1, Block *block2, sideEnum side=RIGHT_SIDE);
 
 	/**
-	 * Se encarga de balancear la carga de 2 bloques
-	 * @param block1
-	 * @param block2
-	 * @return bool true en caso de OK false en caso contrario
+	 * Se encarga de balancear la carga de 2 bloques, hacia izquierda o derecha
+	 * dependiendo del parametro side. Mantiene el orden de los elementos
+	 * Para esto se debe pasar en el bloque1 los elementos menores, en el 2 los siguientes, y la direccion
+	 * del balanceo
+	 * @param block1 primer bloque (elementos menores)
+	 * @param block2 segundo bloque (elementos mayores)
+	 * @param side direccion en la cual se realiza el balanceo
+	 * @return bool true en caso de OK false en caso de no tener espacio en el bloque donante
+	 * para realizar la operacion
+	 * @throw exception en caso de pasarle puntero a NULL
 	 */
 
 	static bool balanceLoad(Block *block1, Block *block2, sideEnum side=RIGHT_SIDE);
@@ -73,6 +80,9 @@ public:
 	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
 
 private:
+	/**
+	 * Para uso interno, no llamar desde afuera
+	 */
 	static bool innerRedistribute(Block *blockA, Block *blockB, sideEnum side, bool simulate);
 
 };

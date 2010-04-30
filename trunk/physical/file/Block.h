@@ -21,8 +21,6 @@ typedef enum {UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD} loadResultEnum;
  */
 class Block {
 
-	friend class BlockManager;
-
 public:
 	//------------------------TYPEDEFS----------------------------------//
 	/**
@@ -120,46 +118,51 @@ public:
 	VarRegister getPreviousRegister(bool foward=true);
 
 	/**
-	 *
+	 * Posiciona el iterador en la posicion n, y devuelve el registro
+	 * que se encuentra en esa posicion
+	 * @param number posicion a la que se salta
+	 * @return VarRegister el registro actual
 	 */
 	VarRegister getRegisterN(unsigned int number);
 
 	/**
-	 * Obtiene el proximo Register,  siendo este de longitud variable.
-	 * La informacion de la longitud del Register no es necesario pasarla,
-	 * ya que se encuentra persistida en disco.
+	 * Obtiene el VarRegister actual
 	 * @return VarRegister el registro
-	 *
 	 */
 	VarRegister peekRegister();
 
 	/**
 	 * Se fija si es el primer registro...
+	 * @return bool true si es el primero, false en caso contrario
 	 */
 	bool isFirstRegister();
 
 	/**
 	 * Se fija si se paso el ultimo registro
+	 * @return bool true  si nos pasamos del ultimo elemento, false en caso contrario
 	 */
 	bool isLastRegister();
 
 	/**
 	 * Indica si puede continuar iterando, dado que quedan registros en el bloque.
+	 * @return bool true si existe un registro proximo, false en caso contrario
 	 */
 	bool hasNextRegister();
 
 	/**
-	 * Devuelve el contador al principio del bloque
+	 * Posiciona el iterador al principio del bloque, y setea el count
+	 *  si no hay registros no hace nada
+	 *
 	 */
 	void restartCounter();
 
 	/**
-	 * Devuelve el contador al final del bloque
-	 */
+	 * Posiciona el iterador despues del ultimo elemento
+	*/
 	void jumpEndCounter();
 
 	/**
-	 * Devuelve el contador al final del bloque
+	 * Posiciona el iterador en el ultimo elemento
 	 */
 	void jumpLastRegister();
 
@@ -181,7 +184,11 @@ public:
 	void setLoadFactor(float factor);
 
 	/**
-	 *
+	 * Obtiene el contador de la pos actual
+	 * Si no esta sobre una posicion valida devuelve -1
+	 * Posiciones no validas: lista de reg vacios, o hecho un delete
+	 * del ultimo registro
+	 * @return int numero de reg actual -1 en caso de pos no valida
 	 */
 	int getPosActual();
 
@@ -259,13 +266,29 @@ private:
 
 private:
 
+	/**
+	 * Numero del bloque actual
+	 */
 	unsigned int m_blockNumber;
 
+	/**
+	 * Tamaño en bytes del bloque
+	 */
 	unsigned int m_blockSize;
 
+	/**
+	 * Offset en bytes del primer registro, depende de la
+	 * cantidad de informacion de control que se guarde
+	 */
 	unsigned int m_FirstRegisterOffset;
 
+	/**
+	 * Porcentaje minimo de carga del bloque para que este se
+	 * encuentre en underflow. Por default es -1 con lo cual
+	 * no se evalua underflow.
+	 */
 	float m_LoadFactor;
+
 	/**
 	 * Espacio usado por el bloque
 	 */
@@ -287,6 +310,10 @@ private:
 	 */
 	RegisterList m_registers;
 
+	/**
+	 * Posicion del iterador actual
+	 * Si no esta en ningun registro es -1
+	 */
 	int m_posActual;
 
 };
