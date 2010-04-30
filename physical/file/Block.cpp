@@ -22,6 +22,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 	m_usedBytes=m_FirstRegisterOffset;
 	m_registerCount=0;
 	m_LoadFactor=loadFactor;
+	m_posActual=0;
 
 
 }
@@ -32,6 +33,7 @@ Block::~Block()
 
 void Block::restartCounter()
 {
+	m_posActual=0;
 	if(m_registers.size()>0)
 		m_actualReg = m_registers.begin();
 	else
@@ -41,6 +43,7 @@ void Block::restartCounter()
 void Block::jumpEndCounter()
 {
 	m_actualReg = m_registers.end();
+	m_posActual = m_registers.size()-1;
 }
 
 VarRegister Block::getNextRegister(bool foward)
@@ -57,7 +60,10 @@ VarRegister Block::getNextRegister(bool foward)
 			it++;
 
 			if(foward)
+			{
+				m_posActual++;
 				m_actualReg =it;
+			}
 		}
 	}
 
@@ -66,21 +72,9 @@ VarRegister Block::getNextRegister(bool foward)
 
 VarRegister Block::peekRegister()
 {
-	RegisterListIt it;
 	VarRegister current;
 
-	if(m_registers.size()>0&&it!=m_registers.end())
-	{
-		it++;
-		if(it!=m_registers.end())
-		{
-			current=*it;
-		}
-		else
-			throw "No se puede hacer peek";
-	}
-	else
-		throw "No se puede hacer peek";
+	current = getNextRegister(false);
 
 	return current;
 }
@@ -214,7 +208,7 @@ void Block::clear()
 	m_registers.clear();
 	m_registerCount=0;
 	m_usedBytes=m_FirstRegisterOffset;
-	m_actualReg=m_registers.end();
+	restartCounter();
 }
 
 
@@ -267,6 +261,7 @@ bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 			m_actualReg = m_registers.end();
 		}
 
+		m_posActual++;
 		m_registerCount++;
 		m_usedBytes+=reg.getDiskSize();
 		retVal=true;
@@ -369,6 +364,10 @@ float Block::calculateFraction(unsigned int value)
 	return retVar;
 }
 
+unsigned int Block::getPosActual()
+{
+	return m_posActual;
+}
 
 unsigned int Block::getUsedSpace()
 {
@@ -421,7 +420,10 @@ VarRegister Block::getRegisterN(unsigned int number)
 	restartCounter();
 
 	for(i=0; i < number; i++)
+	{
+		m_posActual++;
 		m_actualReg++;
+	}
 
 	reg = getNextRegister(false);
 
@@ -443,7 +445,10 @@ VarRegister Block::getPreviousRegister(bool backward)
 			it--;
 
 			if(backward)
+			{
 				m_actualReg =it;
+				m_posActual--;
+			}
 		}
 	}
 

@@ -10,43 +10,14 @@
 bool BlockManager::balanceLoad(Block *blockA, Block *blockB, sideEnum side)
 {
 	bool retVal=false;
-	unsigned int missing;
-	unsigned int relocateSize=0;
-	unsigned int surplus;
-	unsigned int sizeA;
-	unsigned int sizeB;
-	unsigned int minSize;
-	VarRegister varR;
 
 	if(blockA!=NULL &&blockB!=NULL)
 	{
-		sizeA=blockA->getUsedSpace();
-		sizeB=blockB->getUsedSpace();
-		minSize=blockA->getMinimalLoad();
+		//Simulo la operacion primero para ver si hay suficientes elementos
+		retVal = innerRedistribute(blockA, blockB, side, true);
 
-
-		if(side == RIGHT_SIDE)
-		{
-			missing=minSize-sizeA;
-
-			if(missing>0)
-			{
-				retVal = redistributeLeft(blockA, blockB,  side, true);
-
-				if(retVal)
-				{
-					retVal = redistributeLeft(blockA, blockB,  side, false);
-				}
-			}
-
-		}
-		else
-		{
-			missing=minSize-sizeB;
-
-			surplus=sizeA-minSize;
-		}
-
+		if(retVal)
+			retVal = innerRedistribute(blockA, blockB, side, false);
 	}
 	else
 		throw "Se pasaron punteros a NULL";
@@ -54,14 +25,14 @@ bool BlockManager::balanceLoad(Block *blockA, Block *blockB, sideEnum side)
 	return retVal;
 }
 
-bool BlockManager::redistributeLeft(Block *blockA, Block *blockB, sideEnum side, bool simulate)
+bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side, bool simulate)
 {
 	unsigned int missing;
 	unsigned int relocateSize=0;
-	unsigned int surplus;
 	unsigned int sizeA;
 	unsigned int sizeB;
 	unsigned int minSize;
+	bool breakLoop=false;
 	VarRegister varR;
 
 	sizeA=blockA->getUsedSpace();
@@ -69,20 +40,61 @@ bool BlockManager::redistributeLeft(Block *blockA, Block *blockB, sideEnum side,
 	minSize=blockA->getMinimalLoad();
 
 	bool retVal=false;
-	blockA->jumpEndCounter();
 
-	while(relocateSize<missing)
+	if(side ==LEFT_SIDE)
 	{
-		varR = blockB->getPreviousRegister(true);
-		relocateSize+= varR.getDiskSize();
+		blockA->jumpEndCounter();
 
-		if(blockA->isFirstRegister())
+		if(!simulate)
+			blockB->restartCounter();
+
+		while(relocateSize<missing)
 		{
-			break;
+			varR = blockA->getPreviousRegister(true);
+			relocateSize+= varR.getDiskSize();
+
+			if(blockA->isFirstRegister())
+				breakLoop = true;
+
+			if(!simulate)
+			{
+				blockB->addRegister(varR);
+				blockA->deleteRegister();
+			}
+			if(breakLoop)
+				break;
 		}
+
+		if((sizeB-relocateSize) >=minSize)
+			retVal =true;
 	}
-	if((sizeB-relocateSize) >=minSize)
-		retVal =true;
+	else
+	{
+		blockA->jumpEndCounter();
+
+			if(!simulate)
+				blockB->restartCounter();
+
+			while(relocateSize<missing)
+			{
+				varR = blockB->getNextRegister(true);
+				relocateSize+= varR.getDiskSize();
+
+				if(blockB->isLastRegister())
+					breakLoop = true;
+
+				if(!simulate)
+				{
+					blockA->addRegister(varR);
+					blockB->deleteRegister();
+				}
+				if(breakLoop)
+					break;
+			}
+
+			if((sizeA-relocateSize) >=minSize)
+				retVal =true;
+	}
 
 	return retVal;
 }
