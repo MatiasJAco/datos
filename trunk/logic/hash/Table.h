@@ -50,7 +50,7 @@ public:
 	/**
 	 * Modifica el registro "numReg" en la tabla con el valorNuevo a cambiar
 	 */
-	void modifyRegister(int numReg,int newValue);
+	void modifyRegister(int numReg,unsigned int newValue);
 
 	/**
 	 * para imprimir la tabla por consola
@@ -73,7 +73,7 @@ public:
 	 * y lo reemplaza por newValue
 	 * Retorna false, si no pudo realizar la operacion
 	 */
-	bool changeFirstTimeInTable(int value, int newValue);
+	bool changeFirstTimeInTable(unsigned int value,unsigned int newValue);
 
 	/**
 	 * Recorro la tabla circularmente (me muevo para atras "jump" lugares y para adelante "jump" lugares
@@ -120,7 +120,7 @@ private:
 	/**
 	 * retorna la primera posicion de la tabla donde aparece el valor del value
 	 */
-	int getFirstTimeInTable(int value);
+	int getFirstTimeInTable(unsigned int value);
 
 
 };
