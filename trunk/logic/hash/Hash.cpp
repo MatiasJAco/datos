@@ -67,11 +67,12 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	StringInputData* sid;
 	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
 
-	while (block->hasNextRegister()) {
+	while (!block->isLastRegister()) {
 		varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
 		sid->toData(varRegister.getValue());
 		listaDatos.push_back(*sid);
+		cout << "Clave: " << sid->getKey() << " Valor: " << sid->getValue() <<endl;
 		delete sid;
 		loadResultEnum load = NORMAL_LOAD;
 		deleteResult = block->deleteRegister(load);

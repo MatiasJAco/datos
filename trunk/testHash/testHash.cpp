@@ -96,7 +96,12 @@ void tests() {
 	Hash* hash = new Hash();
 	/* Se toma el dato que ingresa el usuario. */
 	char value[8] = "paytiti";
-	for (int i = 1; i<=62;i++){
+	for (int i = 1; i<=60;i++){
+		StringInputData* sid = createSid(i,value);
+		hash->add(sid);
+		delete sid;
+	}
+	for (int i = 61; i<=62;i++){
 		StringInputData* sid = createSid(i,value);
 		hash->add(sid);
 		delete sid;
@@ -113,8 +118,8 @@ int main(){
 	//testTable2();
 	//testTable3();
 	//testTable4();
-	testDelete();
-	//tests();
+	//testDelete();
+	tests();
 	printf("\npaso test!");
 
 	return 0;
