@@ -219,8 +219,16 @@ int Hash::modify(int key, char* newValue) {
 		return 1;
 	} else {
 		sid->setValue(newValue);
-		this->erase(key);
-		this->add(sid);
+		int resultErase = this->erase(key);
+
+		if (resultErase == 0) { // Si se pudo borrar correctamente el dato, se trata de reinsertar pero con el nuevo valor.
+			int resultAdd = this->add(sid);
+			if (resultAdd != 0) {
+				return -1;
+			}
+		} else {
+			return -1;
+		}
 	}
 
 	return 0;
@@ -241,6 +249,7 @@ int Hash::erase(int key) {
 
 		if (result == false) {
 			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;
+			return -1;
 		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
 
 			this->hashFile->saveBlock(bucket->getBlock());
@@ -264,6 +273,9 @@ void Hash::print() {
 	Bucket* bucket;
 	Block* actualBlock = this->hashFile->getBlock(i);
 	this->hashTable->print();
+
+	cout << "Bloques libres: " << this->hashFile->getFreeBlockString() << endl;
+
 	printf("\nHashFile: \n");
 	while (actualBlock != NULL) {
 		printf("Bucket %i : ",i);
