@@ -32,7 +32,7 @@ int StringInputData::getKey()const {
 	return this->key;
 }
 
-string StringInputData::getValue() {
+string StringInputData::getValue()const {
 	return this->value;
 }
 
@@ -62,4 +62,15 @@ unsigned int StringInputData::size()const
 InputData* StringInputData::newInstance()const
 {
 	return new StringInputData();
+}
+
+std::string StringInputData::toString()const
+{
+	std::string str;
+
+	str+= "Clave:" + key;
+	str+= "Data: " + value;
+	str+= "\n";
+
+	return str;
 }

@@ -21,7 +21,7 @@ public:
 	void setKey(int key);
 	void setValue(std::string value);
 	int getKey()const;
-	string getValue();
+	string getValue()const;
 
 
 	char* toStream(char* stream) const;
@@ -30,6 +30,8 @@ public:
 	unsigned int size() const;
 
 	InputData* newInstance() const;
+
+	std::string toString()const;
 };
 
 #endif /* STRINGINPUTDATA_H_ */
