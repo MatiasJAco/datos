@@ -99,7 +99,7 @@ public:
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
 	 * @return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
 	 */
-	int modify(int key, string newValue);
+	int modify(int key, char* newValue);
 
 
 	/**
