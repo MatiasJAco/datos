@@ -315,7 +315,7 @@ loadResultEnum InnerNode::remove(const InputData& data)
 			// Trato de balancear con el derecho.
 			// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
 			rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
-			balanced = redistribute(rightSibling,sucesor,data,bigBrother);
+			balanced = redistribute(sucesor,rightSibling,data,bigBrother,RIGHT_SIDE);
 		};
 
 		if (balanced)
@@ -334,14 +334,14 @@ loadResultEnum InnerNode::remove(const InputData& data)
 				joinBrother.setLeftPointer(minorBrother.getLeftPointer());
 				leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
 				// Trato de balancear con el sibling izquierdo del sucesor.
-				balanced = redistribute(leftSibling,sucesor,data,minorBrother);
+				balanced = redistribute(sucesor,leftSibling,data,minorBrother,LEFT_SIDE);
 			}else
 				leftJoin=false;
 
 
 
 			if (balanced)
-				modifyINodeData(thiskey,minorBrother);
+				modifyINodeData(joinBrother,minorBrother);
 		}
 
 		// Si no pudo balancear, fusiona.
@@ -635,7 +635,7 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	return true;
 }
 
-bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify)
+bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,INodeData& keyToModify,sideEnum side)
 {
 	bool retVal = false;
 	InputData* currentData = data.newInstance();
@@ -643,23 +643,35 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 	Block* blockNode = node->getBlock();
 	Block* blockSibling = siblingNode->getBlock();
 
-	retVal = BlockManager::balanceLoad(blockNode,blockSibling);
+	retVal = BlockManager::balanceLoad(blockNode,blockSibling,side);
+	VarRegister firstKey;
 
-	// paso el dato de control
-	blockSibling->getNextRegister();
-	VarRegister firstKey = blockSibling->getNextRegister();
+	if(side==RIGHT_SIDE){
+		// paso el dato de control
+		blockSibling->getNextRegister();
+		firstKey = blockSibling->getNextRegister();
+		}else{
+			// paso el dato de control
+			blockNode->restartCounter();
+			blockNode->getNextRegister();
+			VarRegister firstKey = blockNode->getNextRegister();
+		};
 
 	if (node->isLeaf())
 	{
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
-		keyToModify.setKey(data.getKey());
+		keyToModify.setKey(currentData->getKey());
 	}
 	else
 	{
 		keyToModify.toNodeData(firstKey.getValue());
 	}
-	keyToModify.setLeftPointer(node->getNodeNumber());
+	if(side==RIGHT_SIDE){
+		keyToModify.setLeftPointer(node->getNodeNumber());
+		}else{
+			keyToModify.setLeftPointer(siblingNode->getNodeNumber());
+		};
 
 	delete currentData;
 
