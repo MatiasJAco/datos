@@ -38,7 +38,10 @@ void Block::restartCounter()
 		m_actualReg = m_registers.end();
 }
 
-
+void Block::jumpEndCounter()
+{
+	m_actualReg = m_registers.end();
+}
 
 VarRegister Block::getNextRegister(bool foward)
 {
@@ -92,6 +95,18 @@ bool Block::isLastRegister()
 	return retVal;
 
 }
+
+bool Block::isFirstRegister()
+{
+	bool retVal=true;
+
+	if(m_registers.size() > 0)
+		retVal = m_actualReg ==m_registers.begin();
+
+	return retVal;
+
+}
+
 
 bool Block::hasNextRegister()
 {
@@ -413,3 +428,26 @@ VarRegister Block::getRegisterN(unsigned int number)
 	return reg;
 
 }
+
+VarRegister Block::getPreviousRegister(bool backward)
+{
+	VarRegister current;
+	RegisterListIt it;
+	it=m_actualReg;
+
+	if(m_registers.size()>0)
+	{
+		if(it!=m_registers.begin())
+		{
+			current=*it;
+			it--;
+
+			if(backward)
+				m_actualReg =it;
+		}
+	}
+
+	return current;
+}
+
+
