@@ -224,6 +224,24 @@ string FreeBlockFile::getFreeBlockString()
 	return ss.str();
 }
 
+FreeBlockList FreeBlockFile::getFreeBlockList()
+{
+	FreeBlockList list;
+	unsigned int i;
+	char * charStream=new char[m_BlockCount*m_registerSize];
+	m_FileHandler.seekg (sizeof(m_BlockCount), ios::beg);
+
+	m_FileHandler.read(charStream, m_BlockCount*m_registerSize);
+
+	for(i=0; i<m_BlockCount; i++)
+	{
+		list.push_back(ByteConverter::bytesToUInt(&charStream[i*m_registerSize]));
+	}
+	delete [] charStream;
+
+	return list;
+}
+
 
 
 bool FreeBlockFile::close()

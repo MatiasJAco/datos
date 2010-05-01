@@ -125,6 +125,13 @@ public:
 	 */
 	std::string getFreeBlockString();
 
+	/**
+	 * Devuelve una lista con todos los bloques del archivo de bloques libres.
+	 * Solo se usa para informar al usuario de los bloques libres
+	 * @return FreeBlockList array con los numeros de bloques libres separados por coma.
+	 */
+	FreeBlockList getFreeBlockList();
+
 private:
 	//-----------------------------Headers-----------------------------//
 	/**

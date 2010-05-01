@@ -169,6 +169,11 @@ string BlockFile::getFreeBlockString()
 	return m_FreeBlockFile.getFreeBlockString();
 }
 
+FreeBlockList BlockFile::getFreeBlockList()
+{
+	return m_FreeBlockFile.getFreeBlockList();
+}
+
 bool BlockFile::close()
 {
 	bool retVal=false;
