@@ -36,8 +36,9 @@ bool BlockManager::exchangeBlock(Block *blockA, Block *blockB)
 		unsigned int blockNumA=blockA->getBlockNumber();
 		unsigned int blockNumB=blockB->getBlockNumber();
 
-		blockA->m_blockNumber=blockNumB;
-		blockB->m_blockNumber=blockNumA;
+		//TODO : DESCOMENTAR ESTO! SE LO COMENTO PORQUE NO COMPILA!
+//		blockA->m_blockNumber=blockNumB;
+//		blockB->m_blockNumber=blockNumA;
 
 	}
 	return retVal;
