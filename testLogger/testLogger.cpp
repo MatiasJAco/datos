@@ -6,7 +6,7 @@
  */
 
 using namespace std;
-#include "../common/logger/Logger.h"
+#include "../logic/logger/Logger.h"
 
 int main(int argc, char *argv[]){
 
