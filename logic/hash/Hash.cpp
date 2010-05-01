@@ -77,7 +77,6 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		this->add(&sid);
 		listaDatos.pop_front(); // Borro el primer sid de la lista.
 	}
-
 	return 0;
 }
 

@@ -85,22 +85,6 @@ public:
 	 */
 	bool deleteRegister(int key);
 
-//	/**
-//	 * Este metodo borra el registro del bloque apuntado por la posicion pasada por parametro
-//	 * @param position Es la posicion del registro que se desea eliminar.
-//	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
-//	 */
-//	bool deleteRegisterAtPosition(int position);
-
-//	/**
-//	 * Este metodo modifica el registro del bloque que contiene el bucket, dada su clave y su posicion.
-//	 * @param key Es la clave del registro que se desea modificar (se modifica solo el valor, no la clave).
-//	 * @param position Es la posicion del registro a borrar en el bloque.
-//	 * @param newValue Es el nuevo valor.
-//	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
-//	 */
-//	bool modifyRegister(int key, int position,char* newValue);
-
 	/**
 	 * Imprime el bucket entero.
 	 */
@@ -118,10 +102,6 @@ public:
 	 */
 	bool divideDepth();
 
-//	/**
-//	 * Sirve para posicionarse al final del bucket.
-//	 */
-//	void positionateAtEnd();
 
 	/**
 	 * Lee el primer registro del bucket, y devuelve su tamaño de dispersión.
