@@ -289,3 +289,36 @@ bool Bucket::divideDepth(){
 	}
 	else return false;
 }
+
+
+void Bucket::getListOfSids(list<StringInputData> &listaDatos){
+	block->restartCounter();
+	StringInputData* sid;
+	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
+	while (!block->isLastRegister()) {
+		varRegister = block->getNextRegister(false);
+		sid = new StringInputData();
+		sid->toData(varRegister.getValue());
+		listaDatos.push_back(*sid);
+		delete sid;
+		block->getNextRegister(true);
+	}
+}
+
+void Bucket::empty(){
+	block->restartCounter();
+	bool deleteResult = true;
+	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
+	while (!block->isLastRegister()) {
+		varRegister = block->getNextRegister(false);
+		loadResultEnum load = NORMAL_LOAD;
+		deleteResult = block->deleteRegister(load);
+
+		if (deleteResult == false) {
+			cout << "No pudo borrarse el registro del bloque: " << this->getNumber() << endl;
+		}
+		//this->saveBucket(bucket);
+	}
+
+//	this->saveBucket(bucket);
+}

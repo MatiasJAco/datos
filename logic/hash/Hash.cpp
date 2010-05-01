@@ -63,34 +63,13 @@ bool Hash::existsElement(int key, int & position) {
 	return result;
 }
 
+
+
 int Hash::reHash(Bucket* bucketDesbordado) {
-	//TODO hacer funcion hash->saveBuquet(buquet); que adentro de ella este el saveBlock(blocK)
-	//porque hash se tiene que "desentender" de bloque
-
-	Block* block = bucketDesbordado->getBlock();
-	block->restartCounter();
 	list<StringInputData> listaDatos;
-	bool deleteResult = true;
-	StringInputData* sid;
-	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
-	while (!block->isLastRegister()) {
-		varRegister = block->getNextRegister(false);
-		sid = new StringInputData();
-		sid->toData(varRegister.getValue());
-		listaDatos.push_back(*sid);
-		delete sid;
-		loadResultEnum load = NORMAL_LOAD;
-		deleteResult = block->deleteRegister(load);
-
-		if (deleteResult == false) {
-			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
-		}
-		this->saveBucket(bucketDesbordado);
-	}
-
+	bucketDesbordado->getListOfSids(listaDatos);
+	bucketDesbordado->empty();
 	this->saveBucket(bucketDesbordado);
-
-	//no hace falta volver a guardar el td porque ya quedo guardado
 
 	//recorro toda la lista de sids y redisperso el bloque
 	while (!listaDatos.empty()) {
@@ -118,10 +97,6 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 
 	// Se obtiene el bloque desde el disco
 	Block* block = this->hashFile->getBlock(bucketNumber);
-	if (block == NULL) {
-		cout<<"Hubo un error al intentar leer un bloque que no existia"<<endl;
-		result = 2;
-	}
 	Bucket* bucket = new Bucket(block);
 	result = bucket->insertRegister(sid);
 	return bucket;
@@ -177,47 +152,6 @@ int Hash::add(StringInputData* sid) {
 	//delete bucket;
 	return 0;
 }
-
-/*int Hash::modify(int key, char* newValue) {
-	int position;
-	// Verifico unicidad
-	if (!existsElement(key,position)){
-		return 1;
-	}
-	if (position==-1)
-		return -1;  //esto no podria pasar, porque si se encontro el elemento, tiene que pasar una posicion
-
-	unsigned int bucketNumber = this->getNumberOfBucket(key);
-	Block* block = this->hashFile->getBlock(bucketNumber);
-
-	Bucket * bucket = new Bucket(block);
-
-	if (!bucket->deleteRegister(key))
-		return -1;
-
-	if (!this->hashFile->saveBlock(bucket->getBlock()))
-		return -1;
-	delete bucket;
-
-	stringstream ss (stringstream::in | stringstream::out);
-		ss.str(newValue);
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
-	sid->setValue(ss.str());
-	int insertResult;
-
-	Bucket * bucketA = tryToInsertNewSid(sid,insertResult);
-	if (insertResult != 0) //si no se pudo agregar en el bucket lo guardo
-		return -1;
-	delete sid;
-
-	if (!this->hashFile->saveBlock(bucketA->getBlock()))
-		return -1;
-	delete bucketA;
-
-	return 0;
-}*/
-
 int Hash::modify(int key, char* newValue) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
@@ -252,7 +186,6 @@ int Hash::erase(int key) {
 		unsigned int bucketNumber = this->getNumberOfBucket(key);
 		Block* block = this->hashFile->getBlock(bucketNumber);
 		Bucket* bucket = new Bucket(block);
-		//bucket->setDepth(bucket->getDepthFromHashFile());
 		result = bucket->deleteRegister(key);
 
 		if (result == false) {
@@ -267,7 +200,9 @@ int Hash::erase(int key) {
 
 			if ((registerAmount == 1) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
 				this->hashTable->verifyAndDivide();
-				this->hashFile->deleteBlock(bucketNumber);
+				//intento liberar el bloque
+				if (!this->hashFile->deleteBlock(bucketNumber))
+					return -1;
 			}
 			delete bucket;
 		}

@@ -129,6 +129,17 @@ public:
 	 */
 	unsigned int getDepthFromHashFile();
 
+	/**
+	 * Obtiene la lista entera de Sids que contiene el bucket
+	 * @param Lista de Sids a ser devuelta
+	 */
+	void getListOfSids(list<StringInputData> &listaDatos);
+
+	/**
+	 * Vacia el bucket (dejando el campo de control td)
+	 */
+	void empty();
+
 };
 
 #endif /* BUCKET_H_ */
