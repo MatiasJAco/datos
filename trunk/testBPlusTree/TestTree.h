@@ -23,7 +23,10 @@ public:
 
 protected:
 	void testRecoverLeaf();
-	void testInsertLeaf();
+	void testInsertLeafSinOverflow();
+	void testInsertRoot();
+
+	void testInsertComplejo();
 
 private:
 	BPlusTree* mainFixture;
