@@ -89,6 +89,7 @@ void testDelete() {
 	hash->erase(22);
 
 	hash->print();
+	delete hash;
 }
 
 void tests() {
@@ -140,6 +141,7 @@ void tests() {
 	hash->print();
 	hash->erase(62);
 	hash->print();
+	delete hash;
 }
 
 int main(int argc, const char* argv[]){
@@ -151,7 +153,7 @@ int main(int argc, const char* argv[]){
 	//tests();
 	//cout << "paso test!" << endl;
 
-	Hash* hash = new Hash(); //TODO importante. hacer que levante el hash del archivo si es que el mismo ya existe.
+	Hash* hash = new Hash();
 
 	if (argc == 1 || argc == 2) {
 		cout << "Comandos para usar el hash:" << endl;
