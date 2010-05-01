@@ -5,6 +5,13 @@
  *  @author: kira
  */
 
+#include "../logic/input/InputData.h"
+#include "../logic/input/StringInputData.h"
+
+#include "../logic/tree/InnerNode.h"
+#include "../logic/tree/dataNode/INodeData.h"
+#include "../physical/file/Block.h"
+
 #ifndef TESTINNERNODE_H_
 #define TESTINNERNODE_H_
 
@@ -20,6 +27,7 @@ protected:
 	void testInsert();
 
 private:
+	InnerNode* node;
 
 };
 
