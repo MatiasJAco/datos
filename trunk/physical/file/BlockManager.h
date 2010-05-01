@@ -22,6 +22,7 @@ public:
 
 	/**
 	 * Se encarga de fusionar 2 bloques
+	 * El bloque que desaparece es el que provoco el underflow
 	 * @param block1 bloque en el que van a quedar los registros
 	 * @param block2 bloque que se va a vaciar.
 	 * @param side bloque que va a desaparacer
@@ -73,16 +74,19 @@ public:
 
 	//--------------------------------deprecated---------------------------------------//
 	/**
+	 * TODO eliminar
 	 * @deprecated
 	 */
 	static bool split(Block *orig, Block *blank);
 
 	/**
+	 * TODO eliminar
 	 * @deprecated
 	 */
 	static bool mergeBlocks(Block *block1, Block *block2,  VarRegister &reg, unsigned int pos);
 
 	/**
+	 * TODO eliminar
 	 * @deprecated
 	 */
 	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
