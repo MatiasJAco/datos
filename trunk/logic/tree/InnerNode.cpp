@@ -757,7 +757,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 }
 
 
-void InnerNode::printContent(InputData & data1)
+void InnerNode::printContent(InputData& dato)
 {
 	INodeData data;
 	VarRegister varR;
@@ -781,3 +781,28 @@ void InnerNode::printContent(InputData & data1)
 		cout<< " LeftPointer:"<<data.getLeftPointer()<< "Clave:"<<data.getKey()<<endl;
 	}
 }
+
+void InnerNode::show(InputData& data){
+
+	this->printContent(data);
+	bool found;
+	m_block->restartCounter();
+	m_block->getNextRegister();
+	VarRegister reg;
+	INodeData currentData;
+	Node* hijo;
+	while(!m_block->isLastRegister()&& !found)
+		{
+
+			reg = this->m_block->peekRegister();
+			// Transformo el registro a un INodeData
+			currentData.toNodeData(reg.getValue());
+			//Pido un hijo para decirle que se muestre.
+			hijo =this->m_tree->getNode(currentData.getLeftPointer());
+			hijo->show(data);
+
+			this->m_block->getNextRegister();
+		}
+	delete hijo;
+
+};

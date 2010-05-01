@@ -26,8 +26,8 @@ void TestTree::run()
 {
 //	testRecoverLeaf();
 //	testInsertLeafSinOverflow();
-//	testInsertRoot();
-	testInsertComplejo();
+	testInsertRoot();
+//	testInsertComplejo();
 }
 
 void TestTree::testRecoverLeaf()
@@ -85,14 +85,14 @@ void TestTree::testInsertLeafSinOverflow()
 
 	cout << "Espacio bloque: "<< leaf->getBlock()->getUsedSpace();
 
-	leaf->printContent(data);
+//	leaf->printContent(data&);
 
 
 	cout << "hoja nueva: " << promotedKey.getKey() << "-" << promotedKey.getLeftPointer() << endl;
 
 	LeafNode* leafsplit = (LeafNode*)mainFixture->getNode(promotedKey.getLeftPointer());
 
-	leafsplit->printContent(data);
+//	leafsplit->printContent(data);
 
 	//	cout << leaf->toStringData(data);
 
@@ -120,13 +120,15 @@ void TestTree::testInsertRoot()
 	mainFixture->insert(data5);
 	mainFixture->insert(data6);
 
-	Node* nodoroot = mainFixture->getNode(1);
-	Node* leaforig = mainFixture->getNode(2);
-	Node* leafsplit = mainFixture->getNode(3);
+	mainFixture->showTree(data);
 
-	nodoroot->printContent(data);
-	leaforig->printContent(data);
-	leafsplit->printContent(data);
+//	Node* nodoroot = mainFixture->getNode(1);
+//	Node* leaforig = mainFixture->getNode(2);
+//	Node* leafsplit = mainFixture->getNode(3);
+//
+//	nodoroot->printContent(data);
+//	leaforig->printContent(data);
+//	leafsplit->printContent(data);
 
 
 

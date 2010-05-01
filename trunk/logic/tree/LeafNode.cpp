@@ -301,7 +301,7 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 }
 
 
-void LeafNode::printContent(InputData & data)
+void LeafNode::printContent(InputData& data)
 {
 	VarRegister varR;
 	unsigned int dataAmmount;
@@ -428,4 +428,11 @@ unsigned int LeafNode::setPreviousLeaf(unsigned int nodeNumber)
 	m_block->modifyRegister(reg);
 
 	return prevleaf;
+}
+
+void LeafNode::show(InputData &data){
+
+	this->printContent(data);
+
+
 }

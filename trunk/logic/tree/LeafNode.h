@@ -130,7 +130,7 @@ public:
 	 * @param data un dato del tipo que se emplea internamente, para saber que tipos de dato
 	 * tenemos
 	 */
-	void printContent(InputData & data);
+	void printContent(InputData& data);
 
 	/**
 	 * Devuelve un string que tiene el contenido de la hoja.
@@ -143,6 +143,8 @@ public:
 	 *
 	 */
 	InputData& getNextData();
+
+	void show(InputData& data);
 
 };
 

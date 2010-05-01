@@ -166,7 +166,8 @@ public:
 	unsigned int getAmountINodeData();
 
 
-	void printContent(InputData & data);
+	void printContent(InputData& data);
+	void show(InputData& data);
 
 };
 

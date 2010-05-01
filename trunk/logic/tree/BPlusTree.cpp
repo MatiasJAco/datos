@@ -170,4 +170,8 @@ void BPlusTree::deleteNode(Node* node)
 
 }
 
+void BPlusTree::showTree(InputData& data){
+	this->m_root->show(data);
+
+};
 
