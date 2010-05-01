@@ -49,12 +49,6 @@ Block* Bucket::getBlock() {
 	return this->block;
 }
 
-//void Bucket::positionateAtEnd(){
-//	this->block->restartCounter();
-//	while (this->block->hasNextRegister()) {
-//		this->block->getNextRegister(true);
-//	}
-//}
 void Bucket::positionateAt(int position){
 	this->block->restartCounter();
 	while (this->block->hasNextRegister()&& position!=0) {
@@ -70,9 +64,6 @@ int Bucket::insertRegister(StringInputData* sid) {
 
 	char* valueReg = new char[dataSize];
 	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
-	//me paro al final del bloque.
-	//TODO es necesario pararse al final? para mi no ,soy pablo
-	//positionateAtEnd();
 
 	/* Intenta insertar el registro en el bloque. */
 	bool inserted = this->block->addRegister(*varRegister, loadResult);
@@ -91,16 +82,9 @@ bool Bucket::existsRegister(int key) {
 	return this->existsRegister(key,aux);
 }
 bool Bucket::existsRegister(int key,int & position) {
-	//position = -1;
 	position = 0;
-	//this->getBlock()->restartCounter();
+	positionateAt(1);//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
 
-	//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
-//	if (this->block->hasNextRegister()) {
-//			this->getBlock()->getNextRegister(true);
-//			position++; //queda en cero
-//	}
-	positionateAt(1);
 	while (this->block->hasNextRegister()) {
 		VarRegister varRegister = this->getBlock()->getNextRegister(true);
 		char* registerValue = varRegister.getValue();
@@ -155,79 +139,6 @@ bool Bucket::deleteRegister(int key) {
 	}
 	return result;
 }
-
-//bool Bucket::deleteRegisterAtPosition(int position){
-//	positionateAt(position);
-//	loadResultEnum load = NORMAL_LOAD;
-//	bool deleteResult = block->deleteRegister(load);
-//	if (deleteResult == false) {
-//		cout << "No pudo borrarse el registro: ";
-//		return false;
-//	}
-//	return true;
-//}
-
-
-
-//bool Bucket::modifyRegister(int key, int position,char* newValue){
-//	//borro el elemento
-//
-//
-//	/*
-//	loadResultEnum loadResult;
-//	unsigned int dataSize = sid->size();
-//	int result = 0; // Es el valor de retorno de esta función. Indica si se pudo insertar el registro al bloque, o no.
-//	char* valueReg = new char[dataSize];
-//	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
-//	//me paro al final del bloque.
-//	positionateAtEnd();
-//	bool inserted = this->block->addRegister(*varRegister, loadResult);
-//
-//	if (loadResult == OVERFLOW_LOAD) {
-//		result = 1;
-//	} else if (inserted == false) {
-//		result = 2;
-//	}
-//	delete varRegister;
-//	return result;
-//	*/
-//
-//	stringstream ss (stringstream::in | stringstream::out);
-//		ss.str(newValue);
-//	StringInputData* sid = new StringInputData();
-//	sid->setKey(key);
-//	sid->setValue(ss.str());
-//
-//	unsigned int dataSize = sid->size();
-//	cout <<sid->getKey()<<"--"<< sid->getValue()<<"----"<<dataSize<<"------------------------------------------";
-//	char* valueReg = new char[dataSize];
-//	//varReg.setValue(sid->toStream(valueReg),dataSize);
-//	VarRegister* varRegister = new VarRegister(sid->toStream(valueReg),dataSize);
-//	delete sid;
-//	loadResultEnum loadResult;
-//	bool inserted = this->block->addRegister(*varRegister, loadResult);
-//
-//	if (loadResult == OVERFLOW_LOAD) {
-//		//result = 1;
-//		return false;
-//	} else if (inserted == false) {
-//		//result = 2;
-//		return false;
-//	}
-//
-////	if (OVERFLOW_LOAD == result) {
-////		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
-////		return -1;
-////	}
-////	else if (UNDERFLOW_LOAD == result) {
-////		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
-////		return -1;
-////	}
-////
-////	delete sid;
-//
-//	return inserted;
-//}
 
 void Bucket::print(){
 	VarRegister varReg;
@@ -317,8 +228,5 @@ void Bucket::empty(){
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro del bloque: " << this->getNumber() << endl;
 		}
-		//this->saveBucket(bucket);
 	}
-
-//	this->saveBucket(bucket);
 }
