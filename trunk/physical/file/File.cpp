@@ -28,4 +28,16 @@ bool File::resize(unsigned int size)
 	return retVal;
 }
 
+bool File::deleteFile()
+{
+	bool retVal;
+	if(m_FileHandler.is_open())
+		m_FileHandler.close();
+
+	retVal = remove(m_FileName.c_str()) == 0;
+	return retVal;
+}
+
+
+
 
