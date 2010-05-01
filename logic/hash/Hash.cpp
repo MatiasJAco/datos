@@ -86,6 +86,7 @@ Bucket* Hash::createNewBucket(int depth){
 	varRegister->setValue(depth);
 	Block* block = this->hashFile->getNewBlock();
 	Bucket *bucket = new Bucket(block);
+	bucket->setDepth(depth);
 	block->addRegister(*varRegister);
 	this->saveBucket(bucket);
 	delete varRegister;
@@ -136,7 +137,6 @@ int Hash::add(StringInputData* sid) {
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			delete bucket;
 			this->add(sid);
-//			this->print();
 			delete bucketNuevo;
 
 		} else {
@@ -144,10 +144,9 @@ int Hash::add(StringInputData* sid) {
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
-			this->hashTable->jumpAndReplace(this->getNumberOfBucket(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
+			this->hashTable->jumpAndReplace(this->calculateHashFunction(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
-//			this->print();
 			delete bucketNuevo;
 			//TODO no hay qeu poner un delete bucket aca?
 		}
@@ -203,7 +202,7 @@ int Hash::erase(int key) {
 			this->saveBucket(bucket);
 			unsigned int registerAmount = block->getRegisterAmount();
 			int element = this->hashTable->verifyJumps(this->calculateHashFunction(key), bucket->getDepth()/2);
-//			print();
+
 			if ((registerAmount == 1) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
 				//intento liberar el bloque
 				if (!this->hashFile->deleteBlock(bucketNumber))
@@ -211,7 +210,6 @@ int Hash::erase(int key) {
 				//hago las modificaciones necesarias en la tabla
 				this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
 
-				//-------------------------------
 				Block *blockAux = this->hashFile->getBlock(element+1);
 				Bucket * bucketAux = new Bucket(blockAux);
 				int tdElement = bucketAux->getDepth();
@@ -228,11 +226,7 @@ int Hash::erase(int key) {
 					this->saveBucket(bucketAux2);
 				delete bucketAux2;
 
-//				print();
 				this->hashTable->verifyAndDivide();
-//				print();
-
-				//-------------------------------
 			}
 			delete bucket;
 		}
