@@ -25,6 +25,24 @@ bool BlockManager::balanceLoad(Block *blockA, Block *blockB, sideEnum side)
 	return retVal;
 }
 
+bool BlockManager::exchangeBlock(Block *blockA, Block *blockB)
+{
+
+
+	bool retVal=false;
+
+	if(blockA!=NULL &&blockB!=NULL)
+	{
+		unsigned int blockNumA=blockA->getBlockNumber();
+		unsigned int blockNumB=blockB->getBlockNumber();
+
+		blockA->m_blockNumber=blockNumB;
+		blockB->m_blockNumber=blockNumA;
+
+	}
+	return retVal;
+}
+
 bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side, bool simulate)
 {
 	unsigned int missing;
@@ -180,13 +198,15 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 			cumSize+= varR.getDiskSize();
 		}
 		//Si el reg a insertar va en la primera mitad
-		//se contabiliza su tamaño en el primer bloque.
+		//se contabiliza su tamaï¿½o en el primer bloque.
 		else
 			cumSize+= regIns.getDiskSize();
 		i++;
 	}
 
-	//Lo que quedo después de la mitad se redistribuye a blank
+	//Lo que quedo despuï¿½s de la mitad se redistribuye a blank
+	unsigned int lastReg=blank->getRegisterAmount();
+
 
 	while(!orig->isLastRegister())
 	{
@@ -195,7 +215,6 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 		blank->addRegister(varR);
 	}
 
-
 	if(pos<i)
 	{
 		orig->getRegisterN(pos);
@@ -203,8 +222,6 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 	}
 	else
 	{
-		unsigned int lastReg=blank->getRegisterAmount()-1;
-
 		blank->getRegisterN(lastReg+pos-i);
 		blank->addRegister(regIns);
 	}
