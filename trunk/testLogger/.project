@@ -3,6 +3,7 @@
 	<name>testLogger</name>
 	<comment></comment>
 	<projects>
+		<project>logic</project>
 		<project>application</project>
 		<project>common</project>
 	</projects>
