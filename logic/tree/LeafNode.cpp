@@ -46,6 +46,7 @@ LeafNode::~LeafNode()
 
 
 loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -67,11 +68,8 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 	VarRegister pointerprev = m_block->getNextRegister();
 	VarRegister pointernext = m_block->getNextRegister();
 
-	/// TODO usar el getCounter de block que falta implementar y corregirle en todos lados.
-	unsigned int pos = 3;
-	while (pos<m_block->getRegisterAmount()&&!found)
+	while (!m_block->isLastRegister()&&!found)
 	{
-		pos++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
@@ -81,12 +79,14 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 			found = true;
 
 			if (currentData->getKey() == data.getKey())
-				throw "Duplicado en insert de Hoja";
+				throw NodeException(NodeException::DUPLICATED_IN_LEAF);
 		}else
 		/// Seria mejor que en Block me pudiera correr en uno: algo asi como it++
 		/// con un metodo.
 		m_block->getNextRegister();
 	}
+
+	unsigned int pos = m_block->getPosActual();
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
@@ -102,11 +102,8 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 }
 
 
-
-//loadResultEnum LeafNode::remove(const InputData & dato)
-
-
 loadResultEnum LeafNode::remove(const InputData& data)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 	bool found = false;
@@ -135,7 +132,7 @@ loadResultEnum LeafNode::remove(const InputData& data)
 	}
 
 	if (!found)
-		throw "No existe el elemento a remover";
+		throw NodeException(NodeException::INEXISTENT_ELEMLEAF);
 
 	delete currentData;
 
@@ -143,13 +140,14 @@ loadResultEnum LeafNode::remove(const InputData& data)
 }
 
 loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdata,INodeData& promotedKey)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 	bool found = false;
 
-
+	// Deberian ser sobre la misma clave.
 	if (dato.getKey() != newdata.getKey())
-		throw "La modificacion es sobre un elemento con la misma clave!";
+		throw NodeException(NodeException::BAD_CALL_OPERATION);
 
 	VarRegister currentRegister;
 	InputData* currentData = newdata.newInstance();
@@ -179,7 +177,7 @@ loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdat
 	}
 
 	if (!found)
-		throw "No existe el elemento a modificar";
+		throw NodeException(NodeException::INEXISTENT_ELEMLEAF);
 
 	delete currentData;
 
@@ -187,6 +185,7 @@ loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdat
 }
 
 loadResultEnum LeafNode::modify(const InputData & data)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 	bool found = false;
@@ -219,7 +218,7 @@ loadResultEnum LeafNode::modify(const InputData & data)
 	}
 
 	if (!found)
-		throw "No existe el elemento a modificar";
+		throw NodeException(NodeException::INEXISTENT_ELEMLEAF);
 
 	delete currentData;
 
@@ -228,6 +227,7 @@ loadResultEnum LeafNode::modify(const InputData & data)
 
 
 bool LeafNode::find(const InputData & key,InputData & data)
+throw (NodeException)
 {
 	bool found = false;
 
@@ -257,7 +257,7 @@ bool LeafNode::find(const InputData & key,InputData & data)
 				data.setValue(currentData->getValue());
 			}
 			else
-				throw "Espacio insuficiente para guardar el dato buscado";
+				throw NodeException(NodeException::INSUFFICIENT_ALLOCK_PARAM);
 		}
 	}
 
@@ -278,14 +278,13 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 
 	blockSibling->restartCounter();
+
 	///Saltea datos de control.
-//	blockSibling->getNextRegister();
-//	blockSibling->getNextRegister();
-	//Recupera el primer registro.
 	blockSibling->getNextRegister();
 	blockSibling->getNextRegister();
 	blockSibling->getNextRegister();
 
+	//Recupera el primer registro de datos.
 	reg = blockSibling->getNextRegister();
 
 	InputData* firstKey = data.newInstance();
@@ -294,6 +293,8 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey->getKey());
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
+
+	sibling->setPreviousLeaf(this->getNodeNumber());
 
 	m_tree->saveNode(sibling);
 
