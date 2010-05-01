@@ -8,7 +8,7 @@
 #ifndef INODEDATA_H_
 #define INODEDATA_H_
 
-#include "../physical/utils/ByteConverter.h"
+#include "../../../physical/utils/ByteConverter.h"
 
 /**
  * Representacion de los datos base primarios que almacena un nodo interno.
