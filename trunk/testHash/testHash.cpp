@@ -143,18 +143,81 @@ void tests() {
 	hash->print();
 }
 
-
-
-
-
-int main(){
+int main(int argc, const char* argv[]){
 	//testTable();
 	//testTable2();
 	//testTable3();
 	//testTable4();
 	//testDelete();
-	tests();
-	printf("\npaso test!");
+	//tests();
+	//cout << "paso test!" << endl;
+
+	Hash* hash = new Hash(); //TODO importante. hacer que levante el hash del archivo si es que el mismo ya existe.
+
+	if (argc == 1 || argc == 2) {
+		cout << "Comandos para usar el hash:" << endl;
+		cout << "-B (Busca una clave)" << endl;
+		cout << "-I (Ingresa un dato a la estructura" << endl;
+		cout << "-M (Modifica un dato existente de la estructura)" << endl;
+		cout << "-Q (Quita un dato de la estructura)" << endl;
+		cout << "-S (Impresion de datos actuales de la estructura)" << endl;
+		cout << "-h (Ayuda)" << endl;
+		return 0;
+	}
+
+	string operacion (argv[1]);
+	string claveValor (argv[2]);
+	string aux (";");
+
+	int separator = claveValor.find(aux);
+
+	int clave = atoi(claveValor.substr(0,separator).c_str());
+	string valor = claveValor.substr(separator+1,claveValor.size());
+
+	if (operacion == "-B") {
+		cout << "Buscando la clave " << clave << "..." << endl;
+		StringInputData* sid = hash->get(clave);
+		if (sid != NULL) {
+			cout << sid->toString() << endl;
+		} else {
+			cout << "No se encontro la clave " << clave << endl;
+		}
+	} else if (operacion == "-I") {
+		cout << "Ingresando la clave" << clave << " con el valor " << valor << "..." << endl;
+		int addResult = hash->add(clave, valor);
+		if (addResult == 0) {
+			cout << "Se agrego correctamente la clave " << clave << endl;
+		} else if (addResult == 1) {
+			cout << "No se agrego la clave " << clave << " pues ya existia."<< endl;
+		} else {
+			cout << "Se produjo un error al ingresar la clave " << clave << endl;
+		}
+	} else if (operacion == "-M") {
+		cout << "Modificando el valor de la clave" << clave << " por " << valor << "..." << endl;
+		int modifyResult = hash->modify(clave, valor);
+		if (modifyResult == 0) {
+			cout << "Se modifico correctamente el valor de la clave " << clave << endl;
+		} else if (modifyResult == 1) {
+			cout << "No se modifico el valor de la clave " << clave << " pues no existia la misma."<< endl;
+		} else {
+			cout << "Se produjo un error al modificar el valor de la clave " << clave << endl;
+		}
+	} else if (operacion == "-Q") {
+		cout << "Quitando el dato representado por la clave " << clave << "..." << endl;
+		int eraseResult = hash->erase(clave);
+		if (eraseResult == 0) {
+			cout << "Se elimino correctamente la clave " << clave << endl;
+		} else if (eraseResult == 1) {
+			cout << "No se elimino la clave " << clave << " pues no existia la misma."<< endl;
+		} else {
+			cout << "Se produjo un error al eliminar la clave " << clave << endl;
+		}
+	} else if (operacion == "-S") {
+		cout << "Impresion del estado actual:" << endl;
+		hash->print();
+	} else if (operacion == "-h") {
+		cout << "Ayuda" << endl;
+	}
 
 	return 0;
 }
