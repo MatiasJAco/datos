@@ -107,7 +107,9 @@ int Hash::add(int clave, string valor) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(clave);
 	sid->setValue(valor);
-	return this->add(sid);
+	bool result = this->add(sid);
+	delete sid;
+	return result;
 }
 
 int Hash::add(StringInputData* sid) {
