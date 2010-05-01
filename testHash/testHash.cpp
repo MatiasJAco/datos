@@ -165,14 +165,16 @@ int main(int argc, const char* argv[]){
 	}
 
 	string operacion (argv[1]);
-	string claveValor (argv[2]);
-	string aux (";");
+	string claveString (argv[2]);
+	string valor (argv[3]);
+	//string aux (";");
 
-	int separator = claveValor.find(aux);
+	//int separator = claveValor.find(aux);
 
-	int clave = atoi(claveValor.substr(0,separator).c_str());
-	string valor = claveValor.substr(separator+1,claveValor.size());
+	//int clave = atoi(claveValor.substr(0,separator).c_str());
+	//string valor = claveValor.substr(separator+1,claveValor.size());
 
+	int clave = atoi(claveString.c_str());
 	if (operacion == "-B") {
 		cout << "Buscando la clave " << clave << "..." << endl;
 		StringInputData* sid = hash->get(clave);
@@ -217,6 +219,6 @@ int main(int argc, const char* argv[]){
 	} else if (operacion == "-h") {
 		cout << "Ayuda" << endl;
 	}
-
+	delete hash;
 	return 0;
 }
