@@ -46,7 +46,7 @@ public:
 	 * @param registro registro a insertar
 	 * @return TRUE si se pudo insertar. En caso de clave duplicada devuelve FALSE
 	 */
-	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
+	loadResultEnum insert(const InputData& data,INodeData& promotedKey) throw (NodeException);
 
 
 	/**
@@ -56,7 +56,7 @@ public:
 	 */
 
 
-	loadResultEnum remove(const InputData& data);
+	loadResultEnum remove(const InputData& data)throw (NodeException);
 
 	/**
 	 * Busca el elemento identificado por la clave
@@ -65,7 +65,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& key,InputData& data);
+	bool find(const InputData& key,InputData& data)throw (NodeException);
 
 	/**
 	 * Modifica el nodo identificado por la clave
@@ -74,7 +74,7 @@ public:
 	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	loadResultEnum modify(const InputData& dato, const InputData& dato2,INodeData& promotedKey);
+	loadResultEnum modify(const InputData& dato, const InputData& dato2,INodeData& promotedKey)throw (NodeException);
 
 	/**
 	 * Modifica el nodo identificado por la clave de data
@@ -82,12 +82,7 @@ public:
 	 * @param data valor que se colocara en el nodo.
 	 * @return loadResultEnum TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	loadResultEnum modify(const InputData& data);
-
-public:
-	/*********************************************************************************************/
-
-		/*********************************************************************************************/
+	loadResultEnum modify(const InputData& data)throw (NodeException);
 
 private:
 	/**

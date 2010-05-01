@@ -46,8 +46,7 @@ public:
     ~InnerNode();
     //loadResultEnum remove(const InputData & key);
 
-    bool find(const InputData & key, InputData & data);
-    loadResultEnum modify(const InputData & key, const InputData & dato,INodeData& promotedKey);
+
     loadResultEnum modify(const InputData & data);
 //    void insertINodeData(INodeData *contBuscado);
     void join(Node *toDivide, Node *destNode, const InputData & newData);
@@ -73,9 +72,13 @@ private:
 public:
 	/*********************************************************************************************/
 
-	loadResultEnum insert(const InputData& data,INodeData& promotedKey);
+	loadResultEnum insert(const InputData& data,INodeData& promotedKey)throw (NodeException);
 
-	loadResultEnum remove(const InputData& data);
+	loadResultEnum remove(const InputData& data) throw(NodeException);
+
+    bool find(const InputData & key, InputData & data) throw (NodeException);
+
+    loadResultEnum modify(const InputData & key, const InputData & dato,INodeData& promotedKey) throw (NodeException);
 
 	/*********************************************************************************************/
 
@@ -126,14 +129,14 @@ public:
 	 * 					  Solo tiene sentido si se devolvio un loadResultEnum distinto de NORMAL_LOAD.
 	 * @return dato de tipo loadResultEnum. Posibles valores: OVERFLOW_LOAD,NORMAL_LOAD.
 	 */
-	loadResultEnum insertINodeData(const INodeData& iNodeData,INodeData& promotedKey);
+	loadResultEnum insertINodeData(const INodeData& iNodeData,INodeData& promotedKey) throw(NodeException);
 
 	/**
 	 * Elimina un elemento INodeData dentro del InnerNode, a partir de la clave pasada en el parametro.
 	 * @param iNodeData Elemento de InnerNode que se desea eliminar.
 	 * @return dato de tipo loadResultEnum. Posibles valores: UNDERFLOW_LOAD,NORMAL_LOAD.
 	 */
-	loadResultEnum removeINodeData(const INodeData& iNodeData);
+	loadResultEnum removeINodeData(const INodeData& iNodeData) throw (NodeException);
 
 	/**
 	 * Modifica un elemento INodeData a partir de la clave pasada en el parametro.
@@ -141,7 +144,7 @@ public:
 	 * @return dato de tipo loadResultEnum. Posibles valores: NORMAL_LOAD.
 	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
 	 */
-	loadResultEnum modifyINodeData(const INodeData& iNodeData);
+	loadResultEnum modifyINodeData(const INodeData& iNodeData) throw (NodeException);
 
 	/**
 	 * Modifica un elemento INodeData a partir de la clave pasada en el parametro, y lo sustituye por lo que
@@ -151,7 +154,7 @@ public:
 	 * @return dato de tipo loadResultEnum. Posibles valores: NORMAL_LOAD.
 	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
 	 */
-	loadResultEnum modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData);
+	loadResultEnum modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData) throw (NodeException);
 
 	/**
 	 * Devuelve un elemento INodeData.
@@ -165,8 +168,16 @@ public:
 	 */
 	unsigned int getAmountINodeData();
 
-
+	/**
+	 * Imprime en pantalla los elementos de un nodo interno.
+	 * @param tipo de dato de los elementos finales de los nodos.
+	 */
 	void printContent(InputData& data);
+
+	/**
+	 * Muestra por pantalla todos los elementos de su nivel y hacia abajo.
+	 * Tipo de dato de los elementos de los nodos.
+	 */
 	void show(InputData& data);
 
 };

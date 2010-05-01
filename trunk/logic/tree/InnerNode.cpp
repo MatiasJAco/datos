@@ -54,6 +54,7 @@ void InnerNode::getInPosition(INodeData * contenido, unsigned int position)
 
 
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2,INodeData& promotedKey)
+throw (NodeException)
 {
 
 	loadResultEnum result = NORMAL_LOAD;
@@ -63,7 +64,7 @@ loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2
 
 	// Busco el elemento de nodo interno que contiene la referencia a la clave de dato.
 	if (!findINodeData(nodePointerKey))
-		throw "Error: llego clave a una referencia invalida";
+		throw NodeException(NodeException::INVALID_REF);
 
 	// Se lo pide al arbol
 	Node* sucesor = this->m_tree->getNode(nodePointerKey.getLeftPointer());
@@ -336,6 +337,7 @@ void InnerNode::joinInner(Node *underNode, Node *destNode,  INodeData*  newData)
 /**********************************************************************************/
 
 loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -344,14 +346,21 @@ loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
 
 	// Busco el elemento de nodo interno que contiene la referencia a la clave de dato.
 	if (!findINodeData(nodePointerKey))
-		throw "Error: llego clave a una referencia invalida";
+		throw NodeException(NodeException::INVALID_REF);
 
 	// Se lo pide al arbol
 	Node* sucesor = this->m_tree->getNode(nodePointerKey.getLeftPointer());
 
 
-	// Inserta en el hijo y regresa la clave a promover..
-	result = sucesor->insert(data,promotedKey);
+	try
+	{
+		// Inserta en el hijo y regresa la clave a promover..
+		result = sucesor->insert(data,promotedKey);
+	}
+	catch(NodeException e)
+	{
+		throw;
+	}
 
 	// Si hubo overflow tuvo que promover una clave.
 	if (result == OVERFLOW_LOAD)
@@ -369,13 +378,21 @@ loadResultEnum InnerNode::insert(const InputData& data,INodeData& promotedKey)
 
 		/// Devuelve el resultado de haber insertado una clave,
 		/// promoted Key es modificado despues del insert.
-		result = insertINodeData(newINodeData,promotedKey);
+		try
+		{
+			result = insertINodeData(newINodeData,promotedKey);
+		}
+		catch(NodeException e)
+		{
+			throw;
+		}
 	}
 
 	return result;
 }
 
 loadResultEnum InnerNode::remove(const InputData& data)
+throw(NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -384,12 +401,19 @@ loadResultEnum InnerNode::remove(const InputData& data)
 
 	// Busca el nodo interno que referencia a esa clave
 	if (!findINodeData(thiskey))
-		throw "Error! llego una clave a una referencia invalida!";
+		throw NodeException(NodeException::INVALID_REF);
 
 	// traigo el sucesor de este innerNode y lo elimino.
 	Node* sucesor = m_tree->getNode(thiskey.getLeftPointer());
 
-	result = sucesor->remove(data);
+	try
+	{
+		result = sucesor->remove(data);
+	}
+	catch(NodeException e)
+	{
+		throw;
+	}
 
 	if (result == UNDERFLOW_LOAD)
 	{
@@ -471,6 +495,7 @@ loadResultEnum InnerNode::remove(const InputData& data)
 
 
 bool InnerNode::find(const InputData & key, InputData & data)
+throw(NodeException)
 {
 	bool found = false;
 
@@ -479,18 +504,18 @@ bool InnerNode::find(const InputData & key, InputData & data)
 
 	// Busca el nodo interno que referencia a esa clave
 	if (!findINodeData(nodePointerKey))
-		throw "Error! llego una clave a una referencia invalida!";
+		throw NodeException(NodeException::INVALID_REF);;
 
 	// traigo el sucesor de este innerNode.
 	Node* sucesor = m_tree->getNode(nodePointerKey.getLeftPointer());
 
 	found = sucesor->find(key,data);
 
-
 	return found;
 }
 
 loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& promotedKey)
+throw(NodeException)
 {
 	/// Trata de insertar un elemento INodeData y si dio overflow hace el split.
 	loadResultEnum result = NORMAL_LOAD;
@@ -527,7 +552,7 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 		{
 			found = true;
 			if (currentData.getKey() == iNodeData.getKey())
-				throw "Duplicado en insert de Nodo Interno";
+				throw NodeException(NodeException::DUPLICATED_IN_INNER);
 		}else
 
 		currentRegister = m_block->getNextRegister();
@@ -592,6 +617,7 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 
 
 loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -620,7 +646,7 @@ loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
 		}
 
 		if (!found)
-			throw "No existe el elemento a remover";
+			throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 	}
 
 
@@ -628,6 +654,7 @@ loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
 }
 
 loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -665,12 +692,13 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 
 	}
 	if (!found)
-		throw "No existe el elemento a modificar";
+		throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
 	return result;
 }
 
 loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData)
+throw (NodeException)
 {
 	loadResultEnum result = NORMAL_LOAD;
 
@@ -708,10 +736,10 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData,const INode
 
 	}
 	if (!found)
-				throw "No existe el elemento a modificar";
+		throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
 	if (result!= NORMAL_LOAD)
-		throw "Esta devolviendo estado de carga anormal. No deberia, es de tamaño fijo y ya existia!";
+		throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
 
 
 	return result;
@@ -857,8 +885,10 @@ void InnerNode::printContent(InputData& dato)
 	{
 		varR = m_block->getNextRegister(true);
 		data.toNodeData(varR.getValue());
-		cout<< " LeftPointer:"<<data.getLeftPointer()<< "Clave:"<<data.getKey()<<endl;
+		cout << data.getLeftPointer();
+		cout << " (Clave:" << data.getKey() << ") ";
 	}
+	cout << endl;
 }
 
 void InnerNode::show(InputData& data){

@@ -60,6 +60,7 @@ BPlusTree::~BPlusTree()
 }
 
 bool BPlusTree::insert(const InputData& data)
+throw (BPlusTreeException)
 {
 	bool retVal = true;
 
@@ -69,10 +70,16 @@ bool BPlusTree::insert(const InputData& data)
 	INodeData promotedKey;
 
 	if (m_root == NULL)
-		throw "No hay elemento raiz";
+		throw BPlusTreeException(BPlusTreeException::INNEXISTENT_ROOT);
 
-
-	result = m_root->insert(data,promotedKey);
+	try
+	{
+		result = m_root->insert(data,promotedKey);
+	}
+	catch(exception &e)
+	{
+		throw;
+	}
 
 	if (result == OVERFLOW_LOAD)
 	{
@@ -90,16 +97,16 @@ bool BPlusTree::insert(const InputData& data)
 		INodeData newKey(promotedKey.getLeftPointer(),Node::UNDEFINED_KEY);
 
 		// habria que hacer casteo dinamico.
-
-
 		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);
 		result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
 
 		saveNode(sucesor);
+
 		saveNode(m_root);
 
+		// La raiz esta insertando el minimo de claves, no puede ser overflow.
 		if (result == OVERFLOW_LOAD)
-			throw "Imposible, es el minimo de claves!!";
+			throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
 	}
 
 	return retVal;
@@ -157,10 +164,10 @@ LeafNode* BPlusTree::newLeafNode()
 	return node;
 }
 
-void BPlusTree::deleteNode(Node* node)
+void BPlusTree::deleteNode(Node* node) throw (BPlusTreeException)
 {
 	if (node == NULL)
-		throw "Se intento eliminar un nodo nulo";
+		throw BPlusTreeException(BPlusTreeException::DELETED_FREENODE);
 
 	unsigned int nodeNumber = node->getNodeNumber();
 
@@ -170,8 +177,17 @@ void BPlusTree::deleteNode(Node* node)
 
 }
 
+
+
 void BPlusTree::showTree(InputData& data){
+
 	this->m_root->show(data);
 
 };
+
+void BPlusTree::deleteTree()
+{
+	file.deleteFile();
+}
+
 

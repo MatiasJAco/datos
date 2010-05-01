@@ -8,12 +8,14 @@
 #ifndef BPLUSTREE_H_
 #define BPLUSTREE_H_
 
-
+#include "exceptions/BPlusTreeException.h"
+#include "exceptions/NodeException.h"
 
 #include "../input/InputData.h"
 
 #include "../../physical/file/Block.h"
 #include "../../physical/file/BlockFile.h"
+
 
 #include "Node.h"
 #include "InnerNode.h"
@@ -79,7 +81,7 @@ public:
 
 
 
-	bool insert(const InputData& data);
+	bool insert(const InputData& data) throw (BPlusTreeException);
 
 	/// Destructor
 	virtual ~BPlusTree();
@@ -121,14 +123,18 @@ public:
 	 * Elimina un nodo del arbol. Permite que este disponible para usarlo.
 	 * @param node. Nodo a eliminar.
 	 */
-	void deleteNode(Node* node);
-
+	void deleteNode(Node* node) throw (BPlusTreeException);
 
 	/**
 	 * Muestra el arbol por pantalla.
 	 *
 	 * **/
 	void showTree(InputData& data);
+
+	/**
+	 * Elimina el arbol de disco.
+	 */
+	void deleteTree();
 
 
 };
