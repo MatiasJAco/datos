@@ -10,19 +10,13 @@ using namespace std;
 
 const string BPlusTree::FILENAME_DEFAULT = "arbolbmas.dat";
 
-BPlusTree::BPlusTree()
-{
-	m_sizeNodes = SIZENODE_DEFAULT;
-	m_branchFactor = BRANCHFACTOR_DEFAULT;
-	file.open(FILENAME_DEFAULT,SIZENODE_DEFAULT);
-	m_root = NULL;
-	m_currentNode = NULL;
-}
 
-BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor)
+BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor,const InputData& typeData)
+:m_typeData(typeData)
 {
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
+
 	file.open(FILENAME_DEFAULT,sizeNodes,branchFactor);
 
 	/// Creo la raiz y la guardo, o la leo de disco.
@@ -40,17 +34,12 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor)
 	m_currentNode = m_root;
 }
 
-
-BPlusTree::~BPlusTree()
-{
-	file.close();
-}
-
-
-BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor)
+BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor,const InputData& typeData)
+:m_typeData(typeData)
 {
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
+
 	file.open(nameFile,sizeNodes, branchFactor);
 
 	m_root = getNode(ROOT_NODENUMBER);
@@ -63,6 +52,11 @@ BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor)
 	}
 
 	m_currentNode = m_root;
+}
+
+BPlusTree::~BPlusTree()
+{
+	file.close();
 }
 
 bool BPlusTree::insert(const InputData& data)
@@ -89,16 +83,20 @@ bool BPlusTree::insert(const InputData& data)
 		m_root = (InnerNode*)newInnerNode(level+1);
 
 		// le cambio el numero de nodo al sucesor y mantengo el definido para la raiz.
-		sucesor->setNodeNumber(m_root->getNodeNumber());
-		m_root->setNodeNumber(ROOT_NODENUMBER);
+		BlockManager::exchangeBlock(m_root->getBlock(),sucesor->getBlock());
 
 		// Claves que se insertaran al nodo raiz.
 		INodeData firstKey(sucesor->getNodeNumber(),promotedKey.getKey());
 		INodeData newKey(promotedKey.getLeftPointer(),Node::UNDEFINED_KEY);
 
 		// habria que hacer casteo dinamico.
+
+
 		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);
 		result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
+
+		saveNode(sucesor);
+		saveNode(m_root);
 
 		if (result == OVERFLOW_LOAD)
 			throw "Imposible, es el minimo de claves!!";
@@ -121,11 +119,11 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 
 		if (level == Node::LEAF_LEVEL)
 		{
-			node = new LeafNode(nodeNumber,block,this);
+			node = new LeafNode(nodeNumber,block,m_typeData,this);
 		}
 		else
 		{
-			node = new InnerNode(nodeNumber,level,block,this);
+			node = new InnerNode(nodeNumber,level,block,m_typeData,this);
 		}
 	}
 
@@ -139,22 +137,22 @@ void BPlusTree::saveNode(Node* node)
 	file.saveBlock(block);
 }
 
-Node* BPlusTree::newInnerNode(unsigned int level)
+InnerNode* BPlusTree::newInnerNode(unsigned int level)
 {
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	Node* node = new InnerNode(nodeNumber,level,block,this);
+	InnerNode* node = new InnerNode(nodeNumber,level,block,m_typeData,this);
 
 	return node;
 }
 
-Node* BPlusTree::newLeafNode()
+LeafNode* BPlusTree::newLeafNode()
 {
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	Node* node = new LeafNode(nodeNumber,block,this);
+	LeafNode* node = new LeafNode(nodeNumber,block,m_typeData,this);
 
 	return node;
 }
@@ -171,3 +169,5 @@ void BPlusTree::deleteNode(Node* node)
 	delete node;
 
 }
+
+

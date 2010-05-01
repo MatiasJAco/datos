@@ -7,28 +7,22 @@
 
 #include "Node.h"
 
-Node::Node()
-{
-	m_nodeNumber = UNDEFINED_NODE_NUMBER;
-}
-
-Node::Node(unsigned int nodeNumber)
-{
-	m_nodeNumber = nodeNumber;
-}
-
 //Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
-Node::Node(unsigned int nodeNumber,unsigned int level,Block* block)
+Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData)
+:m_typeData(typeData)
 {
 	m_nodeNumber = nodeNumber;
 	m_block = block;
 //	m_tree = pointerTree;
 
-	VarRegister regLevel;
-	regLevel.setValue(level);
+	if (m_block->getRegisterAmount()==0)
+	{
+		VarRegister regLevel;
+		regLevel.setValue(level);
 
-	m_block->restartCounter();
-	m_block->addRegister(regLevel);
+		m_block->restartCounter();
+		m_block->addRegister(regLevel);
+	}
 }
 
 Node::~Node()
@@ -79,12 +73,7 @@ void Node::setLevel(const unsigned int level)
 
 unsigned int Node::getNodeNumber()const
 {
-	return m_nodeNumber;
-}
-
-void Node::setNodeNumber(unsigned int number)
-{
-	m_nodeNumber = number;
+	return m_block->getBlockNumber();
 }
 
 

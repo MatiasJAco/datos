@@ -19,7 +19,10 @@
 #include "InnerNode.h"
 #include "LeafNode.h"
 
-class Node;
+//class Node;
+
+class LeafNode;
+class InnerNode;
 
 /**
  * Implementacion de arbol B+ guardado en disco
@@ -45,6 +48,7 @@ private:
 
 	unsigned int m_sizeNodes;
 	float m_branchFactor;
+	const InputData& m_typeData;
 
 private:
 	/// Guardo una referencia a la raiz.
@@ -53,19 +57,26 @@ private:
 	Node* m_currentNode;
 
 public:
-	/// Constructor por defecto
-	BPlusTree();
 
-	/// Constructor que recibe el tamaño y factor de carga de los nodos.
-	BPlusTree(unsigned int sizeNodes,float branchFactor);
 
 	/** Constructor que recibe el tamaño y factor de carga de los nodos, y el nombre
 	 * del archivo donde se almacena el arbol.
 	 * @param nameFile nombre del archivo.
 	 * @param sizeNodes tamaño de los nodos.
 	 * @param branchFactor factor de carga de los nodos.
+	 * @param typedata Un referencia al tipo de dato que almacena.
 	 */
-	BPlusTree(std::string nameFile,unsigned int sizeNodes,float branchFactor);
+	BPlusTree(unsigned int sizeNodes,float branchFactor,const InputData& typedata);
+
+	/** Constructor que recibe el tamaño y factor de carga de los nodos, y el nombre
+	 * del archivo donde se almacena el arbol.
+	 * @param nameFile nombre del archivo.
+	 * @param sizeNodes tamaño de los nodos.
+	 * @param branchFactor factor de carga de los nodos.
+	 * @param typedata Un referencia al tipo de dato que almacena.
+	 */
+	BPlusTree(std::string nameFile,unsigned int sizeNodes,float branchFactor,const InputData& typedata);
+
 
 
 	bool insert(const InputData& data);
@@ -96,7 +107,7 @@ public:
 	 * @param level Nivel del nodo interno.
 	 * @return El nodo. NULL en caso de algun error.
 	 */
-	Node* newInnerNode(unsigned int level);
+	InnerNode* newInnerNode(unsigned int level);
 
 	/**
 	 * Devuelve un nodo hoja
@@ -104,13 +115,16 @@ public:
 	 * el nodo creado
 	 * @return El nodo. NULL en caso de algun error.
 	 */
-	Node* newLeafNode();
+	LeafNode* newLeafNode();
 
 	/**
 	 * Elimina un nodo del arbol. Permite que este disponible para usarlo.
 	 * @param node. Nodo a eliminar.
 	 */
 	void deleteNode(Node* node);
+
+
+
 
 };
 

@@ -7,28 +7,36 @@
 
 #include "LeafNode.h"
 
-LeafNode::LeafNode()
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData)
+:Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
 {
+	if (m_block->getRegisterAmount()<3)
+		{
+		VarRegister prevPointer,nextPointer;
+
+		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
+		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
+
+		m_block->addRegister(prevPointer);
+		m_block->addRegister(nextPointer);
+		}
 }
 
-LeafNode::LeafNode(unsigned int nodeNumber)
-:Node(nodeNumber)
-{
-}
-
-LeafNode::LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree)
-//:Node(nodeNumber,Node::LEAF_LEVEL,block,pointerTree)
-:Node(nodeNumber,Node::LEAF_LEVEL,block)
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData,BPlusTree* pointerTree)
+:Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
 {
 	m_tree = pointerTree;
 
-	VarRegister prevPointer,nextPointer;
+	if (m_block->getRegisterAmount()<3)
+	{
+		VarRegister prevPointer,nextPointer;
 
-	prevPointer.setValue(UNDEFINED_NODE_NUMBER);
-	nextPointer.setValue(UNDEFINED_NODE_NUMBER);
+		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
+		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
 
-	m_block->addRegister(prevPointer);
-	m_block->addRegister(nextPointer);
+		m_block->addRegister(prevPointer);
+		m_block->addRegister(nextPointer);
+	}
 }
 
 
@@ -83,7 +91,12 @@ loadResultEnum LeafNode::insert(const InputData& data,INodeData& promotedKey)
 	m_block->addRegister(regData,result);
 
 	if (result == OVERFLOW_LOAD)
+	{
 		split(data,pos,promotedKey);
+		setNextLeaf(promotedKey.getLeftPointer());
+	}
+
+	m_tree->saveNode(this);
 
 	return result;
 }
@@ -266,9 +279,13 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 
 	blockSibling->restartCounter();
 	///Saltea datos de control.
-	blockSibling->getNextRegister();
-	blockSibling->getNextRegister();
+//	blockSibling->getNextRegister();
+//	blockSibling->getNextRegister();
 	//Recupera el primer registro.
+	blockSibling->getNextRegister();
+	blockSibling->getNextRegister();
+	blockSibling->getNextRegister();
+
 	reg = blockSibling->getNextRegister();
 
 	InputData* firstKey = data.newInstance();
@@ -277,6 +294,8 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey->getKey());
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
+
+	m_tree->saveNode(sibling);
 
 	return true;
 }
@@ -291,11 +310,18 @@ void LeafNode::printContent(InputData & data)
 	m_block->restartCounter();
 	dataAmmount = m_block->getRegisterAmount();
 
+	cout << "\t Numero nodo: " << getNodeNumber();
 	varR = m_block->getNextRegister(true);
-	cout << "Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
-	cout << "Datos "<<endl;
+	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
+	varR = m_block->getNextRegister(true);
+	cout << "\t Nodo anterior: "<< ByteConverter::bytesToInt(varR.getValue());
+	varR = m_block->getNextRegister(true);
+	cout << "\t Nodo siguiente: "<< ByteConverter::bytesToInt(varR.getValue());
+	cout << "\n Datos "<<endl;
 
-	for(i=1; i < dataAmmount; i++)
+	i = m_block->getPosActual();
+
+	for(i = i; i < dataAmmount; i++)
 	{
 		varR = m_block->getNextRegister(true);
 		data.toData(varR.getValue());
@@ -305,9 +331,39 @@ void LeafNode::printContent(InputData & data)
 
 }
 
+std::string LeafNode::toStringData(InputData & typedata)
+{
+	std::string retStr = "";
+
+	VarRegister varR;
+	unsigned int dataAmmount;
+	unsigned int i = 0;
+
+	m_block->restartCounter();
+	dataAmmount = m_block->getRegisterAmount();
+
+	varR = m_block->getNextRegister(true);
+	retStr+= "\t Nivel: "+ ByteConverter::bytesToUInt(varR.getValue());
+	varR = m_block->getNextRegister(true);
+	retStr += "\t Nodo anterior: " + ByteConverter::bytesToInt(varR.getValue());
+	varR = m_block->getNextRegister(true);
+	retStr += "\t Nodo siguiente: "+ ByteConverter::bytesToInt(varR.getValue());
+	retStr +=  "\n Datos \n";
+
+	i = m_block->getPosActual();
+
+	for(i = i; i < dataAmmount; i++)
+	{
+		varR = m_block->getNextRegister(true);
+		typedata.toData(varR.getValue());
+		retStr+= typedata.toString();
+	}
+
+	return retStr;
+}
 
 
-unsigned int LeafNode::getNext()
+unsigned int LeafNode::getNextLeaf()
 {
 	unsigned int nextLeaf = UNDEFINED_NODE_NUMBER;
 
@@ -323,7 +379,7 @@ unsigned int LeafNode::getNext()
 	return nextLeaf;
 }
 
-unsigned int LeafNode::getPrevious()
+unsigned int LeafNode::getPreviousLeaf()
 {
 	unsigned int prevLeaf = UNDEFINED_NODE_NUMBER;
 
@@ -339,3 +395,37 @@ unsigned int LeafNode::getPrevious()
 	return prevLeaf;
 }
 
+unsigned int LeafNode::setNextLeaf(unsigned int nodeNumber)
+{
+	unsigned int nextleaf = Node::UNDEFINED_NODE_NUMBER;
+
+	m_block->restartCounter();
+
+	m_block->getNextRegister();
+	m_block->getNextRegister();
+
+	VarRegister reg;
+	reg.setValue(nodeNumber);
+
+	m_block->modifyRegister(reg);
+
+
+	return nextleaf;
+}
+
+
+unsigned int LeafNode::setPreviousLeaf(unsigned int nodeNumber)
+{
+	unsigned int prevleaf = Node::UNDEFINED_NODE_NUMBER;
+
+	m_block->restartCounter();
+
+	m_block->getNextRegister();
+
+	VarRegister reg;
+	reg.setValue(nodeNumber);
+
+	m_block->modifyRegister(reg);
+
+	return prevleaf;
+}

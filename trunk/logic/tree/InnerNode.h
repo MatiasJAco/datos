@@ -37,10 +37,12 @@ private:
     unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir, const InputData & newData);
 
 private:
-    InnerNode(unsigned int nodeNumber, unsigned int level, Block *block, BPlusTree *pointerTree);
+    InnerNode(unsigned int nodeNumber, unsigned int level,Block *block,const InputData& typeData, BPlusTree *pointerTree);
+
+
 public:
-    InnerNode();
-    InnerNode(unsigned int nodeNumber);
+    InnerNode(unsigned int nodeNumber, unsigned int level, Block *block,const InputData& typeData);
+
     ~InnerNode();
     //loadResultEnum remove(const InputData & key);
 
@@ -151,6 +153,20 @@ public:
 	 */
 	loadResultEnum modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData);
 
+	/**
+	 * Devuelve un elemento INodeData.
+	 * @return INodeData siguiente.
+	 */
+	INodeData getNextINodeData();
+
+	/**
+	 * Devuelve la cantidad total de elementos INodeData;
+	 * @return Cantidad de elementos INodeData.
+	 */
+	unsigned int getAmountINodeData();
+
+
+	void printContent(InputData & data);
 
 };
 

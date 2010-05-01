@@ -27,17 +27,12 @@ private:
 
 private:
 	//--------------Constructor/Destructor----------------//
-	LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree);
+	LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData,BPlusTree* pointerTree);
 
 public:
-	/// Constructor
-	LeafNode();
 
-	/**
-	 * Constructor.
-	 * @param nodeNumber Identificador del nodo.
-	 */
-	LeafNode(unsigned int nodeNumber);
+	LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData);
+
 
 	/// Destructor.
 	~LeafNode();
@@ -110,14 +105,25 @@ public:
 	 * Devuelve el puntero a la siguiente hoja.
 	 * @return Numero de nodo o identificador.
 	 */
-	unsigned int getNext();
+	unsigned int getNextLeaf();
 
 	/**
 	 * Devuelve el puntero a la hoja anterior.
 	 * @return Numero de nodo o identificador.
 	 */
-	unsigned int getPrevious();
+	unsigned int getPreviousLeaf();
 
+	/**
+	 * Setea el puntero a la siguiente hoja.
+	 * @return Numero de nodo o identificador.
+	 */
+	unsigned int setNextLeaf(unsigned int nodeNumber);
+
+	/**
+	 * Setea el puntero a la hoja anterior.
+	 * @return Numero de nodo o identificador.
+	 */
+	unsigned int setPreviousLeaf(unsigned int nodeNumber);
 
 	/**
 	 * Imprime el contenido del nodo por pantalla.
@@ -125,6 +131,18 @@ public:
 	 * tenemos
 	 */
 	void printContent(InputData & data);
+
+	/**
+	 * Devuelve un string que tiene el contenido de la hoja.
+	 * @param data un dato del tipo que se emplea internamente, para saber que tipos de dato
+	 * tenemos
+	 */
+	std::string toStringData(InputData & typedata);
+
+	/**
+	 *
+	 */
+	InputData& getNextData();
 
 };
 
