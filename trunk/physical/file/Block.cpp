@@ -178,7 +178,7 @@ bool Block::deserialize(char *streamChar)
 			temp.deserialize(p);
 			regSize = temp.getDiskSize();
 			m_registers.push_back(temp);
-			m_registerCount++;
+			//m_registerCount++;
 		}
 
 		retVal=true;
@@ -305,7 +305,7 @@ bool Block::modifyRegister(const VarRegister & reg, loadResultEnum &load)
 
 		load= evaluateLoad(newSize);
 
-		if(load ==NORMAL_LOAD)
+		if(load != OVERFLOW_LOAD)
 		{
 			deleteRegister();
 			addRegister(reg);

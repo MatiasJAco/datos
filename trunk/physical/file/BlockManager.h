@@ -60,7 +60,7 @@ public:
 	 */
 	static bool redistributeOverflow(Block *orig, Block *blank, VarRegister &reg, unsigned int pos);
 
-
+	static bool exchangeBlock(Block* blockA,Block*blockB);
 
 
 	//--------------------------------deprecated---------------------------------------//
