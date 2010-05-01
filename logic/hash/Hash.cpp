@@ -242,6 +242,7 @@ void Hash::print() {
 	Block* actualBlock = this->hashFile->getBlock(i);
 	this->hashTable->print();
 
+	//TODO : cambiar esto y usar el this->hashFile->getFreeBlockList() y restarle uno a cada elem de la lista
 	cout << "Bloques libres: " << this->hashFile->getFreeBlockString() << endl;
 
 	printf("\nHashFile: \n");
