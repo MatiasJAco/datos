@@ -142,7 +142,7 @@ loadResultEnum LeafNode::remove(const InputData& data)
 	return result;
 }
 
-loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdata)
+loadResultEnum LeafNode::modify(const InputData & dato, const InputData & newdata,INodeData& promotedKey)
 {
 	loadResultEnum result = NORMAL_LOAD;
 	bool found = false;

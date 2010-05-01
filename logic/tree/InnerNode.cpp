@@ -53,7 +53,7 @@ void InnerNode::getInPosition(INodeData * contenido, unsigned int position)
 
 
 
-loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2)
+loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2,INodeData& promotedKey)
 {
 
 	loadResultEnum result = NORMAL_LOAD;
@@ -67,16 +67,95 @@ loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2
 
 	// Se lo pide al arbol
 	Node* sucesor = this->m_tree->getNode(nodePointerKey.getLeftPointer());
-	result=sucesor->modify(dato,dato2);
+	result=sucesor->modify(dato,dato2,promotedKey);
 	if (result==OVERFLOW_LOAD){
-		//TODO implementar este caso
+		// Busca el INodeData mayor al promotedKey y es seteada dentro de la misma.
+
+		// Hace el intercambio de claves y punteros. Modifica el puntero de bigger
+		INodeData bigger(UNDEFINED_NODE_NUMBER,promotedKey.getKey());
+		findINodeData(bigger,false);
+
+		INodeData newINodeData(bigger.getLeftPointer(),promotedKey.getKey());
+		bigger.setLeftPointer(promotedKey.getLeftPointer());
+
+		modifyINodeData(bigger);
+
+		/// Devuelve el resultado de haber insertado una clave,
+		/// promoted Key es modificado despues del insert.
+		result = insertINodeData(newINodeData,promotedKey);
+
 	}else{
 		if(result==UNDERFLOW_LOAD){
 			//TODO implementar este caso
+			bool hasRightBrother=false;
+			bool leftJoin=true;
+			bool balanced = false;
+			Node* rightSibling;
+			Node* leftSibling;
+			INodeData joinBrother;
+
+			// busco el hermano mayor a key para obtener el hijo derecho.
+			INodeData bigBrother(UNDEFINED_NODE_NUMBER,nodePointerKey.getKey());
+			findINodeData(bigBrother,false);
+			//Verifico que tenga hermano derecho.
+			if(!this->m_block->hasNextRegister()){
+				hasRightBrother=false;
+			}
+
+			if(hasRightBrother){
+				joinBrother.setKey(bigBrother.getKey());
+				joinBrother.setLeftPointer(bigBrother.getLeftPointer());
+				// Trato de balancear con el derecho.
+				// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
+				rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
+				balanced = redistribute(sucesor,rightSibling,dato,bigBrother,RIGHT_SIDE);
+			};
+
+			if (balanced)
+				modifyINodeData(nodePointerKey,bigBrother);
+
+			// Si no pudo, busco el sibling izquierdo, el hijo del hermano menor.
+			if (!balanced)
+			{
+				//Verifica que tenga hermano izquierdo.
+				INodeData minorBrother(UNDEFINED_NODE_NUMBER,nodePointerKey.getKey());
+				findINodeData(minorBrother);
+				unsigned int posicionNodo=this->buscarPosicionInnerPorClave(nodePointerKey.getKey());
+				if(posicionNodo!=1){
+					this->getInPosition(&minorBrother,posicionNodo-1);
+					joinBrother.setKey(minorBrother.getKey());
+					joinBrother.setLeftPointer(minorBrother.getLeftPointer());
+					leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
+					// Trato de balancear con el sibling izquierdo del sucesor.
+					balanced = redistribute(sucesor,leftSibling,dato,minorBrother,LEFT_SIDE);
+				}else
+					leftJoin=false;
+
+					if (balanced)
+						modifyINodeData(joinBrother,minorBrother);
+			}
+
+			// Si no pudo balancear, fusiona.
+			if (!balanced)
+			{
+				INodeData fusionatedNode;
+				if(leftJoin){
+					merge(sucesor,leftSibling,dato,fusionatedNode,LEFT_SIDE);
+					result = removeINodeData(joinBrother);
+				}else{
+					merge(sucesor,rightSibling,dato,fusionatedNode,RIGHT_SIDE);
+					result = removeINodeData(joinBrother);
+					//Recupero clave del que borro y se a paso al que queda.
+					joinBrother.setLeftPointer(nodePointerKey.getLeftPointer());
+					modifyINodeData(nodePointerKey,joinBrother);
+
+				};
+
+			}
 		};
 	};
 
-	return NORMAL_LOAD;
+	return result;
 }
 
 loadResultEnum InnerNode::modify(const InputData& data)
