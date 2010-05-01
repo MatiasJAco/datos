@@ -35,10 +35,19 @@ public:
 	 */
 	virtual bool close()=0;
 
+
 	/**
 	 * Corta la longitud del archivo
+	 * @return true en caso de ok, false en caso contrario
 	 */
 	bool resize(unsigned int size);
+
+	/**
+	 * Elimina el archivo.
+	 * @return true en caso de ok, false en caso contrario
+	 */
+	bool deleteFile();
+
 
 protected:
 	//-----------------------------Headers-----------------------------//
