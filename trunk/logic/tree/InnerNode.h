@@ -47,7 +47,7 @@ public:
     //loadResultEnum remove(const InputData & key);
 
     bool find(const InputData & key, InputData & data);
-    loadResultEnum modify(const InputData & key, const InputData & dato);
+    loadResultEnum modify(const InputData & key, const InputData & dato,INodeData& promotedKey);
     loadResultEnum modify(const InputData & data);
 //    void insertINodeData(INodeData *contBuscado);
     void join(Node *toDivide, Node *destNode, const InputData & newData);

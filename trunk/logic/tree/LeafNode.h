@@ -74,7 +74,7 @@ public:
 	 * @param registro valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	loadResultEnum modify(const InputData& dato, const InputData& dato2);
+	loadResultEnum modify(const InputData& dato, const InputData& dato2,INodeData& promotedKey);
 
 	/**
 	 * Modifica el nodo identificado por la clave de data

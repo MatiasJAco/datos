@@ -102,7 +102,7 @@ public:
 	 * @param reg valor que se colocara en el registro
 	 * @return bool TRUE si modifico el elemento FALSE en caso que no se encontrara.
 	 */
-	virtual loadResultEnum modify(const InputData& data1, const InputData& data2) = 0;
+	virtual loadResultEnum modify(const InputData& data1, const InputData& data2,INodeData& promotedKey) = 0;
 
 	/**
 	 * Modifica el nodo identificado por la clave de data
