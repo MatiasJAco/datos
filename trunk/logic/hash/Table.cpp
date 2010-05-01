@@ -335,25 +335,19 @@ void Table::jumpAndReplace(int position, int jump, int element){
 	int sizeOfTable = this->getSize();
 	int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
-	int i;
+	int i = position;
 
-	/* Me muevo para adelante */
-	i =  position+jump;
-	if ( i <= (sizeOfTable-1) ){
-		this->modifyRegister(i,element);
-	}
-	else{   //se paso del final y hay que volver al ppio
-		i = i -sizeOfTable ;
-		this->modifyRegister(i,element);
+	//me paro lo mas al ppio posible en la tabla segun los saltos "jumps"
+	while ((i-jump)>=0){
+		i = i - jump;
 	}
 
-	/* Me muevo para atras */
-	i =  position-jump;
-	if ( i >= 0 ){
-		this->modifyRegister(i,element);
-	}
-	else{   //se paso del ppio y hay que volver desde atras
-		i = i + sizeOfTable;
+	//reemplazo ese elemento
+	this->modifyRegister(i,element);
+
+	//mientras que pueda, voy saltando y reemplazando el valor en la tabla
+	while ((i+jump)<= (sizeOfTable-1)){
+		i = i + jump;
 		this->modifyRegister(i,element);
 	}
 }

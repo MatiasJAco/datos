@@ -147,13 +147,97 @@ void tests() {
 	delete hash;
 }
 
+// IMPORTANTE !!!!!!!!!!!
+// Para correr este ejemplo hay que eliminar manualmente los 3 archivos generados en los tests anteriores
+// hash.bin    hash.bin.free  table.txt
+void testEjemplo(){
+	Hash* hash = new Hash();
+	cout<< "Este proximo print deberia mostrar todas las cosas creadas pero vacias!\n"<<endl;
+	hash->print();
+
+	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
+
+	cout<< "+123\n"<<endl;
+	StringInputData* sid123 = createSid(123,value);
+	hash->add(sid123);
+	delete sid123;
+	hash->print();
+
+	cout<< "+915\n"<<endl;
+	StringInputData* sid915 = createSid(915,value);
+	hash->add(sid915);
+	delete sid915;
+	hash->print();
+
+	cout<< "+629\n"<<endl;
+	StringInputData* sid629 = createSid(629,value);
+	hash->add(sid629);
+	delete sid629;
+	hash->print();
+
+	cout<< "+411\n"<<endl;
+	StringInputData* sid411 = createSid(411,value);
+	hash->add(sid411);
+	delete sid411;
+	hash->print();
+
+	cout<< "+200\n"<<endl;
+	StringInputData* sid200 = createSid(200,value);
+	hash->add(sid200);
+	delete sid200;
+	hash->print();
+
+	cout<< "+863\n"<<endl;
+	StringInputData* sid863 = createSid(863,value);
+	hash->add(sid863);
+	delete sid863;
+	hash->print();
+
+	cout<< "-629\n"<<endl;
+	hash->erase(629);
+	hash->print();
+
+	cout<< "+408\n"<<endl;
+	StringInputData* sid408 = createSid(408,value);
+	hash->add(sid408);
+	delete sid408;
+	hash->print();
+
+	cout<< "+34\n"<<endl;
+	StringInputData* sid34 = createSid(34,value);
+	hash->add(sid34);
+	delete sid34;
+	hash->print();
+
+	cout<< "+510\n"<<endl;
+	StringInputData* sid510 = createSid(510,value);
+	hash->add(sid510);
+	delete sid510;
+	hash->print();
+
+	cout<< "+863\n"<<endl;
+	hash->erase(863);
+	hash->print();
+
+	cout<< "+775\n"<<endl;
+	StringInputData* sid775 = createSid(775,value);
+	hash->add(sid775);
+	delete sid775;
+	hash->print();
+
+
+	delete hash;
+}
+
 int main(int argc, const char* argv[]){
 	//testTable();
 	//testTable2();
 	//testTable3();
 	//testTable4();
 	//testDelete();
-	tests();
+	//tests();
+
+	testEjemplo();
 	//cout << "paso test!" << endl;
 
 //	Hash* hash = new Hash();
