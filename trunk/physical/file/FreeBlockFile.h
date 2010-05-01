@@ -11,7 +11,11 @@
 #include <fstream>
 #include "FixedRegister.h"
 #include "File.h"
+#include <list>
 #include "../utils/ByteConverter.h"
+
+typedef std::list<unsigned int> FreeBlockList;
+typedef FreeBlockList::iterator FreeBlockListIt;
 
 /**
  * Clase encargada de manejar los bloques libres para nuestro archivo.
@@ -21,6 +25,7 @@
  */
 class FreeBlockFile:public File
 {
+
 public:
 	FreeBlockFile();
 	~FreeBlockFile();
@@ -65,6 +70,11 @@ public:
 	 */
 	std::string getFreeBlockString();
 
+	/**
+	 * Muestra por pantalla los nodos libres, se usa para debug
+	 * @return string un string con todos los numeros de bloques
+	 */
+	FreeBlockList getFreeBlockList();
 
 private:
 
