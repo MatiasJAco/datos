@@ -60,6 +60,14 @@ public:
 	 */
 	static bool redistributeOverflow(Block *orig, Block *blank, VarRegister &reg, unsigned int pos);
 
+	/**
+	 * Intercambia el contenido del Bloque A por el del bloque B
+	 * Si A tenia 123 y B 456
+	 * B pasa a tener 456 y A pasa a tener 123
+	 * @param blockA bloque a intercambiar
+	 * @param blockB bloque a intercambiar
+	 * @return bool true en caso de OK false en caso contrario
+	 */
 	static bool exchangeBlock(Block* blockA,Block*blockB);
 
 

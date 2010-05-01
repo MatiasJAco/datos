@@ -162,10 +162,14 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 			}
 
 			block2->clear();
+			retVal=true;
 		}
 	}
 	else
 		throw "Se pasaron punteros a NULL";
+
+	if(side==RIGHT_SIDE&&retVal)
+		retVal = exchangeBlock(block1,block2);
 
 	block1->restartCounter();
 	block2->restartCounter();
