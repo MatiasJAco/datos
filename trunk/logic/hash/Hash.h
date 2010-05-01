@@ -82,6 +82,11 @@ private:
 	 */
 	int reHash(Bucket* bucketDesbordado);
 
+	/**
+	 * Guarda el bucket en el archivo Hash
+	 */
+	void saveBucket(Bucket * bucket);
+
 public:
 
 	Hash();
