@@ -108,26 +108,44 @@ void tests() {
 		delete sid;
 	}
 
-
-
-	hash->print();
-
-
-
+//	hash->print();
 	//@return int Retorna 1 si el sid no existe;0 si fue cambiado; -1 si hubo algun problema
-	char newValue[15]= "______________";
-	bool result = hash->modify(12,newValue);
-	if (result==1)
-		cout<<endl<<"NO existe el sid"<<endl;
-	else if (result==-1)
-		cout<<endl<<"Hubo algun prob"<<endl;
-	else
-			cout<<endl<<"lo cambio!"<<endl;
+//	char newValue[15]= "______________";
+//	bool result = hash->modify(12,newValue);
+//	if (result==1)
+//		cout<<endl<<"NO existe el sid"<<endl;
+//	else if (result==-1)
+//		cout<<endl<<"Hubo algun prob"<<endl;
+//	else
+//			cout<<endl<<"lo cambio!"<<endl;
 
+
+	hash->erase(70);
+	hash->erase(66);
+	hash->erase(30);
+	hash->erase(26);
+	hash->erase(22);
+	hash->erase(18);
+	hash->erase(14);
+	hash->erase(10);
+	hash->erase(6);
+	hash->erase(2);
+	hash->erase(34);
+	hash->erase(38);
+	hash->erase(42);
+	hash->erase(46);
+	hash->erase(50);
+	hash->erase(54);
+	hash->erase(58);
 
 	hash->print();
-
+	hash->erase(62);
+	hash->print();
 }
+
+
+
+
 
 int main(){
 	//testTable();
