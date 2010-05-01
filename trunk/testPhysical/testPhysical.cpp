@@ -239,6 +239,7 @@ void testFreeBlockFile()
 void testFile()
 {
 	cout << "Testeo de file"<<endl;
+	char * streamVar2;
 	BlockFile *archivo=new BlockFile("./pepito", 0.5);
 
 	Block*block;
@@ -303,8 +304,10 @@ void testFile()
 	for(int i=0; i < 10; i++)
 	{
 		var2=block->getNextRegister();
-		if(ByteConverter::bytesToInt(var2.getValue()) !=  i)
+		streamVar2 = var2.getValue();
+		if(ByteConverter::bytesToInt(streamVar2) !=  i)
 			cout << "Error en getNextRegister()"<<endl;
+		delete [] streamVar2;
 	}
 
 	cout <<"Guardado bloque"<<endl;
@@ -317,9 +320,10 @@ void testFile()
 		cout <<"Error al salvar el bloque"<<endl;
 
 	delete block;
-	delete archivo;
+
 	block=NULL;
 
+	delete archivo;
 
 	//----------------------Recuperacion de datos--------------------------//
 	BlockFile *archivo2=new BlockFile();
@@ -333,12 +337,15 @@ void testFile()
 	for(int i=0; i < 10; i++)
 	{
 		var2=block->getNextRegister();
-		if(ByteConverter::bytesToInt(var2.getValue()) !=  i)
+		streamVar2 = var2.getValue();
+		if(ByteConverter::bytesToInt(streamVar2) !=  i)
 			cout << "Error en getNextRegister()"<<endl;
+		delete [] streamVar2;
 	}
 
 
 
+	archivo2->deleteFile();
 
 	delete block;
 	delete archivo2;
@@ -363,9 +370,10 @@ void testBlock()
 	if(!archivo->open("./pepito2", 512))
 		cout << "Error al abrir pepito"<<endl;
 
+	block = archivo->getNewBlock();
 	if(block==NULL)
 		cout << "Error al pedir bloque nuevo"<<endl;
-	block = archivo->getNewBlock();
+
 
 	if(block->getMinimalLoad() != 256)
 		cout << "Error de getMinimalLoad(), resultado:"<<block->getMinimalLoad()<<endl;
@@ -425,17 +433,24 @@ void testBlock()
 
 	var2=block2->getNextRegister(false);
 
-	cout << "actual"<< ByteConverter::bytesToInt(var2.getValue())<<endl;
+	char * streamVar2 = var2.getValue();
+	//cout << "actual"<< ByteConverter::bytesToInt(streamVar2)<<endl;
+	delete [] streamVar2;
 
 	block2->deleteRegister();
 
 	var2=block2->getNextRegister(false);
 
-	cout << "actual"<< ByteConverter::bytesToInt(var2.getValue())<<endl;
+	streamVar2 = var2.getValue();
+	//cout << "actual"<< ByteConverter::bytesToInt(streamVar2)<<endl;
+	delete [] streamVar2;
 
 	var2 = block2->getRegisterN(31);
-	if(ByteConverter::bytesToString(var2.getValue())!= stringLargo)
+	streamVar2 = var2.getValue();
+	if(ByteConverter::bytesToString(streamVar2)!= stringLargo)
 		cout << "Error en el getRegisterN()"<<endl;
+
+	delete [] streamVar2;
 
 
 	block->clear();
@@ -445,8 +460,8 @@ void testBlock()
 	var2.setValue(23132123);
 	BlockManager::redistributeOverflow(block2, block, var2, 1);
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 
 
 	cout << "-----------fin SPLIT------------------"<<endl;
@@ -480,8 +495,10 @@ void testBlock()
 	for(int i=0; i < 10; i++)
 	{
 		var2=block->getNextRegister();
-		if(ByteConverter::bytesToInt(var2.getValue()) !=  i)
+		streamVar2 = var2.getValue();
+		if(ByteConverter::bytesToInt(streamVar2) !=  i)
 			cout << "Error en getNextRegister()"<<endl;
+		delete []streamVar2;
 	}
 
 	cout <<"Guardado bloque"<<endl;
@@ -553,8 +570,11 @@ void testBlock()
 	block->restartCounter();
 	var2 = block->getNextRegister();
 
-	if(ByteConverter::bytesToUInt(var2.getValue())!=890)
+	streamVar2 = var2.getValue();
+	if(ByteConverter::bytesToUInt(streamVar2)!=890)
 		cout << "Error al modificar registro en caso de OVERFLOW"<<endl;
+
+	delete [] streamVar2;
 
 	if(loadResult ==OVERFLOW_LOAD)
 		cout << "Falso Overflow"<<endl;
@@ -585,14 +605,16 @@ void testBlock()
 	BlockManager::merge(block, block2);
 
 	//block2->printRegisters();
-	block->printRegisters();
+	//block->printRegisters();
 
 
 
 	block->restartCounter();
 
 	var2 = block->peekRegister();
-	cout << "PEEK"<< ByteConverter::bytesToUInt(var2.getValue())<<endl;
+	streamVar2 = var2.getValue();
+	//cout << "PEEK"<< ByteConverter::bytesToUInt(streamVar2)<<endl;
+	delete []streamVar2;
 
 	block->deleteRegister();
 
@@ -604,11 +626,11 @@ void testBlock()
 /*	block->jumpEndCounter();
 	block->deleteRegister();*/
 
-	int pos = block->getPosActual();
-	int regAmount = block->getRegisterAmount();
+	//int pos = block->getPosActual();
+	//int regAmount = block->getRegisterAmount();
 
-	if(pos!= regAmount-1)
-		cout << "Error en pos actual2 "<< pos<< endl;
+	//if(pos!= regAmount-1)
+	//	cout << "Error en pos actual3 "<< pos<< endl;
 	//block->printRegisters();
 
 
@@ -671,15 +693,15 @@ void testBlock()
 			cout << "Falso Overflow"<<endl;
 	}
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 	cout << "-------------redistribute left----------"<<endl;
 
 	if(!BlockManager::balanceLoad(block, block2,LEFT_SIDE))
 		cout << "Error en balance lft 2"<<endl;
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 
 
 	cout << "-----------Redistribute-Right---------------------"<<endl;
@@ -714,8 +736,8 @@ void testBlock()
 	if(BlockManager::balanceLoad(block, block2,RIGHT_SIDE))
 		cout << "Error en balance RGT 1"<<endl;
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 
 
 	block->clear();
@@ -744,15 +766,15 @@ void testBlock()
 			cout << "Falso Overflow"<<endl;
 	}
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 	cout << "-------------redistribute left----------"<<endl;
 
 	if(!BlockManager::balanceLoad(block, block2,RIGHT_SIDE))
 		cout << "Error en balance lft 2"<<endl;
 
-	block2->printRegisters();
-	block->printRegisters();
+	//block2->printRegisters();
+	//block->printRegisters();
 
 
 
@@ -781,7 +803,9 @@ try
 	//testFixedRegister();
 	//testFreeBlockFile();
 	testBlock();
-	//testFile();
+	testFile();
+
+
 }
 catch (exception e)
 {
