@@ -116,6 +116,7 @@ void testDelete() {
 
 void tests() {
 	Hash* hash = new Hash();
+	hash->print();
 	/* Se toma el dato que ingresa el usuario. */
 	char value[8] = "paytiti";
 	for (int i = 1; i<=70;i++){
@@ -141,8 +142,6 @@ void tests() {
 	hash->erase(50);
 	hash->erase(54);
 	hash->erase(58);
-
-	hash->print();
 	hash->erase(62);
 	hash->print();
 	delete hash;
