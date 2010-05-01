@@ -41,6 +41,10 @@ int Hash::calculateHashFunction(int key) {
 	return key % this->hashTable->getSize();
 }
 
+void Hash::saveBucket(Bucket * bucket){
+	this->hashFile->saveBlock(bucket->getBlock());
+}
+
 int Hash::getNumberOfBucket(int key) {
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
@@ -81,10 +85,10 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		if (deleteResult == false) {
 			cout << "No pudo borrarse el registro: " << sid->getKey() << " del bloque: " << bucketDesbordado->getNumber() << endl;
 		}
-		this->hashFile->saveBlock(block);
+		this->saveBucket(bucketDesbordado);
 	}
 
-	this->hashFile->saveBlock(block);
+	this->saveBucket(bucketDesbordado);
 
 	//no hace falta volver a guardar el td porque ya quedo guardado
 
@@ -102,10 +106,11 @@ Bucket* Hash::createNewBucket(int depth){
 	VarRegister* varRegister = new VarRegister();
 	varRegister->setValue(depth);
 	Block* block = this->hashFile->getNewBlock();
+	Bucket *bucket = new Bucket(block);
 	block->addRegister(*varRegister);
-	this->hashFile->saveBlock(block);
+	this->saveBucket(bucket);
 	delete varRegister;
-	return new Bucket(block);
+	return bucket;
 }
 
 Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
@@ -132,7 +137,7 @@ int Hash::add(StringInputData* sid) {
 	int insertResult;
 	Bucket * bucket = tryToInsertNewSid(sid,insertResult);
 	if (insertResult == 0) { //si se pudo agregar en el bucket lo guardo
-		this->hashFile->saveBlock(bucket->getBlock());
+		this->saveBucket(bucket);
 		delete bucket;
 	} else if (insertResult == 1) {  //hubo desborde
 		printf("Hubo desborde en el bucket: %i. ",bucket->getNumber());
@@ -146,7 +151,7 @@ int Hash::add(StringInputData* sid) {
 			int numeroBuquetNuevo = bucketNuevo->getNumber();
 			this->hashTable->changeFirstTimeInTable(numeroBuquet,numeroBuquetNuevo);
 			bucket->duplicateDepth();
-			this->hashFile->saveBlock(bucket->getBlock());
+			this->saveBucket(bucket);
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			delete bucket;
 			this->add(sid);
@@ -156,7 +161,7 @@ int Hash::add(StringInputData* sid) {
 		} else {
 			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
-			this->hashFile->saveBlock(bucket->getBlock());
+			this->saveBucket(bucket);
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 			this->hashTable->jumpAndReplace(this->getNumberOfBucket(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
@@ -247,22 +252,24 @@ int Hash::erase(int key) {
 		unsigned int bucketNumber = this->getNumberOfBucket(key);
 		Block* block = this->hashFile->getBlock(bucketNumber);
 		Bucket* bucket = new Bucket(block);
-		bucket->setDepth(bucket->getDepthFromHashFile());
+		//bucket->setDepth(bucket->getDepthFromHashFile());
 		result = bucket->deleteRegister(key);
 
 		if (result == false) {
 			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;
+			delete bucket;
 			return -1;
 		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
 
-			this->hashFile->saveBlock(bucket->getBlock());
+			this->saveBucket(bucket);
 			unsigned int registerAmount = block->getRegisterAmount();
 			int element = this->hashTable->verifyJumps(this->calculateHashFunction(key), bucket->getDepth());
 
-			if ((registerAmount == 0) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
+			if ((registerAmount == 1) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
 				this->hashTable->verifyAndDivide();
 				this->hashFile->deleteBlock(bucketNumber);
 			}
+			delete bucket;
 		}
 	} else {
 		cout << "No existe la clave: " << key << endl;
