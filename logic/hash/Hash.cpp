@@ -2,7 +2,7 @@
  * Hash.cpp
  *
  *  Created on: Apr 16, 2010
- *      Author: Adrián Bernardi
+ *      Author: Pablo Lisio / Adrián Bernardi
  */
 
 #include "Hash.h"

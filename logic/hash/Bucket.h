@@ -2,7 +2,7 @@
  * Bucket.h
  *
  *  Created on: Apr 24, 2010
- *      Author: Adrián Bernardi
+ *      Author: Pablo Lisio / Adrián Bernardi
  */
 
 #ifndef BUCKET_H_

@@ -2,7 +2,7 @@
  * Bucket.cpp
  *
  *  Created on: Apr 24, 2010
- *      Author: Adrián Bernardi
+ *      Author: Pablo Lisio / Adrián Bernardi
  */
 
 #include "Bucket.h"
