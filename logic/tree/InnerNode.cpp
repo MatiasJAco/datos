@@ -10,16 +10,15 @@
 using namespace std;
 
 
-InnerNode::InnerNode(){}
-
-InnerNode::InnerNode(unsigned int nodeNumber)
-:Node(nodeNumber)
+InnerNode::InnerNode(unsigned int nodeNumber, unsigned int level, Block *block,const InputData& typeData)
+:Node(nodeNumber,level,block,typeData)
 {
+
 }
 
-InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
+InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData,BPlusTree* pointerTree)
 //:Node(nodeNumber,level,block,pointerTree)
-:Node(nodeNumber,level,block)
+:Node(nodeNumber,level,block,typeData)
 {
 	m_tree = pointerTree;
 }
@@ -424,23 +423,28 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 
 	// Creo el registro para poder insertarlo en el bloque.
 	char* valueReg = new char[iNodeData.getSize()];
-	VarRegister regData(iNodeData.toStream(valueReg),iNodeData.getSize());
+	iNodeData.toStream(valueReg);
+	VarRegister regData(valueReg,iNodeData.getSize());
 
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
-	unsigned int pos = 0;
+
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
-	while (pos<m_block->getRegisterAmount()&&!found)
+	if (iNodeData.getKey()==UNDEFINED_KEY)
+		m_block->jumpEndCounter();
+
+	while (iNodeData.getKey()!=UNDEFINED_KEY&&
+			!m_block->isLastRegister()&&!found)
 	{
-		pos++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
 		currentData.toNodeData(currentRegister.getValue());
-		if (currentData.getKey() >= iNodeData.getKey())
+		if (currentData.getKey()==UNDEFINED_KEY||
+			currentData.getKey()>= iNodeData.getKey())
 		{
 			found = true;
 			if (currentData.getKey() == iNodeData.getKey())
@@ -450,11 +454,17 @@ loadResultEnum InnerNode::insertINodeData(const INodeData& iNodeData,INodeData& 
 		currentRegister = m_block->getNextRegister();
 	}
 
+
+	unsigned int pos = m_block->getPosActual();
+
+
 	/// Lo agrega al final si no lo encontro
 	m_block->addRegister(regData,result);
 
 	if (result == OVERFLOW_LOAD)
 		split(iNodeData,pos,promotedKey);
+
+	m_tree->saveNode(this);
 
 	return result;
 }
@@ -470,14 +480,16 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 	m_block->restartCounter();
 	//Itera una vez para obviar el dato de control.
 	VarRegister level = this->m_block->getNextRegister();
-	unsigned int iterador;
-	while(iterador<m_block->getRegisterAmount()&& !found )
+
+	while(!m_block->isLastRegister()&& !found )
 	{
-		iterador++;
+
 		reg = this->m_block->peekRegister();
 		// Transformo el registro a un INodeData
 		currentData.toNodeData(reg.getValue());
-		if(currentData.getKey()> innerNodeElem.getKey())
+		// UNDEFINED_KEY es la clave mayor a cualquier elemento.
+		if(currentData.getKey()> innerNodeElem.getKey()||
+		   currentData.getKey()==UNDEFINED_KEY)
 		{
 			found = true;
 		}
@@ -547,7 +559,8 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 
 	// Creo el registro para poder insertarlo en el bloque.
 	char* valueReg = new char[iNodeData.getSize()];
-	VarRegister regData(iNodeData.toStream(valueReg),iNodeData.getSize());
+	iNodeData.toStream(valueReg);
+	VarRegister regData(valueReg,iNodeData.getSize());
 
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
@@ -555,10 +568,9 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 //	VarRegister pointers = m_block->getNextRegister();
-	unsigned int iterador=0;
-	while (iterador<m_block->getRegisterAmount()&&!found)
+
+	while (!m_block->isLastRegister()&&!found)
 	{
-		iterador++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
@@ -574,11 +586,7 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData)
 
 	}
 	if (!found)
-				throw "No existe el elemento a modificar";
-
-	if (result!= NORMAL_LOAD)
-		throw "Esta devolviendo estado de carga anormal. No deberia, es de tamaño fijo y ya existia!";
-
+		throw "No existe el elemento a modificar";
 
 	return result;
 }
@@ -628,12 +636,29 @@ loadResultEnum InnerNode::modifyINodeData(const INodeData& iNodeData,const INode
 
 
 	return result;
+}
 
+INodeData InnerNode::getNextINodeData()
+{
+	INodeData dataNode;
+
+	VarRegister reg = m_block->getNextRegister();
+	dataNode.toNodeData(reg.getValue());
+
+	return dataNode;
+}
+
+unsigned int InnerNode::getAmountINodeData()
+{
+	unsigned int sizeblock = m_block->getRegisterAmount();
+
+	// Le resto el dato de control.
+	return (sizeblock-1);
 }
 
 bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promotedKey)
 {
-	InnerNode* sibling = (InnerNode*)m_tree->newInnerNode(getLevel());
+	InnerNode* sibling = m_tree->newInnerNode(getLevel());
 	Block* blockSibling = sibling->getBlock();
 
 	char* valueReg = new char[data.getSize()];
@@ -729,4 +754,30 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 	delete currentData;
 
 	return retVal;
+}
+
+
+void InnerNode::printContent(InputData & data1)
+{
+	INodeData data;
+	VarRegister varR;
+	unsigned int dataAmmount;
+	unsigned int i=0;
+
+	m_block->restartCounter();
+	dataAmmount = m_block->getRegisterAmount();
+
+	cout << "\t Numero nodo: " << getNodeNumber();
+	varR = m_block->getNextRegister(true);
+	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
+	cout << "\n Datos "<<endl;
+
+	i = m_block->getPosActual();
+
+	for(i = i; i < dataAmmount; i++)
+	{
+		varR = m_block->getNextRegister(true);
+		data.toNodeData(varR.getValue());
+		cout<< " LeftPointer:"<<data.getLeftPointer()<< "Clave:"<<data.getKey()<<endl;
+	}
 }

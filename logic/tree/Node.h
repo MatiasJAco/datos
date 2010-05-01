@@ -33,7 +33,7 @@ public:
 	/// Definicion de constante para los nodos que no tienen asignado un identificador.
 	static const unsigned int UNDEFINED_NODE_NUMBER = -1;
 	static const unsigned int UNDEFINED_NODE_LEVEL = -1;
-	static const unsigned int UNDEFINED_KEY = -1;
+	static const int UNDEFINED_KEY = -1;
 
 protected:
 	//---------------Atributes-------------//
@@ -42,13 +42,14 @@ protected:
 
 	Block* m_block;
 
+	const InputData& m_typeData;
+
 //	BPlusTree* m_tree;
 
 protected:
 	//--------------Constructor/Destructor----------------//
 //	Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree);
-	Node(unsigned int nodeNumber,unsigned int level,Block* block);
-
+	Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData);
 
 public:
 
@@ -112,6 +113,7 @@ public:
 	virtual loadResultEnum modify(const InputData& data) = 0;
 
 
+	virtual void printContent(InputData & data) = 0;
 
 	/**
 	 * Evalua si el nodo esta vacio.
@@ -134,10 +136,6 @@ public:
 
 	/// Obtiene el identificador.
 	unsigned int getNodeNumber()const;
-	/// Modifica el identificador.
-	void setNodeNumber(unsigned int number);
-
-
 
 	//virtual void divide (Node* toDivide,Node* destNode,const InputData& newData) = 0;
 
