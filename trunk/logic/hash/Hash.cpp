@@ -222,7 +222,7 @@ int Hash::erase(int key) {
 				if (!bucketAux2->divideDepth()){
 					delete bucket;
 					delete bucketAux2;
-					return -1;
+					return -1; // TODO ver esto. es un error realmente? no deberia devolver 0?
 				}
 				else
 					this->saveBucket(bucketAux2);
