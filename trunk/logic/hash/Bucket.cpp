@@ -112,7 +112,6 @@ VarRegister Bucket::getRegister(int key) {
 		sid->toData(registerValue);
 		if (sid->getKey() == key) {
 			found = true;
-			delete sid;
 		}
 		delete sid;
 	}
