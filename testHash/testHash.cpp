@@ -88,6 +88,7 @@ void testModify() {
 	else
 		cout<<endl<<"lo cambio!"<<endl;
 	hash->print();
+	delete hash;
 }
 
 void testDelete() {
