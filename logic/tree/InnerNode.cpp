@@ -894,7 +894,7 @@ void InnerNode::printContent(InputData& dato)
 void InnerNode::show(InputData& data){
 
 	this->printContent(data);
-	bool found;
+	bool found=false;
 	m_block->restartCounter();
 	m_block->getNextRegister();
 	VarRegister reg;
