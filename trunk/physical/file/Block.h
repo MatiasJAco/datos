@@ -21,6 +21,8 @@ typedef enum {UNDERFLOW_LOAD=0, NORMAL_LOAD ,OVERFLOW_LOAD} loadResultEnum;
  */
 class Block {
 
+	friend class BlockManager;
+
 public:
 	//------------------------TYPEDEFS----------------------------------//
 	/**
