@@ -95,6 +95,14 @@ public:
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
+	 * @param clave Es la clave del dato a ingresar.
+	 * @param valor Es el valor del dato a ingrear.
+	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
+	 */
+	int add(int clave, string valor);
+
+	/**
+	 * Agrega un elemento nuevo al archivo Hash.
 	 * @param sid Es el dato que se desea agregar.
 	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
 	 */
@@ -111,7 +119,7 @@ public:
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
 	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado, o -1 si hubo algun problema.
 	 */
-	int modify(int key, char* newValue);
+	int modify(int key, string newValue);
 
 	/**
 	 * Elimina el dato, cuya clave es la pasada por parametro.

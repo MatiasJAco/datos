@@ -101,6 +101,12 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 	return bucket;
 }
 
+int Hash::add(int clave, string valor) {
+	StringInputData* sid = new StringInputData();
+	sid->setKey(clave);
+	sid->setValue(valor);
+	return this->add(sid);
+}
 
 int Hash::add(StringInputData* sid) {
 	// Verifico unicidad
@@ -151,7 +157,7 @@ int Hash::add(StringInputData* sid) {
 	//delete bucket;
 	return 0;
 }
-int Hash::modify(int key, char* newValue) {
+int Hash::modify(int key, string newValue) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
 	bool exists = this->existsElement(sid->getKey());
