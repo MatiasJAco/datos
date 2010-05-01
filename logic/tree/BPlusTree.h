@@ -10,10 +10,10 @@
 
 
 
-#include "../logic/input/InputData.h"
+#include "../input/InputData.h"
 
-#include "../physical/file/Block.h"
-#include "../physical/file/BlockFile.h"
+#include "../../physical/file/Block.h"
+#include "../../physical/file/BlockFile.h"
 
 #include "Node.h"
 #include "InnerNode.h"

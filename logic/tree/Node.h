@@ -11,10 +11,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "../logic/input/InputData.h"
-#include "../physical/file/Block.h"
-#include "../physical/file/BlockManager.h"
-#include "../logic/tree/dataNode/INodeData.h"
+#include "../input/InputData.h"
+#include "../../physical/file/Block.h"
+#include "../../physical/file/BlockManager.h"
+#include "dataNode/INodeData.h"
 
 //#include "BPlusTree.h"
 
