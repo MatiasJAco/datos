@@ -18,7 +18,8 @@ Hash::Hash() {
 }
 
 Hash::~Hash() {
-	// TODO Auto-generated destructor stub
+	// TODO algo mas para el delete de hash?
+	this->hashFile->close();
 }
 
 StringInputData* Hash::get(int key) {

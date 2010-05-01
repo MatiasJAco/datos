@@ -8,12 +8,10 @@
 #include "Table.h"
 
 Table::Table() {
-	// TODO Auto-generated constructor stub
-
 }
 
 Table::~Table() {
-	// TODO Auto-generated destructor stub
+	//se tuvo en cuenta en la implementacion que la tabla quede siempre guardada en disco despues de cada operacion
 }
 
 bool Table::exists(char nombreArchTabla[10]){
