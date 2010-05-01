@@ -124,6 +124,11 @@ public:
 	void deleteNode(Node* node);
 
 
+	/**
+	 * Muestra el arbol por pantalla.
+	 *
+	 * **/
+	void showTree(InputData& data);
 
 
 };

@@ -113,8 +113,9 @@ public:
 	virtual loadResultEnum modify(const InputData& data) = 0;
 
 
-	virtual void printContent(InputData & data) = 0;
+	virtual void printContent(InputData& data) = 0;
 
+	virtual void show(InputData& data) = 0;
 	/**
 	 * Evalua si el nodo esta vacio.
 	 * @return bool TRUE si esta vacio FALSE en caso contrario
