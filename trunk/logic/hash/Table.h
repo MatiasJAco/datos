@@ -102,6 +102,13 @@ public:
 
 private:
 	/**
+	 * Indica si existe el archivo pasado por parametro.
+	 * @param filename Es el archivo que se desea saber si existe.
+	 * @return True si existe el archivo, false en caso contrario.
+	 */
+	bool exists(char nombreArchTabla[10]);
+
+	/**
 	 * Se encarga de abrir el archivo de la Tabla segun el formato (lectura,escritura) que se le pase como parametro.
 	 * @param format[2] Puede ser por ejemplo para escritura "w", o bien para lectura "r".
 	 * @return Devuelve un puntero al archivo de la tabla.
@@ -119,6 +126,12 @@ private:
 	 * @return Devuelve un puntero al archivo de la tabla.
 	 */
 	FILE * openFileForWrite();
+
+	/**
+	 * Se encarga de abrir el archivo de la Tabla para agregar datos al final.
+	 * @return Devuelve un puntero al archivo de la tabla.
+	 */
+	FILE * openFileForAppend();
 
 	/**
 	 * Se encarga de cerrar el archivo de la Tabla e informa si hubo error al intentar hacerlo.

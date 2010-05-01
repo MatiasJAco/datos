@@ -16,6 +16,13 @@ Table::~Table() {
 	// TODO Auto-generated destructor stub
 }
 
+bool Table::exists(char nombreArchTabla[10]){
+	if (fopen(nombreArchTabla,"r"))
+		return true;
+	else
+		return false;
+}
+
 FILE * Table::openFile(char format[2]){
 	FILE * arch_tabla;
 	char nombreArchTabla[10] = "tabla.txt";
@@ -35,6 +42,11 @@ FILE * Table::openFileForWrite(){
 	return openFile(format);
 }
 
+FILE * Table::openFileForAppend(){
+	char format[2]="a";
+	return openFile(format);
+}
+
 void Table::closeFile(FILE * tableFile){
 	if( fclose(tableFile) )
 		      printf( "\nError: No se pudo cerrar la tabla correctamente\n" );
@@ -50,9 +62,16 @@ FILE* Table::createTemporalFile(){
 }
 
 FILE * Table::createFile(){
-	FILE* archTabla = openFileForWrite();
-	fprintf( archTabla, "1\n0" ); // Se crea la tabla, con size 1.
-	closeFile(archTabla);
+	FILE* archTabla;
+	char nombreArchTabla[10] = "tabla.txt";
+	if (!exists(nombreArchTabla)) {
+		archTabla = openFileForWrite();
+		fprintf( archTabla, "1\n0" ); // Se crea la tabla, con size 1.
+		closeFile(archTabla);
+	} else {
+		archTabla = openFileForAppend();
+		closeFile(archTabla);
+	}
 	return archTabla;
 }
 
