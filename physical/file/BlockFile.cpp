@@ -90,6 +90,14 @@ bool BlockFile::open(const std::string fileName)
 	return retVal;
 }
 
+bool BlockFile::deleteFile()
+{
+	bool retVal=false;
+	retVal = m_FreeBlockFile.deleteFile();
+	retVal = retVal && File::deleteFile();
+	return retVal;
+}
+
 bool BlockFile::readHeader()
 {
 	char *charBlockNum=new char[sizeof(m_LastBlock)];
