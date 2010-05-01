@@ -198,7 +198,7 @@ void Table::print(){
 	int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 
-	printf("Tabla (de tamaño = %i):\n ",sizeOfTable);
+	printf("Tabla (de tamaño = %i): ",sizeOfTable);
 	for (int i = 0; i<sizeOfTable;i++){
 		printf("%i",listElementsTable[i]);
 		if (i<sizeOfTable-1)

@@ -249,18 +249,23 @@ void Hash::print() {
 	Block* actualBlock = this->hashFile->getBlock(i);
 	this->hashTable->print();
 
-	//TODO : cambiar esto y usar el this->hashFile->getFreeBlockList() y restarle uno a cada elem de la lista
-	cout << "Bloques libres: " << this->hashFile->getFreeBlockString() << endl;
 
-	printf("\nHashFile: \n");
+	cout << "Bloques libres: ";
+	FreeBlockList freeBlockList = this->hashFile->getFreeBlockList();
+	for (list<unsigned int>::iterator it = freeBlockList.begin(); it != freeBlockList.end(); it++)
+	    cout << *it -1 << " | ";
+	cout << endl;
+
+	cout << "HashFile: " << endl;
 	while (actualBlock != NULL) {
 		int numeroReal = i-1;
-		cout<<"Bucket "<< numeroReal<<": ";
+		cout << "Bucket " << numeroReal << ": ";
 		bucket = new Bucket(actualBlock);
 		bucket->print();
 		delete bucket;
 		i++;
 		actualBlock = this->hashFile->getBlock(i);
-		printf("\n");
+		cout << endl;
 	}
+	cout << endl;
 }
