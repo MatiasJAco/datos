@@ -174,13 +174,6 @@ bool Bucket::modifyDepth(int depth){
 
 	bool result2 = this->block->modifyRegister(varReg,result);
 
-	if (OVERFLOW_LOAD == result) {
-		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Overflow" << endl;
-	}
-	else if (UNDERFLOW_LOAD == result) {
-		cout << "Error al intentar modificar el tamaño de dispersion de un bloque. Este no puede modificarse. Causado por Underflow" << endl;
-	}
-
 	delete sid;
 	return result2;
 }
@@ -215,17 +208,18 @@ void Bucket::getListOfSids(list<StringInputData> &listaDatos){
 	}
 }
 
-void Bucket::empty(){
+bool Bucket::empty(){
 	block->restartCounter();
 	bool deleteResult = true;
+	bool result = true;
 	VarRegister varRegister = block->getNextRegister(true); // Salteo el primer registro que tiene datos de control.
 	while (!block->isLastRegister()) {
 		varRegister = block->getNextRegister(false);
 		loadResultEnum load = NORMAL_LOAD;
 		deleteResult = block->deleteRegister(load);
-
 		if (deleteResult == false) {
-			cout << "No pudo borrarse el registro del bloque: " << this->getNumber() << endl;
+			result = false;
 		}
 	}
+	return result;
 }

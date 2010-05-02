@@ -25,8 +25,6 @@ FILE * Table::openFile(char format[2]){
 	FILE * arch_tabla;
 	char nombreArchTabla[10] = "tabla.txt";
 	arch_tabla = fopen(nombreArchTabla,format);
-	if( !arch_tabla )
-	  printf( "\nError: No se pudo abrir la tabla correctamente\n" );
 	return arch_tabla;
 }
 
@@ -46,16 +44,13 @@ FILE * Table::openFileForAppend(){
 }
 
 void Table::closeFile(FILE * tableFile){
-	if( fclose(tableFile) )
-		      printf( "\nError: No se pudo cerrar la tabla correctamente\n" );
+	fclose(tableFile);
 }
 
 FILE* Table::createTemporalFile(){
 	FILE * arch_tabla_temporal;
 	char nombreArchTabla[18] = "tablaTemporal.txt";
 	arch_tabla_temporal = fopen(nombreArchTabla,"w");
-	if( !arch_tabla_temporal )
-	  printf( "\nError: No se pudo abrir la tabla correctamente\n" );
 	return arch_tabla_temporal;
 }
 
@@ -90,9 +85,7 @@ int Table::parse(unsigned int * listElementsTable){
 	for(int i = 1;i<=sizeOfTable;i++){
 		fgets(linea,180,arch_tabla);
 		ptr = strtok(linea," \n\t");
-		if (ptr == NULL)
-				printf("\nError: El archivo de la tabla contiene un renglon vacio. El mismo no se puede parsear. No puede contener un renglon vacio.\n\t");
-		else{
+		if (ptr != NULL){
 			listElementsTable[cont] = atoi(ptr);
 			cont++;
 		}
@@ -127,10 +120,9 @@ int Table::getNumberOfBucketInHash(int NumOfRegToPointInTable){
 	for (int i = 0;i<NumOfRegToPointInTable+2;i++){
 		if (!feof(arch_tabla))
 			fgets(linea,180,arch_tabla);
-		else{
-			printf("\nError: hubo un error al intentar acceder a un registro de la tabla en obtenerBloqueAApuntarEnArchivoHash.");
+		else
 			return -1;
-		}
+
 	}
 
 	ptr = strtok(linea," \n\t");
@@ -161,8 +153,6 @@ void Table::modifyRegister(int numReg,unsigned int newValue){
 				strcpy(valorObtenido,ptr);
 				fprintf(archTemporal,"%s\n",valorObtenido);
 			}
-			else
-				printf("\nError: hubo un error al intentar acceder a un registro de la tabla en modificarRegistroEnTabla1.");
 		}
 
 		fprintf( archTemporal,"%s\n" ,valorNuevoString );
@@ -176,17 +166,12 @@ void Table::modifyRegister(int numReg,unsigned int newValue){
 					strcpy(valorObtenido,ptr);
 					fprintf(archTemporal,"%s\n",valorObtenido);
 				}
-				else
-					printf("\nError: hubo un error al intentar acceder a un registro de la tabla en modificarRegistroEnTabla2.");
 			}
 		}
 		closeFile(arch_tabla_a_borrar);
 		closeFile(archTemporal);
 		remove("tabla.txt");
 		rename("tablaTemporal.txt","tabla.txt");
-	}
-	else{
-		printf("\nError: hubo un error al intentar acceder a un registro de la tabla. Registro %i no existe en la tabla.",numReg);
 	}
 }
 
