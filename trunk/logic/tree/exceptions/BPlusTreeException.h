@@ -44,6 +44,13 @@ public:
 		case NodeException::INVALID_REF:
 			m_cause = CORRUPTED;
 			break;
+		case NodeException::INEXISTENT_ELEMINNER:
+		case NodeException::INEXISTENT_ELEMLEAF:
+			m_cause = INEXISTENT_ELEM;
+			break;
+		case NodeException::INSUFFICIENT_ALLOCK_PARAM:
+			m_cause = CORRUPTED;
+			break;
 		default:
 			m_cause = UNDEFINED;
 			break;

@@ -421,7 +421,6 @@ throw(NodeException)
 		bool hasRightBrother = false;
 		bool hasMinorBrother = false;
 
-//		bool leftJoin = true;
 		bool balanced = false;
 		Node* sibling;
 
@@ -439,9 +438,6 @@ throw(NodeException)
 		//Verifico que tenga hermano derecho.
 		if(hasRightBrother)
 		{
-//			joinBrother.setKey(bigBrother.getKey());
-//			joinBrother.setLeftPointer(bigBrother.getLeftPointer());
-
 			// Trato de balancear con el derecho.
 			// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
 			sibling = m_tree->getNode(bigBrother.getLeftPointer());
@@ -461,26 +457,8 @@ throw(NodeException)
 				balanced = redistribute(sucesor,sibling,data,keymodified,LEFT_SIDE);
 			}
 
-
-//			// Me busca el hermano menor.
-//			unsigned int posicionNodo=this->buscarPosicionInnerPorClave(thiskey.getKey());
-//			if(posicionNodo!=1){
-//				this->getInPosition(&minorBrother,posicionNodo-1);
-//				joinBrother.setKey(minorBrother.getKey());
-//				joinBrother.setLeftPointer(minorBrother.getLeftPointer());
-//
-//				leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
-//				// Trato de balancear con el sibling izquierdo del sucesor.
-//				balanced = redistribute(sucesor,leftSibling,data,keymodified,LEFT_SIDE);
-//			}else
-//				leftJoin=false;
-
-
-
 			if (balanced)
-//				modifyINodeData(joinBrother,keymodified);
 				modifyINodeData(minorBrother,keymodified);
-
 		}
 
 		// Si no pudo balancear, fusiona.
@@ -491,24 +469,20 @@ throw(NodeException)
 			if(hasRightBrother)
 			{
 				merge(sucesor,sibling,data,fusionatedNode,RIGHT_SIDE);
-//				result = removeINodeData(joinBrother);
 				result = removeINodeData(thiskey);
 				//Recupero clave del que borro y se a paso al que queda.
-//				joinBrother.setLeftPointer(thiskey.getLeftPointer());
-//				modifyINodeData(thiskey,joinBrother);
 				bigBrother.setLeftPointer(fusionatedNode.getLeftPointer());
 				modifyINodeData(bigBrother);
-
 			}
 			else
 			{
-				//
 				merge(sucesor,sibling,data,fusionatedNode,LEFT_SIDE);
-//				result = removeINodeData(joinBrother);
 				result = removeINodeData(minorBrother);
 				thiskey.setLeftPointer(fusionatedNode.getLeftPointer());
 				modifyINodeData(thiskey);
 			}
+			// En la fusion se elimina el sibling, permanece el que produjo el underflow.
+			m_tree->deleteNode(sibling);
 		}
 
 		if (sibling!=NULL)
@@ -520,9 +494,6 @@ throw(NodeException)
 
 	return result;
 }
-
-
-
 
 
 bool InnerNode::find(const InputData & key, InputData & data)
