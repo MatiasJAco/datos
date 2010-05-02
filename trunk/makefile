@@ -15,6 +15,9 @@ INPUT_DIR =logic/input/
 OBJ_DIR = obj/
 BIN_DIR = bin/
 TEST_PHYSICAL_DIR = testPhysical/
+TREE_MAIN_DIR = treeMain/
+HASH_MAIN_DIR = hashMain/
+LOGGER_MAIN_DIR = loggerMain/
 
 ##Objetos physical
 
@@ -70,7 +73,7 @@ MKDIRFLAGS = -p
 
 .PHONY: clean createDir all
 
-all: libphysical.a liblogic.a testPhysical
+all: createDir libphysical.a liblogic.a loggerMain hashMain treeMain
 	
 
 #Directorios
@@ -84,9 +87,17 @@ clean:
 ######################################################################################
 #				EJECUTABLES
 ######################################################################################
-testPhysical: createDir testPhysical.o libphysical.a
+testPhysical: testPhysical.o libphysical.a
 	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)testPhysical" "$(OBJ_DIR)testPhysical.o" -lphysical 
 
+loggerMain:loggerMain.o
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)loggerMain" "$(OBJ_DIR)loggerMain.o" -lphysical -llogic
+ 
+hashMain:hashMain.o
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)hashMain" "$(OBJ_DIR)hashMain.o" -lphysical -llogic
+ 
+treeMain:treeMain.o
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)treeMain" "$(OBJ_DIR)treeMain.o" -lphysical -llogic
 
 #######################################################################################
 #				LIBRARIES
@@ -95,10 +106,10 @@ libphysical.a: $(PHYSICAL_OBJS)
 	$(ARCHIVER) $(AFLAGS) "$(OBJ_DIR)libphysical.a" $(PHYSICAL_OBJS_O)
 
 liblogic.a: $(LOGIC_OBJS) 
-	$(ARCHIVER) $(AFLAGS) "$(OBJ_DIR)libphysical.a" $(LOGIC_OBJS_O)
+	$(ARCHIVER) $(AFLAGS) "$(OBJ_DIR)liblogic.a" $(LOGIC_OBJS_O)
 
 #libapplication.a:$(LOGIC_OBJS) 
-	$(ARCHIVER) $(AFLAGS) "$(OBJ_DIR)libphysical.a" $(LOGIC_OBJS_O)
+#	$(ARCHIVER) $(AFLAGS) "$(OBJ_DIR)libphysical.a" $(LOGIC_OBJS_O)
 
 #######################################################################################
 #				OBJETOS PHYSICAL
@@ -182,4 +193,14 @@ INodeData.o:$(TREE_DATA_DIR)INodeData.cpp
 #######################################################################################
 testPhysical.o: $(TEST_PHYSICAL_DIR)testPhysical.cpp
 	$(CC) $(CFLAGS) -MF"$(OBJ_DIR)testPhysical.d" -MT"$(OBJ_DIR)testPhysical.d" -o"$(OBJ_DIR)testPhysical.o" "$(TEST_PHYSICAL_DIR)testPhysical.cpp"
+
+treeMain.o: $(TREE_MAIN_DIR)TreeMain.cpp
+	$(CC) $(CFLAGS) -MF"$(OBJ_DIR)treeMain.d" -MT"$(OBJ_DIR)treeMain.d" -o"$(OBJ_DIR)treeMain.o" "$(TREE_MAIN_DIR)TreeMain.cpp"
+
+loggerMain.o:$(LOGGER_MAIN_DIR)LoggerMain.cpp
+	$(CC) $(CFLAGS) -MF"$(OBJ_DIR)loggerMain.d" -MT"$(OBJ_DIR)loggerMain.d" -o"$(OBJ_DIR)loggerMain.o" "$(LOGGER_MAIN_DIR)LoggerMain.cpp"
+
+hashMain.o:$(HASH_MAIN_DIR)HashMain.cpp
+	$(CC) $(CFLAGS) -MF"$(OBJ_DIR)hashMain.d" -MT"$(OBJ_DIR)hashMain.d" -o"$(OBJ_DIR)hashMain.o" "$(HASH_MAIN_DIR)HashMain.cpp"
+
 
