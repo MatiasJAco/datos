@@ -155,6 +155,11 @@ void testEjemplo(){
 	cout<< "Este proximo print deberia mostrar todas las cosas creadas pero vacias!\n"<<endl;
 	hash->print();
 
+	hash->add(123, "paytiti");
+	hash->print();
+	hash->erase(123);
+	hash->print();
+
 	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
 	cout<< "+123\n"<<endl;
