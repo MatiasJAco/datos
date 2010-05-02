@@ -13,8 +13,6 @@ bool BlockManager::balanceLoad(Block *blockA, Block *blockB, sideEnum side)
 
 	if(blockA!=NULL &&blockB!=NULL)
 	{
-		blockA->printRegisters();
-		blockB->printRegisters();
 
 		//Simulo la operacion primero para ver si hay suficientes elementos
 		retVal = innerRedistribute(blockA, blockB, side, true);
