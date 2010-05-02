@@ -97,6 +97,7 @@ throw (BPlusTreeException)
 
 		INodeData firstKey;
 		INodeData newKey;
+
 		if (!sucesor->isLeaf()){
 			INodeData currentData;
 			VarRegister reg;

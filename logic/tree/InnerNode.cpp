@@ -496,7 +496,7 @@ throw(NodeException)
 			}
 			else
 			{
-				merge(sucesor,sibling,data,fusionatedNode,LEFT_SIDE);
+				merge(sibling,sucesor,data,fusionatedNode,LEFT_SIDE);
 				result = removeINodeData(minorBrother);
 				refkey.setLeftPointer(fusionatedNode.getLeftPointer());
 				modifyINodeData(refkey);
