@@ -369,7 +369,7 @@ throw (NodeException)
 
 		// Hace el intercambio de claves y punteros. Modifica el puntero de bigger
 		INodeData bigger(UNDEFINED_NODE_NUMBER,promotedKey.getKey());
-		findINodeData(bigger,false);
+		findINodeData(bigger/**,false**/);
 
 		INodeData newINodeData(bigger.getLeftPointer(),promotedKey.getKey());
 		bigger.setLeftPointer(promotedKey.getLeftPointer());
