@@ -37,6 +37,7 @@ public:
 
 private:
 	static const float UNDEFINED_LOAD_FACTOR=-1;
+	static const float DEFAULT_FIXED_REGISTER_COUNT=0;
 
 public:
 	//------------------------CONSTRUCTOR/DESTUCTOR---------------------//
@@ -238,6 +239,10 @@ public:
 	 */
 	unsigned int getRemainingSpace();
 
+	unsigned int getFixedRegisterCount();
+
+	void setFixedRegisterCount(unsigned int count);
+
 	//--------------------SERIALIZE/DESERIALIZE-------------------//
 	/**
 	 * Convierte a un stream el contenido del registro
@@ -323,6 +328,8 @@ private:
 	 * Si no esta en ningun registro es -1
 	 */
 	int m_posActual;
+
+	unsigned int m_FixedRegisterCount;
 
 };
 

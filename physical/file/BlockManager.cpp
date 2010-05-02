@@ -13,6 +13,9 @@ bool BlockManager::balanceLoad(Block *blockA, Block *blockB, sideEnum side)
 
 	if(blockA!=NULL &&blockB!=NULL)
 	{
+		blockA->printRegisters();
+		blockB->printRegisters();
+
 		//Simulo la operacion primero para ver si hay suficientes elementos
 		retVal = innerRedistribute(blockA, blockB, side, true);
 
@@ -50,6 +53,8 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 	unsigned int sizeA;
 	unsigned int sizeB;
 	unsigned int minSize;
+	unsigned int fixedRegisterCount;
+	unsigned int i;
 	VarRegister varR;
 
 	sizeA=blockA->getUsedSpace();
@@ -104,9 +109,13 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 		{
 			missing = minSize -sizeA;
 			blockB->restartCounter();
+			fixedRegisterCount = blockB->getFixedRegisterCount();
 
 			if(!simulate)
 				blockA->jumpEndCounter();
+
+			for(i=0; i <fixedRegisterCount;i++)
+				blockB->getNextRegister();
 
 			while(relocateSize<missing)
 			{
