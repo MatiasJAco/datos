@@ -42,6 +42,7 @@ Bucket* Hash::createNewBucket(int depth){
 	block->addRegister(*varRegister);
 	this->saveBucket(bucket);
 	delete varRegister;
+	bucketsUsedAmount++;	//se agrego un bucket al archivo Hash
 	return bucket;
 }
 
@@ -202,7 +203,7 @@ int Hash::erase(int key) {
 			bool soloLiberarBq = false;
 			if ((depth>1)&&(tamTable>1))
 				element = this->hashTable->verifyJumps(this->calculateHashFunction(key), depth/2);
-			else
+			else if (bucketsUsedAmount > 1)
 				soloLiberarBq = true;
 
 			if (((registerAmount == 1) && (depth == tamTable) && (element != -1))  ||  ((registerAmount == 1)&& soloLiberarBq)) {
@@ -212,6 +213,9 @@ int Hash::erase(int key) {
 
 				if (soloLiberarBq)
 					return 0;
+
+				// Un bucket fue liberado
+				bucketsUsedAmount--;
 
 				//hago las modificaciones necesarias en la tabla
 				this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
