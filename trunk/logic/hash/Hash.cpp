@@ -203,12 +203,25 @@ int Hash::erase(int key) {
 
 			this->saveBucket(bucket);
 			unsigned int registerAmount = block->getRegisterAmount();
-			int element = this->hashTable->verifyJumps(this->calculateHashFunction(key), bucket->getDepth()/2);
 
-			if ((registerAmount == 1) && (bucket->getDepth() == this->hashTable->getSize()) && (element != -1)) {
+			unsigned int depth = bucket->getDepth();
+			unsigned int tamTable = this->hashTable->getSize();
+			int element = -1;
+			bool soloLiberarBq = false;
+			if ((depth>1)&&(tamTable>1))
+				element = this->hashTable->verifyJumps(this->calculateHashFunction(key), depth/2);
+			else
+				soloLiberarBq = true;
+
+			if (((registerAmount == 1) && (depth == tamTable) && (element != -1))  ||  ((registerAmount == 1)&& soloLiberarBq)) {
 				//intento liberar el bloque
 				if (!this->hashFile->deleteBlock(bucketNumber))
 					return -1;
+
+				//------
+				if (soloLiberarBq)
+					return 0;
+				//------
 				//hago las modificaciones necesarias en la tabla
 				this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
 
