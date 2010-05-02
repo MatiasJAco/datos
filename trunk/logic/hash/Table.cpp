@@ -73,7 +73,7 @@ FILE * Table::createFile(){
 	return archTabla;
 }
 
-int Table::parse(int * listElementsTable){
+int Table::parse(unsigned int * listElementsTable){
 	int sizeOfTable;
 	char linea[180];
 	char * ptr = NULL;
@@ -192,7 +192,7 @@ void Table::modifyRegister(int numReg,unsigned int newValue){
 
 void Table::print(){
 	int sizeOfTable = this->getSize();
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 
 	printf("Tabla (de tamaño = %i): ",sizeOfTable);
@@ -209,7 +209,7 @@ void Table::print(){
 
 void Table::duplicate(){
 	int sizeOfTable = getSize();
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	parse(listElementsTable);
 
 	FILE * archTemporal = createTemporalFile();
@@ -239,7 +239,7 @@ int Table::verifyAndDivide(){
 	if (sizeOfTable<=1) return -1;
 	if (fmod(sizeOfTable,2)!=0) return -1;
 
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	parse(listElementsTable);
 	int pos;
 	for (int i = 0; i<sizeOfTable/2;i++){
@@ -270,7 +270,7 @@ int Table::verifyAndDivide(){
 
 int Table::getFirstTimeInTable(unsigned int value){
 	int sizeOfTable = this->getSize();
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 	int result = 0;
 	bool continuar= true;
@@ -294,7 +294,7 @@ bool Table::changeFirstTimeInTable(unsigned int value, unsigned int newValue){
 int Table::verifyJumps(int position, int jump){
 	int element1,element2;
 	int sizeOfTable = this->getSize();
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 	int i;
 
@@ -325,7 +325,7 @@ int Table::verifyJumps(int position, int jump){
 
 void Table::jumpAndReplace(int position, int jump, int element){
 	int sizeOfTable = this->getSize();
-	int listElementsTable[sizeOfTable];
+	unsigned int listElementsTable[sizeOfTable];
 	this->parse(listElementsTable);
 	int i = position;
 

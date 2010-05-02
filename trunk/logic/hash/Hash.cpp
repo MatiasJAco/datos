@@ -129,8 +129,8 @@ int Hash::add(StringInputData* sid) {
 		if (td==tamTabla) {
 			this->hashTable->duplicate();
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
-			int numeroBuquet = bucket->getNumber();
-			int numeroBuquetNuevo = bucketNuevo->getNumber();
+			unsigned int numeroBuquet = bucket->getNumber();
+			unsigned int numeroBuquetNuevo = bucketNuevo->getNumber();
 			this->hashTable->changeFirstTimeInTable(numeroBuquet,numeroBuquetNuevo);
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);

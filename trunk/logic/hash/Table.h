@@ -37,7 +37,7 @@ public:
 	 * @param listElementsTable Es la lista de elementos que posee la tabla.
 	 * @return Devuelve un entero que indica el tamaño de la tabla.
 	 */
-	int parse(int * listElementsTable);
+	int parse(unsigned int * listElementsTable);
 
 	/**
 	 * Retorna la cant de elementos que tiene la tabla segun el primer renglon, el cual contiene el tamaño de la misma.
