@@ -785,6 +785,8 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey.getKey());
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
+	this->modifyLastKey();
+
 	this->m_tree->saveNode(sibling);
 	return true;
 }
@@ -914,5 +916,24 @@ void InnerNode::show(InputData& data){
 			this->m_block->getNextRegister();
 		}
 	delete hijo;
+
+};
+
+void InnerNode::modifyLastKey(){
+	INodeData iNodeData;
+	loadResultEnum result;
+	m_block->restartCounter();
+	int pipa=m_block->getRegisterAmount()-1;
+	while (m_block->getPosActual()<pipa){
+		m_block->getNextRegister();
+	};
+	VarRegister changeReg;
+	changeReg=this->m_block->peekRegister();
+	iNodeData.toNodeData(changeReg.getValue());
+	iNodeData.setKey(UNDEFINED_KEY);
+	char* valueReg = new char[iNodeData.getSize()];
+	iNodeData.toStream(valueReg);
+	VarRegister regData(valueReg,iNodeData.getSize());
+	m_block->modifyRegister(regData,result);
 
 };
