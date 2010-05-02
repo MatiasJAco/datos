@@ -148,12 +148,24 @@ bool BlockManager::innerRedistribute(Block *blockA, Block *blockB, sideEnum side
 bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 {
 	bool retVal=false;
+	bool isOverflow=false;
 
 	if(block1!=NULL &&block2!=NULL)
 	{
-		unsigned int minSize=block1->getMinimalLoad();
+		unsigned int combinedSize;
 
-		if(block1->getUsedSpace()<= minSize && block2->getUsedSpace()<= minSize)
+		if(side==RIGHT_SIDE)
+		{
+			combinedSize =block1->getUsedSpace()-block2->getUsedSpace()-block2->getBlockControlDataSize();
+			isOverflow = combinedSize > block1->getBlockSize();
+		}
+		else
+		{
+			combinedSize =block2->getUsedSpace()-block1->getUsedSpace()-block1->getBlockControlDataSize();
+			isOverflow = combinedSize > block2->getBlockSize();
+		}
+
+		if(!isOverflow)
 		{
 			VarRegister varR;
 			unsigned int lastReg=block1->getRegisterAmount()-1;

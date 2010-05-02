@@ -243,6 +243,10 @@ public:
 
 	void setFixedRegisterCount(unsigned int count);
 
+	unsigned int getBlockControlDataSize();
+
+	unsigned int getBlockSize();
+
 	//--------------------SERIALIZE/DESERIALIZE-------------------//
 	/**
 	 * Convierte a un stream el contenido del registro
@@ -266,6 +270,7 @@ public:
 	 * @return bool true en caso de exito
 	 */
 	bool deleteRegister();
+
 
 private:
 
@@ -329,7 +334,7 @@ private:
 	 */
 	int m_posActual;
 
-	unsigned int m_FixedRegisterCount;
+	unsigned int m_fixedRegisterCount;
 
 };
 
