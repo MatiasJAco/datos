@@ -87,12 +87,13 @@ std::string Logger::procesar_linea(char *line) {
 
 
 
-void Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
+bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
 {
     archivo = new ArchivoTexto(ptrArchivo);
     char caracterABuscar;
     char caracterLeido;
     std::string lineaDeCadenaBuscada;
+    bool cadenaEncontrada=false;
     unsigned int posicionComienzoDeLinea = 0;
     bool cambioDeLinea = true;
     unsigned int contadorDeLetras = 0;
@@ -115,6 +116,7 @@ void Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
                 archivo->leerLinea(lineaDeCadenaBuscada);
                 std::cout << lineaDeCadenaBuscada << std::endl;
                 cambioDeLinea = true;
+                cadenaEncontrada=true;
             }
         }
         else
@@ -123,6 +125,7 @@ void Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
     }
     ;
     archivo->~ArchivoTexto();
+    return cadenaEncontrada;
 }
 
 void Logger::buscar(std::string cadena){
@@ -142,7 +145,9 @@ void Logger::buscar(std::string cadena){
 	};
 	string nuevoNombre=nombre+".txt";
 	char* ptrArchivo=&nuevoNombre[0];
-	buscarArchivo(ptrArchivo,cadena);
+	if(!buscarArchivo(ptrArchivo,cadena))
+		cout<<endl<<"Cadena no encontrada."<<endl;
+
 };
 
 

@@ -54,7 +54,7 @@ private:
 
 	std::string itos(int i);
 
-	void buscarArchivo(char *ptrArchivo, std::string cadena);
+	bool buscarArchivo(char *ptrArchivo, std::string cadena);
 
 public:
 
