@@ -117,8 +117,9 @@ public:
 
 	/**
 	 * Vacia el bucket (dejando el campo de control td)
+	 * @return Retorna true si pudo vaciarlo, false en caso contrario
 	 */
-	void empty();
+	bool empty();
 
 };
 
