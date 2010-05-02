@@ -28,6 +28,9 @@ class InnerNode: public Node {
 
 	friend class BPlusTree;
 
+public:
+	typedef enum {MINOR,EQUAL,BIGGER}Condition;
+
 private:
 	BPlusTree* m_tree;
 	void joinInner(Node *toDivide, Node *destNode, INodeData *newData);
@@ -120,6 +123,16 @@ public:
 	 * @return bool. TRUE si lo encontro, FALSE de lo contrario.
 	 */
 	bool findINodeData(INodeData& innerNodeElem,bool less = true);
+
+
+	/**
+	 * Se le pasa una clave y devuelve el INodeData que corresponde a esa clave.
+	 * @param innerNodeElem Elemento INodeData que se busca.
+	 * @param condition. Segun se setee la condition, devuelve el igual, o el inmediatamente mayor o
+	 * 					menor. El default es igual.
+	 * @return bool. TRUE si lo encontro, FALSE de lo contrario.
+	 */
+	bool findINodeData(INodeData& innerNodeElem,Condition condition);
 
 	/**
 	 * Inserta un elemento INodeData en forma ordenada dentro del InnerNode.
