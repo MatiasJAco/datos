@@ -208,6 +208,16 @@ void testEjemplo(){
 	delete hash;
 }
 
+void testAdrianSeLaCome(){
+	Hash* hash = new Hash();
+	char value[8] = "paytiti";
+	hash->add(12,value);
+	hash->print();
+	hash->erase(12);
+	hash->print();
+	delete hash;
+}
+
 int main(int argc, const char* argv[]){
 	//testTable();
 	//testTable2();
@@ -217,6 +227,8 @@ int main(int argc, const char* argv[]){
 	//tests();
 
 	testEjemplo();
+
+	//testAdrianSeLaCome();
 	//cout << "paso test!" << endl;
 
 //	Hash* hash = new Hash();
