@@ -91,6 +91,28 @@ VarRegister Block::peekRegister()
 	return current;
 }
 
+VarRegister Block::peekNextRegister()
+{
+
+    RegisterListIt it;
+    VarRegister current;
+
+    if(m_registers.size()>0&&it!=m_registers.end())
+    {
+            it++;
+            if(it!=m_registers.end())
+            {
+                    current=*it;
+            }
+            else
+                    throw "No se puede hacer peek";
+    }
+    else
+    	throw "No se puede hacer peek";
+
+    return current;
+}
+
 bool Block::isLastRegister()
 {
 	bool retVal=true;
