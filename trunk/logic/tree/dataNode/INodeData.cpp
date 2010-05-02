@@ -80,7 +80,8 @@ bool    INodeData::operator <(INodeData &p)
 bool    INodeData::operator >(INodeData &p)
 {
 	bool retVal=false;
-	retVal = m_key > p.m_key || m_key==UNDEFINED_KEY;
+
+	retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
 	return retVal;
 }
 
