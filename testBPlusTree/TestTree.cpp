@@ -32,9 +32,9 @@ void TestTree::run()
 
 
 //	testInsertComplejo();
-//	testRemove();
+	testRemove();
 //	testModify();
-	testFind();
+//	testFind();
 
 }
 
@@ -284,37 +284,37 @@ void TestTree::testInsertComplejo()
 
 
 	//Testeo de findInodeDATA
-	InnerNode* leaf10 = dynamic_cast<InnerNode*> (mainFixture->getNode(10));
+//	InnerNode* leaf10 = dynamic_cast<InnerNode*> (mainFixture->getNode(10));
+//
+//	leaf10->printContent(data);
+//	INodeData search(3,3);
+//	INodeData found;
+//
+//	if(!leaf10->findINodeData(search,found, InnerNode::EQUAL))
+//		cout << "Error en el equal"<<endl;
+//
+//	if(!leaf10->findINodeData(search,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
+//
+//	if(leaf10->findINodeData(search,found, InnerNode::MINOR))
+//		cout << "Error en el minor"<<endl;
+//
+//	INodeData search2(3,7);
+//	if(!leaf10->findINodeData(search2,found, InnerNode::EQUAL))
+//		cout << "Error en el equal"<<endl;
+//
+//	if(!leaf10->findINodeData(search2,found, InnerNode::MINOR))
+//		cout << "Error en el minor"<<endl;
+//
+//	if(leaf10->findINodeData(search2,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
+//
+//	INodeData search3(3,5);
+//
+//	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
 
-	leaf10->printContent(data);
-	INodeData search(3,3);
-	INodeData found;
-
-	if(!leaf10->findINodeData(search,found, InnerNode::EQUAL))
-		cout << "Error en el equal"<<endl;
-
-	if(!leaf10->findINodeData(search,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
-
-	if(leaf10->findINodeData(search,found, InnerNode::MINOR))
-		cout << "Error en el minor"<<endl;
-
-	INodeData search2(3,7);
-	if(!leaf10->findINodeData(search2,found, InnerNode::EQUAL))
-		cout << "Error en el equal"<<endl;
-
-	if(!leaf10->findINodeData(search2,found, InnerNode::MINOR))
-		cout << "Error en el minor"<<endl;
-
-	if(leaf10->findINodeData(search2,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
-
-	INodeData search3(3,5);
-
-	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
-
-	//mainFixture->showTree(data);
+	mainFixture->showTree(data);
 	mainFixture->deleteTree();
 
 //	Node* leafsplit = mainFixture->getNode(3);
@@ -343,6 +343,18 @@ void TestTree::testRemove()
 	StringInputData data7(7,"77");
 	StringInputData data8(8,"88");
 	StringInputData data9(9,"99");
+	StringInputData data10(10,"100");
+	StringInputData data11(22,"02");
+	StringInputData data12(37,"03");
+	StringInputData data13(88,"04");
+	StringInputData data14(55,"05");
+	StringInputData data15(29,"06");
+	StringInputData data16(26,"07");
+	StringInputData data17(27,"08");
+	StringInputData data18(18,"09");
+	StringInputData data19(19,"10");
+
+
 
 	mainFixture->insert(data1);
 	mainFixture->insert(data2);
@@ -353,10 +365,29 @@ void TestTree::testRemove()
 	mainFixture->insert(data7);
 	mainFixture->insert(data8);
 	mainFixture->insert(data9);
+	mainFixture->insert(data10);
+	mainFixture->insert(data11);
+	mainFixture->insert(data12);
+	mainFixture->insert(data13);
+	mainFixture->insert(data14);
+	mainFixture->insert(data15);
+	mainFixture->insert(data16);
+	mainFixture->insert(data17);
+	mainFixture->insert(data18);
+
+	mainFixture->remove(data8);
+
 
 //	mainFixture->showTree(data);
 
-	mainFixture->remove(data1);
+//	mainFixture->remove(data1);
+//	mainFixture->remove(data2);
+//	mainFixture->remove(data3);
+//	mainFixture->remove(data4);
+//	mainFixture->remove(data5);
+//	mainFixture->remove(data6);
+
+
 
 	mainFixture->showTree(data);
 
@@ -562,5 +593,5 @@ void TestTree::testFind(){
 
 
 
-};
+}
 
