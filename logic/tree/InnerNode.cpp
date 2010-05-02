@@ -663,6 +663,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 			//Si no es el ultimo bloque y no encontro el elemento
 			while(!m_block->isLastRegister()&&!retFound)
 			{
+				reg = m_block->peekRegister();
 
 				currentData.toNodeData(reg.getValue());
 
@@ -905,16 +906,20 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 	retVal = BlockManager::balanceLoad(blockNode,blockSibling,side);
 	VarRegister firstKey;
 
-	if(side==RIGHT_SIDE){
+	if(side==RIGHT_SIDE)
+	{
+//		if (node->isLeaf())
 		// paso el dato de control
 		blockSibling->getNextRegister();
 		firstKey = blockSibling->getNextRegister();
-		}else{
+	}
+	else
+	{
 			// paso el dato de control
 			blockNode->restartCounter();
 			blockNode->getNextRegister();
 			VarRegister firstKey = blockNode->getNextRegister();
-		};
+	}
 
 	if (node->isLeaf())
 	{
