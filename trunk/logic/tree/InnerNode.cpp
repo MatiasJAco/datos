@@ -511,12 +511,12 @@ throw(NodeException)
 			}
 		}
 
-		m_tree->saveNode(sucesor);
 		if (sibling!=NULL)
 			m_tree->saveNode(sibling);
-		m_tree->saveNode(this);
-
 	}
+
+	m_tree->saveNode(sucesor);
+	m_tree->saveNode(this);
 
 	return result;
 }
