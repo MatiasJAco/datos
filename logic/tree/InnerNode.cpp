@@ -813,7 +813,8 @@ throw (NodeException)
 
 	// Creo el registro del segundo parametro para poder insertarlo en el bloque.
 	char* valueReg = new char[newINodeData.getSize()];
-	VarRegister regData(newINodeData.toStream(valueReg),newINodeData.getSize());
+	newINodeData.toStream(valueReg);
+	VarRegister regData(valueReg,newINodeData.getSize());
 
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
@@ -821,10 +822,9 @@ throw (NodeException)
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 //	VarRegister pointers = m_block->getNextRegister();
-	unsigned int iterador=0;
-	while (iterador<m_block->getRegisterAmount()&&!found)
+
+	while (!m_block->isLastRegister()&&!found)
 	{
-		iterador++;
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
@@ -834,7 +834,8 @@ throw (NodeException)
 			// lo modifica
 			found = true;
 			m_block->modifyRegister(regData,result);
-		}else
+		}
+		else
 			this->m_block->getNextRegister();
 
 
@@ -842,8 +843,8 @@ throw (NodeException)
 	if (!found)
 		throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
-	if (result!= NORMAL_LOAD)
-		throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
+//	if (result!= NORMAL_LOAD)
+//		throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
 
 
 	return result;
@@ -900,42 +901,39 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 	bool retVal = false;
 	InputData* currentData = data.newInstance();
 
+	Block* blockRight = NULL;
 	Block* blockNode = node->getBlock();
 	Block* blockSibling = siblingNode->getBlock();
 
 	retVal = BlockManager::balanceLoad(blockNode,blockSibling,side);
 	VarRegister firstKey;
 
-	if(side==RIGHT_SIDE)
+	if (side == RIGHT_SIDE)
 	{
-//		if (node->isLeaf())
-		// paso el dato de control
-		blockSibling->getNextRegister();
-		firstKey = blockSibling->getNextRegister();
+		blockRight = blockSibling;
+		keyToModify.setLeftPointer(node->getNodeNumber());
 	}
 	else
 	{
-			// paso el dato de control
-			blockNode->restartCounter();
-			blockNode->getNextRegister();
-			VarRegister firstKey = blockNode->getNextRegister();
+		blockRight = blockNode;
+		keyToModify.setLeftPointer(siblingNode->getNodeNumber());
 	}
+
 
 	if (node->isLeaf())
 	{
+		blockRight->restartCounter();
+		firstKey = blockRight->getRegisterN(3);
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
 		keyToModify.setKey(currentData->getKey());
 	}
 	else
 	{
+		blockRight->restartCounter();
+		firstKey = blockRight->getRegisterN(1);
 		keyToModify.toNodeData(firstKey.getValue());
 	}
-	if(side==RIGHT_SIDE){
-		keyToModify.setLeftPointer(node->getNodeNumber());
-		}else{
-			keyToModify.setLeftPointer(siblingNode->getNodeNumber());
-		};
 
 	delete currentData;
 
