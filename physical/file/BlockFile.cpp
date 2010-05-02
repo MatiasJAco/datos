@@ -98,6 +98,11 @@ bool BlockFile::deleteFile()
 	return retVal;
 }
 
+unsigned int BlockFile::getLastBlockCreated()
+{
+	return m_LastBlock;
+}
+
 bool BlockFile::readHeader()
 {
 	char *charBlockNum=new char[sizeof(m_LastBlock)];

@@ -138,6 +138,12 @@ public:
 	 */
 	FreeBlockList getFreeBlockList();
 
+	/**
+	 * Obtiene el numero del ultimo bloque creado.O sea el numero del bloque del final del archivo
+	 * @return unsigned int devuelve la cantidad de bloques creados
+	 */
+	unsigned int getLastBlockCreated();
+
 private:
 	//-----------------------------Headers-----------------------------//
 	/**
