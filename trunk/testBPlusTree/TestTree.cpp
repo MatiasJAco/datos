@@ -27,7 +27,8 @@ void TestTree::run()
 //	testRecoverLeaf();
 //	testInsertLeafSinOverflow();
 //	testInsertRoot();
-	testInsertComplejo();
+//	testInsertComplejo();
+	testRemove();
 }
 
 void TestTree::testRecoverLeaf()
@@ -321,10 +322,34 @@ void TestTree::testInsertComplejo()
 //	leaf8->printContent(data);
 //	leaf9->printContent(data);
 
+}
+
+void TestTree::testRemove()
+{
+	StringInputData data;
+	StringInputData data1(1,"11");
+	StringInputData data2(2,"22");
+	StringInputData data3(3,"33");
+	StringInputData data4(4,"44");
+	StringInputData data5(5,"55");
+	StringInputData data6(6,"66");
+	StringInputData data7(7,"77");
+	StringInputData data8(8,"88");
+	StringInputData data9(9,"99");
+
+	mainFixture->insert(data1);
+	mainFixture->insert(data2);
+	mainFixture->insert(data3);
+	mainFixture->insert(data4);
+	mainFixture->insert(data5);
+	mainFixture->insert(data6);
+	mainFixture->insert(data7);
+	mainFixture->insert(data8);
+	mainFixture->insert(data9);
 
 
+	mainFixture->remove(data1);
 
-
-
+	mainFixture->deleteTree();
 }
 
