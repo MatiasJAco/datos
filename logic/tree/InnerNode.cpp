@@ -930,27 +930,48 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode,sideEnum side)
 {
 	bool retVal = false;
+	VarRegister firstKey;
 	InputData* currentData = data.newInstance();
 
+	// Bloques de los nodos a fusionar.
 	Block* blockNode = node->getBlock();
 	Block* blockSibling = siblingNode->getBlock();
 
-	BlockManager::merge(blockNode,blockSibling,side);
-
-	// paso el dato de control
-	blockNode->getNextRegister();
-	VarRegister firstKey = blockNode->getNextRegister();
+	// Guardo los datos de control acerca de los punteros
+	// siguiente y anterior, en el caso en se esten fusionando hojas.
+	unsigned int nextLeaf = UNDEFINED_NODE_NUMBER;
 
 	if (node->isLeaf())
 	{
+		if (side == RIGHT_SIDE)
+		{
+			nextLeaf = ((LeafNode*)siblingNode)->getNextLeaf();
+		}
+		else
+		{
+			nextLeaf = ((LeafNode*)node)->getNextLeaf();
+		}
+	}
+
+	// Propiamente el merge.
+	BlockManager::merge(blockNode,blockSibling,side);
+
+	if (node->isLeaf())
+	{
+		// paso los 3 datos de control de la hoja.
+		firstKey = blockNode->getRegisterN(3);
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
-		fusionatedNode.setKey(currentData.getKey());
+		fusionatedNode.setKey(currentData->getKey());
 	}
 	else
 	{
+		// paso el dato de control del nivel.
+		blockNode->getNextRegister();
+		firstKey = blockNode->getNextRegister();
 		fusionatedNode.toNodeData(firstKey.getValue());
 	}
+
 	fusionatedNode.setLeftPointer(node->getNodeNumber());
 
 	delete currentData;
