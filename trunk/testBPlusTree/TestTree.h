@@ -25,7 +25,8 @@ protected:
 	void testRecoverLeaf();
 	void testInsertLeafSinOverflow();
 	void testInsertRoot();
-
+	void testModify();
+	void testFind();
 	void testInsertComplejo();
 	void testRemove();
 

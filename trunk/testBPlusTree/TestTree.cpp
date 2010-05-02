@@ -27,8 +27,15 @@ void TestTree::run()
 //	testRecoverLeaf();
 //	testInsertLeafSinOverflow();
 //	testInsertRoot();
+
 //	testInsertComplejo();
-	testRemove();
+
+
+//	testInsertComplejo();
+//	testRemove();
+//	testModify();
+	testFind();
+
 }
 
 void TestTree::testRecoverLeaf()
@@ -352,4 +359,205 @@ void TestTree::testRemove()
 
 	mainFixture->deleteTree();
 }
+
+void TestTree::testModify(){
+
+	cout << "\n\t\t*********testModify*********\t\t\n";
+
+		StringInputData data;
+
+		StringInputData data1(7,"11");
+		StringInputData data2(33,"22");
+		StringInputData data3(12,"33");
+		StringInputData data4(25,"44");
+		StringInputData data5(5,"55");
+		StringInputData data6(98,"66");
+		StringInputData data7(75,"77");
+		StringInputData data8(48,"88");
+		StringInputData data9(99,"99");
+		StringInputData data10(64,"01");
+//		StringInputData data11(22,"02");
+//		StringInputData data12(37,"03");
+//		StringInputData data13(88,"04");
+//		StringInputData data14(55,"05");
+//		StringInputData data15(29,"06");
+//		StringInputData data16(26,"07");
+//		StringInputData data17(27,"08");
+//		StringInputData data18(18,"09");
+//		StringInputData data19(19,"10");
+//		StringInputData data20(20,"11");
+//		StringInputData data21(21,"12");
+//		StringInputData data22(80,"13");
+//		StringInputData data23(23,"08");
+//		StringInputData data24(24,"09");
+//		StringInputData data25(70,"10");
+//		StringInputData data26(71,"11");
+//		StringInputData data27(72,"12");
+//		StringInputData data28(28,"13");
+//		StringInputData data29(73,"09");
+//		StringInputData data30(30,"10");
+//		StringInputData data31(31,"11");
+//		StringInputData data32(66,"12");
+//		StringInputData data33(87,"13");
+//		StringInputData data34(34,"09");
+//		StringInputData data35(35,"10");
+//		StringInputData data36(36,"11");
+//		StringInputData data37(102,"12");
+//		StringInputData data38(38,"13");
+//		StringInputData data39(39,"09");
+//		StringInputData data40(40,"10");
+//		StringInputData data41(41,"11");
+//		StringInputData data42(42,"12");
+//		StringInputData data43(43,"13");
+//		StringInputData data44(44,"09");
+//		StringInputData data45(45,"10");
+//		StringInputData data46(46,"11");
+//		StringInputData data47(47,"12");
+//		StringInputData data48(91,"13");
+//		StringInputData data49(49,"09");
+//		StringInputData data50(50,"10");
+//		StringInputData data51(51,"11");
+//		StringInputData data52(52,"12");
+//		StringInputData data53(53,"13");
+//		StringInputData data54(54,"09");
+//		StringInputData data55(90,"10");
+//		StringInputData data56(56,"11");
+//		StringInputData data57(57,"12");
+//		StringInputData data58(58,"13");
+//		StringInputData data59(59,"13");
+//		StringInputData data60(1,"11");
+
+		mainFixture->insert(data1);
+		mainFixture->insert(data2);
+		mainFixture->insert(data3);
+		mainFixture->insert(data4);
+		mainFixture->insert(data5);
+		mainFixture->insert(data6);
+		mainFixture->insert(data7);
+		mainFixture->insert(data8);
+		mainFixture->insert(data9);
+		mainFixture->insert(data10);
+//		mainFixture->insert(data11);
+//		mainFixture->insert(data12);
+//		mainFixture->insert(data13);
+//		mainFixture->insert(data14);
+//		mainFixture->insert(data15);
+//		mainFixture->insert(data16);
+//		mainFixture->insert(data17);
+//		mainFixture->insert(data18);
+//		mainFixture->insert(data19);
+//		mainFixture->insert(data20);
+//		mainFixture->insert(data21);
+//		mainFixture->insert(data22);
+//		mainFixture->insert(data23);
+//		mainFixture->insert(data24);
+//		mainFixture->insert(data25);
+//		mainFixture->insert(data26);
+//		mainFixture->insert(data27);
+//		mainFixture->insert(data28);
+//		mainFixture->insert(data29);
+//		mainFixture->insert(data30);
+//		mainFixture->insert(data31);
+//		mainFixture->insert(data32);
+//		mainFixture->insert(data33);
+//		mainFixture->insert(data34);
+//		mainFixture->insert(data35);
+//		mainFixture->insert(data36);
+//		mainFixture->insert(data37);
+//		mainFixture->insert(data38);
+//		mainFixture->insert(data39);
+//		mainFixture->insert(data40);
+//		mainFixture->insert(data41);
+//		mainFixture->insert(data42);
+//		mainFixture->insert(data43);
+//		mainFixture->insert(data44);
+//		mainFixture->insert(data45);
+//		mainFixture->insert(data46);
+//		mainFixture->insert(data47);
+//		mainFixture->insert(data48);
+//		mainFixture->insert(data49);
+//		mainFixture->insert(data50);
+//		mainFixture->insert(data51);
+//		mainFixture->insert(data52);
+//		mainFixture->insert(data53);
+//		mainFixture->insert(data54);
+//		mainFixture->insert(data55);
+//		mainFixture->insert(data56);
+//		mainFixture->insert(data57);
+//		mainFixture->insert(data58);
+//		mainFixture->insert(data59);
+//		mainFixture->insert(data60);
+
+		StringInputData datoMod(75,"10");
+		StringInputData datoaMod(75,"");
+		mainFixture->showTree(data);
+		mainFixture->modifyElement(datoaMod,datoMod);
+		mainFixture->showTree(data);
+		mainFixture->deleteTree();
+
+}
+
+void TestTree::testFind(){
+
+	cout << "\n\t\t*********testModify*********\t\t\n";
+
+	StringInputData data;
+
+	StringInputData data1(7,"11");
+	StringInputData data2(33,"22");
+	StringInputData data3(12,"33");
+	StringInputData data4(25,"44");
+	StringInputData data5(5,"55");
+	StringInputData data6(98,"66");
+	StringInputData data7(75,"77");
+	StringInputData data8(48,"88");
+	StringInputData data9(99,"99");
+	StringInputData data10(64,"01");
+	StringInputData data11(22,"02");
+	StringInputData data12(37,"03");
+	StringInputData data13(88,"04");
+	StringInputData data14(55,"05");
+	StringInputData data15(29,"06");
+	StringInputData data16(26,"07");
+	StringInputData data17(27,"08");
+	StringInputData data18(18,"09");
+
+
+
+	mainFixture->insert(data1);
+	mainFixture->insert(data2);
+	mainFixture->insert(data3);
+	mainFixture->insert(data4);
+	mainFixture->insert(data5);
+	mainFixture->insert(data6);
+	mainFixture->insert(data7);
+	mainFixture->insert(data8);
+	mainFixture->insert(data9);
+	mainFixture->insert(data10);
+	mainFixture->insert(data11);
+	mainFixture->insert(data12);
+	mainFixture->insert(data13);
+	mainFixture->insert(data14);
+	mainFixture->insert(data15);
+	mainFixture->insert(data16);
+	mainFixture->insert(data17);
+	mainFixture->insert(data18);
+
+	mainFixture->showTree(data);
+	StringInputData datoDevuelto(0,"");
+	//Busca 1.
+	StringInputData datoABuscar(1,"");
+	mainFixture->find(datoABuscar,datoDevuelto);
+	//Busca 22.
+	datoABuscar.setKey(22);
+	mainFixture->find(datoABuscar,datoDevuelto);
+	//Busca 125.
+	datoABuscar.setKey(125);
+	mainFixture->find(datoABuscar,datoDevuelto);
+
+	mainFixture->deleteTree();
+
+
+
+};
 
