@@ -475,7 +475,7 @@ throw(NodeException)
 
 			if (balanced)
 //				modifyINodeData(joinBrother,keymodified);
-				modifyINodeData(joinBrother,keymodified);
+				modifyINodeData(minorBrother,keymodified);
 
 		}
 
