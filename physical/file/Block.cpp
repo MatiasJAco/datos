@@ -22,7 +22,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 	m_usedBytes=m_FirstRegisterOffset;
 	m_registerCount=0;
 	m_LoadFactor=loadFactor;
-	m_FixedRegisterCount=DEFAULT_FIXED_REGISTER_COUNT;
+	m_fixedRegisterCount=DEFAULT_FIXED_REGISTER_COUNT;
 
 }
 
@@ -508,10 +508,20 @@ unsigned int Block::getRemainingSpace()
 
 unsigned int Block::getFixedRegisterCount()
 {
-	return m_FixedRegisterCount;
+	return m_fixedRegisterCount;
 }
 
 void Block::setFixedRegisterCount(unsigned int count)
 {
-	m_FixedRegisterCount=count;
+	m_fixedRegisterCount=count;
+}
+
+unsigned int Block::getBlockControlDataSize()
+{
+	return m_FirstRegisterOffset+1;
+}
+
+unsigned int Block::getBlockSize()
+{
+	return m_blockSize;
 }
