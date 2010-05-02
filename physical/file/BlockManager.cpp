@@ -154,7 +154,7 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 	{
 		unsigned int combinedSize;
 
-		if(side==RIGHT_SIDE)
+		if(side==LEFT_SIDE)
 		{
 			combinedSize =block1->getUsedSpace()-block2->getUsedSpace()-block2->getBlockControlDataSize();
 			isOverflow = combinedSize > block1->getBlockSize();
@@ -187,7 +187,7 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 	else
 		throw "Se pasaron punteros a NULL";
 
-	if(side==RIGHT_SIDE&&retVal)
+	if(side==LEFT_SIDE&&retVal)
 		retVal = exchangeBlock(block1,block2);
 
 	block1->restartCounter();
