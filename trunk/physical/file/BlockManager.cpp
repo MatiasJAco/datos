@@ -149,6 +149,8 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 {
 	bool retVal=false;
 	bool isOverflow=false;
+	unsigned int fixedRegisterCount;
+	unsigned int i;
 
 	if(block1!=NULL &&block2!=NULL)
 	{
@@ -173,6 +175,9 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 			block1->getRegisterN(lastReg);
 
 			block2->restartCounter();
+
+			for(i=0; i <fixedRegisterCount&&!block2->isLastRegister();i++)
+				block2->getNextRegister();
 
 			while(!block2->isLastRegister())
 			{
