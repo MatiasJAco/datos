@@ -354,8 +354,11 @@ void TestTree::testRemove()
 	mainFixture->insert(data8);
 	mainFixture->insert(data9);
 
+//	mainFixture->showTree(data);
 
 	mainFixture->remove(data1);
+
+	mainFixture->showTree(data);
 
 	mainFixture->deleteTree();
 }
