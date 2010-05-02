@@ -170,7 +170,7 @@ bool BlockManager::merge(Block *block1, Block *block2,sideEnum side )
 		if(!isOverflow)
 		{
 			VarRegister varR;
-			unsigned int lastReg=block1->getRegisterAmount()-1;
+			unsigned int lastReg=block1->getRegisterAmount();
 
 			block1->getRegisterN(lastReg);
 
