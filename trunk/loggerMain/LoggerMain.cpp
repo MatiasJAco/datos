@@ -42,7 +42,12 @@ int main(int argc, const char* argv[]){
 
 	if (operacion == "-B") {
 		cout << "Buscando la cadena de caracteres " << cadena << "..." << endl;
-		logger->buscar_cadena(&cadena[0]); //TODO hacer saber si se encontro o no.
+		bool findResult = logger->buscar_cadena(&cadena[0]);
+		if (findResult == true) {
+			cout << "Se encontro la cadena " << cadena << endl;
+		} else {
+			cout << "No se encontro la cadena " << cadena << endl;
+		}
 	} else if (operacion == "-I") {
 		cout << "Ingresando la cadena de caracteres " << cadena << endl;
 		logger->ingresar(&cadena[0]);
