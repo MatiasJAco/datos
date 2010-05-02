@@ -187,6 +187,10 @@ public:
 
 	void modifyLastKey();
 
+	INodeData getFirstKeyLeaf(Node* searchNode,const InputData&  data);
+
+	INodeData getLastINodeData();
+
 };
 
 #endif /* INNERNODE_H_ */
