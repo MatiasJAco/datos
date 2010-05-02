@@ -24,6 +24,7 @@ class Hash {
 private:
 	Table* hashTable;
 	BlockFile* hashFile;
+	unsigned int bucketsUsedAmount;
 
 	/**
 	 * Retorna el resultado de la funcion Hash. En este caso estamos usando el metodo de "bits sufijos".
