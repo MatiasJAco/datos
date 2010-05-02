@@ -423,7 +423,7 @@ throw(NodeException)
 
 //		bool leftJoin = true;
 		bool balanced = false;
-		Node* rightSibling,*leftSibling;
+		Node* sibling;
 
 		INodeData keymodified;
 
@@ -444,8 +444,8 @@ throw(NodeException)
 
 			// Trato de balancear con el derecho.
 			// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
-			rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
-			balanced = redistribute(sucesor,rightSibling,data,keymodified,RIGHT_SIDE);
+			sibling = m_tree->getNode(bigBrother.getLeftPointer());
+			balanced = redistribute(sucesor,sibling,data,keymodified,RIGHT_SIDE);
 		}
 
 		if (balanced)
@@ -456,7 +456,10 @@ throw(NodeException)
 		{
 			//Verifica que tenga hermano izquierdo.
 			if (hasMinorBrother)
-				balanced = redistribute(sucesor,leftSibling,data,keymodified,LEFT_SIDE);
+			{
+				sibling = m_tree->getNode(minorBrother.getLeftPointer());
+				balanced = redistribute(sucesor,sibling,data,keymodified,LEFT_SIDE);
+			}
 
 
 //			// Me busca el hermano menor.
@@ -487,23 +490,31 @@ throw(NodeException)
 
 			if(hasRightBrother)
 			{
-				merge(sucesor,rightSibling,data,fusionatedNode,RIGHT_SIDE);
+				merge(sucesor,sibling,data,fusionatedNode,RIGHT_SIDE);
 //				result = removeINodeData(joinBrother);
 				result = removeINodeData(thiskey);
 				//Recupero clave del que borro y se a paso al que queda.
 //				joinBrother.setLeftPointer(thiskey.getLeftPointer());
 //				modifyINodeData(thiskey,joinBrother);
-				modifyINodeData(bigBrother,fusionatedNode);
+				bigBrother.setLeftPointer(fusionatedNode.getLeftPointer());
+				modifyINodeData(bigBrother);
+
 			}
 			else
 			{
 				//
-				merge(sucesor,leftSibling,data,fusionatedNode,LEFT_SIDE);
+				merge(sucesor,sibling,data,fusionatedNode,LEFT_SIDE);
 //				result = removeINodeData(joinBrother);
 				result = removeINodeData(minorBrother);
-				modifyINodeData(thiskey,fusionatedNode);
+				thiskey.setLeftPointer(fusionatedNode.getLeftPointer());
+				modifyINodeData(thiskey);
 			}
 		}
+
+		m_tree->saveNode(sucesor);
+		if (sibling!=NULL)
+			m_tree->saveNode(sibling);
+		m_tree->saveNode(this);
 
 	}
 
@@ -726,7 +737,7 @@ throw (NodeException)
 
 	while (!m_block->isLastRegister()&&!found)
 	{
-		currentRegister = m_block->getNextRegister();
+		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
 		currentData.toNodeData(currentRegister.getValue());
@@ -958,14 +969,18 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 
 	if (node->isLeaf())
 	{
+		blockNode->restartCounter();
 		// paso los 3 datos de control de la hoja.
 		firstKey = blockNode->getRegisterN(3);
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
 		fusionatedNode.setKey(currentData->getKey());
+
+		((LeafNode*)node)->setNextLeaf(nextLeaf);
 	}
 	else
 	{
+		blockNode->restartCounter();
 		// paso el dato de control del nivel.
 		blockNode->getNextRegister();
 		firstKey = blockNode->getNextRegister();

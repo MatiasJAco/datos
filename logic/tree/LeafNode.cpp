@@ -124,7 +124,7 @@ throw (NodeException)
 
 	while (!m_block->isLastRegister()&&!found)
 	{
-		currentRegister = m_block->getNextRegister();
+		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
 		currentData->toData(currentRegister.getValue());
