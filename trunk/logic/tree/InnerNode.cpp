@@ -621,59 +621,73 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 	INodeData currentData;
 
 	VarRegister reg;
-	m_block->restartCounter();
 
-
-	if(condition!= MINOR)
+	if(m_block->getRegisterAmount() > 1)
 	{
-		//Itera una vez para obviar el dato de control.
-		VarRegister level = m_block->getNextRegister();
+		m_block->restartCounter();
 
-		reg = m_block->peekRegister();
 
-		while(!m_block->isLastRegister()&&!retFound)
+		if(condition!= MINOR)
 		{
-			currentData.toNodeData(reg.getValue());
+			//Itera una vez para obviar el dato de control.
+			VarRegister level = m_block->getNextRegister();
 
-			if(condition  == EQUAL)
+			//Obtengo el primer InodeData
+			reg = m_block->peekRegister();
+
+			//Si no es el ultimo bloque y no encontro el elemento
+			while(!m_block->isLastRegister()&&!retFound)
 			{
-				if(currentData.getKey()== innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+
+				currentData.toNodeData(reg.getValue());
+
+				if(condition  == EQUAL)
+				{
+					//Comparo si es igual o si es el ultimo registro
+					if(currentData.getKey()== innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+					{
+						retFound=true;
+						innerNodeFound = currentData;
+					}
+				}
+				else
+				{
+					//Comparo si es mayor o si es el ultimo registro
+					if(currentData.getKey()>innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+					{
+						retFound=true;
+						innerNodeFound = currentData;
+					}
+				}
+				//Pido el siguiente
+				reg = m_block->getNextRegister();
+			}
+		}
+		else
+		{
+			//Salto al final
+			m_block->jumpLastRegister();
+
+			//Evito el ultimo registro, ya que tiene key -1
+			m_block->getPreviousRegister();
+
+			//Mientras no lo encuentre y no llegue a los datos de control
+			while(!m_block->isFirstRegister()&&!retFound)
+			{
+				//Pido el dato y retrocedo el iterador
+				reg = m_block->getPreviousRegister();
+				currentData.toNodeData(reg.getValue());
+
+				//Si es menor lo devuelvo
+				if(currentData.getKey()< innerNodeElem.getKey())
 				{
 					retFound=true;
 					innerNodeFound = currentData;
 				}
-			}
-			else
-			{
-				if(currentData.getKey()>innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
-				{
-					retFound=true;
-					innerNodeFound = currentData;
-				}
-			}
-			reg = m_block->getNextRegister();
-		}
-	}
-	else
-	{
-		m_block->jumpLastRegister();
 
-		m_block->getPreviousRegister();
-
-		//Mientras no lo encuentre y no llegue a los datos de control
-		while(!m_block->isFirstRegister()&&!retFound)
-		{
-			reg = m_block->getPreviousRegister();
-			currentData.toNodeData(reg.getValue());
-
-			if(currentData.getKey()< innerNodeElem.getKey())
-			{
-				retFound=true;
-				innerNodeFound = currentData;
 			}
 
 		}
-
 	}
 
 	return retFound;
