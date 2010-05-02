@@ -166,6 +166,35 @@ bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
 		throw BPlusTreeException(e);
 	}
 
+	if((this->m_root->getBlock()->getRegisterAmount()==2)&&(!this->m_root->isLeaf())){
+		unsigned int currentLevel= this->m_root->getLevel();
+
+			//Obtengo el unico hijo
+			Block* rootBlock= this->m_root->getBlock();
+			rootBlock->restartCounter();
+			//Salteo datos de control.
+			rootBlock->getNextRegister();
+			VarRegister currentRegister;
+			currentRegister=rootBlock->getNextRegister();
+			INodeData currentData(0,0);
+			currentData.toNodeData(currentRegister.getValue());
+			Node* sucesor=this->getNode(currentData.getLeftPointer());
+			Block* blockSucesor=sucesor->getBlock();
+			//Cambio los numeros de bloque.
+			BlockManager::exchangeBlock(rootBlock,blockSucesor);
+			//Intercambio los punteros
+			Node*auxPointer;
+			auxPointer=m_root;
+			m_root=sucesor;
+			sucesor=auxPointer;
+			this->deleteNode(sucesor);
+			m_root->setLevel(currentLevel-1);
+			this->saveNode(m_root);
+	};
+
+
+
+
 	return retVal;
 }
 
