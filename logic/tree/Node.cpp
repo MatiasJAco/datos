@@ -95,6 +95,11 @@ void Node::setBlock(Block* block)
 	m_block = block;
 }
 
+void Node::nodeNumber(unsigned int number)
+{
+	this->m_nodeNumber=number;
+}
+
 Block* Node::getBlock()
 {
 	return m_block;

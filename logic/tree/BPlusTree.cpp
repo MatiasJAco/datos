@@ -83,6 +83,7 @@ throw (BPlusTreeException)
 
 	if (result == OVERFLOW_LOAD)
 	{
+
 		level = m_root->getLevel();
 
 		/// La raiz se transforma en nodo interno.
@@ -91,10 +92,44 @@ throw (BPlusTreeException)
 
 		// le cambio el numero de nodo al sucesor y mantengo el definido para la raiz.
 		BlockManager::exchangeBlock(m_root->getBlock(),sucesor->getBlock());
+		sucesor->nodeNumber(sucesor->getNodeNumber());
+		m_root->nodeNumber(m_root->getNodeNumber());
 
-		// Claves que se insertaran al nodo raiz.
-		INodeData firstKey(sucesor->getNodeNumber(),promotedKey.getKey());
-		INodeData newKey(promotedKey.getLeftPointer(),Node::UNDEFINED_KEY);
+		INodeData firstKey;
+		INodeData newKey;
+		if (!sucesor->isLeaf()){
+			INodeData currentData;
+			VarRegister reg;
+			Node* nodoIzquierdo=this->getNode(promotedKey.getLeftPointer());
+			Block* bloqueIzquierdo;
+			while(!nodoIzquierdo->isLeaf()){
+			//Obtener primer clave de la rama.
+
+				bloqueIzquierdo =nodoIzquierdo->getBlock();
+				//Salteo info de control.
+				bloqueIzquierdo->restartCounter();
+				bloqueIzquierdo->getNextRegister();
+				reg=bloqueIzquierdo->getNextRegister();
+				currentData.toNodeData(reg.getValue());
+				nodoIzquierdo=this->getNode(currentData.getLeftPointer());
+			};
+			InputData* leftKey=data.newInstance();
+			//Encuentro la primer hoja de la segunda rama.
+			bloqueIzquierdo =nodoIzquierdo->getBlock();
+			//Salteo info de control.
+			bloqueIzquierdo->restartCounter();
+			bloqueIzquierdo->getNextRegister();
+			bloqueIzquierdo->getNextRegister();
+			bloqueIzquierdo->getNextRegister();
+			reg=bloqueIzquierdo->getNextRegister();
+			leftKey->toData(reg.getValue());
+			promotedKey.setKey(leftKey->getKey());
+
+		};
+		firstKey.setLeftPointer(sucesor->getNodeNumber());
+		firstKey.setKey(promotedKey.getKey());
+		newKey.setLeftPointer(promotedKey.getLeftPointer());
+		newKey.setKey(Node::UNDEFINED_KEY);
 
 		// habria que hacer casteo dinamico.
 		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);
