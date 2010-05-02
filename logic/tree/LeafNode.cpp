@@ -116,7 +116,9 @@ throw (NodeException)
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
+	VarRegister prevPointer = m_block->getNextRegister();
+	VarRegister nextPointer = m_block->getNextRegister();
+
 
 	while (!m_block->isLastRegister()&&!found)
 	{
@@ -161,7 +163,8 @@ throw (NodeException)
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
+	VarRegister prevPointer = m_block->getNextRegister();
+	VarRegister nextPointer = m_block->getNextRegister();
 
 	while (!m_block->isLastRegister()&&!found)
 	{
@@ -202,7 +205,8 @@ throw (NodeException)
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
+	VarRegister prevPointer = m_block->getNextRegister();
+	VarRegister nextPointer = m_block->getNextRegister();
 
 	while (!m_block->isLastRegister()&&!found)
 	{
@@ -239,7 +243,8 @@ throw (NodeException)
 	/// Tengo que avanzar primero los datos de control siempre.
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
-	VarRegister pointers = m_block->getNextRegister();
+	VarRegister prevPointer = m_block->getNextRegister();
+	VarRegister nextPointer = m_block->getNextRegister();
 
 	while (!m_block->isLastRegister()&&!found)
 	{
