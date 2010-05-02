@@ -159,15 +159,13 @@ void Table::modifyRegister(int numReg,unsigned int newValue){
 				fgets(linea,180,arch_tabla_a_borrar);
 				ptr = strtok(linea," \n\t");
 				strcpy(valorObtenido,ptr);
-				fprintf( archTemporal, valorObtenido );
-				fprintf( archTemporal, "\n" );
+				fprintf(archTemporal,"%s\n",valorObtenido);
 			}
 			else
 				printf("\nError: hubo un error al intentar acceder a un registro de la tabla en modificarRegistroEnTabla1.");
 		}
 
-		fprintf( archTemporal, valorNuevoString );
-		fprintf( archTemporal, "\n" );
+		fprintf( archTemporal,"%s\n" ,valorNuevoString );
 		fgets(linea,180,arch_tabla_a_borrar);
 
 		if (numeroRenglon+1<=tam_tabla_a_borrar){
@@ -176,8 +174,7 @@ void Table::modifyRegister(int numReg,unsigned int newValue){
 					fgets(linea,180,arch_tabla_a_borrar);
 					ptr = strtok(linea," \n\t");
 					strcpy(valorObtenido,ptr);
-					fprintf( archTemporal, valorObtenido );
-					fprintf( archTemporal, "\n" );
+					fprintf(archTemporal,"%s\n",valorObtenido);
 				}
 				else
 					printf("\nError: hubo un error al intentar acceder a un registro de la tabla en modificarRegistroEnTabla2.");
@@ -221,18 +218,15 @@ void Table::duplicate(){
 	sprintf(nuevoTam,"%i",aux);
 	char valorObtenido[10];
 
-	fprintf( archTemporal, nuevoTam );
-	fprintf( archTemporal, "\n" );
+	fprintf(archTemporal,"%s\n",nuevoTam);
 
 	for(int i = 0;i<sizeOfTable;i++){
 			sprintf(valorObtenido,"%i",listElementsTable[i]);
-			fprintf( archTemporal,  valorObtenido);
-			fprintf( archTemporal, "\n" );
+			fprintf( archTemporal, "%s\n" ,valorObtenido);
 	}
 	for(int i = 0;i<sizeOfTable;i++){
 			sprintf(valorObtenido,"%i",listElementsTable[i]);
-			fprintf( archTemporal,  valorObtenido);
-			fprintf( archTemporal, "\n" );
+			fprintf( archTemporal, "%s\n" ,valorObtenido);
 	}
 
 	closeFile(archTemporal);
@@ -261,13 +255,11 @@ int Table::verifyAndDivide(){
 	sprintf(nuevoTam,"%i",aux);
 	char valorObtenido[10];
 
-	fprintf( archTemporal, nuevoTam );
-	fprintf( archTemporal, "\n" );
+	fprintf( archTemporal,"%s\n" ,nuevoTam );
 
 	for(int i = 0;i<sizeOfTable/2;i++){
 			sprintf(valorObtenido,"%i",listElementsTable[i]);
-			fprintf( archTemporal,  valorObtenido);
-			fprintf( archTemporal, "\n" );
+			fprintf( archTemporal,"%s\n" ,valorObtenido );
 	}
 	closeFile(archTemporal);
 	remove("tabla.txt");
