@@ -128,11 +128,12 @@ public:
 	/**
 	 * Se le pasa una clave y devuelve el INodeData que corresponde a esa clave.
 	 * @param innerNodeElem Elemento INodeData que se busca.
+	 * @param innerNodeFound elemento que se encontro. Si no se encontro no se modifica
 	 * @param condition. Segun se setee la condition, devuelve el igual, o el inmediatamente mayor o
 	 * 					menor. El default es igual.
 	 * @return bool. TRUE si lo encontro, FALSE de lo contrario.
 	 */
-	bool findINodeData(INodeData& innerNodeElem,Condition condition);
+	bool findINodeData(INodeData& innerNodeElem,INodeData & innerNodeFound, Condition condition);
 
 	/**
 	 * Inserta un elemento INodeData en forma ordenada dentro del InnerNode.

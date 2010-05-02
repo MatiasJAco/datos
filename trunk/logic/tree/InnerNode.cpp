@@ -615,6 +615,70 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 	return found;
 }
 
+bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFound, Condition condition)
+{
+	bool retFound=false;
+	INodeData currentData;
+
+	VarRegister reg;
+	m_block->restartCounter();
+
+
+	if(condition!= MINOR)
+	{
+		//Itera una vez para obviar el dato de control.
+		VarRegister level = m_block->getNextRegister();
+
+		reg = m_block->peekRegister();
+
+		while(!m_block->isLastRegister()&&!retFound)
+		{
+			currentData.toNodeData(reg.getValue());
+
+			if(condition  == EQUAL)
+			{
+				if(currentData.getKey()== innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+				{
+					retFound=true;
+					innerNodeFound = currentData;
+				}
+			}
+			else
+			{
+				if(currentData.getKey()>innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+				{
+					retFound=true;
+					innerNodeFound = currentData;
+				}
+			}
+			reg = m_block->getNextRegister();
+		}
+	}
+	else
+	{
+		m_block->jumpLastRegister();
+
+		m_block->getPreviousRegister();
+
+		//Mientras no lo encuentre y no llegue a los datos de control
+		while(!m_block->isFirstRegister()&&!retFound)
+		{
+			reg = m_block->getPreviousRegister();
+			currentData.toNodeData(reg.getValue());
+
+			if(currentData.getKey()< innerNodeElem.getKey())
+			{
+				retFound=true;
+				innerNodeFound = currentData;
+			}
+
+		}
+
+	}
+
+	return retFound;
+}
+
 
 loadResultEnum InnerNode::removeINodeData(const INodeData& iNodeData)
 throw (NodeException)
