@@ -7,6 +7,8 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "NodeException.h"
+
 #ifndef BPLUSTREEEXCEPTION_H_
 #define BPLUSTREEEXCEPTION_H_
 
@@ -16,18 +18,41 @@ public:
 	typedef enum
 	{
 		DUPLICATED = 0,
-		INVALID_REF,
 		INEXISTENT_ELEM,
 		ANOMALOUS_LOADRESULT,
 		INNEXISTENT_ROOT,
 		DELETED_FREENODE,
-		INSUFFICIENT_ALLOCK_PARAM
-
+		INSUFFICIENT_ALLOCK_PARAM,
+		CORRUPTED,
+		UNDEFINED
 	}ExceptionCause;
 
 public:
+	BPlusTreeException(){}
+
 	BPlusTreeException(ExceptionCause cause): std::exception(){
 		m_cause = cause;
+	}
+
+	BPlusTreeException(NodeException& e): std::exception(){
+
+		switch(e.getCause())
+		{
+		case NodeException::DUPLICATED_IN_LEAF:
+			m_cause = DUPLICATED;
+			break;
+		case NodeException::INVALID_REF:
+			m_cause = CORRUPTED;
+			break;
+		default:
+			m_cause = UNDEFINED;
+			break;
+		}
+	}
+
+	ExceptionCause getCause() const
+	{
+		return m_cause;
 	}
 
 	const char* what() const throw()
@@ -37,16 +62,16 @@ public:
 			case DUPLICATED:
 				return "Se intento insertar un elemento duplicado ya existente en el arbol";
 				break;
-			case INVALID_REF:
-				return "Error: llego clave a una referencia invalida";
-				break;
 			case INEXISTENT_ELEM:
+				return "No se encuentra el elemento";
 				break;
 			case ANOMALOUS_LOADRESULT:
 				break;
 			case DELETED_FREENODE:
+				return "Se intento borrar un elemento ya eliminado";
 				break;
-			case INSUFFICIENT_ALLOCK_PARAM:
+			case CORRUPTED:
+				return "El arbol se encuentra corrupto";
 				break;
 			default:
 				return "Error inesperado";

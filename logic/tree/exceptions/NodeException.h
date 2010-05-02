@@ -22,14 +22,19 @@ public:
 		INEXISTENT_ELEMINNER,
 		INEXISTENT_ELEMLEAF,
 		ANOMALOUS_LOADRESULT,
-		DELETED_FREENODE,
 		INSUFFICIENT_ALLOCK_PARAM,
 		BAD_CALL_OPERATION,
+		UNDEFINED
 	}ExceptionCause;
 
 public:
 	NodeException(ExceptionCause cause): std::exception(){
 		m_cause = cause;
+	}
+
+	ExceptionCause getCause() const
+	{
+		return m_cause;
 	}
 
 	const char* what() const throw()
@@ -52,8 +57,6 @@ public:
 				break;
 			case ANOMALOUS_LOADRESULT:
 				return "Una operacion sobre el nodo devolvio un estado de carga inesperado";
-				break;
-			case DELETED_FREENODE:
 				break;
 			case INSUFFICIENT_ALLOCK_PARAM:
 				return "Se intento almacenar en un nodo existente, un elemento que supera al tamaño disponible";
