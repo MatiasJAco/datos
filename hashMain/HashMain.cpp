@@ -61,7 +61,7 @@ int main(int argc, const char* argv[]){
 			cout << "No se encontro la clave " << clave << endl;
 		}
 	} else if (operacion == "-I") {
-		cout << "Ingresando la clave" << clave << " con el valor " << valor << "..." << endl;
+		cout << "Ingresando la clave " << clave << " con el valor " << valor << "..." << endl;
 		int addResult = hash->add(clave, valor);
 		if (addResult == 0) {
 			cout << "Se agrego correctamente la clave " << clave << endl;
@@ -71,7 +71,7 @@ int main(int argc, const char* argv[]){
 			cout << "Se produjo un error al ingresar la clave " << clave << endl;
 		}
 	} else if (operacion == "-M") {
-		cout << "Modificando el valor de la clave" << clave << " por " << valor << "..." << endl;
+		cout << "Modificando el valor de la clave " << clave << " por " << valor << "..." << endl;
 		int modifyResult = hash->modify(clave, valor);
 		if (modifyResult == 0) {
 			cout << "Se modifico correctamente el valor de la clave " << clave << endl;

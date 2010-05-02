@@ -65,7 +65,7 @@ int main(int argc, const char* argv[]){
 			cout << "No se encontro la clave " << clave << endl;
 		}
 	} else if (operacion == "-I") {
-		cout << "Ingresando la clave" << clave << " con el valor " << valor << "..." << endl;
+		cout << "Ingresando la clave " << clave << " con el valor " << valor << "..." << endl;
 		StringInputData sid (clave, valor);
 		bool insertResult = bPlusTree->insert(sid);
 		if (insertResult == true) {
@@ -74,7 +74,7 @@ int main(int argc, const char* argv[]){
 			cout << "No se agrego la clave " << clave << ". Verifique si la misma ya existia." << endl;
 		}
 	} else if (operacion == "-M") {
-		cout << "Modificando el valor de la clave" << clave << " por " << valor << "..." << endl;
+		cout << "Modificando el valor de la clave " << clave << " por " << valor << "..." << endl;
 		StringInputData sid (clave, "");
 		StringInputData sid2 (clave, valor);
 		bool modifyResult = bPlusTree->modifyElement(sid, sid2);
