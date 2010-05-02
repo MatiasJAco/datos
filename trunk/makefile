@@ -34,6 +34,12 @@ LOGIC_OBJS_O = $(OBJ_DIR)Bucket.o $(OBJ_DIR)Hash.o $(OBJ_DIR)Table.o $(OBJ_DIR)I
 
 LOGIC_OBJS_D = $(OBJ_DIR)Bucket.d $(OBJ_DIR)Hash.d $(OBJ_DIR)Table.d $(OBJ_DIR)InputData.d $(OBJ_DIR)StringInputData.d $(OBJ_DIR)archivoTexto.d $(OBJ_DIR)Logger.d $(OBJ_DIR)BPlusTree.d $(OBJ_DIR)InnerNode.d $(OBJ_DIR)LeafNode.p      $(OBJ_DIR)Node.d $(OBJ_DIR)INodeData.d
 
+LIBS = liblogic.a libphysical.a
+
+EXEC_OBJS_O = loggerMain.o hashMain.o treeMain.o
+
+EXEC_OBJS_D = loggerMain.d hashMain.d treeMain.d
+
 ##Objetos application
 #APPLICATION_OBJS 
 
@@ -73,7 +79,7 @@ MKDIRFLAGS = -p
 
 .PHONY: clean createDir all
 
-all: createDir libphysical.a liblogic.a loggerMain hashMain treeMain
+all: createDir liblogic.a libphysical.a loggerMain hashMain treeMain
 	
 
 #Directorios
@@ -81,7 +87,7 @@ createDir:
 	$(MKDIR) $(MKDIRFLAGS) $(OBJ_DIR) $(BIN_DIR)
 #Clean
 clean:  
-	$(RM) $(RMFLAGS) $(PHYSICAL_OBJS_O) $(PHYSICAL_OBJS_D) $(LOGIC_OBJS_O) $(LOGIC_OBJS_D) $(APPLICATION_OBJS_D) $(APPLICATION_OBJS_O)
+	$(RM) $(RMFLAGS) $(PHYSICAL_OBJS_O) $(PHYSICAL_OBJS_D) $(LOGIC_OBJS_O) $(LOGIC_OBJS_D) $(APPLICATION_OBJS_D) $(APPLICATION_OBJS_O) $(EXEC_OBJS_O) $(EXEC_OBJS_D) $(LIBS)
 
 
 ######################################################################################
@@ -90,14 +96,14 @@ clean:
 testPhysical: testPhysical.o libphysical.a
 	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)testPhysical" "$(OBJ_DIR)testPhysical.o" -lphysical 
 
-loggerMain:loggerMain.o
-	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)loggerMain" "$(OBJ_DIR)loggerMain.o" -lphysical -llogic
+loggerMain:loggerMain.o liblogic.a libphysical.a 
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)loggerMain" "$(OBJ_DIR)loggerMain.o" -llogic -lphysical
  
-hashMain:hashMain.o
-	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)hashMain" "$(OBJ_DIR)hashMain.o" -lphysical -llogic
+hashMain:hashMain.o liblogic.a libphysical.a 
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)hashMain" "$(OBJ_DIR)hashMain.o" -llogic -lphysical
  
-treeMain:treeMain.o
-	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)treeMain" "$(OBJ_DIR)treeMain.o" -lphysical -llogic
+treeMain:treeMain.o liblogic.a libphysical.a 
+	$(CC) -L"$(OBJ_DIR)" -o "$(BIN_DIR)treeMain" "$(OBJ_DIR)treeMain.o" -llogic -lphysical 
 
 #######################################################################################
 #				LIBRARIES
