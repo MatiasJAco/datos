@@ -85,8 +85,6 @@ std::string Logger::procesar_linea(char *line) {
 	return cadena;
 }
 
-
-
 bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
 {
     archivo = new ArchivoTexto(ptrArchivo);
@@ -128,7 +126,7 @@ bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
     return cadenaEncontrada;
 }
 
-void Logger::buscar(std::string cadena){
+bool Logger::buscar(std::string cadena){
 	int buffer[1];
 	buffer[0]=0;
 	FILE *archdisco;
@@ -146,15 +144,11 @@ void Logger::buscar(std::string cadena){
 	string nuevoNombre=nombre+".txt";
 	char* ptrArchivo=&nuevoNombre[0];
 	if(!buscarArchivo(ptrArchivo,cadena))
-		cout<<endl<<"Cadena no encontrada."<<endl;
-
+		return false;
+	return true;
 };
 
-
-
-
 void Logger::escribir_archivo(std::string cadena){
-
 	archivo=new ArchivoTexto("logger.txt");
 	long tamanio=0;
 	FILE *archdisco;
@@ -203,26 +197,20 @@ void Logger::escribir_archivo(std::string cadena){
 };
 
 //Busca la cadena de caracteres en el log.
-void Logger::buscar_cadena(char * e_arg){
+bool Logger::buscar_cadena(char * e_arg){
 	std::string cadena = "";
 	cadena = cadena + this->procesar_linea(e_arg);
-    this->buscar(cadena);
+    return this->buscar(cadena);
 }
 
-
-	void Logger::recorrer_log(){
-		std::string cadenaLeida="";
-
-		archivo=new ArchivoTexto("logger.txt");
-		while (archivo->leerLinea(cadenaLeida)){
-
-			std::cout<<cadenaLeida<<std::endl;
-
-		}
-		archivo->~ArchivoTexto();
-
-	};
-
+void Logger::recorrer_log(){
+	std::string cadenaLeida="";
+	archivo=new ArchivoTexto("logger.txt");
+	while (archivo->leerLinea(cadenaLeida)){
+		std::cout<<cadenaLeida<<std::endl;
+	}
+	archivo->~ArchivoTexto();
+};
 
 void Logger::ingresar(char *e_arg)
 {
@@ -230,7 +218,6 @@ void Logger::ingresar(char *e_arg)
     cadena = cadena + this->procesar_linea(e_arg);
     this->escribir_archivo(cadena);
 }
-
 
 void Logger::imprimir_ayuda(void) {
 	printf("\t-B, --buscar \t\tBuscar cadena de caracteres.\n");
@@ -240,4 +227,3 @@ void Logger::imprimir_ayuda(void) {
 
 	return;
 }
-

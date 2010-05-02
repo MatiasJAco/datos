@@ -37,9 +37,7 @@ private:
 	/**
 	 * Busca una cadena de caracteres en el archivo de texto.
 	 */
-
-	void buscar(std::string cadena);
-
+	bool buscar(std::string cadena);
 
 	/**
 	 * Procesa una linea particular, quedandose solo con caracteres validos y detectand si
@@ -62,7 +60,6 @@ public:
 
 	virtual ~Logger();
 
-
 	/**
 	 * Imprime la ayuda.
 	 */
@@ -71,7 +68,7 @@ public:
 	/**
 	 * Busca la cadena de caracteres en el log.
 	 */
-	void buscar_cadena(char*);
+	bool buscar_cadena(char*);
 
 	/**
 	 * Recorre el log actual y lo imprime por pantalla.
@@ -83,27 +80,6 @@ public:
 	 */
 	void ingresar(char *);
 
-
-
-
-
-
-
-
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif /* LOGGER_H_ */
