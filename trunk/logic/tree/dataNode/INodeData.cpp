@@ -65,7 +65,24 @@ unsigned int INodeData::getSize() const
 	return (sizeof(int)*2);
 }
 
+bool    INodeData::operator ==(INodeData &p)
+{
+	return p.m_key == m_key;
+}
 
+bool    INodeData::operator <(INodeData &p)
+{
+	bool retVal=false;
+	retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
+	return retVal;
+}
+
+bool    INodeData::operator >(INodeData &p)
+{
+	bool retVal=false;
+	retVal = m_key > p.m_key || m_key==UNDEFINED_KEY;
+	return retVal;
+}
 
 
 

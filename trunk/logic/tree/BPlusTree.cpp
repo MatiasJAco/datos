@@ -129,7 +129,7 @@ throw (BPlusTreeException)
 		firstKey.setLeftPointer(sucesor->getNodeNumber());
 		firstKey.setKey(promotedKey.getKey());
 		newKey.setLeftPointer(promotedKey.getLeftPointer());
-		newKey.setKey(Node::UNDEFINED_KEY);
+		newKey.setKey(INodeData::UNDEFINED_KEY);
 
 		// habria que hacer casteo dinamico.
 		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);

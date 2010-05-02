@@ -33,7 +33,7 @@ public:
 	/// Definicion de constante para los nodos que no tienen asignado un identificador.
 	static const unsigned int UNDEFINED_NODE_NUMBER = -1;
 	static const unsigned int UNDEFINED_NODE_LEVEL = -1;
-	static const int UNDEFINED_KEY = -1;
+	//static const int UNDEFINED_KEY = -1;
 
 protected:
 	//---------------Atributes-------------//

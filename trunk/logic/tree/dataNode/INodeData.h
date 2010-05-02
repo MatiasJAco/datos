@@ -23,6 +23,10 @@ private:
 
 public:
 
+	static const int UNDEFINED_KEY = -1;
+
+public:
+
 	/// Constructor
 	INodeData();
 
@@ -68,6 +72,22 @@ public:
 	 * Tama�o del dato.
 	 */
 	unsigned int getSize()const;
+
+	/**
+	 *
+	 */
+	bool    operator ==(INodeData &p);
+	/**
+	 *
+	 */
+	bool    operator <(INodeData &p);
+
+	/**
+	 *
+	 */
+	bool    operator >(INodeData &p);
+
+
 
 };
 
