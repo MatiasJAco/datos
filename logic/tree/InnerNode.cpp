@@ -13,13 +13,14 @@ using namespace std;
 InnerNode::InnerNode(unsigned int nodeNumber, unsigned int level, Block *block,const InputData& typeData)
 :Node(nodeNumber,level,block,typeData)
 {
-
+	m_block->setFixedRegisterCount(1);
 }
 
 InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData,BPlusTree* pointerTree)
 //:Node(nodeNumber,level,block,pointerTree)
 :Node(nodeNumber,level,block,typeData)
 {
+	m_block->setFixedRegisterCount(1);
 	m_tree = pointerTree;
 }
 

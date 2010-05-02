@@ -10,10 +10,12 @@
 LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData)
 :Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
 {
+	m_block->setFixedRegisterCount(3);
+
 	if (m_block->getRegisterAmount()<3)
 		{
-		VarRegister prevPointer,nextPointer;
 
+		VarRegister prevPointer,nextPointer;
 		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
 		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
 
@@ -26,11 +28,11 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 :Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
 {
 	m_tree = pointerTree;
-
+	m_block->setFixedRegisterCount(3);
 	if (m_block->getRegisterAmount()<3)
 	{
-		VarRegister prevPointer,nextPointer;
 
+		VarRegister prevPointer,nextPointer;
 		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
 		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
 
