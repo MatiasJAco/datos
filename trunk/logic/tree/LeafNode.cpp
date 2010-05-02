@@ -239,7 +239,7 @@ throw (NodeException)
 
 	VarRegister currentRegister;
 	InputData* currentData = data.newInstance();
-
+	bool keyFound=false;
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
@@ -254,23 +254,32 @@ throw (NodeException)
 
 		/// Transformo el registro a un InputData
 		currentData->toData(currentRegister.getValue());
-		if (currentData->getKey() == key.getKey())
+		if (currentData->getKey() >= key.getKey())
 		{
 			found = true;
 
-			if (data.size() > currentData->size())
-			{
+			if (currentData->getKey() == key.getKey())
+				keyFound=true;
+//			if (data.size() < currentData->size())
+//			{
 				data.setKey(currentData->getKey());
 				data.setValue(currentData->getValue());
-			}
-			else
-				throw NodeException(NodeException::INSUFFICIENT_ALLOCK_PARAM);
+//			}
+//			else
+//				throw NodeException(NodeException::INSUFFICIENT_ALLOCK_PARAM);
 		}
+
 	}
+	//Si llega al final del nodo sin encontrar el elemento o uno de clave mayor,
+	//devuelve el de clave mas grande del nodo
+	if(!found){
+		data.setKey(currentData->getKey());
+		data.setValue(currentData->getValue());
+	};
 
 	delete currentData;
 
-	return found;
+	return keyFound;
 }
 
 bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedKey)

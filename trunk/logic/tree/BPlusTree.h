@@ -96,6 +96,10 @@ public:
 	 */
 	bool remove(const InputData& data) throw (BPlusTreeException);
 
+	bool modifyElement(const InputData & dato, const InputData & dato2) throw (BPlusTreeException);
+
+	bool find(const InputData & key, InputData & data)throw(BPlusTreeException);
+
 public:
 	/**
 	 * Muestra el arbol por pantalla.
