@@ -247,4 +247,25 @@ void BPlusTree::deleteTree()
 	file.deleteFile();
 }
 
+bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) throw (BPlusTreeException){
+	bool retVal = true;
+	INodeData promotedKey;
+	this->m_root->modify(dato,dato2,promotedKey);
+	return retVal;
+}
+
+bool BPlusTree::find(const InputData & key, InputData & data)throw(BPlusTreeException){
+
+	bool retVal=true;
+	if(this->m_root->find(key,data)){
+		cout<<endl<<"Elemento encontrado:"<<endl;
+	}else{
+		cout<<endl<<"No se encontro el elemento, se devuelve el de clave mayor:"<<endl;
+	};
+
+	cout<<"Clave: "<<data.getKey()<<endl;
+	cout<<"Dato: "<<data.getValue()<<endl;
+	return retVal;
+
+}
 

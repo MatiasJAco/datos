@@ -520,7 +520,7 @@ throw(NodeException)
 	bool found = false;
 
 	// Elemento de nodo interno con referencia a la clave a insertar.
-	INodeData nodePointerKey(Node::UNDEFINED_NODE_NUMBER,data.getKey());
+	INodeData nodePointerKey(Node::UNDEFINED_NODE_NUMBER,key.getKey());
 
 	// Busca el nodo interno que referencia a esa clave
 	if (!findINodeData(nodePointerKey))
