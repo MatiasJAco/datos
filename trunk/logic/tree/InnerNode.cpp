@@ -769,7 +769,8 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	Block* blockSibling = sibling->getBlock();
 
 	char* valueReg = new char[data.getSize()];
-	VarRegister reg(data.toStream(valueReg),data.getSize());
+	data.toStream(valueReg);
+	VarRegister reg(valueReg,data.getSize());
 
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
 	//Recupera primer elemento del neuvo nodo.
@@ -784,7 +785,7 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey.getKey());
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
-
+	this->m_tree->saveNode(sibling);
 	return true;
 }
 

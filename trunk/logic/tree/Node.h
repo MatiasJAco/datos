@@ -149,6 +149,8 @@ public:
 
 	Block* getBlock();
 
+	void nodeNumber(unsigned int number);
+
 protected:
 
 	void setBlock(Block* block);
@@ -156,6 +158,7 @@ protected:
 
 
 	static unsigned int readLevel(Block block);
+
 
 };
 

@@ -26,8 +26,8 @@ void TestTree::run()
 {
 //	testRecoverLeaf();
 //	testInsertLeafSinOverflow();
-	testInsertRoot();
-//	testInsertComplejo();
+//	testInsertRoot();
+	testInsertComplejo();
 }
 
 void TestTree::testRecoverLeaf()
@@ -176,30 +176,32 @@ void TestTree::testInsertComplejo()
 	mainFixture->insert(data15);
 	mainFixture->insert(data16);
 
-	Node* nodoroot = mainFixture->getNode(1);
-	Node* leaf2 = mainFixture->getNode(2);
-	Node* leaf3 = mainFixture->getNode(3);
-	Node* leaf4 = mainFixture->getNode(4);
-	Node* leaf5 = mainFixture->getNode(5);
-	Node* leaf6 = mainFixture->getNode(6);
-	Node* leaf7 = mainFixture->getNode(7);
-	Node* leaf8 = mainFixture->getNode(8);
-	Node* leaf9 = mainFixture->getNode(9);
-	Node* leaf10 = mainFixture->getNode(10);
+//	Node* nodoroot = mainFixture->getNode(1);
+//	Node* leaf2 = mainFixture->getNode(2);
+//	Node* leaf3 = mainFixture->getNode(3);
+//	Node* leaf4 = mainFixture->getNode(4);
+//	Node* leaf5 = mainFixture->getNode(5);
+//	Node* leaf6 = mainFixture->getNode(6);
+//	Node* leaf7 = mainFixture->getNode(7);
+//	Node* leaf8 = mainFixture->getNode(8);
+//	Node* leaf9 = mainFixture->getNode(9);
+//	Node* leaf10 = mainFixture->getNode(10);
 
+	mainFixture->showTree(data);
+	mainFixture->deleteTree();
 
 //	Node* leafsplit = mainFixture->getNode(3);
-
-	nodoroot->printContent(data);
-	leaf2->printContent(data);
-	leaf3->printContent(data);
-	leaf4->printContent(data);
-	leaf5->printContent(data);
-	leaf6->printContent(data);
-	leaf7->printContent(data);
-	leaf8->printContent(data);
-	leaf9->printContent(data);
-	leaf10->printContent(data);
+//
+//	nodoroot->printContent(data);
+//	leaf2->printContent(data);
+//	leaf3->printContent(data);
+//	leaf4->printContent(data);
+//	leaf5->printContent(data);
+//	leaf6->printContent(data);
+//	leaf7->printContent(data);
+//	leaf8->printContent(data);
+//	leaf9->printContent(data);
+//	leaf10->printContent(data);
 
 
 
