@@ -134,6 +134,12 @@ public:
 	VarRegister peekRegister();
 
 	/**
+	 * Obtiene el VarRegister siguiente
+	 * @return VarRegister el registro
+	 */
+	VarRegister peekNextRegister();
+
+	/**
 	 * Se fija si es el primer registro...
 	 * @return bool true si es el primero, false en caso contrario
 	 */
