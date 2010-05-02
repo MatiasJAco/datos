@@ -54,8 +54,6 @@ int main(int argc, const char* argv[]){
 	int clave = atoi(claveValor.substr(1, separator).c_str());
 	string valor = claveValor.substr(separator+1, separator2 - separator - 1);
 
-	cout << valor << endl;
-
 	if (operacion == "-B") {
 		cout << "Buscando la clave " << clave << "..." << endl;
 		StringInputData sid (clave,"");
