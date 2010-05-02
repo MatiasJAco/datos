@@ -923,8 +923,8 @@ void InnerNode::modifyLastKey(){
 	INodeData iNodeData;
 	loadResultEnum result;
 	m_block->restartCounter();
-	int pipa=m_block->getRegisterAmount()-1;
-	while (m_block->getPosActual()<pipa){
+	int posUltimoReg=m_block->getRegisterAmount()-1;
+	while (m_block->getPosActual()<posUltimoReg){
 		m_block->getNextRegister();
 	};
 	VarRegister changeReg;
