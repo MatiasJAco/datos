@@ -124,11 +124,9 @@ int Hash::add(StringInputData* sid) {
 		this->saveBucket(bucket);
 		delete bucket;
 	} else if (insertResult == 1) {  //hubo desborde
-		printf("Hubo desborde en el bucket: %i. ",bucket->getNumber());
 		int tamTabla = this->hashTable->getSize();
 		int td = bucket->getDepth();
 		if (td==tamTabla) {
-			cout << "Entro por td=tamTabla=" << td << endl;
 			this->hashTable->duplicate();
 			Bucket *bucketNuevo = createNewBucket(tamTabla * 2);
 			int numeroBuquet = bucket->getNumber();
@@ -140,9 +138,7 @@ int Hash::add(StringInputData* sid) {
 			delete bucket;
 			this->add(sid);
 			delete bucketNuevo;
-
 		} else {
-			printf("Entro por td!=tamTabla (%i!=%i).\n",td,tamTabla);
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
@@ -150,13 +146,10 @@ int Hash::add(StringInputData* sid) {
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
 			delete bucketNuevo;
-			//TODO no hay qeu poner un delete bucket aca?
 		}
 	} else {
 		return insertResult;
 	}
-	//TODO ver si hay que hacer el delete
-	//delete bucket;
 	return 0;
 }
 int Hash::modify(int key, string newValue) {
@@ -196,7 +189,6 @@ int Hash::erase(int key) {
 		result = bucket->deleteRegister(key);
 
 		if (result == false) {
-			cout << "Se produjo un error al intentar eliminar el registro cuya clave es: " << key << endl;
 			delete bucket;
 			return -1;
 		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
@@ -245,8 +237,7 @@ int Hash::erase(int key) {
 			delete bucket;
 		}
 	} else {
-		cout << "No existe la clave: " << key << endl;
-		return 1;
+		return 1; // No existe la clave. Se devuelve 1.
 	}
 	return 0;
 }
@@ -256,7 +247,6 @@ void Hash::print() {
 	Bucket* bucket;
 	Block* actualBlock = this->hashFile->getBlock(i);
 	this->hashTable->print();
-
 
 	cout << "Bloques libres: ";
 	FreeBlockList freeBlockList = this->hashFile->getFreeBlockList();
