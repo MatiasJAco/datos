@@ -28,7 +28,7 @@ protected:
 	void testModify();
 	void testFind();
 	void testInsertComplejo();
-	void testRemove();
+	void testRemoveInnerNode();
 
 private:
 	BPlusTree* mainFixture;
