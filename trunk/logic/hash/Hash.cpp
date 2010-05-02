@@ -18,7 +18,6 @@ Hash::Hash() {
 }
 
 Hash::~Hash() {
-	// TODO algo mas para el delete de hash?
 	this->hashFile->close();
 }
 
@@ -34,8 +33,22 @@ StringInputData* Hash::get(int key) {
 	return NULL;
 }
 
+Bucket* Hash::createNewBucket(int depth){
+	VarRegister* varRegister = new VarRegister();
+	varRegister->setValue(depth);
+	Block* block = this->hashFile->getNewBlock();
+	Bucket *bucket = new Bucket(block);
+	bucket->setDepth(depth);
+	block->addRegister(*varRegister);
+	this->saveBucket(bucket);
+	delete varRegister;
+	return bucket;
+}
+
 void Hash::inicializeHashFile(){
-	createNewBucket(1);
+	Block* block = this->hashFile->getBlock(1);
+	if (block == NULL)
+		createNewBucket(1);
 }
 
 int Hash::calculateHashFunction(int key) {
@@ -52,6 +65,7 @@ int Hash::getNumberOfBucket(int key) {
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
+
 bool Hash::existsElement(int key) {
 	int aux = -1;
 	return (this->existsElement(key,aux));
@@ -63,8 +77,6 @@ bool Hash::existsElement(int key, int & position) {
 	delete bucket;
 	return result;
 }
-
-
 
 int Hash::reHash(Bucket* bucketDesbordado) {
 	list<StringInputData> listaDatos;
@@ -79,18 +91,6 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		listaDatos.pop_front(); // Borro el primer sid de la lista.
 	}
 	return 0;
-}
-
-Bucket* Hash::createNewBucket(int depth){
-	VarRegister* varRegister = new VarRegister();
-	varRegister->setValue(depth);
-	Block* block = this->hashFile->getNewBlock();
-	Bucket *bucket = new Bucket(block);
-	bucket->setDepth(depth);
-	block->addRegister(*varRegister);
-	this->saveBucket(bucket);
-	delete varRegister;
-	return bucket;
 }
 
 Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
