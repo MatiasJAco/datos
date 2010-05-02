@@ -33,8 +33,9 @@ void TestTree::run()
 
 //	testInsertComplejo();
 //	testRemove();
-//	testModify();
+	testModify();
 //	testFind();
+	testFindInodeData();
 	testRemoveInnerNode();
 
 }
@@ -332,6 +333,72 @@ void TestTree::testInsertComplejo()
 
 }
 
+void TestTree::testFindInodeData()
+{
+	StringInputData data;
+	StringInputData data1(1,"11");
+	StringInputData data2(2,"22");
+	StringInputData data3(3,"33");
+	StringInputData data4(4,"44");
+	StringInputData data5(5,"55");
+	StringInputData data6(6,"66");
+	StringInputData data7(7,"77");
+	StringInputData data8(8,"88");
+	StringInputData data9(9,"99");
+	StringInputData data10(10,"100");
+	StringInputData data11(22,"02");
+	StringInputData data12(37,"03");
+	StringInputData data13(88,"04");
+	StringInputData data14(55,"05");
+	StringInputData data15(29,"06");
+	StringInputData data16(26,"07");
+	StringInputData data17(27,"08");
+	StringInputData data18(18,"09");
+	StringInputData data19(19,"10");
+
+
+
+	mainFixture->insert(data1);
+	mainFixture->insert(data2);
+	mainFixture->insert(data3);
+	mainFixture->insert(data4);
+	mainFixture->insert(data5);
+	mainFixture->insert(data6);
+	mainFixture->insert(data7);
+	mainFixture->insert(data8);
+	mainFixture->insert(data9);
+	mainFixture->insert(data10);
+	mainFixture->insert(data11);
+	mainFixture->insert(data12);
+	mainFixture->insert(data13);
+	mainFixture->insert(data14);
+	mainFixture->insert(data15);
+	mainFixture->insert(data16);
+	mainFixture->insert(data17);
+	mainFixture->insert(data18);
+
+	//mainFixture->remove(data8);
+
+
+	mainFixture->showTree(data);
+
+	mainFixture->remove(data1);
+
+	InnerNode* leaf9 = dynamic_cast<InnerNode*> (mainFixture->getNode(9));
+
+	leaf9->printContent(data);
+	INodeData search(3,-1);
+	INodeData found;
+	if(!leaf9->findINodeData(search,found, InnerNode::MINOR))
+		cout << "Error en el equal"<<endl;
+
+
+	mainFixture->showTree(data);
+
+	mainFixture->deleteTree();
+}
+
+
 void TestTree::testRemove()
 {
 	StringInputData data;
@@ -376,12 +443,12 @@ void TestTree::testRemove()
 	mainFixture->insert(data17);
 	mainFixture->insert(data18);
 
-	mainFixture->remove(data8);
+	//mainFixture->remove(data8);
 
 
-//	mainFixture->showTree(data);
+	mainFixture->showTree(data);
 
-//	mainFixture->remove(data1);
+	mainFixture->remove(data1);
 //	mainFixture->remove(data2);
 //	mainFixture->remove(data3);
 //	mainFixture->remove(data4);
