@@ -76,9 +76,9 @@ throw (BPlusTreeException)
 	{
 		result = m_root->insert(data,promotedKey);
 	}
-	catch(exception &e)
+	catch(NodeException &e)
 	{
-		throw;
+		throw BPlusTreeException(e);
 	}
 
 	if (result == OVERFLOW_LOAD)
@@ -142,6 +142,28 @@ throw (BPlusTreeException)
 		// La raiz esta insertando el minimo de claves, no puede ser overflow.
 		if (result == OVERFLOW_LOAD)
 			throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
+	}
+
+	return retVal;
+}
+
+bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
+{
+	bool retVal = true;
+	loadResultEnum result = NORMAL_LOAD;
+
+	// TODO manejo de baja del nivel de profundidad.
+
+	if (m_root == NULL)
+		throw BPlusTreeException(BPlusTreeException::INNEXISTENT_ROOT);
+
+	try
+	{
+		result = m_root->remove(data);
+	}
+	catch(NodeException &e)
+	{
+		throw BPlusTreeException(e);
 	}
 
 	return retVal;

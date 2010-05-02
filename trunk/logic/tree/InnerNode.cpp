@@ -417,72 +417,90 @@ throw(NodeException)
 
 	if (result == UNDERFLOW_LOAD)
 	{
-		bool hasRightBrother=false;
-		bool leftJoin=true;
+		bool hasRightBrother = false;
+		bool hasMinorBrother = false;
+
+//		bool leftJoin = true;
 		bool balanced = false;
-		Node* rightSibling;
-		Node* leftSibling;
+		Node* rightSibling,*leftSibling;
+
+		INodeData keymodified;
+
 		INodeData joinBrother;
 
 		// busco el hermano mayor a key para obtener el hijo derecho.
-		INodeData bigBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
-		findINodeData(bigBrother,false);
-		//Verifico que tenga hermano derecho.
-		if(!this->m_block->hasNextRegister()){
-			hasRightBrother=false;
-		}
+		INodeData bigBrother;
+		hasRightBrother = findINodeData(thiskey,bigBrother,BIGGER);
 
-		if(hasRightBrother){
-			joinBrother.setKey(bigBrother.getKey());
-			joinBrother.setLeftPointer(bigBrother.getLeftPointer());
+		INodeData minorBrother;
+		hasMinorBrother = findINodeData(thiskey,minorBrother,MINOR);
+
+		//Verifico que tenga hermano derecho.
+		if(hasRightBrother)
+		{
+//			joinBrother.setKey(bigBrother.getKey());
+//			joinBrother.setLeftPointer(bigBrother.getLeftPointer());
+
 			// Trato de balancear con el derecho.
 			// Al redistribuir me devuelve la clave que hay que promover y modificar en thiskey.
 			rightSibling = m_tree->getNode(bigBrother.getLeftPointer());
-			balanced = redistribute(sucesor,rightSibling,data,bigBrother,RIGHT_SIDE);
-		};
+			balanced = redistribute(sucesor,rightSibling,data,keymodified,RIGHT_SIDE);
+		}
 
 		if (balanced)
-			modifyINodeData(thiskey,bigBrother);
+			modifyINodeData(thiskey,keymodified);
 
 		// Si no pudo, busco el sibling izquierdo, el hijo del hermano menor.
 		if (!balanced)
 		{
 			//Verifica que tenga hermano izquierdo.
-			INodeData minorBrother(UNDEFINED_NODE_NUMBER,thiskey.getKey());
-			findINodeData(minorBrother);
-			unsigned int posicionNodo=this->buscarPosicionInnerPorClave(thiskey.getKey());
-			if(posicionNodo!=1){
-				this->getInPosition(&minorBrother,posicionNodo-1);
-				joinBrother.setKey(minorBrother.getKey());
-				joinBrother.setLeftPointer(minorBrother.getLeftPointer());
-				leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
-				// Trato de balancear con el sibling izquierdo del sucesor.
-				balanced = redistribute(sucesor,leftSibling,data,minorBrother,LEFT_SIDE);
-			}else
-				leftJoin=false;
+			if (hasMinorBrother)
+				balanced = redistribute(sucesor,leftSibling,data,keymodified,LEFT_SIDE);
+
+
+//			// Me busca el hermano menor.
+//			unsigned int posicionNodo=this->buscarPosicionInnerPorClave(thiskey.getKey());
+//			if(posicionNodo!=1){
+//				this->getInPosition(&minorBrother,posicionNodo-1);
+//				joinBrother.setKey(minorBrother.getKey());
+//				joinBrother.setLeftPointer(minorBrother.getLeftPointer());
+//
+//				leftSibling = m_tree->getNode(minorBrother.getLeftPointer());
+//				// Trato de balancear con el sibling izquierdo del sucesor.
+//				balanced = redistribute(sucesor,leftSibling,data,keymodified,LEFT_SIDE);
+//			}else
+//				leftJoin=false;
 
 
 
 			if (balanced)
-				modifyINodeData(joinBrother,minorBrother);
+//				modifyINodeData(joinBrother,keymodified);
+				modifyINodeData(joinBrother,keymodified);
+
 		}
 
 		// Si no pudo balancear, fusiona.
 		if (!balanced)
 		{
 			INodeData fusionatedNode;
-			if(leftJoin){
-				merge(sucesor,leftSibling,data,fusionatedNode,LEFT_SIDE);
-				result = removeINodeData(joinBrother);
-			}else{
+
+			if(hasRightBrother)
+			{
 				merge(sucesor,rightSibling,data,fusionatedNode,RIGHT_SIDE);
-				result = removeINodeData(joinBrother);
+//				result = removeINodeData(joinBrother);
+				result = removeINodeData(thiskey);
 				//Recupero clave del que borro y se a paso al que queda.
-				joinBrother.setLeftPointer(thiskey.getLeftPointer());
-				modifyINodeData(thiskey,joinBrother);
-
-			};
-
+//				joinBrother.setLeftPointer(thiskey.getLeftPointer());
+//				modifyINodeData(thiskey,joinBrother);
+				modifyINodeData(bigBrother,fusionatedNode);
+			}
+			else
+			{
+				merge(sucesor,leftSibling,data,fusionatedNode,LEFT_SIDE);
+//				result = removeINodeData(joinBrother);
+				result = removeINodeData(minorBrother);
+				modifyINodeData(thiskey,fusionatedNode);
+			}
 		}
 
 	}
@@ -577,7 +595,7 @@ throw(NodeException)
 bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 {
 	bool found = false;
-	INodeData currentData;
+	INodeData currentData(UNDEFINED_NODE_NUMBER,UNDEFINED_KEY);
 
 	VarRegister reg;
 	//Busca al sucesor que puede tener el dato
@@ -603,12 +621,6 @@ bool InnerNode::findINodeData(INodeData& innerNodeElem,bool less)
 			this->m_block->getNextRegister();
 	}
 
-	if(!less){
-		reg = this->m_block->peekRegister();
-		// Transformo el registro a un INodeData
-		currentData.toNodeData(reg.getValue());
-	};
-	// Devuelve el menor a key o el mayor segun less.
 	innerNodeElem.setKey(currentData.getKey());
 	innerNodeElem.setLeftPointer(currentData.getLeftPointer());
 

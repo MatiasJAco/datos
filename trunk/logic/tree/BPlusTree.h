@@ -79,13 +79,37 @@ public:
 	 */
 	BPlusTree(std::string nameFile,unsigned int sizeNodes,float branchFactor,const InputData& typedata);
 
-
-
-	bool insert(const InputData& data) throw (BPlusTreeException);
-
 	/// Destructor
 	virtual ~BPlusTree();
 
+	/**
+	 * Inserta un elemento en el arbol.
+	 * @param data. El elemento a remover.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool insert(const InputData& data) throw (BPlusTreeException);
+
+	/**
+	 * Elimina un elemento del arbol.
+	 * @param data. Contiene la clave del elemento a remover.
+	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
+	 */
+	bool remove(const InputData& data) throw (BPlusTreeException);
+
+public:
+	/**
+	 * Muestra el arbol por pantalla.
+	 *
+	 * **/
+	void showTree(InputData& data);
+
+	/**
+	 * Elimina el arbol de disco.
+	 */
+	void deleteTree();
+
+
+public:
 /// TODO Estos deberian ser privates? o friends?
 	/**
 	 * Recibe un numero de nodo y devuelve el nodo almacenado en disco.
@@ -124,18 +148,6 @@ public:
 	 * @param node. Nodo a eliminar.
 	 */
 	void deleteNode(Node* node) throw (BPlusTreeException);
-
-	/**
-	 * Muestra el arbol por pantalla.
-	 *
-	 * **/
-	void showTree(InputData& data);
-
-	/**
-	 * Elimina el arbol de disco.
-	 */
-	void deleteTree();
-
 
 };
 
