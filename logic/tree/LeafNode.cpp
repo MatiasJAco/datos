@@ -98,7 +98,6 @@ throw (NodeException)
 		setNextLeaf(promotedKey.getLeftPointer());
 	}
 
-	m_tree->saveNode(this);
 
 	return result;
 }
