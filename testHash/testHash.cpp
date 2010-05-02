@@ -208,7 +208,7 @@ void testEjemplo(){
 	delete hash;
 }
 
-void testAdrianSeLaCome(){
+void testBug(){
 	Hash* hash = new Hash();
 	char value[8] = "paytiti";
 	hash->add(12,value);
@@ -228,7 +228,7 @@ int main(int argc, const char* argv[]){
 
 	testEjemplo();
 
-	//testAdrianSeLaCome();
+	//testBug();
 	//cout << "paso test!" << endl;
 
 //	Hash* hash = new Hash();

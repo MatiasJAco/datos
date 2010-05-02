@@ -218,10 +218,9 @@ int Hash::erase(int key) {
 				if (!this->hashFile->deleteBlock(bucketNumber))
 					return -1;
 
-				//------
 				if (soloLiberarBq)
 					return 0;
-				//------
+
 				//hago las modificaciones necesarias en la tabla
 				this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
 
@@ -235,7 +234,7 @@ int Hash::erase(int key) {
 				if (!bucketAux2->divideDepth()){
 					delete bucket;
 					delete bucketAux2;
-					return -1; // TODO ver esto. es un error realmente? no deberia devolver 0?
+					return -1;  //esto no deberia de pasar nunca, pero se lanza el error de todos modos
 				}
 				else
 					this->saveBucket(bucketAux2);
