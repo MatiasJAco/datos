@@ -167,10 +167,11 @@ throw (NodeException)
 	VarRegister prevPointer = m_block->getNextRegister();
 	VarRegister nextPointer = m_block->getNextRegister();
 
+	currentRegister = m_block->peekRegister();
+
 	while (!m_block->isLastRegister()&&!found)
 	{
-		currentRegister = m_block->getNextRegister();
-
+		currentRegister = m_block->peekRegister();
 		/// Transformo el registro a un InputData
 		currentData->toData(currentRegister.getValue());
 		if (currentData->getKey() == newdata.getKey())
@@ -178,6 +179,8 @@ throw (NodeException)
 			found = true;
 			m_block->modifyRegister(regNuevo,result);
 		}
+
+		m_block->getNextRegister();
 	}
 
 	if (!found)
