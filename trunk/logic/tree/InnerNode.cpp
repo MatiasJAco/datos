@@ -497,6 +497,7 @@ throw(NodeException)
 			}
 			else
 			{
+				//
 				merge(sucesor,leftSibling,data,fusionatedNode,LEFT_SIDE);
 //				result = removeINodeData(joinBrother);
 				result = removeINodeData(minorBrother);
@@ -944,7 +945,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 	{
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
-		fusionatedNode.setKey(data.getKey());
+		fusionatedNode.setKey(currentData.getKey());
 	}
 	else
 	{
