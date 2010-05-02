@@ -180,6 +180,9 @@ public:
 	 */
 	void show(InputData& data);
 
+
+	void modifyLastKey();
+
 };
 
 #endif /* INNERNODE_H_ */
