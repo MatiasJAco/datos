@@ -560,17 +560,17 @@ throw(NodeException)
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
-	if (iNodeData.getKey()==UNDEFINED_KEY)
+	if (iNodeData.getKey()==INodeData::UNDEFINED_KEY)
 		m_block->jumpEndCounter();
 
-	while (iNodeData.getKey()!=UNDEFINED_KEY&&
+	while (iNodeData.getKey()!=INodeData::UNDEFINED_KEY&&
 			!m_block->isLastRegister()&&!found)
 	{
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
 		currentData.toNodeData(currentRegister.getValue());
-		if (currentData.getKey()==UNDEFINED_KEY||
+		if (currentData.getKey()==INodeData::UNDEFINED_KEY||
 			currentData.getKey()>= iNodeData.getKey())
 		{
 			found = true;
@@ -625,7 +625,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 				if(condition  == EQUAL)
 				{
 					//Comparo si es igual o si es el ultimo registro
-					if(currentData.getKey()== innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+					if(currentData == innerNodeElem)
 					{
 						retFound=true;
 						innerNodeFound = currentData;
@@ -634,7 +634,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 				else
 				{
 					//Comparo si es mayor o si es el ultimo registro
-					if(currentData.getKey()>innerNodeElem.getKey()||  currentData.getKey()==UNDEFINED_KEY)
+					if(currentData > innerNodeElem)
 					{
 						retFound=true;
 						innerNodeFound = currentData;
@@ -660,7 +660,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 				currentData.toNodeData(reg.getValue());
 
 				//Si es menor lo devuelvo
-				if(currentData.getKey()< innerNodeElem.getKey())
+				if(currentData < innerNodeElem)
 				{
 					retFound=true;
 					innerNodeFound = currentData;
@@ -1016,7 +1016,7 @@ void InnerNode::modifyLastKey(){
 	VarRegister changeReg;
 	changeReg=this->m_block->peekRegister();
 	iNodeData.toNodeData(changeReg.getValue());
-	iNodeData.setKey(UNDEFINED_KEY);
+	iNodeData.setKey(INodeData::UNDEFINED_KEY);
 	char* valueReg = new char[iNodeData.getSize()];
 	iNodeData.toStream(valueReg);
 	VarRegister regData(valueReg,iNodeData.getSize());

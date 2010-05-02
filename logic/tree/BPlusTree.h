@@ -12,7 +12,7 @@
 #include "exceptions/NodeException.h"
 
 #include "../input/InputData.h"
-
+#include "dataNode/INodeData.h"
 #include "../../physical/file/Block.h"
 #include "../../physical/file/BlockFile.h"
 
