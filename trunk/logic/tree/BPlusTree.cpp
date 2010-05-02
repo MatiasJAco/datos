@@ -285,16 +285,17 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 
 bool BPlusTree::find(const InputData & key, InputData & data)throw(BPlusTreeException){
 
-	bool retVal=true;
-	if(this->m_root->find(key,data)){
-		cout<<endl<<"Elemento encontrado:"<<endl;
-	}else{
-		cout<<endl<<"No se encontro el elemento, se devuelve el de clave mayor:"<<endl;
-	};
+	bool retVal = true;
 
-	cout<<"Clave: "<<data.getKey()<<endl;
-	cout<<"Dato: "<<data.getValue()<<endl;
+	try
+	{
+		retVal = m_root->find(key,data);
+	}
+	catch(NodeException e)
+	{
+		throw BPlusTreeException(e);
+	}
+
 	return retVal;
-
 }
 

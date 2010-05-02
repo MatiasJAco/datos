@@ -100,6 +100,8 @@ public:
 
 	bool find(const InputData & key, InputData & data)throw(BPlusTreeException);
 
+	bool getNext(InputData& data);
+
 public:
 	/**
 	 * Muestra el arbol por pantalla.
