@@ -112,7 +112,7 @@ bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
                 contadorDeLetras = 0;
                 archivo->setPosicionCursor(posicionComienzoDeLinea);
                 archivo->leerLinea(lineaDeCadenaBuscada);
-                std::cout << lineaDeCadenaBuscada << std::endl;
+                //std::cout << lineaDeCadenaBuscada << std::endl; // Se comenta para no mostrar las lineas sobre las que busca
                 cambioDeLinea = true;
                 cadenaEncontrada=true;
             }
