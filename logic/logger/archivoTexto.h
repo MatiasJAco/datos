@@ -8,6 +8,9 @@
 //Inclusiones necesarias
 #include <fstream>
 
+/**
+ *
+ */
 class ArchivoTexto {
 
 private:

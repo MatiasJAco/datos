@@ -20,6 +20,10 @@
 #include "archivoTexto.h"
 #include <iostream>
 
+
+/**
+ *
+ */
 class Logger{
 
 private:
