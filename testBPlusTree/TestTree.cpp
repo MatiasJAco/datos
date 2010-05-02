@@ -274,7 +274,39 @@ void TestTree::testInsertComplejo()
 //	Node* leaf9 = mainFixture->getNode(9);
 //	Node* leaf10 = mainFixture->getNode(10);
 
-	mainFixture->showTree(data);
+
+	//Testeo de findInodeDATA
+	InnerNode* leaf10 = dynamic_cast<InnerNode*> (mainFixture->getNode(10));
+
+	leaf10->printContent(data);
+	INodeData search(3,3);
+	INodeData found;
+
+	if(!leaf10->findINodeData(search,found, InnerNode::EQUAL))
+		cout << "Error en el equal"<<endl;
+
+	if(!leaf10->findINodeData(search,found, InnerNode::BIGGER))
+		cout << "Error en el bigger"<<endl;
+
+	if(leaf10->findINodeData(search,found, InnerNode::MINOR))
+		cout << "Error en el minor"<<endl;
+
+	INodeData search2(3,7);
+	if(!leaf10->findINodeData(search2,found, InnerNode::EQUAL))
+		cout << "Error en el equal"<<endl;
+
+	if(!leaf10->findINodeData(search2,found, InnerNode::MINOR))
+		cout << "Error en el minor"<<endl;
+
+	if(leaf10->findINodeData(search2,found, InnerNode::BIGGER))
+		cout << "Error en el bigger"<<endl;
+
+	INodeData search3(3,5);
+
+	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
+		cout << "Error en el bigger"<<endl;
+
+	//mainFixture->showTree(data);
 	mainFixture->deleteTree();
 
 //	Node* leafsplit = mainFixture->getNode(3);
@@ -288,7 +320,7 @@ void TestTree::testInsertComplejo()
 //	leaf7->printContent(data);
 //	leaf8->printContent(data);
 //	leaf9->printContent(data);
-//	leaf10->printContent(data);
+
 
 
 
