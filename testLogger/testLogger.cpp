@@ -22,11 +22,18 @@ int main(int argc, char *argv[]){
 	MiLogger->ingresar(&cadenaAIngresar2[0]);
 	MiLogger->ingresar(&cadenaAIngresar3[0]);
 
-	string CadenaABuscar1("2010");
+	//string CadenaABuscar1("2010");
+	string CadenaABuscar1("valor4");
 	string CadenaABuscar2("valor2");
 
-	MiLogger->buscar_cadena(&CadenaABuscar1[0]);
-	MiLogger->buscar_cadena(&CadenaABuscar2[0]);
+	bool encontrado = MiLogger->buscar_cadena(&CadenaABuscar1[0]);
+	if (!encontrado) {
+		cout << "Cadena no encontrada" << endl;
+	}
+	bool encontrado2 = MiLogger->buscar_cadena(&CadenaABuscar2[0]);
+	if (encontrado2) {
+		cout << "Cadena encontrada" << endl;
+	}
 
 	MiLogger->recorrer_log();
 
