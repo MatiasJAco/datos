@@ -25,8 +25,8 @@ int main(int argc, const char* argv[]){
 			return 0;
 		} else if (operacion == "-h") {
 			cout << "Ayuda - Algunos ejemplos de ejecucion:" << endl;
-			cout << "./loggerMain -I \"(12;paytiti)\"" << endl;
-			cout << "./loggerMain -B \"(12;)\"" << endl;
+			cout << "./loggerMain -I \"cadena de caracteres\"" << endl;
+			cout << "./loggerMain -B \"cadena de caracteres\"" << endl;
 			cout << "./loggerMain -S" << endl;
 			delete logger;
 			return 0;
@@ -44,23 +44,21 @@ int main(int argc, const char* argv[]){
 		cout << "Buscando la cadena de caracteres " << cadena << "..." << endl;
 		bool findResult = logger->buscar_cadena(&cadena[0]);
 		if (findResult == true) {
-			cout << "Se encontro la cadena " << cadena << endl;
+			cout << "Se encontro la cadena \"" << cadena  << "\"" << endl;
 		} else {
-			cout << "No se encontro la cadena " << cadena << endl;
+			cout << "No se encontro la cadena \"" << cadena  << "\"" << endl;
 		}
 	} else if (operacion == "-I") {
-		cout << "Ingresando la cadena de caracteres " << cadena << endl;
+		cout << "Ingresando la cadena de caracteres \"" << cadena  << "\"" << endl;
 		logger->ingresar(&cadena[0]);
-		cout << "Se ingreso correctamente la cadena de caracteres " << cadena << endl;
+		cout << "Se ingreso correctamente la cadena de caracteres \"" << cadena << "\"" << endl;
 	} else if (operacion == "-S") {
 		cout << "Impresion del estado actual:" << endl;
 		logger->recorrer_log();
 	} else if (operacion == "-h") {
 		cout << "Ayuda - Algunos ejemplos de ejecucion:" << endl;
-		cout << "./loggerMain -I \"(12;paytiti)\"" << endl;
-		cout << "./loggerMain -B \"(12;)\"" << endl;
-		cout << "./loggerMain -M \"(12;pepe)\"" << endl;
-		cout << "./loggerMain -Q \"(12;)\"" << endl;
+		cout << "./loggerMain -I \"cadena de caracteres\"" << endl;
+		cout << "./loggerMain -B \"cadena de caracteres\"" << endl;
 		cout << "./loggerMain -S" << endl;
 	}
 	delete logger;
