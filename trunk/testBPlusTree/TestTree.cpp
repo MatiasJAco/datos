@@ -641,6 +641,17 @@ void TestTree::testModify(){
 		mainFixture->modifyElement(datoaMod,datoMod);
 		mainFixture->showTree(data);
 		mainFixture->deleteTree();
+		StringInputData datoMod2(99,"10r0000");
+		StringInputData datoaMod2(99,"");
+		mainFixture->showTree(data);
+		mainFixture->modifyElement(datoaMod2,datoMod2);
+		mainFixture->showTree(data);
+		StringInputData datoMod3(98,"100000000000000");
+		StringInputData datoaMod3(98,"");
+		mainFixture->showTree(data);
+		mainFixture->modifyElement(datoaMod3,datoMod3);
+		mainFixture->showTree(data);
+		mainFixture->deleteTree();
 
 }
 
