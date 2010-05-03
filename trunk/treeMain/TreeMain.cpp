@@ -127,11 +127,7 @@ int main(int argc, const char* argv[]){
 			cout << e.what() << endl;
 		}
 
-		if (modifyResult == true) {
-			cout << "Se modifico correctamente el valor de la clave " << clave << endl;
-		} else {
-			cout << "No se modifico el valor de la clave " << clave << " . Verifique si existe la clave pasada por parametro. " << endl;
-		}
+		cout << "Se modifico correctamente el valor de la clave " << clave << endl;
 	}
 	else
 		if (operacion == "-Q") {
