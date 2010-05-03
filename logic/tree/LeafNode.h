@@ -135,9 +135,9 @@ public:
 	std::string toStringData(InputData & typedata);
 
 	/**
-	 *
+	 * Devuelve los inputData de una hoja.
 	 */
-	InputData& getNextData();
+	bool getNextData(InputData& data);
 
 	void show(InputData& data);
 

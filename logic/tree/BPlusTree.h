@@ -56,7 +56,7 @@ private:
 	/// Guardo una referencia a la raiz.
 	Node* m_root;
 	/// Guardo una referencia al nodo corriente para permitir acceso secuencial.
-	Node* m_currentNode;
+	LeafNode* m_currentNode;
 
 public:
 
@@ -154,6 +154,11 @@ public:
 	 * @param node. Nodo a eliminar.
 	 */
 	void deleteNode(Node* node) throw (BPlusTreeException);
+
+	/**
+	 * Setea el elemento actual despues de una llamada a una operacion de recuperacion.
+	 */
+	void setCurrent(LeafNode* node);
 
 };
 
