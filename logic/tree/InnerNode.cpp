@@ -437,7 +437,7 @@ throw(NodeException)
 	}
 
 	if (result == UNDERFLOW_LOAD)
-	{
+	{	result=NORMAL_LOAD;
 		bool hasRightBrother = false;
 		bool hasMinorBrother = false;
 
@@ -702,12 +702,13 @@ throw (NodeException)
 			// lo elimino
 			found = true;
 			m_block->deleteRegister(result);
-		}
+		}else{
+			m_block->getNextRegister();
+		};
 
-		if (!found)
-			throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 	}
-
+if (!found)
+			throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
 	return result;
 }
@@ -920,6 +921,10 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 
 bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode,sideEnum side)
 {
+	//Intercambio puntero.
+
+
+
 	bool retVal = false;
 	VarRegister firstKey;
 	InputData* currentData = data.newInstance();
@@ -931,6 +936,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 	// Guardo los datos de control acerca de los punteros
 	// siguiente y anterior, en el caso en se esten fusionando hojas.
 	unsigned int nextLeaf = UNDEFINED_NODE_NUMBER;
+	unsigned int prevLeaf = UNDEFINED_NODE_NUMBER;
 
 	if (node->isLeaf())
 	{
@@ -940,7 +946,8 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		}
 		else
 		{
-			nextLeaf = ((LeafNode*)node)->getNextLeaf();
+			nextLeaf = ((LeafNode*)siblingNode)->getNextLeaf();
+			prevLeaf=((LeafNode*)node)->getPreviousLeaf();
 		}
 	}
 
@@ -977,8 +984,27 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		/// porque InputData es abstracto.
 		currentData->toData(firstKey.getValue());
 		fusionatedNode.setKey(currentData->getKey());
-
 		((LeafNode*)node)->setNextLeaf(nextLeaf);
+
+		if(side==LEFT_SIDE){
+			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
+			LeafNode*nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
+			nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
+			this->m_tree->saveNode(nextLeaf);
+
+		};
+			if(prevLeaf!=UNDEFINED_NODE_NUMBER){
+				LeafNode*previLeaf= (LeafNode*)this->m_tree->getNode(prevLeaf);
+				previLeaf->setNextLeaf(((LeafNode*)node)->getNodeNumber());
+				this->m_tree->saveNode(previLeaf);
+			}
+		}else{
+			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
+				LeafNode*nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
+				nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
+				this->m_tree->saveNode(nextLeaf);
+			};
+		};
 	}
 	else
 	{
