@@ -22,6 +22,7 @@ InnerNode::InnerNode(unsigned int nodeNumber,unsigned int level,Block* block,con
 {
 	m_block->setFixedRegisterCount(1);
 	m_tree = pointerTree;
+	m_block->getRegisterN(1);
 }
 
 InnerNode::~InnerNode()

@@ -22,6 +22,7 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 		m_block->addRegister(prevPointer);
 		m_block->addRegister(nextPointer);
 		}
+	m_block->getRegisterN(3);
 }
 
 LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData,BPlusTree* pointerTree)
@@ -39,6 +40,7 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 		m_block->addRegister(prevPointer);
 		m_block->addRegister(nextPointer);
 	}
+	m_block->getRegisterN(3);
 }
 
 
@@ -283,6 +285,8 @@ throw (NodeException)
 		data.setValue(currentData->getValue());
 	};
 
+	m_tree->setCurrent(this);
+
 	delete currentData;
 
 	return keyFound;
@@ -458,4 +462,27 @@ void LeafNode::show(InputData &data){
 	this->printContent(data);
 
 
+}
+
+bool LeafNode::getNextData(InputData& data)
+{
+	bool retVal = false;
+
+	VarRegister reg;
+	InputData* currentData = data.newInstance();
+
+	if (!m_block->isLastRegister())
+	{
+		reg = m_block->getNextRegister();
+		currentData->toData(reg.getValue());
+
+		data.setKey(currentData->getKey());
+		data.setValue(currentData->getValue());
+
+		retVal = true;
+	}
+
+	delete currentData;
+
+	return retVal;
 }
