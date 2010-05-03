@@ -160,7 +160,8 @@ throw (NodeException)
 
 	// Creo el registro para poder insertarlo en el bloque.
 	char* valueReg = new char[newdata.size()];
-	VarRegister regNuevo(newdata.toStream(valueReg),newdata.size());
+	newdata.toStream(valueReg);
+	VarRegister regNuevo(valueReg,newdata.size());
 
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
@@ -183,13 +184,20 @@ throw (NodeException)
 		{
 			found = true;
 			m_block->modifyRegister(regNuevo,result);
-		}
+		}else
 
 		m_block->getNextRegister();
 	}
 
 	if (!found)
 		throw NodeException(NodeException::INEXISTENT_ELEMLEAF);
+	unsigned int pos = m_block->getPosActual();
+	if (result == OVERFLOW_LOAD)
+		{	this->remove(newdata);
+			split(newdata,pos,promotedKey);
+			setNextLeaf(promotedKey.getLeftPointer());
+		}
+
 
 	delete currentData;
 
