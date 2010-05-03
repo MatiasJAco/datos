@@ -39,7 +39,11 @@ private:
 	void positionateAt(int position);
 
 public:
+	/**
+	 * Inicializa los atributos
+	 */
 	Bucket(Block* block);
+
 	virtual ~Bucket();
 
 	void setNumber(unsigned int number);
@@ -111,7 +115,7 @@ public:
 
 	/**
 	 * Obtiene la lista entera de Sids que contiene el bucket
-	 * @param Lista de Sids a ser devuelta
+	 * @param listaDatos de Sids a ser devuelta
 	 */
 	void getListOfSids(list<StringInputData> &listaDatos);
 
