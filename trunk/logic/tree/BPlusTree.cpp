@@ -135,12 +135,12 @@ throw (BPlusTreeException)
 
 		saveNode(sucesor);
 
-		saveNode(m_root);
-
 		// La raiz esta insertando el minimo de claves, no puede ser overflow.
 		if (result == OVERFLOW_LOAD)
 			throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
 	}
+
+	saveNode(m_root);
 
 	return retVal;
 }
@@ -187,8 +187,10 @@ bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
 			sucesor=auxPointer;
 			this->deleteNode(sucesor);
 			m_root->setLevel(currentLevel-1);
-			this->saveNode(m_root);
+
 	};
+
+	this->saveNode(m_root);
 
 
 
@@ -279,6 +281,8 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 	INodeData promotedKey;
 	this->m_root->modify(dato,dato2,promotedKey);
 	return retVal;
+
+	saveNode(m_root);
 }
 
 bool BPlusTree::find(const InputData & key, InputData & data)throw(BPlusTreeException){
