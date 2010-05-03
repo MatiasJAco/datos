@@ -9,7 +9,7 @@
 #include <fstream>
 
 /**
- *
+ * Es el archivo referente al Logger
  */
 class ArchivoTexto {
 
@@ -22,11 +22,12 @@ public:
    * Deja el cursor al comienzo del mismo.
    * En caso de no existir el archivo, lo crea.
    * Si no puede realizar la operación, arroja una excepción
+   * @param path Es el path del archivo
    */
   ArchivoTexto(const std::string& path);
 
   /**
-   * Cierra el archivo (no lo destruye físicamente
+   * Cierra el archivo (no lo destruye físicamente)
    */
   ~ArchivoTexto();
 
@@ -34,6 +35,7 @@ public:
    * Escribe un caracter al archivo en la posición del cursor.
    * Luego de escribirlo, el cursor queda en la posición siguiente
    * Si no puede escribir, arroja una excepción
+   * @param c Es el caracter a escribir
    */
   void escribir(char c);
 
@@ -41,6 +43,7 @@ public:
    * Escribe una cadena de caracteres al archivo en la posición del cursor.
    * Luego de escribirlo, el cursor queda en la posición siguiente al último caracter de la cadena
    *  Si no puede escribir, arroja una excepción
+   *  @param cadena Es la cadena de caracteres a escribir
    */
   void escribir(const std::string& cadena);
 
@@ -62,6 +65,8 @@ public:
    *  - Se lean MAX_LENGTH caracteres
    * El contenido leido se almacena en el parámetro "cadena"
    * Retorna true si pudo leer una linea, o false en caso contrario
+   * @param cadena Es la cadena de caracteres a leer
+   * @return bool Retorna true si pudo leer correctamente, false en caso contrario
    */
   bool leerLinea(std::string &cadena );
 
@@ -75,39 +80,35 @@ public:
    */
   void irAlFinal();
 
-  /*
-  Descripcion: lee un caracter del archivo de texto y lo guarda en el parametro caracter
-  pre:-
-  post: el caracter queda almacenado en el parametro caracter
+  /**
+   * Lee un caracter del archivo de texto y lo guarda en el parametro caracter
+   * El caracter queda almacenado en el parametro caracter
   */
   void leerCaracter(char&);
 
-  /*
-  Descripcion: indica si el archivo llego a su fin
-  pre:-
-  post: devuelve true si es el fin del archivo y false en caso contrario
-  */
+  /**
+   * indica si el archivo llego a su fin
+   * @return bool Devuelve true si es el fin del archivo y false en caso contrario
+   */
   bool finDeArchivo();
 
   /*
-  Descripcion: Indica posicion del cursor en el archivo.
+  Descripcion: Indica posicion del cursor en el archivo
   pre:-
   post:Devuelve un entero que representa la posicion del cursor en el archivo
   */
   int getPosicionCursor();
 
-  /*
-  Descripcion: Cambia posicion del cursor en el archivo.
-  pre:Recibe entero positivo.
-  post:-
-  */
+  /**
+   * Cambia posicion del cursor en el archivo
+   * Recibe entero positivo
+   */
   void setPosicionCursor(int);
 
-  /*
-  Descripcion: Permite obtener el tamanio del archivo.
-  pre:-
-  post:Devuelve el tamanio del archivo en bytes.
-  */
+  /**
+   * Permite obtener el tamanio del archivo
+   * @return long Devuelve el tamanio del archivo en bytes
+   */
    long getTamanio();
 };
 

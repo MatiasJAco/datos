@@ -78,7 +78,7 @@ private:
 
 	/**
 	 * Borra los registros del bucket pasado por parametro (de disco), y luego redispersa dichos registros en el hash.
-	 * @param bucket Es el bucket desbordado cuyos registros deben redispersarse.
+	 * @param bucketDesbordado Es el bucket desbordado cuyos registros deben redispersarse.
 	 * @return Devuelve 0 si realizo la operacion correctamente.
 	 */
 	int reHash(Bucket* bucketDesbordado);
@@ -90,8 +90,14 @@ private:
 
 public:
 
+	/**
+	 * Crea el archivo Hash (si es que no esta creado) y lo inicializa
+	 */
 	Hash();
 
+	/**
+	 * Cierra el archivo (no lo destruye físicamente)
+	 */
 	virtual ~Hash();
 
 	/**

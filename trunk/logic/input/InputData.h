@@ -16,7 +16,7 @@
 using namespace std;
 
 /**
- * Abstract class which represents and holds a user Input value.
+ * Clase abstracta que permite modelar un dato ingresado por el usuario.
  */
 class InputData {
 
@@ -36,8 +36,7 @@ public:
 	/**
 	 * Devuelve el stream correspondiente al dato.
 	 * @param stream stream en donde se almacena.
-	 * @return El mismo stream.
-	 * El resultado de este metodo sera utilizado en las llamadas a setValue de Register.
+	 * @return El mismo stream. El resultado de este metodo sera utilizado en las llamadas a setValue de Register.
 	 */
 	virtual char* toStream(char* stream) const = 0;
 
@@ -59,7 +58,10 @@ public:
 	 */
 	virtual InputData* newInstance() const = 0;
 
-
+	/**
+	 * Devuelve una cadena de caracteres que representa una descripcion del dato ingresado por el usuario.
+	 * @return Devuelve la cadena de caracteres que representa al dato.
+	 */
 	virtual std::string toString()const = 0;
 
 };
