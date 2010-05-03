@@ -39,6 +39,7 @@ int main(int argc, const char* argv[]){
 
 	string operacion (argv[1]);
 	string cadena (argv[2]);
+	string cadena2 = ";" + cadena;
 
 	if (operacion == "-B") {
 		cout << "Buscando la cadena de caracteres " << cadena << "..." << endl;
@@ -50,7 +51,7 @@ int main(int argc, const char* argv[]){
 		}
 	} else if (operacion == "-I") {
 		cout << "Ingresando la cadena de caracteres \"" << cadena  << "\"" << endl;
-		logger->ingresar(&cadena[0]);
+		logger->ingresar(&cadena2[0]);
 		cout << "Se ingreso correctamente la cadena de caracteres \"" << cadena << "\"" << endl;
 	} else if (operacion == "-S") {
 		cout << "Impresion del estado actual:" << endl;
