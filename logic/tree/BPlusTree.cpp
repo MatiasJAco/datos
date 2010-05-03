@@ -279,7 +279,14 @@ void BPlusTree::deleteTree()
 bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) throw (BPlusTreeException){
 	bool retVal = true;
 	INodeData promotedKey;
+	try
+	{
 	this->m_root->modify(dato,dato2,promotedKey);
+	}
+	catch (NodeException e)
+	{
+		throw BPlusTreeException(e);
+	}
 	return retVal;
 
 	saveNode(m_root);
