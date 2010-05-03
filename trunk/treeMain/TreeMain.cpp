@@ -116,7 +116,6 @@ int main(int argc, const char* argv[]){
 		cout << "Modificando el valor de la clave " << clave << " por " << valor << "..." << endl;
 		StringInputData sid (clave, "");
 		StringInputData sid2 (clave, valor);
-		bool modifyResult = false;
 
 		try
 		{
@@ -124,7 +123,8 @@ int main(int argc, const char* argv[]){
 		}
 		catch(BPlusTreeException e)
 		{
-			cout << e.what() << endl;
+			//cout << e.what() << endl;
+			cout << "No se modifico el valor pues la clave no existe" << endl;
 		}
 
 		cout << "Se modifico correctamente el valor de la clave " << clave << endl;
