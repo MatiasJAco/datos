@@ -61,7 +61,8 @@ throw (NodeException)
 
 	// Creo el registro para poder insertarlo en el bloque.
 	char* valueReg = new char[data.size()];
-	VarRegister regData(data.toStream(valueReg),data.size());
+	data.toStream(valueReg);
+	VarRegister regData(valueReg,data.size());
 
 	/// Busco donde insertar el dato dentro del bloque de hoja.
 	m_block->restartCounter();
@@ -215,7 +216,8 @@ throw (NodeException)
 
 	// Creo el registro para poder insertarlo en el bloque.
 	char* valueReg = new char[data.size()];
-	VarRegister regNuevo(data.toStream(valueReg),data.size());
+	data.toStream(valueReg);
+	VarRegister regNuevo(valueReg,data.size());
 
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
