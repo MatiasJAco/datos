@@ -29,32 +29,6 @@ InnerNode::~InnerNode()
 {
 }
 
-
-
-void InnerNode::getInPosition(INodeData * contenido, unsigned int position)
-{
-	//Busca al sucesor que puede tener el dato
-	m_block->restartCounter();
-	//Itera una vez para obviar el dato de control.
-	VarRegister level = this->m_block->getNextRegister();
-	VarRegister reg;
-	unsigned int iterador=0;
-	bool found=false;
-    while(iterador < m_block->getRegisterAmount() && !found){
-        reg = this->m_block->peekRegister();
-        iterador++;
-        // Transformo el registro a un INodeData
-        contenido->toNodeData(reg.getValue());
-        if(iterador == position){
-            found = true;
-        }else
-        this->m_block->getNextRegister();
-    }
-
-}
-
-
-
 loadResultEnum InnerNode::modify(const InputData & dato, const InputData & dato2,INodeData& promotedKey)
 throw (NodeException)
 {
@@ -180,174 +154,10 @@ loadResultEnum InnerNode::modify(const InputData& data)
 }
 
 
-INodeData* InnerNode::divideLeaf(Node* aPartir,Node* destNode,const InputData& newData){
-	//Para hijos hoja
-	LeafNode* nodoAPartir=(LeafNode*)aPartir;
-	char* valueReg = new char[newData.size()];
-	VarRegister reg;
-	nodoAPartir->getBlock()->getNextRegister();
-	reg.setValue(newData.toStream(valueReg),newData.size());
-	//Recorro para obtener la posicion.
-    unsigned int posicion=buscarPosicionLeaf(nodoAPartir,newData);
-
-	BlockManager::redistributeOverflow(aPartir->getBlock(),destNode->getBlock(),reg,posicion);
-	//Devuelvo el primer elemento del nuevo nodo.
-	destNode->getBlock()->restartCounter();
-	//Saltea datos de control.
-	destNode->getBlock()->getNextRegister();
-	//Recupera primer registro.
-	VarRegister regBuscado;
-	InputData* conteBuscado;
-	regBuscado=destNode->getBlock()->getNextRegister();
-	conteBuscado->toData(regBuscado.getValue());
-	INodeData* datoADevolver =new INodeData(destNode->getNodeNumber(),conteBuscado->getKey());
-	return datoADevolver;
-
-}
-
-unsigned int InnerNode::buscarPosicionLeaf(LeafNode *& nodoAPartir,const InputData & newData){
-	nodoAPartir->getBlock()->restartCounter();
-	nodoAPartir->getBlock()->getNextRegister();
-	bool found=false;
-	unsigned int posicion=0;
-	VarRegister regBuscado;
-	InputData* conteBuscado;
-	while(posicion<nodoAPartir->getBlock()->getRegisterAmount()&& !found ){
-		posicion++;
-		regBuscado=nodoAPartir->getBlock()->peekRegister();
-		//Transformo el registro a un InputData
-		conteBuscado->toData(regBuscado.getValue());
-		if(newData.getKey()<conteBuscado->getKey()){
-			found=true;
-		}else{
-			nodoAPartir->getBlock()->getNextRegister();
-		};
-	};
-	nodoAPartir->getBlock()->restartCounter();
-	return posicion;
-}
-
-
-unsigned int InnerNode::buscarPosicionInner(InnerNode *& nodoAPartir,INodeData & newData)
-{
-	nodoAPartir->getBlock()->restartCounter();
-	nodoAPartir->getBlock()->getNextRegister();
-	bool found = false;
-	unsigned int posicion = 0;
-	VarRegister regBuscado;
-	INodeData *conteBuscado;
-    while(posicion < nodoAPartir->getBlock()->getRegisterAmount() && !found){
-        posicion++;
-        regBuscado = nodoAPartir->getBlock()->peekRegister();
-        conteBuscado->toNodeData(regBuscado.getValue());
-        if(newData.getKey() < conteBuscado->getKey()){
-            found = true;
-        }else{
-            nodoAPartir->getBlock()->getNextRegister();
-        };
-    };
-    nodoAPartir->getBlock()->restartCounter();
-    return posicion;
-}
-
-unsigned int InnerNode::buscarPosicionInnerPorClave(int key)
-{
-	this->getBlock()->restartCounter();
-	this->getBlock()->getNextRegister();
-	bool found = false;
-	unsigned int posicion = 0;
-	VarRegister regBuscado;
-	InputData *conteBuscado;
-    while(posicion < this->getBlock()->getRegisterAmount() && !found){
-        posicion++;
-        regBuscado = this->getBlock()->peekRegister();
-        conteBuscado->toData(regBuscado.getValue());
-        if(key < conteBuscado->getKey()){
-            found = true;
-        }else{
-            this->getBlock()->getNextRegister();
-        };
-    };
-    this->getBlock()->restartCounter();
-    return posicion;
-}
-
-INodeData* InnerNode::divideInner(Node* aPartir,Node* destNode,INodeData& newData){
-    InnerNode *nodoAPartir = (InnerNode*)(aPartir);
-    char *valueReg = new char[newData.getSize()];
-    VarRegister reg;
-    nodoAPartir->getBlock()->getNextRegister();
-    reg.setValue(newData.toStream(valueReg), newData.getSize());
-    unsigned int posicion=buscarPosicionInner(nodoAPartir,newData);
-    BlockManager::redistributeOverflow(aPartir->getBlock(), destNode->getBlock(), reg, posicion);
-    destNode->getBlock()->restartCounter();
-    destNode->getBlock()->getNextRegister();
-    VarRegister regBuscado;
-    INodeData* conteBuscado=new INodeData(0,0);
-    regBuscado=destNode->getBlock()->getNextRegister();
-	conteBuscado->toNodeData(regBuscado.getValue());
-	INodeData* datoADevolver =new INodeData(destNode->getNodeNumber(),conteBuscado->getKey());
-	return datoADevolver;
-
-}
-
-
-void InnerNode::join(Node* toDivide,Node* destNode,const InputData& newData){
-
-}
-
-bool InnerNode::balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData){
-	LeafNode* nodoUnderflow=(LeafNode*)underNode;
-	char *valueReg = new char[newData.size()];
-	VarRegister reg;
-    reg.setValue(newData.toStream(valueReg), newData.size());
-	//Busca Posicion
-	unsigned int posicion=this->buscarPosicionLeaf(nodoUnderflow,newData);
-	return BlockManager::redistributeUnderflow(underNode->getBlock(),toDonate->getBlock(),reg,posicion);
-
-}
-
-bool InnerNode::balanceInner(Node* underNode,Node* toDonate,INodeData& newData){
-	InnerNode* nodoUnderflow=(InnerNode*)underNode;
-	char *valueReg = new char[newData.getSize()];
-	VarRegister reg;
-	reg.setValue(newData.toStream(valueReg), newData.getSize());
-	//Busca Posicion
-	unsigned int posicion=this->buscarPosicionInner(nodoUnderflow,newData);
-	return BlockManager::redistributeUnderflow(underNode->getBlock(),toDonate->getBlock(),reg,posicion);
-}
-
-
-
-
 void InnerNode::save(Node* node)
 {
 	m_tree->saveNode(node);
 }
-
-void InnerNode::joinLeaf(Node *underNode, Node *destNode, const InputData & newData){
-	LeafNode* nodoUnderflow=(LeafNode*)underNode;
-	char *valueReg = new char[newData.size()];
-	VarRegister reg;
-	reg.setValue(newData.toStream(valueReg), newData.size());
-	//Busca Posicion
-	unsigned int position=this->buscarPosicionLeaf(nodoUnderflow,newData);
-	BlockManager::mergeBlocks(underNode->getBlock(),destNode->getBlock(),reg,position);
-
-};
-
-void InnerNode::joinInner(Node *underNode, Node *destNode,  INodeData*  newData){
-	 	InnerNode* nodoUnderflow=(InnerNode*)underNode;
-		char *valueReg = new char[newData->getSize()];
-		VarRegister reg;
-		reg.setValue(newData->toStream(valueReg), newData->getSize());
-		//Busca Posicion
-		unsigned int position=this->buscarPosicionInner(nodoUnderflow,*newData);
-		BlockManager::mergeBlocks(underNode->getBlock(),destNode->getBlock(),reg,position);
-
-};
-
-
 
 /**********************************************************************************/
 
@@ -805,24 +615,6 @@ throw (NodeException)
 
 
 	return result;
-}
-
-INodeData InnerNode::getNextINodeData()
-{
-	INodeData dataNode;
-
-	VarRegister reg = m_block->getNextRegister();
-	dataNode.toNodeData(reg.getValue());
-
-	return dataNode;
-}
-
-unsigned int InnerNode::getAmountINodeData()
-{
-	unsigned int sizeblock = m_block->getRegisterAmount();
-
-	// Le resto el dato de control.
-	return (sizeblock-1);
 }
 
 bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promotedKey)
