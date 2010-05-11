@@ -33,11 +33,6 @@ public:
 
 private:
 	BPlusTree* m_tree;
-	void joinInner(Node *toDivide, Node *destNode, INodeData *newData);
-    void joinLeaf(Node *toDivide, Node *destNode, const InputData & newData);
-    void buscarPorClave(INodeData *& contenido, const InputData & dato);
-    unsigned int buscarPosicionInner(InnerNode *& nodoAPartir, INodeData & newData);
-    unsigned int buscarPosicionLeaf(LeafNode *& nodoAPartir, const InputData & newData);
 
 private:
     InnerNode(unsigned int nodeNumber, unsigned int level,Block *block,const InputData& typeData, BPlusTree *pointerTree);
@@ -47,30 +42,6 @@ public:
     InnerNode(unsigned int nodeNumber, unsigned int level, Block *block,const InputData& typeData);
 
     ~InnerNode();
-    //loadResultEnum remove(const InputData & key);
-
-
-    loadResultEnum modify(const InputData & data);
-//    void insertINodeData(INodeData *contBuscado);
-    void join(Node *toDivide, Node *destNode, const InputData & newData);
-    void save(Node* node);
-
-private:
-
-	INodeData* divideLeaf (Node* toDivide,Node* destNode,const InputData& newData);
-
-	INodeData* divideInner(Node* aPartir,Node* destNode,INodeData& newData);
-
-	bool balanceLeaf(Node* underNode,Node* toDonate,const InputData& newData);
-
-	bool balanceInner(Node* underNode,Node* toDonate, INodeData& newData);
-
-	unsigned int buscarPosicionInnerPorClave(int key);
-
-	void getInPosition(INodeData * contenido, unsigned int position);
-
-
-
 
 public:
 	/*********************************************************************************************/
@@ -82,6 +53,8 @@ public:
     bool find(const InputData & key, InputData & data) throw (NodeException);
 
     loadResultEnum modify(const InputData & key, const InputData & dato,INodeData& promotedKey) throw (NodeException);
+
+    loadResultEnum modify(const InputData & data);
 
 	/*********************************************************************************************/
 
@@ -113,6 +86,12 @@ private:
 	 * @return bool TRUE si pudo efectuar la operacion. FALSE de lo contrario.
 	 */
 	bool merge(Node* node,Node* siblingNode,const InputData& data,INodeData& fusionatedNode,sideEnum side);
+
+	/**
+	 * Guarda el nodo.
+	 * @param node Nodo a guardar.
+	 */
+    void save(Node* node);
 
 public:
 	/**
@@ -159,18 +138,6 @@ public:
 	 * 										(Al ser de tamaño fijo no hay OVERFLOW ni UNDERFLOW)
 	 */
 	loadResultEnum modifyINodeData(const INodeData& iNodeData,const INodeData& newINodeData) throw (NodeException);
-
-	/**
-	 * Devuelve un elemento INodeData.
-	 * @return INodeData siguiente.
-	 */
-	INodeData getNextINodeData();
-
-	/**
-	 * Devuelve la cantidad total de elementos INodeData;
-	 * @return Cantidad de elementos INodeData.
-	 */
-	unsigned int getAmountINodeData();
 
 	/**
 	 * Imprime en pantalla los elementos de un nodo interno.

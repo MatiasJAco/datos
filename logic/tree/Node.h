@@ -16,7 +16,6 @@
 #include "../../physical/file/BlockManager.h"
 #include "dataNode/INodeData.h"
 
-//#include "BPlusTree.h"
 
 class Node{
 
@@ -33,7 +32,6 @@ public:
 	/// Definicion de constante para los nodos que no tienen asignado un identificador.
 	static const unsigned int UNDEFINED_NODE_NUMBER = -1;
 	static const unsigned int UNDEFINED_NODE_LEVEL = -1;
-	//static const int UNDEFINED_KEY = -1;
 
 protected:
 	//---------------Atributes-------------//
@@ -44,11 +42,10 @@ protected:
 
 	const InputData& m_typeData;
 
-//	BPlusTree* m_tree;
+
 
 protected:
 	//--------------Constructor/Destructor----------------//
-//	Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree);
 	Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData);
 
 public:
@@ -138,15 +135,6 @@ public:
 	/// Obtiene el identificador.
 	unsigned int getNodeNumber()const;
 
-	//virtual void divide (Node* toDivide,Node* destNode,const InputData& newData) = 0;
-
-//	virtual void join(Node* fusionNode) = 0;
-	/**
-	*Dona una cantidad minima determinada de bytes a otro nodo.
-	*
-	***/
-//	virtual bool balance(Node* destNode,const InputData& deletedData) = 0;
-
 	Block* getBlock();
 
 	void nodeNumber(unsigned int number);
@@ -155,15 +143,8 @@ protected:
 
 	void setBlock(Block* block);
 
-
-
 	static unsigned int readLevel(Block block);
 
-
 };
-
-
-
-
 
 #endif /* NODE_H_ */
