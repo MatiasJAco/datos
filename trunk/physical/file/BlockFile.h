@@ -62,6 +62,7 @@ public:
 	 * Abre el archivo y asigna el tamaño de bloque. Si no existe se crea.
 	 * @param fileName nombre del archivo.
 	 * @param blocksize tamaño de los bloques del archivo
+	 * @param branchFactor float con el factor de carga de los bloques. Va entre 0 y 1.
 	 * @return bool true en caso de exito, false en caso contrario
 	 */
 	bool open(const std::string fileName, unsigned int blocksize, float branchFactor);

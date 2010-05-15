@@ -117,7 +117,7 @@ bool VarRegister::setValue(int int1)
 	return VarRegister::setValue((char*)&int1, sizeof(int));
 }
 
-bool VarRegister::setValue(string &value)
+bool VarRegister::setValue(std::string &value)
 {
 	return VarRegister::setValue((char*)value.c_str(),value.size()+1);
 }

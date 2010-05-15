@@ -40,30 +40,47 @@ public:
 	//-------------------------METODOS-----------------------------------//
 
 	/**
-	 * Convierte a registro un stream pasado por parametro
+	 * Convierte a registro un stream pasado por parametro.
+	 * Es necesario pasar el tama�o ya que el registro es de tama�o variable.
+	 * @param valor stream con el valor a convertir en registro
+	 * @param size tama�o del stream.
+	 * @return bool true en caso de exito, false en caso contrario
 	 */
 	bool setValue(char * valor,unsigned int size);
 
 
 	/**
-	 * Convierte a registro un stream pasado por parametro
+	 * Convierte a registro un int pasado por parametro
+	 * @param value valor a setear
+	 * @return bool true en caso de ok, false en caso contrario
 	 */
-	bool setValue(int);
+	bool setValue(int value);
 
+	/**
+	 * Convierte a registro un string pasado por parametro
+	 * @param value valor a setear
+	 * @return bool true en caso de ok, false en caso contrario
+	 */
 	bool setValue(std::string &value);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro
+	 * IMPORTANTE: se asigna memoria mediante un new dentro de este
+	 * metodo, es importante guardar un puntero al stream para liberar
+	 * la memoria desde afuera despues
+	 * @return char * stream que representa el registro.
 	*/
 	char * getValue();
 
 	/**
-	 * Obtiene el tamaño del Registro (en bytes)
+	 * Obtiene el tamaño del Registro sin contar los datos de control (en bytes)
+	 * @return unsigned int el tamano del contenido del registro
 	 */
 	unsigned int getSize() const;
 
 	/**
-	 * Obtiene el tamaño del Registro (en bytes)
+	 * Obtiene el tamaño del Registro contabilizando los datos de control (en bytes)
+	 * @return unsigned int el tamano del registro
 	 */
 	unsigned int getDiskSize() const;
 
@@ -83,6 +100,9 @@ public:
 
 	/**
 	 * Carga el registro desde un stream
+	 * IMPORTANTE: se asigna memoria mediante un new dentro de este
+	 * metodo, es importante guardar un puntero al stream para liberar
+	 * la memoria desde afuera despues
 	 * @param stream stream de caracteres del cual se carga el registro
 	 * @return true en caso de ok, false en caso contrario
 	 */
