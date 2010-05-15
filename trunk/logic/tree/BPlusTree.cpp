@@ -287,9 +287,11 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 	{
 		throw BPlusTreeException(e);
 	}
-	return retVal;
 
 	saveNode(m_root);
+
+	return retVal;
+
 }
 
 bool BPlusTree::find(const InputData & key, InputData & data)throw(BPlusTreeException){
