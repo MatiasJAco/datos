@@ -35,7 +35,6 @@ public:
 	 */
 	virtual bool close()=0;
 
-
 	/**
 	 * Corta la longitud del archivo
 	 * @return true en caso de ok, false en caso contrario

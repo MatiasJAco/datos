@@ -10,7 +10,7 @@
 #include <sstream>
 
 /**
- * Clase abstracta
+ * Clase de la cual derivan los registros.
  */
 class Register
 {

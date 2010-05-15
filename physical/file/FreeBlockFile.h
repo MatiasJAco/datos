@@ -71,8 +71,8 @@ public:
 	std::string getFreeBlockString();
 
 	/**
-	 * Muestra por pantalla los nodos libres, se usa para debug
-	 * @return string un string con todos los numeros de bloques
+	 * Devuelve una lista con los nodos libres, se usa para debug
+	 * @return FreeBlockList una lista con los bloques libres
 	 */
 	FreeBlockList getFreeBlockList();
 
@@ -80,13 +80,12 @@ private:
 
 	/**
 	 * Lee del archivo el numero de bloques
-	 * @param blockCount cantidad de bloques en el archivo de bloques libres
 	 * @return bool true si esta ok false caso contrario
 	 */
 	bool readHeader();
+
 	/**
 	 * Escribe en el archivo el numero de bloques
-	 * @param blockCount cantidad de bloques en el archivo de bloques libres
 	 * @return bool true si esta ok false caso contrario
 	 */
 	bool writeHeader();

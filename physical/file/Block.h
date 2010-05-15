@@ -103,7 +103,17 @@ public:
 	 */
 	bool modifyRegister(const VarRegister & reg, loadResultEnum & load);
 
+	/**
+	 * Muestra por pantalla el contenido del bloque. Se usa para debug
+	 */
+	void printRegisters();
 
+	/**
+	 * Elimina todos los registros de un bloque.
+	 */
+	void clear();
+
+	//------------------------RECORRIDO---------------------------------------//
 	/**
 	 * Obtiene el proximo Register,  siendo este de longitud variable.
 	 * La informacion de la longitud del Register no es necesario pasarla,
@@ -115,8 +125,9 @@ public:
 	VarRegister getNextRegister(bool foward=true);
 
 	/**
-	 *
+	 * Obtiene el registro actual y retrocede
 	 * @param foward indica si se retrocede el iterador despues de obtener un registro
+	 * @return VarRegister el registro actual
 	 */
 	VarRegister getPreviousRegister(bool foward=true);
 
@@ -175,15 +186,7 @@ public:
 	 */
 	void jumpLastRegister();
 
-	/**
-	 * Muestra por pantalla el contenido del bloque. Se usa para debug
-	 */
-	void printRegisters();
 
-	/**
-	 * Elimina todos los registros de un bloque.
-	 */
-	void clear();
 
 	//-----------------------------GET/SET--------------------------------------//
 	/**
@@ -334,6 +337,10 @@ private:
 	 */
 	int m_posActual;
 
+	/**
+	 * Cantidad de registros del bloque que son datos de control.
+	 * Esto es para el uso de otras clases derivadas.
+	 */
 	unsigned int m_fixedRegisterCount;
 
 };

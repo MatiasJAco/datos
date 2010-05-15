@@ -40,16 +40,21 @@ public:
 
 	/**
 	 * Convierte a registro un stream pasado por parametro
+	 * @param valor stream a convertir en registro
+	 * @param size tamano del registro
+	 * @return bool true en caso de exito
 	 */
 	bool setValue(char * valor,unsigned int size);
 
 	/**
 	 * Recupera el stream que corresponde a un Registro
+	 * @return char * stream con el contenido del registro.
 	 */
 	char * getValue();
 
 	/**
 	 * Obtiene el tamaño del Registro (en bytes)
+	 * @return unsigned int tamano del registro
 	 */
 	unsigned int getSize()const;
 

@@ -72,25 +72,6 @@ public:
 	static bool exchangeBlock(Block* blockA,Block*blockB);
 
 
-	//--------------------------------deprecated---------------------------------------//
-	/**
-	 * TODO eliminar
-	 * @deprecated
-	 */
-	static bool split(Block *orig, Block *blank);
-
-	/**
-	 * TODO eliminar
-	 * @deprecated
-	 */
-	static bool mergeBlocks(Block *block1, Block *block2,  VarRegister &reg, unsigned int pos);
-
-	/**
-	 * TODO eliminar
-	 * @deprecated
-	 */
-	static bool redistributeUnderflow(Block *block1, Block *block2, VarRegister &reg, unsigned int pos);
-
 private:
 	/**
 	 * Para uso interno, no llamar desde afuera
