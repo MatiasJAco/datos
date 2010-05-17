@@ -652,22 +652,22 @@ void TestTree::testModify(){
 		mainFixture->modifyElement(datoaMod3,datoMod3);
 		mainFixture->showTree(data);
 
-//		StringInputData datoMod6(75,"10r00000000000000000");
-//		StringInputData datoaMod6(75,"");
-//		mainFixture->modifyElement(datoaMod6,datoMod6);
-//		mainFixture->showTree(data);
+		StringInputData datoMod6(75,"10r00000000000000000");
+		StringInputData datoaMod6(75,"");
+		mainFixture->modifyElement(datoaMod6,datoMod6);
+		mainFixture->showTree(data);
 //
 //		StringInputData datoMod4(98,"");
 //		StringInputData datoaMod4(98,"");
 //		mainFixture->modifyElement(datoaMod4,datoMod4);
 //		mainFixture->showTree(data);
-		StringInputData datoMod5(99,"");
-		StringInputData datoaMod5(99,"");
-		mainFixture->modifyElement(datoaMod5,datoMod5);
-		mainFixture->showTree(data);
-
-
-		mainFixture->deleteTree();
+//		StringInputData datoMod5(99,"");
+//		StringInputData datoaMod5(99,"");
+//		mainFixture->modifyElement(datoaMod5,datoMod5);
+//		mainFixture->showTree(data);
+//
+//
+	mainFixture->deleteTree();
 
 }
 
