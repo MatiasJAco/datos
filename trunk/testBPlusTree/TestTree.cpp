@@ -10,7 +10,7 @@
 TestTree::TestTree() {
 	// TODO Auto-generated constructor stub
 	StringInputData typedata(4,"hola");
-	mainFixture = new BPlusTree("arbol.dat",92,0.5,typedata);
+	mainFixture = new BPlusTree("arbol.dat",85,0.5,typedata);
 
 }
 
@@ -33,11 +33,11 @@ void TestTree::run()
 
 //	testInsertComplejo();
 //	testRemove();
-//	testModify();
+	testModify();
 //	testFind();
 //	testFindInodeData();
 //	testRemoveInnerNode();
-	testReadNext();
+//	testReadNext();
 
 }
 
@@ -518,12 +518,12 @@ void TestTree::testModify(){
 		StringInputData data3(12,"33");
 		StringInputData data4(25,"44");
 		StringInputData data5(5,"55");
-		StringInputData data6(98,"66");
+		StringInputData data6(97,"00000000000000000");
 		StringInputData data7(75,"77");
 		StringInputData data8(48,"88");
 		StringInputData data9(99,"99");
 		StringInputData data10(64,"01");
-//		StringInputData data11(22,"02");
+		StringInputData data11(98,"0000000000000000");
 //		StringInputData data12(37,"03");
 //		StringInputData data13(88,"04");
 //		StringInputData data14(55,"05");
@@ -584,7 +584,7 @@ void TestTree::testModify(){
 		mainFixture->insert(data8);
 		mainFixture->insert(data9);
 		mainFixture->insert(data10);
-//		mainFixture->insert(data11);
+		mainFixture->insert(data11);
 //		mainFixture->insert(data12);
 //		mainFixture->insert(data13);
 //		mainFixture->insert(data14);
@@ -640,17 +640,33 @@ void TestTree::testModify(){
 		mainFixture->showTree(data);
 		mainFixture->modifyElement(datoaMod,datoMod);
 		mainFixture->showTree(data);
-		mainFixture->deleteTree();
-		StringInputData datoMod2(99,"10r0000");
+
+		StringInputData datoMod2(99,"10r00000000000000000");
 		StringInputData datoaMod2(99,"");
-		mainFixture->showTree(data);
+
 		mainFixture->modifyElement(datoaMod2,datoMod2);
 		mainFixture->showTree(data);
-		StringInputData datoMod3(98,"100000000000000");
-		StringInputData datoaMod3(98,"");
-		mainFixture->showTree(data);
+		StringInputData datoMod3(64,"10000000000000000000");
+		StringInputData datoaMod3(64,"");
+
 		mainFixture->modifyElement(datoaMod3,datoMod3);
 		mainFixture->showTree(data);
+
+//		StringInputData datoMod6(75,"10r00000000000000000");
+//		StringInputData datoaMod6(75,"");
+//		mainFixture->modifyElement(datoaMod6,datoMod6);
+//		mainFixture->showTree(data);
+//
+//		StringInputData datoMod4(98,"");
+//		StringInputData datoaMod4(98,"");
+//		mainFixture->modifyElement(datoaMod4,datoMod4);
+//		mainFixture->showTree(data);
+		StringInputData datoMod5(99,"");
+		StringInputData datoaMod5(99,"");
+		mainFixture->modifyElement(datoaMod5,datoMod5);
+		mainFixture->showTree(data);
+
+
 		mainFixture->deleteTree();
 
 }
