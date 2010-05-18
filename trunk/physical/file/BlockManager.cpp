@@ -220,9 +220,10 @@ bool BlockManager::redistributeOverflow(Block *orig, Block *blank, VarRegister &
 	//a dejar en el bloque original para hacer el split
 	while(!orig->isLastRegister()&&cumSize<sizeFirst)
 	{
-		varR =orig->getNextRegister(true);
+//		varR =orig->getNextRegister(true);
 		if(pos!=i)
 		{
+			varR =orig->getNextRegister(true);
 			cumSize+= varR.getDiskSize();
 		}
 		//Si el reg a insertar va en la primera mitad
