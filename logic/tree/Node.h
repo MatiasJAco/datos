@@ -137,7 +137,7 @@ public:
 
 	Block* getBlock();
 
-	void nodeNumber(unsigned int number);
+	void setNodeNumber(unsigned int number);
 
 protected:
 

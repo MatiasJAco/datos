@@ -31,6 +31,8 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor,const InputData& 
 		saveNode(m_root);
 	}
 
+	m_currentNode = NULL;
+
 }
 
 BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor,const InputData& typeData)
@@ -49,11 +51,19 @@ BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor,c
 		m_root = newLeafNode();
 		saveNode(m_root);
 	}
+
+	m_currentNode = NULL;
 }
 
 BPlusTree::~BPlusTree()
 {
 	file.close();
+
+	if (m_root!=NULL)
+		delete m_root;
+
+	if (m_currentNode!=NULL)
+		delete m_currentNode;
 }
 
 bool BPlusTree::insert(const InputData& data)
@@ -89,41 +99,65 @@ throw (BPlusTreeException)
 
 		// le cambio el numero de nodo al sucesor y mantengo el definido para la raiz.
 		BlockManager::exchangeBlock(m_root->getBlock(),sucesor->getBlock());
-		sucesor->nodeNumber(sucesor->getNodeNumber());
-		m_root->nodeNumber(m_root->getNodeNumber());
+
+		sucesor->setNodeNumber(sucesor->getNodeNumber());
+		m_root->setNodeNumber(m_root->getNodeNumber());
 
 		INodeData firstKey;
 		INodeData newKey;
 
 		if (!sucesor->isLeaf()){
+
 			INodeData currentData;
 			VarRegister reg;
-			Node* nodoIzquierdo=this->getNode(promotedKey.getLeftPointer());
-			Block* bloqueIzquierdo;
+			char* valueReg = NULL;
+
+			Node* nodoIzquierdo = this->getNode(promotedKey.getLeftPointer());
+			Block* bloqueIzquierdo = nodoIzquierdo->getBlock();
+
 			while(!nodoIzquierdo->isLeaf()){
 			//Obtener primer clave de la rama.
 
-				bloqueIzquierdo =nodoIzquierdo->getBlock();
 				//Salteo info de control.
 				bloqueIzquierdo->restartCounter();
 				bloqueIzquierdo->getNextRegister();
-				reg=bloqueIzquierdo->getNextRegister();
-				currentData.toNodeData(reg.getValue());
-				nodoIzquierdo=this->getNode(currentData.getLeftPointer());
-			};
-			InputData* leftKey=data.newInstance();
+
+				reg = bloqueIzquierdo->getNextRegister();
+				valueReg = reg.getValue();	//hace alloc
+				currentData.toNodeData(valueReg);
+
+				delete nodoIzquierdo;
+				nodoIzquierdo = this->getNode(currentData.getLeftPointer());
+				bloqueIzquierdo = nodoIzquierdo->getBlock();
+
+				delete[] valueReg;
+			}
+
 			//Encuentro la primer hoja de la segunda rama.
-			bloqueIzquierdo =nodoIzquierdo->getBlock();
+			bloqueIzquierdo = nodoIzquierdo->getBlock();
+
 			//Salteo info de control.
 			bloqueIzquierdo->restartCounter();
 			bloqueIzquierdo->getNextRegister();
 			bloqueIzquierdo->getNextRegister();
 			bloqueIzquierdo->getNextRegister();
-			reg=bloqueIzquierdo->getNextRegister();
-			leftKey->toData(reg.getValue());
-			promotedKey.setKey(leftKey->getKey());
+			reg = bloqueIzquierdo->getNextRegister();
 
-		};
+			InputData* leftKey = data.newInstance();
+			valueReg = reg.getValue();
+			leftKey->toData(valueReg);
+			promotedKey.setKey(leftKey->getKey());
+			delete leftKey;
+
+
+			if (nodoIzquierdo!=NULL)
+				delete nodoIzquierdo;
+
+			if (valueReg!=NULL)
+				delete[] valueReg;
+
+		}
+
 		firstKey.setLeftPointer(sucesor->getNodeNumber());
 		firstKey.setKey(promotedKey.getKey());
 		newKey.setLeftPointer(promotedKey.getLeftPointer());
@@ -134,10 +168,12 @@ throw (BPlusTreeException)
 		result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
 
 		saveNode(sucesor);
+		delete sucesor;
 
 		// La raiz esta insertando el minimo de claves, no puede ser overflow.
 		if (result == OVERFLOW_LOAD)
 			throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
+
 	}
 
 	saveNode(m_root);
@@ -165,35 +201,43 @@ bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
 	}
 
 	if((this->m_root->getBlock()->getRegisterAmount()==2)&&(!this->m_root->isLeaf())){
-		unsigned int currentLevel= this->m_root->getLevel();
 
-			//Obtengo el unico hijo
-			Block* rootBlock= this->m_root->getBlock();
-			rootBlock->restartCounter();
-			//Salteo datos de control.
-			rootBlock->getNextRegister();
-			VarRegister currentRegister;
-			currentRegister=rootBlock->getNextRegister();
-			INodeData currentData(0,0);
-			currentData.toNodeData(currentRegister.getValue());
-			Node* sucesor=this->getNode(currentData.getLeftPointer());
-			Block* blockSucesor=sucesor->getBlock();
-			//Cambio los numeros de bloque.
-			BlockManager::exchangeBlock(rootBlock,blockSucesor);
-			//Intercambio los punteros
-			Node*auxPointer;
-			auxPointer=m_root;
-			m_root=sucesor;
-			sucesor=auxPointer;
-			this->deleteNode(sucesor);
-			m_root->setLevel(currentLevel-1);
+		INodeData currentData;
+		VarRegister currentRegister;
+		char* currentValue = NULL;
 
-	};
+		unsigned int currentLevel = this->m_root->getLevel();
+
+		//Obtengo el unico hijo
+		Block* rootBlock = this->m_root->getBlock();
+		rootBlock->restartCounter();
+		//Salteo datos de control.
+		rootBlock->getNextRegister();
+
+		currentRegister =  rootBlock->getNextRegister();
+		currentValue = currentRegister.getValue();
+		currentData.toNodeData(currentValue);
+
+		Node* sucesor = this->getNode(currentData.getLeftPointer());
+		Block* blockSucesor = sucesor->getBlock();
+
+		//Cambio los numeros de bloque.
+		BlockManager::exchangeBlock(rootBlock,blockSucesor);
+
+		//Intercambio los punteros
+		Node* auxPointer;
+		auxPointer = m_root;
+		m_root = sucesor;
+		sucesor = auxPointer;
+
+		this->deleteNode(sucesor);
+		m_root->setLevel(currentLevel-1);
+
+		delete [] currentValue;
+
+	}
 
 	this->saveNode(m_root);
-
-
-
 
 	return retVal;
 }
@@ -259,7 +303,7 @@ void BPlusTree::deleteNode(Node* node) throw (BPlusTreeException)
 
 	file.deleteBlock(nodeNumber);
 
-	delete node;
+//	delete node;
 
 }
 
@@ -301,41 +345,61 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 
 			// le cambio el numero de nodo al sucesor y mantengo el definido para la raiz.
 			BlockManager::exchangeBlock(m_root->getBlock(),sucesor->getBlock());
-			sucesor->nodeNumber(sucesor->getNodeNumber());
-			m_root->nodeNumber(m_root->getNodeNumber());
+			sucesor->setNodeNumber(sucesor->getNodeNumber());
+			m_root->setNodeNumber(m_root->getNodeNumber());
 
 			INodeData firstKey;
 			INodeData newKey;
 
 			if (!sucesor->isLeaf()){
 				INodeData currentData;
+
+				char* valueReg = NULL;
 				VarRegister reg;
-				Node* nodoIzquierdo=this->getNode(promotedKey.getLeftPointer());
-				Block* bloqueIzquierdo;
+				Node* nodoIzquierdo= this->getNode(promotedKey.getLeftPointer());
+				Block* bloqueIzquierdo = nodoIzquierdo->getBlock();
+
 				while(!nodoIzquierdo->isLeaf()){
 				//Obtener primer clave de la rama.
-
-					bloqueIzquierdo =nodoIzquierdo->getBlock();
 					//Salteo info de control.
 					bloqueIzquierdo->restartCounter();
 					bloqueIzquierdo->getNextRegister();
-					reg=bloqueIzquierdo->getNextRegister();
-					currentData.toNodeData(reg.getValue());
-					nodoIzquierdo=this->getNode(currentData.getLeftPointer());
-				};
-				InputData* leftKey=dato.newInstance();
+					reg = bloqueIzquierdo->getNextRegister();
+
+					valueReg = reg.getValue();
+					currentData.toNodeData(valueReg);
+
+					delete nodoIzquierdo;
+					nodoIzquierdo = this->getNode(currentData.getLeftPointer());
+					bloqueIzquierdo = nodoIzquierdo->getBlock();
+
+					delete[] valueReg;
+				}
+
+				InputData* leftKey = dato.newInstance();
 				//Encuentro la primer hoja de la segunda rama.
-				bloqueIzquierdo =nodoIzquierdo->getBlock();
+				bloqueIzquierdo = nodoIzquierdo->getBlock();
 				//Salteo info de control.
 				bloqueIzquierdo->restartCounter();
 				bloqueIzquierdo->getNextRegister();
 				bloqueIzquierdo->getNextRegister();
 				bloqueIzquierdo->getNextRegister();
-				reg=bloqueIzquierdo->getNextRegister();
-				leftKey->toData(reg.getValue());
+
+				reg = bloqueIzquierdo->getNextRegister();
+				valueReg = reg.getValue();
+				leftKey->toData(valueReg);
 				promotedKey.setKey(leftKey->getKey());
 
-			};
+				delete leftKey;
+
+
+				if (nodoIzquierdo!=NULL)
+					delete nodoIzquierdo;
+
+				if (valueReg!=NULL)
+					delete[] valueReg;
+
+			}
 			firstKey.setLeftPointer(sucesor->getNodeNumber());
 			firstKey.setKey(promotedKey.getKey());
 			newKey.setLeftPointer(promotedKey.getLeftPointer());
@@ -346,6 +410,7 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 			result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
 
 			saveNode(sucesor);
+			delete sucesor;
 
 			// La raiz esta insertando el minimo de claves, no puede ser overflow.
 			if (result == OVERFLOW_LOAD)
@@ -353,30 +418,41 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 		}
 
 	if((this->m_root->getBlock()->getRegisterAmount()==2)&&(!this->m_root->isLeaf())){
+
+		INodeData currentData;
+		char* currentValue = NULL;
 		unsigned int currentLevel= this->m_root->getLevel();
 
 		//Obtengo el unico hijo
 		Block* rootBlock= this->m_root->getBlock();
 		rootBlock->restartCounter();
+
 		//Salteo datos de control.
 		rootBlock->getNextRegister();
 		VarRegister currentRegister;
-		currentRegister=rootBlock->getNextRegister();
-		INodeData currentData(0,0);
-		currentData.toNodeData(currentRegister.getValue());
-		Node* sucesor=this->getNode(currentData.getLeftPointer());
-		Block* blockSucesor=sucesor->getBlock();
+
+		currentRegister = rootBlock->getNextRegister();
+		currentValue = currentRegister.getValue();
+		currentData.toNodeData(currentValue);
+
+		Node* sucesor = this->getNode(currentData.getLeftPointer());
+		Block* blockSucesor = sucesor->getBlock();
 		//Cambio los numeros de bloque.
 		BlockManager::exchangeBlock(rootBlock,blockSucesor);
+
 		//Intercambio los punteros
-		Node*auxPointer;
-		auxPointer=m_root;
-		m_root=sucesor;
-		sucesor=auxPointer;
+		Node* auxPointer;
+		auxPointer = m_root;
+		m_root = sucesor;
+		sucesor = auxPointer;
+
 		this->deleteNode(sucesor);
 		m_root->setLevel(currentLevel-1);
 
-	};
+		delete[] currentValue;
+
+	}
+
 	saveNode(m_root);
 
 	return retVal;
@@ -417,6 +493,8 @@ bool BPlusTree::getNext(InputData& data)
 
 			if (nodeNumber!=Node::UNDEFINED_NODE_NUMBER )
 			{
+				delete m_currentNode;
+
 				m_currentNode = (LeafNode*)getNode(nodeNumber);
 
 				// Leo de la hoja.

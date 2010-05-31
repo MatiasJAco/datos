@@ -44,9 +44,16 @@ throw (NodeException)
 		throw NodeException(NodeException::INVALID_REF);
 
 	// Se lo pide al arbol
-	Node* sucesor = this->m_tree->getNode(refkey.getLeftPointer());
+	Node* sucesor = m_tree->getNode(refkey.getLeftPointer());
 
-	result=sucesor->modify(dato,newData,promotedKey);
+	try{
+		result = sucesor->modify(dato,newData,promotedKey);
+	}
+	catch(NodeException e)
+	{
+		throw;
+	}
+
 
 	if (result==OVERFLOW_LOAD){
 		// Busca el INodeData mayor al promotedKey y es seteada dentro de la misma.
@@ -68,7 +75,8 @@ throw (NodeException)
 	}
 
 	if (result == UNDERFLOW_LOAD)
-		{	result=NORMAL_LOAD;
+		{
+			result = NORMAL_LOAD;
 			bool hasRightBrother = false;
 			bool hasMinorBrother = false;
 
@@ -104,6 +112,9 @@ throw (NodeException)
 				//Verifica que tenga hermano izquierdo.
 				if (hasMinorBrother)
 				{
+					if (sibling!=NULL)
+						delete sibling;
+
 					sibling = m_tree->getNode(minorBrother.getLeftPointer());
 					balanced = redistribute(sucesor,sibling,newData,keymodified,LEFT_SIDE);
 				}
@@ -137,11 +148,17 @@ throw (NodeException)
 			}
 
 			if (sibling!=NULL)
+			{
 				m_tree->saveNode(sibling);
+				delete sibling;
+			}
 		}
 
 	if (sucesor!=NULL)
+	{
 		m_tree->saveNode(sucesor);
+		delete sucesor;
+	}
 
 	m_tree->saveNode(this);
 
@@ -215,7 +232,10 @@ throw (NodeException)
 	}
 
 	if (sucesor!=NULL)
+	{
 		m_tree->saveNode(sucesor);
+		delete sucesor;
+	}
 
 	m_tree->saveNode(this);
 
@@ -284,6 +304,8 @@ throw(NodeException)
 			//Verifica que tenga hermano izquierdo.
 			if (hasMinorBrother)
 			{
+				if (sibling!=NULL)
+					delete sibling;
 				sibling = m_tree->getNode(minorBrother.getLeftPointer());
 				balanced = redistribute(sucesor,sibling,data,keymodified,LEFT_SIDE);
 			}
@@ -313,14 +335,20 @@ throw(NodeException)
 				modifyINodeData(refkey);
 			}
 			// En la fusion se elimina el sibling, permanece el que produjo el underflow.
+
 			m_tree->deleteNode(sibling);
 		}
 
 		if (sibling!=NULL)
+		{
 			m_tree->saveNode(sibling);
+			delete sibling;
+		}
 	}
 
 	m_tree->saveNode(sucesor);
+	delete sucesor;
+
 	m_tree->saveNode(this);
 
 	return result;
@@ -345,6 +373,8 @@ throw(NodeException)
 
 	found = sucesor->find(key,data);
 
+//	delete sucesor;
+
 	return found;
 }
 
@@ -356,6 +386,7 @@ throw(NodeException)
 
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	INodeData currentData;
 
@@ -380,7 +411,9 @@ throw(NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
-		currentData.toNodeData(currentRegister.getValue());
+		currentValue = currentRegister.getValue(); // hace alloc
+		currentData.toNodeData(currentValue);
+
 		if (currentData.getKey()==INodeData::UNDEFINED_KEY||
 			currentData.getKey()>= iNodeData.getKey())
 		{
@@ -390,6 +423,8 @@ throw(NodeException)
 		}else
 
 		currentRegister = m_block->getNextRegister();
+
+		delete [] currentValue;
 	}
 
 
@@ -402,6 +437,8 @@ throw(NodeException)
 	if (result == OVERFLOW_LOAD)
 		split(iNodeData,pos,promotedKey);
 
+	delete[] valueReg;
+
 	return result;
 }
 
@@ -412,6 +449,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 	INodeData currentData;
 
 	VarRegister reg;
+	char* valueReg = NULL;
 
 	if(m_block->getRegisterAmount() > 1)
 	{
@@ -430,8 +468,8 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 			while(!m_block->isLastRegister()&&!retFound)
 			{
 				reg = m_block->peekRegister();
-
-				currentData.toNodeData(reg.getValue());
+				valueReg = reg.getValue(); //hace alloc
+				currentData.toNodeData(valueReg);
 
 				if(condition  == EQUAL)
 				{
@@ -453,6 +491,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 				}
 				//Pido el siguiente
 				reg = m_block->getNextRegister();
+				delete[] valueReg;
 			}
 		}
 		else
@@ -468,7 +507,8 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 			{
 				//Pido el dato y retrocedo el iterador
 				reg = m_block->getPreviousRegister();
-				currentData.toNodeData(reg.getValue());
+				valueReg = reg.getValue();
+				currentData.toNodeData(valueReg);
 
 				//Si es menor lo devuelvo
 				if(currentData < innerNodeElem)
@@ -477,6 +517,7 @@ bool InnerNode::findINodeData(INodeData & innerNodeElem,INodeData & innerNodeFou
 					innerNodeFound = currentData;
 				}
 
+				delete[] valueReg;
 			}
 
 		}
@@ -493,6 +534,7 @@ throw (NodeException)
 
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	INodeData currentData;
 
@@ -507,18 +549,23 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
-		currentData.toNodeData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();
+		currentData.toNodeData(currentValue);
 		if (currentData.getKey() == iNodeData.getKey())
 		{
 			// lo elimino
 			found = true;
 			m_block->deleteRegister(result);
-		}else{
+		}
+		else
+		{
 			m_block->getNextRegister();
-		};
+		}
 
+		delete [] currentValue;
 	}
-if (!found)
+
+	if (!found)
 			throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
 	return result;
@@ -531,6 +578,7 @@ throw (NodeException)
 
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	INodeData currentData;
 
@@ -551,7 +599,8 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
-		currentData.toNodeData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();
+		currentData.toNodeData(currentValue);
 		if (currentData.getKey() == iNodeData.getKey())
 		{
 			// lo modifica
@@ -560,10 +609,13 @@ throw (NodeException)
 		}else
 			this->m_block->getNextRegister();
 
+		delete[] currentValue;
 
 	}
 	if (!found)
 		throw NodeException(NodeException::INEXISTENT_ELEMINNER);
+
+	delete[] valueReg;
 
 	return result;
 }
@@ -575,6 +627,7 @@ throw (NodeException)
 
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	INodeData currentData;
 
@@ -595,7 +648,8 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un INodeData
-		currentData.toNodeData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();
+		currentData.toNodeData(currentValue);
 		if (currentData.getKey() == iNodeData.getKey())
 		{
 			// lo modifica
@@ -605,14 +659,16 @@ throw (NodeException)
 		else
 			this->m_block->getNextRegister();
 
-
+		delete[] currentValue;
 	}
+
 	if (!found)
 		throw NodeException(NodeException::INEXISTENT_ELEMINNER);
 
 //	if (result!= NORMAL_LOAD)
 //		throw NodeException(NodeException::ANOMALOUS_LOADRESULT);
 
+	delete[] valueReg;
 
 	return result;
 }
@@ -632,9 +688,12 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	//Saltea datos de control
 	blockSibling->getNextRegister();
 
-	reg=blockSibling->getNextRegister();
+	delete [] valueReg;
+
+	reg = blockSibling->getNextRegister();
+	valueReg = reg.getValue();
 	INodeData firstKey;
-	firstKey.toNodeData(reg.getValue());
+	firstKey.toNodeData(valueReg);
 
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey.getKey());
@@ -642,6 +701,11 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	this->modifyLastKey();
 
 	this->m_tree->saveNode(sibling);
+
+	delete sibling;
+
+	delete[] valueReg;
+
 	return true;
 }
 
@@ -653,31 +717,34 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 	Block* blockRight = NULL;
 	Block* blockNode = node->getBlock();
 	Block* blockSibling = siblingNode->getBlock();
+
 	if(!siblingNode->isLeaf()){
-			if(side==RIGHT_SIDE){
 
-				//busca primer elemento del hermano
-				INodeData firstKey=this->getFirstKeyLeaf(siblingNode,data);
-				InnerNode* enUnder=(InnerNode*)node;
-				INodeData lastUnder=enUnder->getLastINodeData();
-				firstKey.setLeftPointer(lastUnder.getLeftPointer());
+		if(side==RIGHT_SIDE){
 
-				enUnder->modifyINodeData(lastUnder,firstKey);
-			}else{
-				//Busca el primer elemento del nodo en underflow
+			//busca primer elemento del hermano
+			INodeData firstKey=this->getFirstKeyLeaf(siblingNode,data);
+			InnerNode* enUnder=(InnerNode*)node;
+			INodeData lastUnder=enUnder->getLastINodeData();
+			firstKey.setLeftPointer(lastUnder.getLeftPointer());
 
-				INodeData firstKey=this->getFirstKeyLeaf(node,data);
-				InnerNode* hermano=(InnerNode*)siblingNode;
-				INodeData lastHermano=hermano->getLastINodeData();
-				firstKey.setLeftPointer(lastHermano.getLeftPointer());
+			enUnder->modifyINodeData(lastUnder,firstKey);
 
-				hermano->modifyINodeData(lastHermano,firstKey);
-			};
+		}else{
+			//Busca el primer elemento del nodo en underflow
 
-	};
+			INodeData firstKey=this->getFirstKeyLeaf(node,data);
+			InnerNode* hermano=(InnerNode*)siblingNode;
+			INodeData lastHermano=hermano->getLastINodeData();
+			firstKey.setLeftPointer(lastHermano.getLeftPointer());
+
+			hermano->modifyINodeData(lastHermano,firstKey);
+		}
+	}
 
 	retVal = BlockManager::balanceLoad(blockNode,blockSibling,side);
 	VarRegister firstKey;
+	char* valueReg = NULL;
 
 	if (side == RIGHT_SIDE)
 	{
@@ -695,15 +762,19 @@ bool InnerNode::redistribute(Node* node,Node* siblingNode,const InputData& data,
 	{
 		blockRight->restartCounter();
 		firstKey = blockRight->getRegisterN(3);
+		valueReg = firstKey.getValue();
 		/// porque InputData es abstracto.
-		currentData->toData(firstKey.getValue());
+		currentData->toData(valueReg);
 		keyToModify.setKey(currentData->getKey());
+		delete [] valueReg;
 	}
 	else
 	{
 		blockRight->restartCounter();
 		firstKey = blockRight->getRegisterN(1);
-		keyToModify.toNodeData(firstKey.getValue());
+		valueReg = firstKey.getValue();
+		keyToModify.toNodeData(valueReg);
+		delete[] valueReg;
 	}
 
 	delete currentData;
@@ -716,10 +787,10 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 {
 	//Intercambio puntero.
 
-
-
 	bool retVal = false;
 	VarRegister firstKey;
+	char* valueReg = NULL;
+
 	InputData* currentData = data.newInstance();
 
 	// Bloques de los nodos a fusionar.
@@ -744,28 +815,30 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		}
 	}
 
-	if(!siblingNode->isLeaf()){
+	if(!siblingNode->isLeaf())
+	{
 		if(side==RIGHT_SIDE){
 
 			//busca primer elemento
 			INodeData firstKey=this->getFirstKeyLeaf(siblingNode,data);
 			InnerNode* enUnder=(InnerNode*)node;
-			INodeData lastUnder=enUnder->getLastINodeData();
+			INodeData lastUnder = enUnder->getLastINodeData();
 			firstKey.setLeftPointer(lastUnder.getLeftPointer());
 
 			enUnder->modifyINodeData(lastUnder,firstKey);
-		}else{
+		}
+		else{
 			//Busca el ultimo elemento
 			//busca primer elemento
-			INodeData firstKey=this->getFirstKeyLeaf(node,data);
-			InnerNode* hermano=(InnerNode*)siblingNode;
-			INodeData lastHermano=hermano->getLastINodeData();
+			INodeData firstKey = this->getFirstKeyLeaf(node,data);
+			InnerNode* hermano = (InnerNode*)siblingNode;
+			INodeData lastHermano = hermano->getLastINodeData();
 			firstKey.setLeftPointer(lastHermano.getLeftPointer());
 
 			hermano->modifyINodeData(lastHermano,firstKey);
-		};
+		}
 
-		};
+		}
 	// Propiamente el merge.
 	BlockManager::merge(blockNode,blockSibling,side);
 
@@ -775,29 +848,43 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		// paso los 3 datos de control de la hoja.
 		firstKey = blockNode->getRegisterN(3);
 		/// porque InputData es abstracto.
-		currentData->toData(firstKey.getValue());
+		valueReg = firstKey.getValue();
+		currentData->toData(valueReg);
 		fusionatedNode.setKey(currentData->getKey());
+		delete[] valueReg;
+
 		((LeafNode*)node)->setNextLeaf(nextLeaf);
 
 		if(side==LEFT_SIDE){
-			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
-			LeafNode*nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
-			nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
-			this->m_tree->saveNode(nextLeaf);
 
-		};
-			if(prevLeaf!=UNDEFINED_NODE_NUMBER){
-				LeafNode*previLeaf= (LeafNode*)this->m_tree->getNode(prevLeaf);
-				previLeaf->setNextLeaf(((LeafNode*)node)->getNodeNumber());
-				this->m_tree->saveNode(previLeaf);
+			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER)
+			{
+			LeafNode* nextLeaf= (LeafNode*)m_tree->getNode(((LeafNode*)node)->getNextLeaf());
+			nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
+			m_tree->saveNode(nextLeaf);
+			delete nextLeaf;
 			}
-		}else{
-			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
-				LeafNode*nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
+
+			if(prevLeaf!=UNDEFINED_NODE_NUMBER)
+			{
+				LeafNode* previLeaf= (LeafNode*)m_tree->getNode(prevLeaf);
+				previLeaf->setNextLeaf(((LeafNode*)node)->getNodeNumber());
+				m_tree->saveNode(previLeaf);
+				delete previLeaf;
+			}
+
+		}
+		else
+		{
+			if(((LeafNode*)node)->getNextLeaf()!=UNDEFINED_NODE_NUMBER)
+			{
+				LeafNode* nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
 				nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
-				this->m_tree->saveNode(nextLeaf);
-			};
-		};
+				m_tree->saveNode(nextLeaf);
+				delete nextLeaf;
+
+			}
+		}
 	}
 	else
 	{
@@ -805,7 +892,9 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		// paso el dato de control del nivel.
 		blockNode->getNextRegister();
 		firstKey = blockNode->getNextRegister();
-		fusionatedNode.toNodeData(firstKey.getValue());
+		valueReg = firstKey.getValue();
+		fusionatedNode.toNodeData(valueReg);
+		delete valueReg;
 	}
 
 	fusionatedNode.setLeftPointer(node->getNodeNumber());
@@ -820,6 +909,7 @@ void InnerNode::printContent(InputData& dato)
 {
 	INodeData data;
 	VarRegister varR;
+	char* valueReg = NULL;
 	unsigned int dataAmmount;
 	unsigned int i=0;
 
@@ -828,17 +918,22 @@ void InnerNode::printContent(InputData& dato)
 
 	cout << "\t Numero nodo: " << getNodeNumber();
 	varR = m_block->getNextRegister(true);
-	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
+	valueReg = varR.getValue();
+	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(valueReg);
 	cout << "\n Datos "<<endl;
+
+	delete [] valueReg;
 
 	i = m_block->getPosActual();
 
 	for(i = i; i < dataAmmount; i++)
 	{
 		varR = m_block->getNextRegister(true);
-		data.toNodeData(varR.getValue());
+		valueReg = varR.getValue();
+		data.toNodeData(valueReg);
 		cout << data.getLeftPointer();
 		cout << " (Clave:" << data.getKey() << ") ";
+		delete[] valueReg;
 	}
 	cout << endl;
 }
@@ -846,98 +941,152 @@ void InnerNode::printContent(InputData& dato)
 void InnerNode::show(InputData& data){
 
 	this->printContent(data);
-	bool found=false;
+
+	bool found = false;
 	m_block->restartCounter();
 	m_block->getNextRegister();
+
+	char* valueReg = NULL;
 	VarRegister reg;
 	INodeData currentData;
 	Node* hijo;
+
 	while(!m_block->isLastRegister()&& !found)
 		{
 
-			reg = this->m_block->peekRegister();
+			reg = m_block->peekRegister();
+			valueReg = reg.getValue();
 			// Transformo el registro a un INodeData
-			currentData.toNodeData(reg.getValue());
+			currentData.toNodeData(valueReg);
 			//Pido un hijo para decirle que se muestre.
-			hijo =this->m_tree->getNode(currentData.getLeftPointer());
+			hijo = m_tree->getNode(currentData.getLeftPointer());
+
 			hijo->show(data);
 
-			this->m_block->getNextRegister();
+			if (hijo!=NULL)
+				delete hijo;
+
+			m_block->getNextRegister();
+
+			delete[] valueReg;
 		}
-	delete hijo;
+}
 
-};
-
-void InnerNode::modifyLastKey(){
+void InnerNode::modifyLastKey()
+{
 	INodeData iNodeData;
 	loadResultEnum result;
+
 	m_block->restartCounter();
+
 	int posUltimoReg=m_block->getRegisterAmount()-1;
+
 	while (m_block->getPosActual()<posUltimoReg){
 		m_block->getNextRegister();
 	};
-	VarRegister changeReg;
-	changeReg=this->m_block->peekRegister();
-	iNodeData.toNodeData(changeReg.getValue());
+
+	VarRegister changeReg = this->m_block->peekRegister();
+	char* changeValue = changeReg.getValue(); //hace alloc
+
+	iNodeData.toNodeData(changeValue);
 	iNodeData.setKey(INodeData::UNDEFINED_KEY);
+	delete [] changeValue;
+
 	char* valueReg = new char[iNodeData.getSize()];
 	iNodeData.toStream(valueReg);
 	VarRegister regData(valueReg,iNodeData.getSize());
+
 	m_block->modifyRegister(regData,result);
 
-};
+	delete[] valueReg;
+
+}
 
 INodeData InnerNode::getFirstKeyLeaf(Node* searchNode,const InputData&  data){
-	Node* sucesor=searchNode;
+
+	Node* sucesor = searchNode;
 	Node* nodoIzquierdo;
-	Block* bloqueIzquierdo=sucesor->getBlock();
+	Block* bloqueIzquierdo = sucesor->getBlock();
+
 	VarRegister reg;
+	char* valueReg = NULL;
 	INodeData firstData;
+
 	bloqueIzquierdo->restartCounter();
 	bloqueIzquierdo->getNextRegister();
-	reg=bloqueIzquierdo->getNextRegister();
-	firstData.toNodeData(reg.getValue());
+	reg = bloqueIzquierdo->getNextRegister();
+	valueReg = reg.getValue();
+	firstData.toNodeData(valueReg);
 
+	delete [] valueReg;
 
-	if (!sucesor->isLeaf()){
+	if (!sucesor->isLeaf())
+	{
 		INodeData currentData;
-		nodoIzquierdo=this->m_tree->getNode(firstData.getLeftPointer());
+		nodoIzquierdo = m_tree->getNode(firstData.getLeftPointer());
+		bloqueIzquierdo = nodoIzquierdo->getBlock();
 
 		while(!nodoIzquierdo->isLeaf()){
-			//Obtener primer clave de la rama.
-			bloqueIzquierdo =nodoIzquierdo->getBlock();
+
 			//Salteo info de control.
 			bloqueIzquierdo->restartCounter();
 			bloqueIzquierdo->getNextRegister();
-			reg=bloqueIzquierdo->getNextRegister();
-			firstData.toNodeData(reg.getValue());
-			nodoIzquierdo=this->m_tree->getNode(currentData.getLeftPointer());
-		};
-		InputData* leftKey=data.newInstance();
+
+			reg = bloqueIzquierdo->getNextRegister();
+			valueReg = reg.getValue();
+			firstData.toNodeData(valueReg);
+
+			delete nodoIzquierdo;
+			nodoIzquierdo = m_tree->getNode(currentData.getLeftPointer());
+			bloqueIzquierdo = nodoIzquierdo->getBlock();
+
+			delete [] valueReg;
+
+		}
+		InputData* leftKey = data.newInstance();
 		//Encuentro la primer hoja de la segunda rama.
-		bloqueIzquierdo =nodoIzquierdo->getBlock();
+		bloqueIzquierdo = nodoIzquierdo->getBlock();
 		//Salteo info de control.
 		bloqueIzquierdo->restartCounter();
 		bloqueIzquierdo->getNextRegister();
 		bloqueIzquierdo->getNextRegister();
 		bloqueIzquierdo->getNextRegister();
-		reg=bloqueIzquierdo->getNextRegister();
-		leftKey->toData(reg.getValue());
+
+		reg = bloqueIzquierdo->getNextRegister();
+		valueReg = reg.getValue();
+		leftKey->toData(valueReg);
+
 		firstData.setKey(leftKey->getKey());
 
-	};
-return firstData;
+		delete leftKey;
+
+		if (nodoIzquierdo!=NULL)
+			delete nodoIzquierdo;
+
+		if (valueReg!=NULL)
+			delete[] valueReg;
+
+	}
+
+	return firstData;
 }
 
 INodeData InnerNode::getLastINodeData(){
 	INodeData iNodeData;
+
 	m_block->restartCounter();
-	int posUltimoReg=m_block->getRegisterAmount()-1;
+	int posUltimoReg = m_block->getRegisterAmount()-1;
+
 	while (m_block->getPosActual()<posUltimoReg){
 		m_block->getNextRegister();
 	};
-	VarRegister reg=m_block->peekRegister();
-	iNodeData.toNodeData(reg.getValue());
+
+	VarRegister reg = m_block->peekRegister();
+	char* valueReg = reg.getValue();
+	iNodeData.toNodeData(valueReg);
+
+	delete [] valueReg;
+
 	return iNodeData;
 
 };

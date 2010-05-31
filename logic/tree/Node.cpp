@@ -27,19 +27,24 @@ Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputDa
 
 Node::~Node()
 {
+	if (m_block!=NULL)
+		delete m_block;
 }
 
 
 unsigned int Node::getLevel()
 {
 	unsigned int level = UNDEFINED_NODE_LEVEL;
+	char* levelValue = NULL;
 
 	m_block->restartCounter();
 
 	if (!m_block->isLastRegister())
 	{
 		VarRegister regLevel = m_block->getNextRegister();
-		level = ByteConverter::bytesToUInt(regLevel.getValue());
+		levelValue = regLevel.getValue();
+		level = ByteConverter::bytesToUInt(levelValue);
+		delete[] levelValue;
 	}
 
 	return level;
@@ -48,13 +53,16 @@ unsigned int Node::getLevel()
 unsigned int Node::readLevel(Block block)
 {
 	unsigned int level = UNDEFINED_NODE_LEVEL;
+	char* levelValue = NULL;
 
 	block.restartCounter();
 
 	if (!block.isLastRegister())
 	{
 		VarRegister regLevel = block.getNextRegister();
-		level = ByteConverter::bytesToUInt(regLevel.getValue());
+		levelValue = regLevel.getValue();
+		level = ByteConverter::bytesToUInt(levelValue);
+		delete [] levelValue;
 	}
 
 	return level;
@@ -95,7 +103,7 @@ void Node::setBlock(Block* block)
 	m_block = block;
 }
 
-void Node::nodeNumber(unsigned int number)
+void Node::setNodeNumber(unsigned int number)
 {
 	this->m_nodeNumber=number;
 }

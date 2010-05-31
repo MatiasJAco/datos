@@ -56,6 +56,7 @@ throw (NodeException)
 
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	InputData* currentData = data.newInstance();
 
@@ -63,6 +64,7 @@ throw (NodeException)
 	char* valueReg = new char[data.size()];
 	data.toStream(valueReg);
 	VarRegister regData(valueReg,data.size());
+
 
 	/// Busco donde insertar el dato dentro del bloque de hoja.
 	m_block->restartCounter();
@@ -78,7 +80,8 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
-		currentData->toData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();	// hace alloc
+		currentData->toData(currentValue);
 		if (currentData->getKey() >= data.getKey())
 		{
 			found = true;
@@ -89,6 +92,8 @@ throw (NodeException)
 		/// Seria mejor que en Block me pudiera correr en uno: algo asi como it++
 		/// con un metodo.
 		m_block->getNextRegister();
+
+		delete[] currentValue;
 	}
 
 	unsigned int pos = m_block->getPosActual();
@@ -101,6 +106,10 @@ throw (NodeException)
 		setNextLeaf(promotedKey.getLeftPointer());
 	}
 
+	delete[] valueReg;
+
+	delete currentData;
+
 
 	return result;
 }
@@ -112,6 +121,7 @@ throw (NodeException)
 	loadResultEnum result = NORMAL_LOAD;
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	InputData* currentData = data.newInstance();
 
@@ -129,13 +139,15 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
-		currentData->toData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();
+		currentData->toData(currentValue);
 		if (currentData->getKey() == data.getKey())
 		{
 			found = true;
 			m_block->deleteRegister(result);
 		}
 		m_block->getNextRegister();
+		delete[] currentValue;
 	}
 
 	if (!found)
@@ -156,6 +168,7 @@ throw (NodeException)
 	if (dato.getKey() != newdata.getKey())
 		throw NodeException(NodeException::BAD_CALL_OPERATION);
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	InputData* currentData = newdata.newInstance();
 
@@ -180,25 +193,32 @@ throw (NodeException)
 		currentRegister = m_block->peekRegister();
 
 		/// Transformo el registro a un InputData
-		currentData->toData(currentRegister.getValue());
+		currentValue = currentRegister.getValue();
+		currentData->toData(currentValue);
 		if (currentData->getKey() == newdata.getKey())
 		{
 			found = true;
 			m_block->modifyRegister(regNuevo,result);
-		}else
 
-		m_block->getNextRegister();
+		}
+		else
+			m_block->getNextRegister();
+
+		delete[] currentValue;
 	}
 
 	if (!found)
 		throw NodeException(NodeException::INEXISTENT_ELEMLEAF);
+
 	unsigned int pos = m_block->getPosActual();
+
 	if (result == OVERFLOW_LOAD)
 		{	this->remove(newdata);
 			split(newdata,pos,promotedKey);
 			setNextLeaf(promotedKey.getLeftPointer());
 		}
 
+	delete[] valueReg;
 
 	delete currentData;
 
@@ -255,8 +275,10 @@ throw (NodeException)
 {
 	bool found = false;
 
+	char* currentValue = NULL;
 	VarRegister currentRegister;
 	InputData* currentData = data.newInstance();
+
 	bool keyFound=false;
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
@@ -269,9 +291,9 @@ throw (NodeException)
 	while (!m_block->isLastRegister()&&!found)
 	{
 		currentRegister = m_block->getNextRegister();
-
+		currentValue = currentRegister.getValue();
 		/// Transformo el registro a un InputData
-		currentData->toData(currentRegister.getValue());
+		currentData->toData(currentValue);
 		if (currentData->getKey() >= key.getKey())
 		{
 			found = true;
@@ -286,6 +308,8 @@ throw (NodeException)
 //			else
 //				throw NodeException(NodeException::INSUFFICIENT_ALLOCK_PARAM);
 		}
+
+		delete[] currentValue;
 
 	}
 	//Si llega al final del nodo sin encontrar el elemento o uno de clave mayor,
@@ -312,6 +336,8 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	VarRegister reg(valueReg,data.size());
 
 	BlockManager::redistributeOverflow(m_block,blockSibling,reg,pos);
+	delete[] valueReg;
+
 
 	blockSibling->restartCounter();
 
@@ -324,7 +350,8 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	reg = blockSibling->getNextRegister();
 
 	InputData* firstKey = data.newInstance();
-	firstKey->toData(reg.getValue());
+	valueReg = reg.getValue(); //hace alloc
+	firstKey->toData(valueReg);
 
 	// Obtiene la primer clave del sibling derecho y su numero de nodo.
 	promotedKey.setKey(firstKey->getKey());
@@ -334,6 +361,12 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 
 	m_tree->saveNode(sibling);
 
+	delete firstKey;
+
+	delete sibling;
+
+	delete[] valueReg;
+
 	return true;
 }
 
@@ -341,6 +374,7 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 void LeafNode::printContent(InputData& data)
 {
 	VarRegister varR;
+	char* valueReg = NULL;
 	unsigned int dataAmmount;
 	unsigned int i=0;
 
@@ -349,11 +383,20 @@ void LeafNode::printContent(InputData& data)
 
 	cout << "\t Numero nodo: " << getNodeNumber();
 	varR = m_block->getNextRegister(true);
-	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(varR.getValue());
+	valueReg = varR.getValue(); //hace alloc
+	cout << "\t Nivel: "<<ByteConverter::bytesToUInt(valueReg);
+	delete[] valueReg;
+
 	varR = m_block->getNextRegister(true);
-	cout << "\t Nodo anterior: "<< ByteConverter::bytesToInt(varR.getValue());
+	valueReg = varR.getValue();//hace alloc
+	cout << "\t Nodo anterior: "<< ByteConverter::bytesToInt(valueReg);
+	delete[] valueReg;
+
 	varR = m_block->getNextRegister(true);
-	cout << "\t Nodo siguiente: "<< ByteConverter::bytesToInt(varR.getValue());
+	valueReg = varR.getValue();//hace alloc
+	cout << "\t Nodo siguiente: "<< ByteConverter::bytesToInt(valueReg);
+	delete[] valueReg;
+
 	cout << "\n Datos "<<endl;
 
 	i = m_block->getPosActual();
@@ -361,8 +404,10 @@ void LeafNode::printContent(InputData& data)
 	for(i = i; i < dataAmmount; i++)
 	{
 		varR = m_block->getNextRegister(true);
-		data.toData(varR.getValue());
+		valueReg = varR.getValue();
+		data.toData(valueReg);
 		cout<< "Clave:"<<data.getKey()<<" Datos:"<<data.getValue()<<endl;
+		delete [] valueReg;
 	}
 
 
@@ -411,7 +456,11 @@ unsigned int LeafNode::getNextLeaf()
 	prevReg = m_block->getNextRegister();
 	nextReg = m_block->getNextRegister();
 
-	nextLeaf = ByteConverter::bytesToUInt(nextReg.getValue());
+	char* valueReg = nextReg.getValue();
+
+	nextLeaf = ByteConverter::bytesToUInt(valueReg);
+
+	delete [] valueReg;
 
 	return nextLeaf;
 }
@@ -479,15 +528,20 @@ bool LeafNode::getNextData(InputData& data)
 	bool retVal = false;
 
 	VarRegister reg;
+	char* currentValue = NULL;
 	InputData* currentData = data.newInstance();
+
 
 	if (!m_block->isLastRegister())
 	{
 		reg = m_block->getNextRegister();
-		currentData->toData(reg.getValue());
+		currentValue = reg.getValue();
+		currentData->toData(currentValue);
 
 		data.setKey(currentData->getKey());
 		data.setValue(currentData->getValue());
+
+		delete[] currentValue;
 
 		retVal = true;
 	}
