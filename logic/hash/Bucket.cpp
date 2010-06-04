@@ -12,7 +12,10 @@ unsigned int Bucket::getDepthFromHashFile(){
 
 	//el primer registro tiene el valor del td
 	VarRegister varRegister=this->block->getNextRegister(true);
-	unsigned int depth = ByteConverter::bytesToInt(varRegister.getValue());
+	char * value = varRegister.getValue();
+	unsigned int depth = ByteConverter::bytesToInt(value);
+	if (value!=NULL)
+		delete [] value;
 	return depth;
 }
 
@@ -23,6 +26,7 @@ Bucket::Bucket(Block* block) {
 }
 
 Bucket::~Bucket() {
+
 }
 
 void Bucket::setNumber(unsigned int number) {
@@ -92,9 +96,12 @@ bool Bucket::existsRegister(int key,int & position) {
 		sid->toData(registerValue);
 		position++;
 		if (sid->getKey() == key) {
+			delete [] registerValue;
 			delete sid;
 			return true;
 		}
+		if (registerValue!=NULL)
+			delete [] registerValue;
 		delete sid;
 	}
 	return false;
@@ -113,6 +120,8 @@ VarRegister Bucket::getRegister(int key) {
 		if (sid->getKey() == key) {
 			found = true;
 		}
+		if (registerValue!=NULL)
+			delete [] registerValue;
 		delete sid;
 	}
 	return varRegister;
@@ -130,10 +139,13 @@ bool Bucket::deleteRegister(int key) {
 		sid->toData(registerValue);
 		if (sid->getKey() == key) {
 			result = this->getBlock()->deleteRegister();
+			delete [] registerValue;
 			delete sid;
 			return result;
 		}
 		varRegister = this->getBlock()->getNextRegister(true);
+		if (registerValue!=NULL)
+			delete [] registerValue;
 		delete sid;
 	}
 	return result;
@@ -148,13 +160,16 @@ void Bucket::print(){
 	while (this->block->hasNextRegister()) {
 		varReg=this->block->getNextRegister(true);
 		StringInputData* sid = new StringInputData();
-		sid->toData(varReg.getValue());
+		char * value = varReg.getValue();
+		sid->toData(value);
 		if (primeraVez){
 			cout << "(" << sid->getKey() << ") ";
 			primeraVez=false;
 		}
 		else
 			cout << sid->getKey() << "-" << sid->getValue() << " | ";
+		if (value !=NULL)
+			delete [] value;
 
 		delete sid;
 	}
@@ -201,8 +216,11 @@ void Bucket::getListOfSids(list<StringInputData> &listaDatos){
 	while (!block->isLastRegister()) {
 		varRegister = block->getNextRegister(false);
 		sid = new StringInputData();
-		sid->toData(varRegister.getValue());
+		char * value = varRegister.getValue();
+		sid->toData(value);
 		listaDatos.push_back(*sid);
+		if (value!= NULL)
+			delete [] value;
 		delete sid;
 		block->getNextRegister(true);
 	}

@@ -19,6 +19,7 @@ Hash::Hash() {
 
 Hash::~Hash() {
 	this->hashFile->close();
+	delete hashFile;
 }
 
 StringInputData* Hash::get(int key) {
@@ -50,6 +51,8 @@ void Hash::inicializeHashFile(){
 	Block* block = this->hashFile->getBlock(1);
 	if (block == NULL)
 		createNewBucket(1);
+	if (block!=NULL)
+		delete block;
 }
 
 int Hash::calculateHashFunction(int key) {
@@ -73,8 +76,12 @@ bool Hash::existsElement(int key) {
 }
 bool Hash::existsElement(int key, int & position) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
-	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
+	Block * block = this->hashFile->getBlock(bucketNumber);
+	Bucket* bucket = new Bucket(block);
 	bool result = bucket->existsRegister(key,position);
+
+	if (block != NULL)
+		delete block;
 	delete bucket;
 	return result;
 }
@@ -266,6 +273,7 @@ void Hash::print() {
 		bucket->print();
 		delete bucket;
 		i++;
+		delete actualBlock;
 		actualBlock = this->hashFile->getBlock(i);
 		cout << endl;
 	}
