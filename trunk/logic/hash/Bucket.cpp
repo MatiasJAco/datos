@@ -26,7 +26,8 @@ Bucket::Bucket(Block* block) {
 }
 
 Bucket::~Bucket() {
-
+	if (this->block!= NULL)
+		delete this->block;
 }
 
 void Bucket::setNumber(unsigned int number) {
@@ -77,6 +78,7 @@ int Bucket::insertRegister(StringInputData* sid) {
 	} else if (inserted == false) {
 		result = 2;
 	}
+	delete [] valueReg;
 	delete varRegister;
 	return result;
 }
