@@ -80,8 +80,6 @@ bool Hash::existsElement(int key, int & position) {
 	Bucket* bucket = new Bucket(block);
 	bool result = bucket->existsRegister(key,position);
 
-	if (block != NULL)
-		delete block;
 	delete bucket;
 	return result;
 }
@@ -98,6 +96,7 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 		this->add(&sid);
 		listaDatos.pop_front(); // Borro el primer sid de la lista.
 	}
+	delete bucketDesbordado;
 	return 0;
 }
 
@@ -140,22 +139,22 @@ int Hash::add(StringInputData* sid) {
 			unsigned int numeroBuquet = bucket->getNumber();
 			unsigned int numeroBuquetNuevo = bucketNuevo->getNumber();
 			this->hashTable->changeFirstTimeInTable(numeroBuquet,numeroBuquetNuevo);
+			delete bucketNuevo;
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
-			delete bucket;
 			this->add(sid);
-			delete bucketNuevo;
 		} else {
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
 			Bucket *bucketNuevo = createNewBucket(bucket->getDepth());
 			this->hashTable->jumpAndReplace(this->calculateHashFunction(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
+			delete bucketNuevo;
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
 			this->add(sid);
-			delete bucketNuevo;
 		}
 	} else {
+		delete bucket;
 		return insertResult;
 	}
 	return 0;
@@ -185,8 +184,6 @@ int Hash::modify(int key, string newValue) {
 }
 
 int Hash::erase(int key) {
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
 	bool exists = this->existsElement(key);
 	bool result = false;
 
@@ -205,6 +202,7 @@ int Hash::erase(int key) {
 			unsigned int registerAmount = block->getRegisterAmount();
 
 			unsigned int depth = bucket->getDepth();
+			delete bucket;
 			unsigned int tamTable = this->hashTable->getSize();
 			int element = -1;
 			bool soloLiberarBq = false;
@@ -230,22 +228,18 @@ int Hash::erase(int key) {
 				Block *blockAux = this->hashFile->getBlock(element+1);
 				Bucket * bucketAux = new Bucket(blockAux);
 				int tdElement = bucketAux->getDepth();
-				delete bucketAux;
 				this->hashTable->jumpAndReplace(this->calculateHashFunction(key),tdElement,element);
 
-				Bucket * bucketAux2 = new Bucket(blockAux);
-				if (!bucketAux2->divideDepth()){
-					delete bucket;
-					delete bucketAux2;
+				if (!bucketAux->divideDepth()){
+					delete bucketAux;
 					return -1;  //esto no deberia de pasar nunca, pero se lanza el error de todos modos
 				}
 				else
-					this->saveBucket(bucketAux2);
-				delete bucketAux2;
+					this->saveBucket(bucketAux);
 
+				delete bucketAux;
 				this->hashTable->verifyAndDivide();
 			}
-			delete bucket;
 		}
 	} else {
 		return 1; // No existe la clave. Se devuelve 1.
@@ -271,9 +265,8 @@ void Hash::print() {
 		cout << "Bucket " << numeroReal << ": ";
 		bucket = new Bucket(actualBlock);
 		bucket->print();
-		delete bucket;
 		i++;
-		delete actualBlock;
+		delete bucket;
 		actualBlock = this->hashFile->getBlock(i);
 		cout << endl;
 	}
