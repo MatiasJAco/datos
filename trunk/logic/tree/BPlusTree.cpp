@@ -103,8 +103,11 @@ throw (BPlusTreeException)
 		sucesor->setNodeNumber(sucesor->getNodeNumber());
 		m_root->setNodeNumber(m_root->getNodeNumber());
 
+
+
 		INodeData firstKey;
 		INodeData newKey;
+
 
 		if (!sucesor->isLeaf()){
 
@@ -168,6 +171,15 @@ throw (BPlusTreeException)
 		result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
 
 		saveNode(sucesor);
+
+		if (sucesor->isLeaf()){
+		//Actualiza puntero izquierdo del nodo surgido en overflow.
+		LeafNode* nodoDerecho = (LeafNode*)this->getNode(newKey.getLeftPointer());
+		nodoDerecho->setPreviousLeaf(sucesor->getNodeNumber());
+		saveNode(nodoDerecho);
+		delete nodoDerecho;
+		};
+
 		delete sucesor;
 
 		// La raiz esta insertando el minimo de claves, no puede ser overflow.
