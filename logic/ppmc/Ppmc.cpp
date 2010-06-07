@@ -14,11 +14,4 @@ Ppmc::~Ppmc() {
 
 }
 
-bool Ppmc::compress(std::string path,int context){
-	std::cout<<path;
-	return true;
-}
 
-bool Ppmc::deCompress(const std::string & path){
-	return false;
-}

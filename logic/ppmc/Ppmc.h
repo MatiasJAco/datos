@@ -12,9 +12,9 @@
  * Clase que modela el algoritmo de compresión de PPMC.
  */
 class Ppmc {
-private:
+protected:
 
-
+	void getPepe();
 
 
 public:
@@ -29,18 +29,18 @@ public:
 	 * @param context Es el número de contexto con el cuál se va a comprimir con ppmc.
 	 * @return Devuelve true si comprimio correctamente. En caso contrario devuelve false.
 	 */
-	bool compress(std::string path,int context);
+	virtual bool compress(std::string path,int context) = 0;
 
 	/**
 	 * Este metodo se encarga de la decompresión
 	 * @param path Es el path donde se encuentra el archivo a decomprimir.
 	 * @return Devuelve true si decomprimio correctamente. En caso contrario devuelve false.
 	 */
-	bool deCompress(const std::string & path);
+	virtual bool deCompress(const std::string & path) = 0;
 
 	/**
 	 * Este metodo muestra las estadisticas de la compresión
 	 */
-	void getStatistics();
+	virtual void getStatistics() = 0;
 };
 #endif /* PPMC_H_ */
