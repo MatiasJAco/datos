@@ -10,7 +10,7 @@
 TestTree::TestTree() {
 	// TODO Auto-generated constructor stub
 	StringInputData typedata(4,"hola");
-	mainFixture = new BPlusTree("arbol.dat",85,0.5,typedata);
+	mainFixture = new BPlusTree("arbol.dat",90,0.5,typedata);
 
 }
 
@@ -31,9 +31,9 @@ void TestTree::run()
 //	testInsertComplejo();
 
 
-//	testInsertComplejo();
+	testInsertComplejo();
 //	testRemove();
-	testModify();
+//	testModify();
 //	testFind();
 //	testFindInodeData();
 //	testRemoveInnerNode();
@@ -494,12 +494,14 @@ void TestTree::testRemove()
 	mainFixture->showTree(data);
 
 	mainFixture->remove(data1);
-//	mainFixture->remove(data2);
-//	mainFixture->remove(data3);
-//	mainFixture->remove(data4);
-//	mainFixture->remove(data5);
-//	mainFixture->remove(data6);
-
+	mainFixture->remove(data2);
+	mainFixture->remove(data3);
+	mainFixture->remove(data4);
+	mainFixture->remove(data5);
+	mainFixture->remove(data6);
+	mainFixture->remove(data12);
+	mainFixture->remove(data13);
+	mainFixture->remove(data14);
 
 
 	mainFixture->showTree(data);

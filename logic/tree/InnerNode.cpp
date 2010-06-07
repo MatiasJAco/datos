@@ -81,7 +81,7 @@ throw (NodeException)
 			bool hasMinorBrother = false;
 
 			bool balanced = false;
-			Node* sibling;
+			Node* sibling=NULL;
 
 			INodeData keymodified;
 
@@ -112,8 +112,9 @@ throw (NodeException)
 				//Verifica que tenga hermano izquierdo.
 				if (hasMinorBrother)
 				{
+
 					if (sibling!=NULL)
-						delete sibling;
+					delete sibling;
 
 					sibling = m_tree->getNode(minorBrother.getLeftPointer());
 					balanced = redistribute(sucesor,sibling,newData,keymodified,LEFT_SIDE);
@@ -273,7 +274,7 @@ throw(NodeException)
 		bool hasMinorBrother = false;
 
 		bool balanced = false;
-		Node* sibling;
+		Node* sibling=NULL;
 
 		INodeData keymodified;
 
@@ -304,6 +305,7 @@ throw(NodeException)
 			//Verifica que tenga hermano izquierdo.
 			if (hasMinorBrother)
 			{
+
 				if (sibling!=NULL)
 					delete sibling;
 				sibling = m_tree->getNode(minorBrother.getLeftPointer());
