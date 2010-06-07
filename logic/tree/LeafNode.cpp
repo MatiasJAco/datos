@@ -103,7 +103,17 @@ throw (NodeException)
 	if (result == OVERFLOW_LOAD)
 	{
 		split(data,pos,promotedKey);
+
+		//Actualiza puntero a anterior delque antes estaba a su derecha.
+		if(this->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
+			LeafNode* formerSibling=(LeafNode*)this->m_tree->getNode(this->getNextLeaf());
+			formerSibling->setPreviousLeaf(promotedKey.getLeftPointer());
+			this->m_tree->saveNode(formerSibling);
+			delete formerSibling;
+		};
+
 		setNextLeaf(promotedKey.getLeftPointer());
+
 	}
 
 	delete[] valueReg;
@@ -215,6 +225,13 @@ throw (NodeException)
 	if (result == OVERFLOW_LOAD)
 		{	this->remove(newdata);
 			split(newdata,pos,promotedKey);
+			//Actualiza puntero a anterior delque antes estaba a su derecha.
+			if(this->getNextLeaf()!=UNDEFINED_NODE_NUMBER){
+				LeafNode* formerSibling=(LeafNode*)this->m_tree->getNode(this->getNextLeaf());
+				formerSibling->setPreviousLeaf(promotedKey.getLeftPointer());
+				this->m_tree->saveNode(formerSibling);
+				delete formerSibling;
+			};
 			setNextLeaf(promotedKey.getLeftPointer());
 		}
 
@@ -358,6 +375,7 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 	promotedKey.setLeftPointer(sibling->getNodeNumber());
 
 	sibling->setPreviousLeaf(this->getNodeNumber());
+	sibling->setNextLeaf(this->getNextLeaf());
 
 	m_tree->saveNode(sibling);
 
