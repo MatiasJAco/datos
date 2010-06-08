@@ -16,6 +16,16 @@ PpmcHash::~PpmcHash() {
 	// TODO Auto-generated destructor stub
 }
 
+bool PpmcHash::saveContext(const char* context, std::string value){
+	//TODO hay que llamar al insert de hash aca
+	return true;
+}
+
+bool PpmcHash::findContext(const char* context, char character, std::string & value){
+	//TODO hay que llamar al get de hash
+	return true;
+}
+
 bool Ppmc::compress(std::string path,int context){
 	std::cout<<path;
 	return true;
@@ -24,3 +34,5 @@ bool Ppmc::compress(std::string path,int context){
 bool Ppmc::deCompress(const std::string & path){
 	return false;
 }
+
+

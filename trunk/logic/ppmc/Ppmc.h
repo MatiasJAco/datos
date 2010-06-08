@@ -12,9 +12,28 @@
  * Clase que modela el algoritmo de compresión de PPMC.
  */
 class Ppmc {
+private:
+
+
 protected:
 
-	void getPepe();
+	/**
+	 * Lee el proximo caracter del archivo a comprimir. Maneja por dentro un
+	 * buffer interno.
+	 * @param result Es el resultado de la operación: 1 si es fin de archivo, 0 si pudo, o -1 si hubo algun problema.
+	 * @return Retorna el caracter deseado.
+	 */
+	char readNextCharacter( int & result);
+
+	/**
+	 * Obtiene el String del contexto que se le pasa como parametro. Ej: "DIV", "IVI" para sizeOfContext 3.
+	 * Es decir, busca desde actualPositionInFile para atras sizeOfContext cantidad de posiciones en el file
+	 * y retorna ese string, para poder guardarlo en la estructura
+	 * @param sizeOfContext Es el tamaño del contexto a buscar
+	 * @param actualPositionInFile Es la posición actual del caracter que lei ultimo en el archivo
+	 * @return Retorna el string del contexto con el tamaño deseado
+	 */
+	char* getStringContext(int sizeOfContext,int actualPositionInFile);
 
 
 public:
@@ -24,7 +43,7 @@ public:
 	virtual ~Ppmc();
 
 	/**
-	 * Este metodo se encarga de la compresión
+	 * Este metodo se encarga de la compresión.
 	 * @param path Es el path donde se encuentra el archivo a comprimir.
 	 * @param context Es el número de contexto con el cuál se va a comprimir con ppmc.
 	 * @return Devuelve true si comprimio correctamente. En caso contrario devuelve false.
