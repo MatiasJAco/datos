@@ -11,6 +11,10 @@
 #include "Ppmc.h"
 #include "../logic/hash/Hash.h"
 
+/**
+ * Clase que modela el algoritmo de compresión de PPMC con almacenamiento de la tabla en un Hash
+ * usando metodos comunes implementados en la clase padre PPMC
+ */
 class PpmcHash: public Ppmc {
 
 private:
@@ -35,9 +39,11 @@ private:
 	 */
 	bool findContext(const char* context, char character, std::string & value);
 
+
 public:
 	PpmcHash();
 	virtual ~PpmcHash();
+
 
 	/**
 	 * Este metodo crea un nuevo contexto y lo guarda.

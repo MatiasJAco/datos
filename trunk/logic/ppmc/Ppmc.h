@@ -9,7 +9,8 @@
 #define PPMC_H_
 #include <iostream>
 /**
- * Clase que modela el algoritmo de compresión de PPMC.
+ * Clase que modela el algoritmo de compresión de PPMC e implementa funciones comunes
+ * para el PPMCHASH y PPMCTREE
  */
 class Ppmc {
 private:

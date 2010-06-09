@@ -10,6 +10,10 @@
 
 #include "Ppmc.h"
 
+/**
+ * Clase que modela el algoritmo de compresión de PPMC con almacenamiento de la tabla en un Arbol
+ * usando metodos comunes implementados en la clase padre PPMC
+ */
 class PpmcTree: public Ppmc {
 
 private:
