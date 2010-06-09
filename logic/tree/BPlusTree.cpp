@@ -245,6 +245,8 @@ bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
 		this->deleteNode(sucesor);
 		m_root->setLevel(currentLevel-1);
 
+
+		delete auxPointer;
 		delete [] currentValue;
 
 	}
@@ -461,6 +463,7 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 		this->deleteNode(sucesor);
 		m_root->setLevel(currentLevel-1);
 
+		delete auxPointer;
 		delete[] currentValue;
 
 	}
