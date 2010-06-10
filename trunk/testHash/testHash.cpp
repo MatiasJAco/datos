@@ -3,6 +3,7 @@
 #include "../logic/hash/Table.h"
 #include "../logic/input/StringInputData.h"
 #include "../logic/hash/Hash.h"
+#include "../logic/md5/MD5.h"
 
 using namespace std;
 
@@ -206,10 +207,17 @@ void testEjemplo(){
 	hash->erase(863);
 	hash->print();
 
-	cout<< "+775\n"<<endl;
-	hash->add(775,value);
+//	cout<< "+775\n"<<endl;
+//	hash->add(775,value);
+//	hash->print();
+//////////////////
+	//todo al sacarle el 775 y poner este , ver que no anda bien.. revisar!
+	cout<< "+1412080015\n"<<endl;
+	hash->add(1412080015,value);
 	hash->print();
-
+	hash->modify(1412080015,"kkkkkkkkk");
+	hash->print();
+/////////////////////////
 	delete hash;
 }
 
@@ -232,7 +240,14 @@ int main(int argc, const char* argv[]){
 	//tests();
 
 	testEjemplo();
-
+//	cout << MD5("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789")<<endl;
+//	cout << MD5("D")<<endl;
+//	cout << MD5("d")<<endl;
+//	cout << MD5("di")<<endl;
+//	cout << MD5("div")<<endl;
+//	cout << MD5("ivi")<<endl;
+//	cout << MD5("divi")<<endl;
+//	cout << MD5("divi-+sd210ac98-.,<{°!#$%&/()=?")<<endl;
 	//testBug();
 	//cout << "paso test!" << endl;
 
