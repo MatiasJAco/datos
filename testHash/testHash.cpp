@@ -59,7 +59,7 @@ void testTable4(){
 	myTable.print();
 }
 
-StringInputData* createSid( int key,char * value){
+StringInputData* createSid( unsigned long int key,char * value){
 	stringstream ss (stringstream::in | stringstream::out);
 	ss.str(value);
 	StringInputData* sid = new StringInputData();

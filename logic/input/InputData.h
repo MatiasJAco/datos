@@ -21,16 +21,16 @@ using namespace std;
 class InputData {
 
 protected:
-	int key;
+	unsigned long int key;
 	string value;
 
 public:
 	InputData();
 	virtual ~InputData();
 
-	virtual void setKey(int key) = 0;
+	virtual void setKey(unsigned long int key) = 0;
 	virtual void setValue(std::string value) = 0;
-	virtual  int getKey()const = 0;
+	virtual  unsigned long int getKey()const = 0;
 	virtual string getValue()const = 0;
 
 	/**

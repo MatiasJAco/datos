@@ -17,7 +17,7 @@ class StringInputData: public InputData {
 
 public:
 	StringInputData();
-	StringInputData(int key,std::string value);
+	StringInputData(unsigned long int key,std::string value);
 
 	virtual ~StringInputData();
 
@@ -25,7 +25,7 @@ public:
 	 * Este metodo define la clave del dato ingresado por el usuario.
 	 * @param key Es la clave del dato.
 	 */
-	void setKey(int key);
+	void setKey(unsigned long int key);
 
 	/**
 	 * Este metodo coloca el valor del dato ingresado por el usuario.
@@ -37,7 +37,7 @@ public:
 	 * Devuelve la clave del dato ingresado por el usuario.
 	 * @return Devuelve la clave del dato.
 	 */
-	int getKey()const;
+	unsigned long int getKey()const;
 
 	/**
 	 * Devuelve el valor del dato ingresado por el usuario.

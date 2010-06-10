@@ -12,7 +12,7 @@ INodeData::INodeData() {
 
 }
 
-INodeData::INodeData( unsigned int leftPointer,int key)
+INodeData::INodeData( unsigned int leftPointer,unsigned long int key)
 {
 	m_key = key;
 	m_leftPointer = leftPointer;
@@ -22,12 +22,12 @@ INodeData::~INodeData() {
 	// TODO Auto-generated destructor stub
 }
 
-int INodeData::getKey()const
+unsigned long int INodeData::getKey()const
 {
 	return m_key;
 }
 
-void INodeData::setKey(int key)
+void INodeData::setKey(unsigned long int key)
 {
 	m_key = key;
 }
@@ -46,7 +46,7 @@ unsigned int INodeData::getLeftPointer()const
 
 char *INodeData::toStream(char* stream)const
 {
-	ByteConverter::intToBytes(m_key,stream);
+	ByteConverter::uLongIntToBytes(m_key,stream);
 	stream+=sizeof(m_key);
 	ByteConverter::uIntToBytes(m_leftPointer,stream);
 
@@ -55,7 +55,7 @@ char *INodeData::toStream(char* stream)const
 
 void INodeData::toNodeData(const char *stream)
 {
-	m_key = ByteConverter::bytesToInt(stream);
+	m_key = ByteConverter::bytesToULongInt(stream);
 	stream+=sizeof(m_key);
 	m_leftPointer = ByteConverter::bytesToUInt(stream);
 }
