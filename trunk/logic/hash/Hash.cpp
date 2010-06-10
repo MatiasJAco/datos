@@ -22,7 +22,7 @@ Hash::~Hash() {
 	delete hashFile;
 }
 
-StringInputData* Hash::get(int key) {
+StringInputData* Hash::get(unsigned long int key) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
 	if (bucket->existsRegister(key)) {
@@ -55,7 +55,7 @@ void Hash::inicializeHashFile(){
 		delete block;
 }
 
-int Hash::calculateHashFunction(int key) {
+int Hash::calculateHashFunction(unsigned long int key) {
 	return key % this->hashTable->getSize();
 }
 
@@ -63,18 +63,18 @@ void Hash::saveBucket(Bucket * bucket){
 	this->hashFile->saveBlock(bucket->getBlock());
 }
 
-int Hash::getNumberOfBucket(int key) {
+int Hash::getNumberOfBucket(unsigned long int key) {
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
 
-bool Hash::existsElement(int key) {
+bool Hash::existsElement(unsigned long int key) {
 	int aux = -1;
 	return (this->existsElement(key,aux));
 }
-bool Hash::existsElement(int key, int & position) {
+bool Hash::existsElement(unsigned long int key, int & position) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Block * block = this->hashFile->getBlock(bucketNumber);
 	Bucket* bucket = new Bucket(block);
@@ -110,7 +110,7 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 	return bucket;
 }
 
-int Hash::add(int clave, string valor) {
+int Hash::add(unsigned long int clave, string valor) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(clave);
 	sid->setValue(valor);
@@ -159,7 +159,7 @@ int Hash::add(StringInputData* sid) {
 	}
 	return 0;
 }
-int Hash::modify(int key, string newValue) {
+int Hash::modify(unsigned long int key, string newValue) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
 	bool exists = this->existsElement(sid->getKey());
@@ -183,7 +183,7 @@ int Hash::modify(int key, string newValue) {
 	return 0;
 }
 
-int Hash::erase(int key) {
+int Hash::erase(unsigned long int key) {
 	bool exists = this->existsElement(key);
 	bool result = false;
 

@@ -110,7 +110,7 @@ unsigned int Table::getSize(){
 	return sizeOfTable;
 }
 
-int Table::getNumberOfBucketInHash(int NumOfRegToPointInTable){
+int Table::getNumberOfBucketInHash(unsigned long int NumOfRegToPointInTable){
 	FILE * arch_tabla;
 	char * ptr = NULL;
 	char linea[180];

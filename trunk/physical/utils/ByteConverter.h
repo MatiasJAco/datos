@@ -45,11 +45,26 @@ public:
 	static char* intToBytes(const int entero,char* bytes);
 
 	/**
+	 * Convierte un unsigned long int a una cadena de bytes.
+	 * \param entero El entero a convertir.
+	 * \param bytes La cadena de bytes donde se almacena la conversión.
+	 * \return El puntero a la cadena de bytes.
+	 */
+	static char* uLongIntToBytes(const unsigned long int entero,char* bytes);
+
+	/**
 	 * Convierte una cadena de bytes a un entero.
 	 * \param bytes La cadena de bytes a convertir
 	 * \return Entero despues de la conversión de la cadena de bytes.
 	 */
 	static unsigned int bytesToUInt(const char* bytes);
+
+	/**
+	 * Convierte una cadena de bytes a un unsigned long int.
+	 * \param bytes La cadena de bytes a convertir
+	 * \return Entero despues de la conversión de la cadena de bytes.
+	 */
+	static unsigned long int bytesToULongInt(const char* bytes);
 
 	/**
 	 * Convierte un entero a una cadena de bytes.

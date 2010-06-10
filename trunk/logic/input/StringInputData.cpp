@@ -11,7 +11,7 @@
 StringInputData::StringInputData() {
 }
 
-StringInputData::StringInputData(int key,std::string value)
+StringInputData::StringInputData(unsigned long int key,std::string value)
 {
 	this->key = key;
 	this->value = value;
@@ -20,7 +20,7 @@ StringInputData::StringInputData(int key,std::string value)
 StringInputData::~StringInputData() {
 }
 
-void StringInputData::setKey(int key) {
+void StringInputData::setKey(unsigned long int key) {
 	this->key = key;
 }
 
@@ -28,7 +28,7 @@ void StringInputData::setValue(std::string value) {
 	this->value = value;
 }
 
-int StringInputData::getKey()const {
+unsigned long int StringInputData::getKey()const {
 	return this->key;
 }
 
@@ -39,7 +39,7 @@ string StringInputData::getValue()const {
 char* StringInputData::toStream(char* stream) const
 {
 	char *p=stream;
-	ByteConverter::intToBytes(key,p);
+	ByteConverter::uLongIntToBytes(key,p);
 	p += sizeof(key);
 	ByteConverter::stringToBytes(value,p);
 
@@ -49,7 +49,7 @@ char* StringInputData::toStream(char* stream) const
 void StringInputData::toData(const char* stream)
 {
 	char *p=(char *)stream;
-	key = ByteConverter::bytesToInt(p);
+	key = ByteConverter::bytesToULongInt(p);
 	p += sizeof(key);
 	value = ByteConverter::bytesToString(p);
 }

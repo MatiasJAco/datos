@@ -83,11 +83,11 @@ int Bucket::insertRegister(StringInputData* sid) {
 	return result;
 }
 
-bool Bucket::existsRegister(int key) {
+bool Bucket::existsRegister(unsigned long int key) {
 	int aux = -1;
 	return this->existsRegister(key,aux);
 }
-bool Bucket::existsRegister(int key,int & position) {
+bool Bucket::existsRegister(unsigned long int key,int & position) {
 	position = 0;
 	positionateAt(1);//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
 
@@ -110,7 +110,7 @@ bool Bucket::existsRegister(int key,int & position) {
 }
 
 
-VarRegister Bucket::getRegister(int key) {
+VarRegister Bucket::getRegister(unsigned long int key) {
 	VarRegister varRegister;
 	this->getBlock()->restartCounter();
 	bool found = false;
@@ -129,7 +129,7 @@ VarRegister Bucket::getRegister(int key) {
 	return varRegister;
 }
 
-bool Bucket::deleteRegister(int key) {
+bool Bucket::deleteRegister(unsigned long int key) {
 	this->getBlock()->restartCounter();
 	VarRegister varRegister = this->getBlock()->getNextRegister(true); // Salteo el primer registro que es de control.
 	bool result = false;

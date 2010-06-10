@@ -18,7 +18,7 @@
 class INodeData {
 
 private:
-	int m_key;
+	unsigned long int m_key;
 	unsigned int m_leftPointer;
 
 public:
@@ -31,7 +31,7 @@ public:
 	INodeData();
 
 	/// Constructor con parametro clave y puntero izquierdo.
-	INodeData( unsigned int leftPointer,int key);
+	INodeData( unsigned int leftPointer,unsigned long int key);
 
 	/// Destructor
 	virtual ~INodeData();
@@ -42,7 +42,7 @@ public:
 	 */
 	//TODO revisar si no deberia ser generico, por el momento, no.
 	// Si fuera generico deberia hacerse ese cambio de implementacion sobre las claves, en todos los proyectos.
-	int getKey()const;
+	unsigned long int getKey()const;
 
 	/**
 	 * Devuelve la referencia izquierda de la clave.
@@ -51,7 +51,7 @@ public:
 	unsigned int getLeftPointer()const;
 
 	/// Set de la clave (separador).
-    void setKey(int key);
+    void setKey(unsigned long int key);
 
     /// Set del puntero izquierdo al separador.
     void setLeftPointer(unsigned int leftPointer);
