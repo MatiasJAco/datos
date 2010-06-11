@@ -31,14 +31,14 @@ private:
 	 * @param key Es la clave sobre la cual se aplicará la función de hash.
 	 * @return Devuelve un entero que surge de aplicar la función de hash a la clave pasada por parámetro.
 	 */
-	int calculateHashFunction(unsigned long int key);
+	int calculateHashFunction(std::string key);
 
 	/**
 	 * Retorna el numero de Bucket del archivo de hash.
 	 * @param key Es la clave que se usa para calcular el número de bucket.
 	 * @return Devuelve el número de bucket que contiene al dato que posee la clave pasada por parámetro.
 	 */
-	int getNumberOfBucket(unsigned long int key);
+	int getNumberOfBucket(std::string key);
 
 	/**
 	 * Crea un bucket (bucket numero 0). Este bucket solo tiene como campo de control el tamaño de dispersion inicial (1).
@@ -51,7 +51,7 @@ private:
 	 * @param key Es la clave del dato que se desea hallar.
 	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
 	 */
-	bool existsElement(unsigned long int key);
+	bool existsElement(std::string key);
 
 	/**
 	 * Verifica si existe un dato en un bloque, e indica en qué posición.
@@ -59,7 +59,7 @@ private:
 	 * @param position Devuelve la posicion en donde se encontro la clave, o -1 si no se encontró.
 	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro.
 	 */
-	bool existsElement(unsigned long int key, int & position);
+	bool existsElement(std::string key, int & position);
 
 	/**
 	 * Crea un bucket nuevo.
@@ -106,7 +106,7 @@ public:
 	 * @param valor Es el valor del dato a ingrear.
 	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
 	 */
-	int add(unsigned long int clave, string valor);
+	int add(std::string clave, string valor);
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
@@ -118,7 +118,7 @@ public:
 	/**
 	 * This method gets a Data object, giving it's key.
 	 */
-	StringInputData* get(unsigned long int key);
+	StringInputData* get(std::string key);
 
 	/**
 	 * Cambia el valor de un key pasado por parámetro.
@@ -126,14 +126,14 @@ public:
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
 	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado, o -1 si hubo algun problema.
 	 */
-	int modify(unsigned long int key, string newValue);
+	int modify(std::string key, string newValue);
 
 	/**
 	 * Elimina el dato, cuya clave es la pasada por parametro.
 	 * @param key Es la clave del dato que se desea borrar.
 	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar el dato, o -1 si hubo algun problema.
 	 */
-	int erase(unsigned long int key);
+	int erase(std::string key);
 
 	/**
 	 * Imprime el hash por consola.

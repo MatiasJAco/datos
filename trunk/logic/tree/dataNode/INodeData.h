@@ -18,12 +18,13 @@
 class INodeData {
 
 private:
-	unsigned long int m_key;
+	std::string m_key;
 	unsigned int m_leftPointer;
 
 public:
 
-	static const int UNDEFINED_KEY = -1;
+	//TODO pablo - reemplace todos los lugares donde aparecia UNDEFINED_KEY como un string vacio ("")
+	//static const int UNDEFINED_KEY = -1;
 
 public:
 
@@ -31,7 +32,7 @@ public:
 	INodeData();
 
 	/// Constructor con parametro clave y puntero izquierdo.
-	INodeData( unsigned int leftPointer,unsigned long int key);
+	INodeData( unsigned int leftPointer,std::string key);
 
 	/// Destructor
 	virtual ~INodeData();
@@ -42,7 +43,7 @@ public:
 	 */
 	//TODO revisar si no deberia ser generico, por el momento, no.
 	// Si fuera generico deberia hacerse ese cambio de implementacion sobre las claves, en todos los proyectos.
-	unsigned long int getKey()const;
+	std::string getKey()const;
 
 	/**
 	 * Devuelve la referencia izquierda de la clave.
@@ -51,7 +52,7 @@ public:
 	unsigned int getLeftPointer()const;
 
 	/// Set de la clave (separador).
-    void setKey(unsigned long int key);
+    void setKey(std::string key);
 
     /// Set del puntero izquierdo al separador.
     void setLeftPointer(unsigned int leftPointer);

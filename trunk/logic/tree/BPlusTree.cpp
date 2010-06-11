@@ -164,7 +164,11 @@ throw (BPlusTreeException)
 		firstKey.setLeftPointer(sucesor->getNodeNumber());
 		firstKey.setKey(promotedKey.getKey());
 		newKey.setLeftPointer(promotedKey.getLeftPointer());
-		newKey.setKey(INodeData::UNDEFINED_KEY);
+
+		//TODO pablo, mati revisalo
+		//newKey.setKey(INodeData::UNDEFINED_KEY);
+		newKey.setKey("");
+
 
 		// habria que hacer casteo dinamico.
 		result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);
@@ -417,7 +421,10 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 			firstKey.setLeftPointer(sucesor->getNodeNumber());
 			firstKey.setKey(promotedKey.getKey());
 			newKey.setLeftPointer(promotedKey.getLeftPointer());
-			newKey.setKey(INodeData::UNDEFINED_KEY);
+
+			//TODO pablo - mati revisalo
+			//newKey.setKey(INodeData::UNDEFINED_KEY);
+			newKey.setKey("");
 
 			// habria que hacer casteo dinamico.
 			result = ((InnerNode*)m_root)->insertINodeData(firstKey,promotedKey);

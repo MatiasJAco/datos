@@ -83,11 +83,11 @@ int Bucket::insertRegister(StringInputData* sid) {
 	return result;
 }
 
-bool Bucket::existsRegister(unsigned long int key) {
+bool Bucket::existsRegister(std::string key) {
 	int aux = -1;
 	return this->existsRegister(key,aux);
 }
-bool Bucket::existsRegister(unsigned long int key,int & position) {
+bool Bucket::existsRegister(std::string key,int & position) {
 	position = 0;
 	positionateAt(1);//para salvar el primer reg (que es el td) - contra ese no se tiene que comparar
 
@@ -97,7 +97,8 @@ bool Bucket::existsRegister(unsigned long int key,int & position) {
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
 		position++;
-		if (sid->getKey() == key) {
+		//if (sid->getKey() == key) {
+		if (strcmp(sid->getKey().c_str(),key.c_str())==0) {
 			delete [] registerValue;
 			delete sid;
 			return true;
@@ -110,7 +111,7 @@ bool Bucket::existsRegister(unsigned long int key,int & position) {
 }
 
 
-VarRegister Bucket::getRegister(unsigned long int key) {
+VarRegister Bucket::getRegister(std::string key) {
 	VarRegister varRegister;
 	this->getBlock()->restartCounter();
 	bool found = false;
@@ -119,7 +120,8 @@ VarRegister Bucket::getRegister(unsigned long int key) {
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
-		if (sid->getKey() == key) {
+		//if (sid->getKey() == key) {
+		if (strcmp(sid->getKey().c_str() , key.c_str())==0) {
 			found = true;
 		}
 		if (registerValue!=NULL)
@@ -129,7 +131,7 @@ VarRegister Bucket::getRegister(unsigned long int key) {
 	return varRegister;
 }
 
-bool Bucket::deleteRegister(unsigned long int key) {
+bool Bucket::deleteRegister(std::string key) {
 	this->getBlock()->restartCounter();
 	VarRegister varRegister = this->getBlock()->getNextRegister(true); // Salteo el primer registro que es de control.
 	bool result = false;
@@ -139,7 +141,8 @@ bool Bucket::deleteRegister(unsigned long int key) {
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
-		if (sid->getKey() == key) {
+		//if (sid->getKey() == key) {
+		if (strcmp(sid->getKey().c_str(), key.c_str())==0) {
 			result = this->getBlock()->deleteRegister();
 			delete [] registerValue;
 			delete sid;
@@ -186,7 +189,13 @@ bool Bucket::modifyDepth(int depth){
 	sid->toData(varReg.getValue());
 	unsigned int dataSize = sizeof(int);
 	char* valueReg = new char[dataSize];
-	sid->setKey(depth);
+
+	//TODO pablo - verificar que esto ande bien
+	//sid->setKey(depth);
+	char stringDepth[10];
+	sprintf(stringDepth,"%i",depth);
+	sid->setKey(stringDepth);
+
 	varReg.setValue(sid->toStream(valueReg),dataSize);
 
 	bool result2 = this->block->modifyRegister(varReg,result);

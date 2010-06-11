@@ -16,7 +16,9 @@ PpmcHash::~PpmcHash() {
 }
 
 int PpmcHash::saveContext(const char* context, std::string value){
-	return this->hash->add(atoi(context), value);
+	//TODO pablo - comente el add para q ande
+	//return this->hash->add(atoi(context), value);
+	return 0;
 }
 
 bool PpmcHash::findContext(const char* context, char character, std::string & value){

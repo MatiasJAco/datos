@@ -61,12 +61,6 @@ char *ByteConverter::intToBytes(const int entero, char *bytes)
 	return bytes;
 }
 
-char *ByteConverter::uLongIntToBytes(const unsigned long int entero, char *bytes)
-{
-	memcpy(bytes,&entero,sizeof(unsigned long int ));
-	return bytes;
-}
-
 char *ByteConverter::doubleToBytes(const double decimald, char *bytes)
 {
 	memcpy(bytes,&decimald,sizeof(double));
@@ -105,17 +99,6 @@ unsigned int ByteConverter::bytesToUInt(const char *bytes)
 	if(bytes!=NULL)
 	{
 		memcpy(&entero,bytes,sizeof(unsigned int));
-	}
-
-	return entero;
-}
-
-unsigned long int ByteConverter::bytesToULongInt(const char *bytes)
-{
-	unsigned long int entero = 0;
-	if(bytes!=NULL)
-	{
-		memcpy(&entero,bytes,sizeof(unsigned long int));
 	}
 
 	return entero;
