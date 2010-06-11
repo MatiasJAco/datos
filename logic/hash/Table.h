@@ -50,7 +50,7 @@ public:
 	 * @param NumOfRegToPointInTable Es la posición de la tabla, para buscar el bucket que hay en la misma.
 	 * @return Devuelve -1 si hubo algun error al intentar leer el registro
 	 */
-	int getNumberOfBucketInHash(unsigned long int NumOfRegToPointInTable);
+	int getNumberOfBucketInHash(int NumOfRegToPointInTable);
 
 	/**
 	 * Modifica el registro "numReg" en la tabla con el valorNuevo a cambiar.

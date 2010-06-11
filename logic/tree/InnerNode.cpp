@@ -404,10 +404,15 @@ throw(NodeException)
 	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
-	if (iNodeData.getKey()==INodeData::UNDEFINED_KEY)
+	//TODO pablo - mati revisalo
+	//if (iNodeData.getKey()==INodeData::UNDEFINED_KEY)
+	std::string stringVacio = "";
+	if (strcmp(iNodeData.getKey().c_str(),stringVacio.c_str())==0)
 		m_block->jumpEndCounter();
 
-	while (iNodeData.getKey()!=INodeData::UNDEFINED_KEY&&
+	//TODO pablo - mati revisalo
+	//while (iNodeData.getKey()!=INodeData::UNDEFINED_KEY&&
+	while (strcmp(iNodeData.getKey().c_str(),stringVacio.c_str())!=0 &&
 			!m_block->isLastRegister()&&!found)
 	{
 		currentRegister = m_block->peekRegister();
@@ -416,7 +421,10 @@ throw(NodeException)
 		currentValue = currentRegister.getValue(); // hace alloc
 		currentData.toNodeData(currentValue);
 
-		if (currentData.getKey()==INodeData::UNDEFINED_KEY||
+		//TODO pablo - mati revisalo
+		//if (currentData.getKey()==INodeData::UNDEFINED_KEY||
+		std::string stringVacio = "";
+		if (strcmp(currentData.getKey().c_str(),stringVacio.c_str())==0 ||
 			currentData.getKey()>= iNodeData.getKey())
 		{
 			found = true;
@@ -991,7 +999,11 @@ void InnerNode::modifyLastKey()
 	char* changeValue = changeReg.getValue(); //hace alloc
 
 	iNodeData.toNodeData(changeValue);
-	iNodeData.setKey(INodeData::UNDEFINED_KEY);
+
+	//TODO pablo - mati revisalo
+	//iNodeData.setKey(INodeData::UNDEFINED_KEY);
+	iNodeData.setKey("");
+
 	delete [] changeValue;
 
 	char* valueReg = new char[iNodeData.getSize()];

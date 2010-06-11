@@ -22,7 +22,7 @@ Hash::~Hash() {
 	delete hashFile;
 }
 
-StringInputData* Hash::get(unsigned long int key) {
+StringInputData* Hash::get(std::string key) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
 	if (bucket->existsRegister(key)) {
@@ -55,26 +55,28 @@ void Hash::inicializeHashFile(){
 		delete block;
 }
 
-int Hash::calculateHashFunction(unsigned long int key) {
-	return key % this->hashTable->getSize();
+int Hash::calculateHashFunction(std::string key) {
+	//return key % this->hashTable->getSize();
+	//TODO pablo - armar nueva funcion hash
+	return 0;
 }
 
 void Hash::saveBucket(Bucket * bucket){
 	this->hashFile->saveBlock(bucket->getBlock());
 }
 
-int Hash::getNumberOfBucket(unsigned long int key) {
+int Hash::getNumberOfBucket(std::string key) {
 	//incremento en uno el valor porque el metodo getBlock() no acepta ceros (0)
 	int result = 1;
 	result += this->hashTable->getNumberOfBucketInHash(calculateHashFunction(key));
 	return result;
 }
 
-bool Hash::existsElement(unsigned long int key) {
+bool Hash::existsElement(std::string key) {
 	int aux = -1;
 	return (this->existsElement(key,aux));
 }
-bool Hash::existsElement(unsigned long int key, int & position) {
+bool Hash::existsElement(std::string key, int & position) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Block * block = this->hashFile->getBlock(bucketNumber);
 	Bucket* bucket = new Bucket(block);
@@ -110,7 +112,7 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 	return bucket;
 }
 
-int Hash::add(unsigned long int clave, string valor) {
+int Hash::add(std::string clave, string valor) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(clave);
 	sid->setValue(valor);
@@ -159,7 +161,7 @@ int Hash::add(StringInputData* sid) {
 	}
 	return 0;
 }
-int Hash::modify(unsigned long int key, string newValue) {
+int Hash::modify(std::string key, string newValue) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
 	bool exists = this->existsElement(sid->getKey());
@@ -183,7 +185,7 @@ int Hash::modify(unsigned long int key, string newValue) {
 	return 0;
 }
 
-int Hash::erase(unsigned long int key) {
+int Hash::erase(std::string key) {
 	bool exists = this->existsElement(key);
 	bool result = false;
 

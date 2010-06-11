@@ -65,7 +65,7 @@ public:
 	 * @param key Es la clave a buscar.
 	 * @return Devuelve true si encuentra un registro con la clave pasada por parametro. En caso contrario devuelve false.
 	 */
-	bool existsRegister(unsigned long int key);
+	bool existsRegister(std::string key);
 
 	/**
 	 * Este metodo indica si existe un registro fisico, con la clave dada.
@@ -73,21 +73,21 @@ public:
 	 * @param position devuelve la posicion en donde se encontro la key (-1 si no se encontro).
 	 * @return Devuelve true si encuentra un registro con la clave pasada por parametro. En caso contrario devuelve false.
 	 */
-	bool existsRegister(unsigned long int key, int & position);
+	bool existsRegister(std::string key, int & position);
 
 	/**
 	 * Este metodo devuelve un registro variable, en base a una clave pasada por parametro.
 	 * @param key Es la clave que sirve para encontrar el registro deseado.
 	 * @return Devuelve el registro cuya clave es la pasada por parametro.
 	 */
-	VarRegister getRegister(unsigned long int key);
+	VarRegister getRegister(std::string key);
 
 	/**
 	 * Este metodo borra un registro del bloque que contiene el bucket, dada su clave.
 	 * @param key Es la clave del registro que se desea eliminar.
 	 * @return Devuelve true si consigue borrar el registro, false en caso contrario.
 	 */
-	bool deleteRegister(unsigned long int key);
+	bool deleteRegister(std::string key);
 
 	/**
 	 * Imprime el bucket entero.

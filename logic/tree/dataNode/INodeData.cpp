@@ -12,7 +12,7 @@ INodeData::INodeData() {
 
 }
 
-INodeData::INodeData( unsigned int leftPointer,unsigned long int key)
+INodeData::INodeData( unsigned int leftPointer,std::string key)
 {
 	m_key = key;
 	m_leftPointer = leftPointer;
@@ -22,12 +22,12 @@ INodeData::~INodeData() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned long int INodeData::getKey()const
+std::string INodeData::getKey()const
 {
 	return m_key;
 }
 
-void INodeData::setKey(unsigned long int key)
+void INodeData::setKey(std::string key)
 {
 	m_key = key;
 }
@@ -46,7 +46,7 @@ unsigned int INodeData::getLeftPointer()const
 
 char *INodeData::toStream(char* stream)const
 {
-	ByteConverter::uLongIntToBytes(m_key,stream);
+	ByteConverter::stringToBytes(m_key,stream);
 	stream+=sizeof(m_key);
 	ByteConverter::uIntToBytes(m_leftPointer,stream);
 
@@ -55,7 +55,7 @@ char *INodeData::toStream(char* stream)const
 
 void INodeData::toNodeData(const char *stream)
 {
-	m_key = ByteConverter::bytesToULongInt(stream);
+	m_key = ByteConverter::bytesToString(stream);
 	stream+=sizeof(m_key);
 	m_leftPointer = ByteConverter::bytesToUInt(stream);
 }
@@ -73,15 +73,21 @@ bool    INodeData::operator ==(INodeData &p)
 bool    INodeData::operator <(INodeData &p)
 {
 	bool retVal=false;
-	retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
+	//TODO pablo - revisalo mati
+	//retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
+	std::string stringVacio = "";
+	retVal = (strcmp(m_key.c_str(),p.m_key.c_str())<0) || (strcmp(p.m_key.c_str(),stringVacio.c_str())==0);
+
 	return retVal;
 }
 
 bool    INodeData::operator >(INodeData &p)
 {
 	bool retVal=false;
-
-	retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
+	//TODO pablo - revisalo mati
+	//retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
+	std::string stringVacio = "";
+	retVal = ( strcmp(p.m_key.c_str(),stringVacio.c_str())!=0 && ((strcmp(m_key.c_str(),p.m_key.c_str()) > 0) ) || (strcmp(m_key.c_str(),stringVacio.c_str()) == 0));
 	return retVal;
 }
 
