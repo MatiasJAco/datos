@@ -7,6 +7,9 @@
 
 #include "INodeData.h"
 
+const std::string INodeData::UNDEFINED_KEY= "@-1";
+
+
 INodeData::INodeData() {
 	// TODO Auto-generated constructor stub
 
@@ -73,8 +76,8 @@ bool    INodeData::operator ==(INodeData &p)
 bool    INodeData::operator <(INodeData &p)
 {
 	bool retVal=false;
-	//TODO pablo - revisalo mati
-	//retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
+
+	retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
 	std::string stringVacio = "";
 	retVal = (strcmp(m_key.c_str(),p.m_key.c_str())<0) || (strcmp(p.m_key.c_str(),stringVacio.c_str())==0);
 
@@ -84,10 +87,10 @@ bool    INodeData::operator <(INodeData &p)
 bool    INodeData::operator >(INodeData &p)
 {
 	bool retVal=false;
-	//TODO pablo - revisalo mati
-	//retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
+
+	retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
 	std::string stringVacio = "";
-	retVal = ( strcmp(p.m_key.c_str(),stringVacio.c_str())!=0 && ((strcmp(m_key.c_str(),p.m_key.c_str()) > 0) ) || (strcmp(m_key.c_str(),stringVacio.c_str()) == 0));
+	retVal = ( (strcmp(p.m_key.c_str(),stringVacio.c_str())!=0) && ((strcmp(m_key.c_str(),p.m_key.c_str()) > 0) ) || (strcmp(m_key.c_str(),stringVacio.c_str()) == 0));
 	return retVal;
 }
 
