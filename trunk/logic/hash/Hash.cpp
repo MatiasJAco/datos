@@ -38,9 +38,13 @@ StringInputData* Hash::get(std::string key) {
 
 Bucket* Hash::createNewBucket(int depth){
 	VarRegister* varRegister = new VarRegister();
-	char depthString[10];
-	sprintf(depthString,"%i",depth);
-	varRegister->setValue(depthString,sizeof(depthString));
+
+	std::string depthString;
+	std::stringstream aux;
+	aux << depth;
+	depthString = aux.str();
+
+	varRegister->setValue(depthString);
 	Block* block = this->hashFile->getNewBlock();
 	Bucket *bucket = new Bucket(block);
 	bucket->setDepth(depth);
