@@ -274,17 +274,40 @@ void testMd5() {
 	std::cout << md5.hexdigest() << std::endl;
 }
 
-// Aun sin terminar:
+/* El resultado debe dar:
+ * ======================
+ * md5:  4d186321c1a7f0f354b297e8914ab240
+ * bigint: 413010806030201120110071500150305041102090714080901041011020400
+ * bigint mod 6 = 4 */
 void testHashFunction() {
-	MD5 md5("hola");
+	MD5 md5("paytiti");
 	std::string s(md5.hexdigest());
 	std::cout << s << std::endl;
 	int i = 0;
-
 	std::string nueva = "";
 
 	while(i < 32) {
-		if (s.substr(i,1).compare("a") == 0) {
+		if (s.substr(i,1).compare("0") == 0) {
+			nueva.append("00");
+		} else if (s.substr(i,1).compare("1") == 0) {
+			nueva.append("01");
+		} else if (s.substr(i,1).compare("2") == 0) {
+			nueva.append("02");
+		} else if (s.substr(i,1).compare("3") == 0) {
+			nueva.append("03");
+		} else if (s.substr(i,1).compare("4") == 0) {
+			nueva.append("04");
+		} else if (s.substr(i,1).compare("5") == 0) {
+			nueva.append("05");
+		} else if (s.substr(i,1).compare("6") == 0) {
+			nueva.append("06");
+		} else if (s.substr(i,1).compare("7") == 0) {
+			nueva.append("07");
+		} else if (s.substr(i,1).compare("8") == 0) {
+			nueva.append("08");
+		} else if (s.substr(i,1).compare("9") == 0) {
+			nueva.append("09");
+		} else if (s.substr(i,1).compare("a") == 0) {
 			nueva.append("10");
 		} else if (s.substr(i,1).compare("b") == 0) {
 			nueva.append("11");
@@ -299,16 +322,22 @@ void testHashFunction() {
 		} else {
 			nueva.append(s.substr(i,1));
 		}
-
 		i++;
 	}
 	std::cout << nueva << std::endl;
 
 	BigInteger f = stringToBigInteger(nueva);
 	std::cout << f << std::endl;
-	BigInteger g = stringToBigInteger("4");
+	BigInteger g = stringToBigInteger("6");
 	std::cout << g << std::endl;
 	std::cout << (f % g).toInt() << std::endl;
+}
+
+void testHexa() {
+	/*unsigned long long int hola = 0xFFFFFFFFFFFFFFFE;
+	cout << hola << endl;
+	unsigned long long int hola2 = 0xa;
+	cout << hola2 << endl;*/
 }
 
 int main(int argc, const char* argv[]){
@@ -318,7 +347,6 @@ int main(int argc, const char* argv[]){
 	//testTable4();
 	//testDelete();
 	//tests();
-
 	testEjemplo();
 	//testBigInt();
 	//testMd5();
