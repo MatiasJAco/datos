@@ -4,6 +4,7 @@
 #include "../logic/input/StringInputData.h"
 #include "../logic/hash/Hash.h"
 #include "../logic/md5/MD5.h"
+#include "../logic/bigint/BigIntegerLibrary.hh"
 
 using namespace std;
 
@@ -245,6 +246,56 @@ void testBug(){
 	delete hash;
 }
 
+/* Muestra la cadena que representa al numero, por pantalla. */
+void testBigInt() {
+	std::string s("0123456789012345678901234567890123456789012345678901234567890123");
+	BigInteger f = stringToBigInteger(s);
+	std::cout << f << std::endl;
+}
+
+/* Devuelve la cadena: 4d186321c1a7f0f354b297e8914ab240 */
+void testMd5() {
+	MD5 md5("hola");
+	std::cout << md5.hexdigest() << std::endl;
+}
+
+// Aun sin terminar:
+void testHashFunction() {
+	MD5 md5("hola");
+	std::string s(md5.hexdigest());
+	std::cout << s << std::endl;
+	int i = 0;
+
+	std::string nueva = "";
+
+	while(i < 32) {
+		if (s.substr(i,1).compare("a") == 0) {
+			nueva.append("10");
+		} else if (s.substr(i,1).compare("b") == 0) {
+			nueva.append("11");
+		} else if (s.substr(i,1).compare("c") == 0) {
+			nueva.append("12");
+		} else if (s.substr(i,1).compare("d") == 0) {
+			nueva.append("13");
+		} else if (s.substr(i,1).compare("e") == 0) {
+			nueva.append("14");
+		} else if (s.substr(i,1).compare("f") == 0) {
+			nueva.append("15");
+		} else {
+			nueva.append(s.substr(i,1));
+		}
+
+		i++;
+	}
+	std::cout << nueva << std::endl;
+
+	BigInteger f = stringToBigInteger(nueva);
+	std::cout << f << std::endl;
+	BigInteger g = stringToBigInteger("4");
+	std::cout << g << std::endl;
+	std::cout << (f % g).toInt() << std::endl;
+}
+
 int main(int argc, const char* argv[]){
 	//testTable();
 	//testTable2();
@@ -253,7 +304,10 @@ int main(int argc, const char* argv[]){
 	//testDelete();
 	//tests();
 
-	testEjemplo();
+	//testEjemplo();
+	testBigInt();
+	//testMd5();
+	//testHashFunction();
 
 	unsigned long long int mitest = 18446744073709551614 / 2;
 	//cout <<mitest;
