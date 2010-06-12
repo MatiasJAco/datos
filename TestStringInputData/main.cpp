@@ -14,7 +14,7 @@ int main( int argc, char **argv)
 {
 	StringInputData *fixture = new StringInputData();
 
-	unsigned long int key = 3;
+	std::string key = "3";
     string value = "algo";
 
 	fixture->setKey(key);

@@ -68,8 +68,8 @@ std::string StringInputData::toString()const
 {
 	std::string str;
 
-	str+= "Clave:" + key;
-	str+= "Data: " + value;
+	str+= "Clave: " + key;
+	str+= ", Data: " + value;
 	str+= "\n";
 
 	return str;
