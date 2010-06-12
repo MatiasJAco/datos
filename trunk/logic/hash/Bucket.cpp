@@ -13,7 +13,9 @@ unsigned int Bucket::getDepthFromHashFile(){
 	//el primer registro tiene el valor del td
 	VarRegister varRegister=this->block->getNextRegister(true);
 	char * value = varRegister.getValue();
-	unsigned int depth = ByteConverter::bytesToInt(value);
+	unsigned int depth;
+	std::string stringDepth = ByteConverter::bytesToString(value);
+	depth = atoi(stringDepth.c_str());
 	if (value!=NULL)
 		delete [] value;
 	return depth;
@@ -190,8 +192,6 @@ bool Bucket::modifyDepth(int depth){
 	unsigned int dataSize = sizeof(int);
 	char* valueReg = new char[dataSize];
 
-	//TODO pablo - verificar que esto ande bien
-	//sid->setKey(depth);
 	char stringDepth[10];
 	sprintf(stringDepth,"%i",depth);
 	sid->setKey(stringDepth);

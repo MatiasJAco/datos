@@ -36,7 +36,9 @@ StringInputData* Hash::get(std::string key) {
 
 Bucket* Hash::createNewBucket(int depth){
 	VarRegister* varRegister = new VarRegister();
-	varRegister->setValue(depth);
+	char depthString[10];
+	sprintf(depthString,"%i",depth);
+	varRegister->setValue(depthString,sizeof(depthString));
 	Block* block = this->hashFile->getNewBlock();
 	Bucket *bucket = new Bucket(block);
 	bucket->setDepth(depth);
@@ -58,7 +60,8 @@ void Hash::inicializeHashFile(){
 int Hash::calculateHashFunction(std::string key) {
 	//return key % this->hashTable->getSize();
 	//TODO pablo - armar nueva funcion hash
-	return 0;
+
+	return atoi (key.c_str()) % this->hashTable->getSize();;
 }
 
 void Hash::saveBucket(Bucket * bucket){

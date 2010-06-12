@@ -159,79 +159,94 @@ void testEjemplo(){
 	cout<< "Este proximo print deberia mostrar todas las cosas creadas pero vacias!\n"<<endl;
 	hash->print();
 
-//	hash->add("123", "paytiti");
-//	hash->print();
-//	hash->erase("123");
-//	hash->print();
+	hash->add("123", "paytiti");
+	hash->print();
+	hash->erase("123");
+	hash->print();
 
-	//char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
+	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
 	//este es el maximo char[244] que puede entrar, sino pincha
 	//char value[244] = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012";
 
 //	string value = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012";
-//
-//	cout<< "+123\n"<<endl;
-//	hash->add("123",value);
+
+	cout<< "+123\n"<<endl;
+	hash->add("123",value);
+	hash->print();
+
+	cout<< "+915\n"<<endl;
+	hash->add("915",value);
+	hash->print();
+
+	cout<< "+629\n"<<endl;
+	hash->add("629",value);
+	hash->print();
+
+	cout<< "+411\n"<<endl;
+	hash->add("411",value);
+	hash->print();
+
+	cout<< "+200\n"<<endl;
+	hash->add("200",value);
+	hash->print();
+
+	cout<< "+863\n"<<endl;
+	hash->add("863",value);
+	hash->print();
+
+	cout<< "-629\n"<<endl;
+	hash->erase("629");
+	hash->print();
+
+	cout<< "+408\n"<<endl;
+	hash->add("408",value);
+	hash->print();
+
+	cout<< "+34\n"<<endl;
+	hash->add("34",value);
+	hash->print();
+
+	cout<< "+510\n"<<endl;
+	hash->add("510",value);
+	hash->print();
+
+	cout<< "-863\n"<<endl;
+	hash->erase("863");
+	hash->print();
+
+	cout<< "+775\n"<<endl;
+	hash->add("775",value);
+	hash->print();
+
+	cout<<"modify value 123"<<endl;
+	hash->modify("123","pepitooooooooo");
+	hash->print();
+
+	cout<<"pruebo el get de hash con 123"<<endl;
+	StringInputData* sid = hash->get("123");
+	if (sid != NULL) {
+		cout << sid->toString() << endl;
+	} else {
+		cout << "No se encontro la clave 123 "<< endl;
+	}
+
+//////////////////
+	//todo al sacarle el 775 y poner este , ver que no anda bien.. revisar!
+//	cout<< "+1412080015\n"<<endl;
+//	hash->add("1412080015",value);
+//	hash->print();
+//	hash->modify("1412080015","kkkkkkkkk");
+//	hash->print();
+/////////////////////////
+
+//	cout<< "+1412080015\n"<<endl;
+//	hash->add("1412080015",value);
+//	hash->print();
+//	hash->modify("1412080015","pepe");
 //	hash->print();
 
-//	cout<< "+915\n"<<endl;
-//	hash->add(915,value);
-//	hash->print();
-//
-//	cout<< "+629\n"<<endl;
-//	hash->add(629,value);
-//	hash->print();
-//
-//	cout<< "+411\n"<<endl;
-//	hash->add(411,value);
-//	hash->print();
-//
-//	cout<< "+200\n"<<endl;
-//	hash->add(200,value);
-//	hash->print();
-//
-//	cout<< "+863\n"<<endl;
-//	hash->add(863,value);
-//	hash->print();
-//
-//	cout<< "-629\n"<<endl;
-//	hash->erase(629);
-//	hash->print();
-//
-//	cout<< "+408\n"<<endl;
-//	hash->add(408,value);
-//	hash->print();
-//
-//	cout<< "+34\n"<<endl;
-//	hash->add(34,value);
-//	hash->print();
-//
-//	cout<< "+510\n"<<endl;
-//	hash->add(510,value);
-//	hash->print();
-//
-//	cout<< "-863\n"<<endl;
-//	hash->erase(863);
-//	hash->print();
-//
-////	cout<< "+775\n"<<endl;
-////	hash->add(775,value);
-////	hash->print();
-////////////////////
-//	//todo al sacarle el 775 y poner este , ver que no anda bien.. revisar!
-//	cout<< "+1412080015\n"<<endl;
-//	hash->add(1412080015,value);
-//	hash->print();
-//	hash->modify(1412080015,"kkkkkkkkk");
-//	hash->print();
-///////////////////////////
-//
-//	cout<< "+1412080015\n"<<endl;
-//	hash->add(1412080015,value);
-//	hash->print();
-//	hash->modify(1412080015,"pepe");
-//	hash->print();
+
 
 	delete hash;
 }
@@ -304,8 +319,8 @@ int main(int argc, const char* argv[]){
 	//testDelete();
 	//tests();
 
-	//testEjemplo();
-	testBigInt();
+	testEjemplo();
+	//testBigInt();
 	//testMd5();
 	//testHashFunction();
 
@@ -321,12 +336,27 @@ int main(int argc, const char* argv[]){
 	//	unsigned long long int supermax = 18446744073709551615; // maximo! 18446744073709551615 (longitud de 20)
 	//	cout << supermax <<endl;
 
-	long double mydouble =  710000811000714080406040107000314051502120803061010050910010700/2;
-	//HAY QUE SACARLE EL CERO ADELANTE!
-	//cout<<mydouble<<endl;
+	//long double mydouble =  710000811000714080406040107000314051502120803061010050910010700/2;
 
-	long double igual = 10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*6.02331;
-	//cout<<mydouble<<endl;
+//	cout << MD5("ivi")<<endl;
+//
+//	//HAY QUE SACARLE EL CERO ADELANTE si es que tiene
+//	long double mydouble =  1105020005030501011204110211150910060810001412140604130909050506;
+//	cout<<mydouble<<endl;
+//
+//	long double igual = 10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10;
+//	cout<<igual<<endl;
+//
+//
+//	  int n;
+//	  n=70;
+//	  cout << hex << n << endl;
+//	  cout << dec << n << endl;
+
+
+
+
+
 
 //	long double mydouble2 = 1234567890012345678901234567890123456789012345678901234567890123;
 //	cout<<mydouble2<<endl;
@@ -336,7 +366,7 @@ int main(int argc, const char* argv[]){
 
 
 //	cout << MD5("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789")<<endl;
-//	cout << MD5("D")<<endl;
+//  cout << MD5("D")<<endl;
 //	cout << MD5("d")<<endl;
 //	cout << MD5("di")<<endl;
 //	cout << MD5("div")<<endl;
