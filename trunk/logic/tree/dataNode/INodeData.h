@@ -24,7 +24,10 @@ private:
 public:
 
 	//TODO pablo - reemplace todos los lugares donde aparecia UNDEFINED_KEY como un string vacio ("")
-	//static const int UNDEFINED_KEY = -1;
+
+	static const std::string UNDEFINED_KEY;
+
+
 
 public:
 
