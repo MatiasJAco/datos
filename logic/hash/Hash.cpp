@@ -9,6 +9,8 @@
 #include <sstream>
 #include <iostream>
 #include "../../logic/input/StringInputData.h"
+#include "../logic/bigint/BigIntegerLibrary.hh"
+#include "../logic/md5/MD5.h"
 
 Hash::Hash() {
 	this->hashTable->createFile();
@@ -58,10 +60,58 @@ void Hash::inicializeHashFile(){
 }
 
 int Hash::calculateHashFunction(std::string key) {
-	//return key % this->hashTable->getSize();
-	//TODO pablo - armar nueva funcion hash
-
-	return atoi (key.c_str()) % this->hashTable->getSize();;
+	int numero = 0;
+	try {
+	MD5 md5(key);
+	std::string md5KeyString(md5.hexdigest());
+	int i = 0;
+	std::string nueva = "";
+	while(i < 32) {
+		if (md5KeyString.substr(i,1).compare("0") == 0) {
+			nueva.append("00");
+		} else if (md5KeyString.substr(i,1).compare("1") == 0) {
+			nueva.append("01");
+		} else if (md5KeyString.substr(i,1).compare("2") == 0) {
+			nueva.append("02");
+		} else if (md5KeyString.substr(i,1).compare("3") == 0) {
+			nueva.append("03");
+		} else if (md5KeyString.substr(i,1).compare("4") == 0) {
+			nueva.append("04");
+		} else if (md5KeyString.substr(i,1).compare("5") == 0) {
+			nueva.append("05");
+		} else if (md5KeyString.substr(i,1).compare("6") == 0) {
+			nueva.append("06");
+		} else if (md5KeyString.substr(i,1).compare("7") == 0) {
+			nueva.append("07");
+		} else if (md5KeyString.substr(i,1).compare("8") == 0) {
+			nueva.append("08");
+		} else if (md5KeyString.substr(i,1).compare("9") == 0) {
+			nueva.append("09");
+		} else if (md5KeyString.substr(i,1).compare("a") == 0) {
+			nueva.append("10");
+		} else if (md5KeyString.substr(i,1).compare("b") == 0) {
+			nueva.append("11");
+		} else if (md5KeyString.substr(i,1).compare("c") == 0) {
+			nueva.append("12");
+		} else if (md5KeyString.substr(i,1).compare("d") == 0) {
+			nueva.append("13");
+		} else if (md5KeyString.substr(i,1).compare("e") == 0) {
+			nueva.append("14");
+		} else if (md5KeyString.substr(i,1).compare("f") == 0) {
+			nueva.append("15");
+		} else {
+			nueva.append(md5KeyString.substr(i,1));
+		}
+		i++;
+	}
+	BigInteger f = stringToBigInteger(nueva);
+	BigInteger g = BigInteger(this->hashTable->getSize());
+	numero = (f % g).toInt();
+	} catch(...) {
+		std::cout << "error desconocido. " << std::endl;
+	}
+	return numero;
+	//return atoi (key.c_str()) % this->hashTable->getSize();
 }
 
 void Hash::saveBucket(Bucket * bucket){
@@ -119,7 +169,7 @@ int Hash::add(std::string clave, string valor) {
 	StringInputData* sid = new StringInputData();
 	sid->setKey(clave);
 	sid->setValue(valor);
-	bool result = this->add(sid);
+	int result = this->add(sid);
 	delete sid;
 	return result;
 }
