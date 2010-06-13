@@ -1,15 +1,15 @@
 /*
- * SecuencialFile.cpp
+ * SequentialFile.cpp
  *
  *  Created on: 11/06/2010
  *      Author: alex
  */
 
-#include "SecuencialFile.h"
+#include "SequentialFile.h"
 
 using namespace std;
 
-SecuencialFile::SecuencialFile(accessModeEnum mode) {
+SequentialFile::SequentialFile(accessModeEnum mode) {
 
 	m_AccessMode = mode;
 	m_InputType = TEXT;
@@ -19,12 +19,12 @@ SecuencialFile::SecuencialFile(accessModeEnum mode) {
 
 }
 
-SecuencialFile::~SecuencialFile() {
+SequentialFile::~SequentialFile() {
 	close();
 
 }
 
-bool SecuencialFile::close()
+bool SequentialFile::close()
 {
 	bool retVal;
 
@@ -43,7 +43,7 @@ bool SecuencialFile::close()
 	return retVal;
 }
 
-bool SecuencialFile::open(const std::string fileName)
+bool SequentialFile::open(const std::string fileName)
 {
 	bool retVal=false;
 
@@ -95,14 +95,14 @@ bool SecuencialFile::open(const std::string fileName)
 	return retVal;
 }
 
-bool SecuencialFile::writeHeader()
+bool SequentialFile::writeHeader()
 {
 	bool retVal=false;
 	return retVal;
 }
 
 
-char SecuencialFile::readChar()
+char SequentialFile::readChar()
 {
 	char  retChar;
 
@@ -111,7 +111,7 @@ char SecuencialFile::readChar()
 	return retChar;
 }
 
-void SecuencialFile::readNChar(char * stream, unsigned int ammount)
+void SequentialFile::readNChar(char * stream, unsigned int ammount)
 {
 	if(m_AccessMode == WRITE_FILE)
 		throw  PhysicalException(PhysicalException::INVALID_FILE_OPERATION);
@@ -136,7 +136,7 @@ void SecuencialFile::readNChar(char * stream, unsigned int ammount)
 
 }
 
-void SecuencialFile::writeNChar(const char *stream, unsigned int ammount)
+void SequentialFile::writeNChar(const char *stream, unsigned int ammount)
 {
 	if(m_AccessMode == READ_FILE)
 		throw  PhysicalException(PhysicalException::INVALID_FILE_OPERATION);
@@ -163,49 +163,49 @@ void SecuencialFile::writeNChar(const char *stream, unsigned int ammount)
 
 }
 
-void SecuencialFile::fillBuffer()
+void SequentialFile::fillBuffer()
 {
 	m_FileHandler.read(m_Buffer, m_BufferSize*sizeof(char));
 }
 
-void SecuencialFile::writeBuffer()
+void SequentialFile::writeBuffer()
 {
 	m_FileHandler.write(m_Buffer, m_CurrentPos*sizeof(char));
 }
 
 
-bool SecuencialFile::readHeader()
+bool SequentialFile::readHeader()
 {
 	bool retVal=false;
 	return retVal;
 }
 
-accessModeEnum SecuencialFile::getAccessMode() const
+accessModeEnum SequentialFile::getAccessMode() const
 {
     return m_AccessMode;
 }
 
-unsigned int SecuencialFile::getBufferSize() const
+unsigned int SequentialFile::getBufferSize() const
 {
     return m_BufferSize;
 }
 
-dataTypeEnum SecuencialFile::getInputType() const
+dataTypeEnum SequentialFile::getInputType() const
 {
     return m_InputType;
 }
 
-void SecuencialFile::setAccessMode(accessModeEnum AccessMode)
+void SequentialFile::setAccessMode(accessModeEnum AccessMode)
 {
     this->m_AccessMode = AccessMode;
 }
 
-void SecuencialFile::setBufferSize(unsigned int BufferSize)
+void SequentialFile::setBufferSize(unsigned int BufferSize)
 {
     this->m_BufferSize = BufferSize;
 }
 
-void SecuencialFile::setInputType(dataTypeEnum InputType)
+void SequentialFile::setInputType(dataTypeEnum InputType)
 {
     this->m_InputType = InputType;
 }

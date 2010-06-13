@@ -1,5 +1,5 @@
 /*
- * SecuencialFile.h
+ * SequentialFile.h
  *
  *  Created on: 11/06/2010
  *      Author: alex
@@ -19,14 +19,14 @@ typedef enum {READ_FILE, WRITE_FILE} accessModeEnum;
  * Implementacion de un archivo secuencial con un buffer interno para realizar operaciones,
  * para reducir la cantidad de operaciones de disco
  */
-class SecuencialFile: public File {
+class SequentialFile: public File {
 
 
 public:
 	static const int DEFAULT_BUFFER_SIZE = 100;
 
-	SecuencialFile(accessModeEnum type);
-	virtual ~SecuencialFile();
+	SequentialFile(accessModeEnum type);
+	virtual ~SequentialFile();
 
 	/**
 	 * Abre el archivo. Si no existe se crea.
