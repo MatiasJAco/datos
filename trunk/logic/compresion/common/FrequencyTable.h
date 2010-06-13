@@ -7,11 +7,13 @@
 
 #ifndef FREQUENCYTABLE_H_
 #define FREQUENCYTABLE_H_
+
 #include <list>
 #include "CharFrequency.h"
 
 class FrequencyTable {
-typedef list <CharFrequency>CharFrequencyList;
+
+typedef std::list<CharFrequency> CharFrequencyList;
 typedef CharFrequencyList::iterator CharFrequencyListIterator;
 
 
@@ -22,7 +24,9 @@ public:
 
 	unsigned long getFrequency(char c);
 
-	unsigned long getFrequencySum();
+	unsigned long getFrequencyTotal();
+
+	unsigned long getCumFrequency(char c);
 
 	void setFrequency(char c, unsigned long);
 
