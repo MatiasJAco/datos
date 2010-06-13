@@ -8,10 +8,12 @@
 #ifndef CHARFREQUENCY_H_
 #define CHARFREQUENCY_H_
 
+#include <iostream>
+
 class CharFrequency {
 public:
 	CharFrequency();
-	CharFrequency(CharFrequency);
+	CharFrequency(const CharFrequency&);
 	CharFrequency(char, unsigned long);
 	virtual ~CharFrequency();
 
