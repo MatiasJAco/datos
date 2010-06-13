@@ -47,11 +47,11 @@ private:
 	void inicializeHashFile();
 
 	/**
-	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
-	 * @param key Es la clave del dato que se desea hallar.
-	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
+	 * Agrega un elemento nuevo al archivo Hash.
+	 * @param sid Es el dato que se desea agregar.
+	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
 	 */
-	bool existsElement(std::string key);
+	int add(StringInputData* sid);
 
 	/**
 	 * Verifica si existe un dato en un bloque, e indica en qué posición.
@@ -109,11 +109,11 @@ public:
 	int add(std::string clave, string valor);
 
 	/**
-	 * Agrega un elemento nuevo al archivo Hash.
-	 * @param sid Es el dato que se desea agregar.
-	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
 	 */
-	int add(StringInputData* sid);
+	bool existsElement(std::string key);
 
 	/**
 	 * This method gets a Data object, giving it's key.

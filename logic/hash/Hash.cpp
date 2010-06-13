@@ -133,6 +133,7 @@ bool Hash::existsElement(std::string key) {
 	int aux = -1;
 	return (this->existsElement(key,aux));
 }
+
 bool Hash::existsElement(std::string key, int & position) {
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Block * block = this->hashFile->getBlock(bucketNumber);
