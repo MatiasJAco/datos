@@ -77,9 +77,8 @@ bool    INodeData::operator <(INodeData &p)
 {
 	bool retVal=false;
 
-	retVal = m_key < p.m_key || p.m_key==UNDEFINED_KEY;
-	std::string stringVacio = "";
-	retVal = (strcmp(m_key.c_str(),p.m_key.c_str())<0) || (strcmp(p.m_key.c_str(),stringVacio.c_str())==0);
+
+	retVal = (strcmp(m_key.c_str(),p.m_key.c_str())<0) || (strcmp(p.m_key.c_str(),INodeData::UNDEFINED_KEY.c_str())==0);
 
 	return retVal;
 }
@@ -88,9 +87,7 @@ bool    INodeData::operator >(INodeData &p)
 {
 	bool retVal=false;
 
-	retVal = (p.m_key!= UNDEFINED_KEY)&&(m_key > p.m_key || m_key==UNDEFINED_KEY);
-	std::string stringVacio = "";
-	retVal = ( (strcmp(p.m_key.c_str(),stringVacio.c_str())!=0) && ((strcmp(m_key.c_str(),p.m_key.c_str()) > 0) ) || (strcmp(m_key.c_str(),stringVacio.c_str()) == 0));
+	retVal = ( (strcmp(p.m_key.c_str(),INodeData::UNDEFINED_KEY.c_str())!=0) && (((strcmp(m_key.c_str(),p.m_key.c_str()) > 0) ) || (strcmp(m_key.c_str(),INodeData::UNDEFINED_KEY.c_str()) == 0)));
 	return retVal;
 }
 

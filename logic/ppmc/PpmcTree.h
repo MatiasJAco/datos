@@ -9,6 +9,10 @@
 #define PPMCTREE_H_
 
 #include "Ppmc.h"
+#include "../logic/input/StringInputData.h"
+#include "../logic/tree/BPlusTree.h"
+#include "stdlib.h"
+
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC con almacenamiento de la tabla en un Arbol
@@ -17,6 +21,8 @@
 class PpmcTree: public Ppmc {
 
 private:
+	/* El arbol que se usa para guardar las tablas de estadisticas del algoritmo de compresion. */
+		BPlusTree* tree;
 
 	/**
 	 * Guarda en el Arbol la clave context y el valor value
@@ -36,8 +42,15 @@ private:
 	bool findContext(const char* context, char character, std::string & value);
 
 
+
 public:
 
+
+	int createContext(std::string context);
+	bool existsCharacterInContext(std::string context, std::string character);
+	int addCharacterToContext(std::string context, std::string character);
+	int increaseFrequency(std::string context, std::string character);
+	int getCharacterOccurrences(std::string context, std::string character);
 	PpmcTree();
 	virtual ~PpmcTree();
 
