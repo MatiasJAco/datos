@@ -15,19 +15,7 @@ PpmcHash::~PpmcHash() {
 	delete this->hash;
 }
 
-int PpmcHash::saveContext(const char* context, std::string value){
-	//TODO pablo - comente el add para q ande
-	//return this->hash->add(atoi(context), value);
-	return 0;
-}
-
-bool PpmcHash::findContext(const char* context, char character, std::string & value){
-	//TODO hay que llamar al get de hash
-	return true;
-}
-
-void PpmcHash::stoupper(std::string& s)
-{
+void PpmcHash::stoupper(std::string& s) {
 	std::string::iterator i = s.begin();
 	std::string::iterator end = s.end();
 
@@ -37,40 +25,92 @@ void PpmcHash::stoupper(std::string& s)
 	}
 }
 
-int PpmcHash::getNumberForLetter(std::string letter)
-{
-	this->stoupper(letter);
-	const char* character = letter.c_str();
-	int i = static_cast<int>(*character);
-	return i-65;
-}
-
-int PpmcHash::generateContext(std::string context, std::string letter) {
-	int letterNumber = this->getNumberForLetter(letter);
-	std::string contextTable = "";
-
-	for (int i = 0; i < letterNumber; i++) {
-		contextTable.append("0");
-	}
-
-	contextTable.append("1");
-
-	for (int i = letterNumber; i < 25; i++) {
-		contextTable.append("0");
-	}
-
-	this->saveContext(contextTable.c_str(), contextTable);
+int PpmcHash::createContext(std::string context) {
+	string valor = "27,1-"; // 27 es el caracter de escape.
+	this->hash->add(context, valor);
 	return 0;
 }
 
-bool PpmcHash::compress(std::string path,int context){
+bool PpmcHash::existsCharacterInContext(std::string context, std::string character) {
+	bool exists = this->hash->existsElement(context);
+	if (exists) { // Si existe el contexto, lo obtengo y busco el caracter en su tabla.
+		StringInputData* stringInputData = this->hash->get(context);
+		std::string contextTable = stringInputData->getValue();
+		if (contextTable.find(character,0) != string::npos) { // Si encuentra el caracter en la tabla del contexto, devuelve true.
+			return true;
+		}
+	}
+	return false;
+}
+
+int PpmcHash::addCharacterToContext(std::string context, std::string character) {
+	if (this->existsCharacterInContext(context, character)) {
+		return 1;
+	}
+	StringInputData* stringInputData = this->hash->get(context);
+	std::string contextTable = stringInputData->getValue();
+	contextTable.append(character); // Agrega el caracter al contexto.
+	contextTable.append(",1-"); // Inicialmente, el caracter se agrega con una ocurrencia.
+	this->hash->modify(context, contextTable);
+	return 0;
+}
+
+int PpmcHash::increaseFrequency(std::string context, std::string character) {
+	if (!this->existsCharacterInContext(context, character)) {
+		return 1;
+	}
+	StringInputData* stringInputData = this->hash->get(context);
+	std::string contextTable = stringInputData->getValue();
+	std::string newContextTable = "";
+
+	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
+	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
+
+	newContextTable.append(contextTable, characterIndex,1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
+	newContextTable.append(",");
+
+	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	int occurrences = atoi(stringOccurrences.c_str());
+	occurrences++;
+
+	std::string newStringOccurrences;
+	std::stringstream aux;
+	aux << occurrences;
+	newStringOccurrences = aux.str();
+
+	newContextTable.append(newStringOccurrences); // Agrega la cantidad de ocurrencias anterior, mas 1.
+	newContextTable.append("-");
+	newContextTable.append(contextTable, contextTable.find("-",characterIndex)+1, contextTable.length());
+	return 0;
+}
+
+int PpmcHash::getCharacterOccurrences(std::string context, std::string character) {
+	if (!this->existsCharacterInContext(context, character)) {
+		return 1;
+	}
+	StringInputData* stringInputData = this->hash->get(context);
+	std::string contextTable = stringInputData->getValue();
+
+	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
+	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
+
+	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	int occurrences = atoi(stringOccurrences.c_str());
+	return occurrences;
+}
+
+int PpmcHash::getTotalOccurencesFromContext(std::string context) {
+	return 0;
+}
+
+bool PpmcHash::compress(std::string path,int context) {
 	std::cout<<path;
 	return true;
 }
 
-bool PpmcHash::deCompress(const std::string & path){
+bool PpmcHash::deCompress(const std::string & path) {
 	return false;
 }
 
-void PpmcHash::getStatistics(){
+void PpmcHash::getStatistics() {
 }

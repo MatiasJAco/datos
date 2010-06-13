@@ -23,49 +23,60 @@ private:
 	Hash* hash;
 
 	/**
-	 * Guarda en el Hash la clave context y el valor value
-	 * @param context Es la clave a guardar en la estructura
-	 * @param value Es el valor a guardar en la estructura
-	 * @return Devuelve 0 si pudo guardar el contexto, o un numero distinto de cero en caso de no poder.
-	 */
-	int saveContext(const char* context, std::string value);
-
-	/**
-	 * Busca en el Hash la clave context y devuelve el valor value
-	 * @param context Es la clave a buscar en la estructura
-	 * @param character Es el caracter "dado character"
-	 * @param value Es el valor de la clave (la probabilidad). Este valor lo devuelve
-	 * @return Devuelve true si lo encontro. En caso contrario devuelve false.
-	 */
-	bool findContext(const char* context, char character, std::string & value);
-
-
-public:
-	PpmcHash();
-	virtual ~PpmcHash();
-
-
-	/**
-	 * Este metodo crea un nuevo contexto y lo guarda.
-	 * @param context Es una cadena que representa el contexto.
-	 * @param letter Es la letra leida luego del contexto.
-	 * @return Devuelve 0 si se pudo crear y guardar el contexto o un numero distinto a 0 si hubo un error.
-	 */
-	int generateContext(std::string context, std::string letter);
-
-	/**
 	 * Convierte una cadena a mayusculas.
 	 * @param s La cadena a pasar a mayusculas.
 	 */
 	void stoupper(std::string& s);
 
+public:
+	PpmcHash();
+	virtual ~PpmcHash();
+
 	/**
-	 * Este metodo devuelve el numero que le corresponde a una letra.
-	 * @param letter Es la letra sobre la cual se quiere averiguar su numero.
-	 * @return Devuelve el numero correspondiente de la letra.
-	 * 		   Por ejemplo, para la A seria el 0, para la E seria el 4.
+	 * Guarda en el Hash un nuevo contexto.
+	 * @param context Es el nombre del contexto. Por ejemplo "DIV".
+	 * @return Devuelve 0 si pudo guardar el contexto, o un numero distinto de cero en caso de no poder.
 	 */
-	int getNumberForLetter(std::string letter);
+	int createContext(std::string context);
+
+	/**
+	 * Busca si existe la letra del contexto dado, en la tabla del PPMC (que está guardada en el Hash).
+	 * @param context Es el contexto a buscar en la tabla de estadisticas del PPMC.
+	 * @param character Es el caracter a encontrar en el contexto pasado por parámetro.
+	 * @return Devuelve true si lo encontro. En caso contrario devuelve false.
+	 */
+	bool existsCharacterInContext(std::string context, std::string character);
+
+	/**
+	 * Este método agrega un caracter a un contexto.
+	 * @param context Es el contexto sobre el cual se agrega el caracter pasado por parámetro.
+	 * @param character Es el caracter que se desea agregar al contexto pasado por parámetro.
+	 * @return Devuelve 0 si pudo agregar el caracter al contexto, o un número distinto de cero si no pudo.
+	 */
+	int addCharacterToContext(std::string context, std::string character);
+
+	/**
+	 * Aumenta en 1 la ocurrencia del caracter pasado por parámetro, en el contexto pasado por parámetro.
+	 * @param character El caracter cuya frecuencia se aumentará en 1.
+	 * @param context El contexto en el cual se aumentará la frecuencia del caracter.
+	 * @return Devuelve 0 si pudo aumentar la ocurrencia del caracter, o un número distinto de cero si no pudo.
+	 */
+	int increaseFrequency(std::string context, std::string character);
+
+	/**
+	 * Devuelve la cantidad de ocurrencias de un caracter en un contexto.
+	 * @param context Es el contexto sobre el cual busca las ocurrencias del caracter dado por parámetro.
+	 * @param character Es el caracter al cual se le cuentan las ocurrencias.
+	 * @return Devuelve la cantidad de ocurrencias de un caracter en el contexto dado por parámetro.
+	 */
+	int getCharacterOccurrences(std::string context, std::string character);
+
+	/**
+	 * Devuelve la cantidad total de ocurrencias de un contexto.
+	 * @param context Es el contexto sobre el cual se pide la cantidad de occurencias que hubo.
+	 * @return Devuelve la cantidad total de ocurrencias del contexto pasado por parámetro.
+	 */
+	int getTotalOccurencesFromContext(std::string context);
 
 	/**
 	 * Este metodo se encarga de la compresión.
