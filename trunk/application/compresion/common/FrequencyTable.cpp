@@ -31,14 +31,17 @@ string FrequencyTable::toString()
 
 
 
-void FrequencyTable::setFrequency(char c, unsigned long  unsignedLong)
+void FrequencyTable::setFrequency(char c, unsigned long freq)
 {
+	CharFrequency cf(c, freq);
+	setFrequency(cf);
 }
 
 
 
 void FrequencyTable::setFrequency(CharFrequency cf)
 {
+	m_Frequencies.push_back(cf);
 }
 
 

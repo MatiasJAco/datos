@@ -11,15 +11,28 @@
 #include <iostream>
 #include <sstream>
 
+/**
+ * Clase que guarda el par caracter/frecuencia
+ */
 class CharFrequency {
 public:
+	//--------------------CONSTRUCTOR/DESTRUCTOR---------------------------//
 	CharFrequency();
 	CharFrequency(const CharFrequency&);
 	CharFrequency(char, unsigned long);
 	virtual ~CharFrequency();
 
+	/**
+	 * Convierte al par caracter/Frecuencia en un string para su posterior
+	 * guardado en disco
+	 * @return string el par caracter/frecuencia serializado
+	 */
 	std::string toString();
 
+	//-------------------OPERATORS----------------------------------------//
+	bool operator < (const CharFrequency &cF) const;
+
+	//-------------------ATRIBUTES----------------------------------------//
 private:
 
 	char m_Char;
