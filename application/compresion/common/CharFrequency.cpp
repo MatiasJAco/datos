@@ -29,6 +29,11 @@ string CharFrequency::toString()
 	return retStr.str();
 }
 
+bool CharFrequency::operator < (const CharFrequency &cF) const
+{
+	return m_Char < cF.m_Char;
+}
+
 CharFrequency::CharFrequency(const CharFrequency & charFrequency)
 {
 }
