@@ -66,10 +66,10 @@ int PpmcHash::increaseFrequency(std::string context, std::string character) {
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
 	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
 
-	newContextTable.append(contextTable, characterIndex,1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
+	newContextTable.append(contextTable,0,characterIndex+1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
 	newContextTable.append(",");
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
 	int occurrences = atoi(stringOccurrences.c_str());
 	occurrences++;
 
@@ -94,7 +94,7 @@ int PpmcHash::getCharacterOccurrences(std::string context, std::string character
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
 	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
 	int occurrences = atoi(stringOccurrences.c_str());
 	return occurrences;
 }
