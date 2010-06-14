@@ -8,12 +8,12 @@
 #include "PpmcTree.h"
 
 PpmcTree::PpmcTree() {
-	// TODO Auto-generated constructor stub
-
+	StringInputData typedata("4","hola");
+	this->tree = new BPlusTree("arbol.dat",95,0.5,typedata);
 }
 
 PpmcTree::~PpmcTree() {
-	// TODO Auto-generated destructor stub
+	delete this->tree;
 }
 
 bool PpmcTree::saveContext(const char* context, std::string value){
@@ -75,10 +75,10 @@ int PpmcTree::increaseFrequency(std::string context, std::string character) {
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
 	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
 
-	newContextTable.append(contextTable, characterIndex,1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
+	newContextTable.append(contextTable,0,characterIndex+1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
 	newContextTable.append(",");
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
 	int occurrences = atoi(stringOccurrences.c_str());
 	occurrences++;
 
@@ -90,6 +90,8 @@ int PpmcTree::increaseFrequency(std::string context, std::string character) {
 	newContextTable.append(newStringOccurrences); // Agrega la cantidad de ocurrencias anterior, mas 1.
 	newContextTable.append("-");
 	newContextTable.append(contextTable, contextTable.find("-",characterIndex)+1, contextTable.length());
+	stringInputData.setValue(newContextTable);
+	this->tree->modifyElement(datoABuscar,stringInputData);
 	return 0;
 }
 
@@ -106,19 +108,40 @@ int PpmcTree::getCharacterOccurrences(std::string context, std::string character
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
 	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+1,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
 	int occurrences = atoi(stringOccurrences.c_str());
 	return occurrences;
 }
 
 
-bool Ppmc::compress(std::string path,int context){
+bool PpmcTree::compress(std::string path,int context){
+	int result=0;
+	std::string newContext="";
+	while(result!=1){
+		char readed;//=this->readNextCharacter(result);
+		if(result!=1){
+			newContext=newContext+readed;
+			bool exists =false;
+			exists=this->existsCharacterInContext(newContext,newContext);
+			if (exists)
+				this->increaseFrequency(newContext,newContext);
+			};
+		};
 	std::cout<<path;
 	return true;
 }
 
-bool Ppmc::deCompress(const std::string & path){
+bool PpmcTree::deCompress(const std::string & path){
 	return false;
 }
 
+void PpmcTree::showContexts(){
+	StringInputData data;
+	this->tree->showTree(data);
+
+};
+
+void PpmcTree::getStatistics(){
+
+};
 
