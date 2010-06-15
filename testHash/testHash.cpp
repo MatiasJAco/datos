@@ -5,6 +5,7 @@
 #include "../logic/hash/Hash.h"
 #include "../logic/md5/MD5.h"
 #include "../logic/bigint/BigIntegerLibrary.hh"
+#include "../logic/ppmc/PpmcHash.h"
 
 using namespace std;
 
@@ -333,11 +334,90 @@ void testHashFunction() {
 	std::cout << (f % g).toInt() << std::endl;
 }
 
-void testHexa() {
-	/*unsigned long long int hola = 0xFFFFFFFFFFFFFFFE;
-	cout << hola << endl;
-	unsigned long long int hola2 = 0xa;
-	cout << hola2 << endl;*/
+/* Guarda el contexto "ABC" con la letra "A" y el Escape. Ambos tienen 1 ocurrencia. */
+void testPpmc1() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+	ppmcHash->addCharacterToContext("ABC","A");
+
+	/* Busca cantidad de ocurrencias de "A" y de ESCAPE en el contexto "ABC". */
+	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 1) && (ppmcHash->getCharacterOccurrences("ABC","*") == 1)) {
+		std::cout << "ok test ppmc 1" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 1" << std::endl;
+	}
+}
+
+/* Guarda el contexto "ABC". Letra "A": 11 ocurrencias. Escape: 1 ocurrencia. */
+void testPpmc2() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+	ppmcHash->addCharacterToContext("ABC","A");
+	for (int i = 0; i < 10; i++) {
+		ppmcHash->increaseFrequency("ABC","A");
+	}
+	/* Busca cantidad de ocurrencias de "A" y de ESCAPE en el contexto "ABC". */
+	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 11) && (ppmcHash->getCharacterOccurrences("ABC","*") == 1)) {
+		std::cout << "ok test ppmc 2" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 2" << std::endl;
+	}
+}
+
+/* Crea contexto "ABC". Verifica que el caracter "A" no exista. */
+void testPpmc3() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+
+	if (!ppmcHash->existsCharacterInContext("ABC","A")) {
+		std::cout << "ok test ppmc 3" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 3" << std::endl;
+	}
+}
+
+/* Crea contexto "ABC". Carga el caracter "X" y verifica que exista el mismo. */
+void testPpmc4() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+	ppmcHash->addCharacterToContext("ABC","X");
+
+	if (ppmcHash->existsCharacterInContext("ABC","X")) {
+		std::cout << "ok test ppmc 4" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 4" << std::endl;
+	}
+}
+
+/* Crea contexto "ABC" con 2 caracteres ("A" y el "B") con 1 ocurrencia cada uno. */
+void testPpmc5() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+	ppmcHash->addCharacterToContext("ABC","A");
+	ppmcHash->addCharacterToContext("ABC","B");
+
+	if ((ppmcHash->existsCharacterInContext("ABC","A")) && (ppmcHash->existsCharacterInContext("ABC","B"))) {
+		std::cout << "ok test ppmc 5" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 5" << std::endl;
+	}
+}
+
+/* Crea contexto "ABC". Carga los caracteres "A" y el "B" con 1 ocurrencia cada uno. */
+void testPpmc6() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->createContext("ABC");
+	ppmcHash->addCharacterToContext("ABC","A");
+	ppmcHash->addCharacterToContext("ABC","B");
+	ppmcHash->increaseFrequency("ABC","A");
+	ppmcHash->increaseFrequency("ABC","B");
+	ppmcHash->increaseFrequency("ABC","B");
+
+	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 2) && (ppmcHash->getCharacterOccurrences("ABC","B") == 3) && (ppmcHash->getTotalOccurencesFromContext("ABC") == 6)) {
+		std::cout << "ok test ppmc 6" << std::endl;
+	} else {
+		std::cout << "fallo test ppmc 6" << std::endl;
+	}
 }
 
 int main(int argc, const char* argv[]){
@@ -347,12 +427,19 @@ int main(int argc, const char* argv[]){
 	//testTable4();
 	//testDelete();
 	//tests();
-	testEjemplo();
+	//testEjemplo();
 	//testBigInt();
 	//testMd5();
 	//testHashFunction();
 
-	unsigned long long int mitest = 18446744073709551614 / 2;
+	//testPpmc1();
+	//testPpmc2();
+	//testPpmc3();
+	//testPpmc4();
+	//testPpmc5();
+	testPpmc6();
+
+	//unsigned long long int mitest = 18446744073709551614 / 2;
 	//cout <<mitest;
 //	unsigned long int maximo = 4294967295; //este es el maximo 4294967295
 //	cout <<maximo<<endl;
