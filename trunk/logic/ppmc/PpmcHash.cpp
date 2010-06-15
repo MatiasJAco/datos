@@ -26,7 +26,7 @@ void PpmcHash::stoupper(std::string& s) {
 }
 
 int PpmcHash::createContext(std::string context) {
-	string valor = "27,1-"; // 27 es el caracter de escape.
+	string valor = "*/,1/-"; // * es el caracter de escape.
 	this->hash->add(context, valor);
 	return 0;
 }
@@ -50,7 +50,7 @@ int PpmcHash::addCharacterToContext(std::string context, std::string character) 
 	StringInputData* stringInputData = this->hash->get(context);
 	std::string contextTable = stringInputData->getValue();
 	contextTable.append(character); // Agrega el caracter al contexto.
-	contextTable.append(",1-"); // Inicialmente, el caracter se agrega con una ocurrencia.
+	contextTable.append("/,1/-"); // Inicialmente, el caracter se agrega con una ocurrencia.
 	this->hash->modify(context, contextTable);
 	return 0;
 }
@@ -64,12 +64,12 @@ int PpmcHash::increaseFrequency(std::string context, std::string character) {
 	std::string newContextTable = "";
 
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
-	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
+	size_t dashIndex = contextTable.find("/-",characterIndex); // Busca el primer guión luego del caracter.
 
 	newContextTable.append(contextTable,0,characterIndex+1); // Copia la cadena vieja a la nueva, hasta encontrar la letra inclusive.
-	newContextTable.append(",");
+	newContextTable.append("/,");
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+3,dashIndex-characterIndex-3);
 	int occurrences = atoi(stringOccurrences.c_str());
 	occurrences++;
 
@@ -79,8 +79,9 @@ int PpmcHash::increaseFrequency(std::string context, std::string character) {
 	newStringOccurrences = aux.str();
 
 	newContextTable.append(newStringOccurrences); // Agrega la cantidad de ocurrencias anterior, mas 1.
-	newContextTable.append("-");
+	newContextTable.append("/-");
 	newContextTable.append(contextTable, contextTable.find("-",characterIndex)+1, contextTable.length());
+	this->hash->modify(context, newContextTable);
 	return 0;
 }
 
@@ -92,15 +93,27 @@ int PpmcHash::getCharacterOccurrences(std::string context, std::string character
 	std::string contextTable = stringInputData->getValue();
 
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
-	size_t dashIndex = contextTable.find("-",characterIndex); // Busca el primer guión luego del caracter.
+	size_t dashIndex = contextTable.find("/-",characterIndex); // Busca el primer guión luego del caracter.
 
-	std::string stringOccurrences = contextTable.substr(characterIndex+2,dashIndex);
+	std::string stringOccurrences = contextTable.substr(characterIndex+3,dashIndex-characterIndex-3);
 	int occurrences = atoi(stringOccurrences.c_str());
 	return occurrences;
 }
 
 int PpmcHash::getTotalOccurencesFromContext(std::string context) {
-	return 0;
+	int occurrences = 0;
+	StringInputData* stringInputData = this->hash->get(context);
+	std::string contextTable = stringInputData->getValue();
+
+	while (contextTable.find("/,",0) != string::npos) {
+		size_t commaIndex = contextTable.find("/,",0);
+		size_t dashIndex = contextTable.find("/-",0);
+		std::string stringOccurrences = contextTable.substr(commaIndex+2,dashIndex-3);
+		occurrences += atoi(stringOccurrences.c_str());
+		contextTable.replace(0,dashIndex+2,"");
+	}
+
+	return occurrences;
 }
 
 bool PpmcHash::compress(std::string path,int context) {
