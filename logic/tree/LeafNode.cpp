@@ -16,7 +16,7 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 		{
 
 		VarRegister prevPointer,nextPointer;
-		//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
 		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
 
@@ -35,7 +35,7 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 	{
 
 		VarRegister prevPointer,nextPointer;
-		//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 		prevPointer.setValue(UNDEFINED_NODE_NUMBER);
 		nextPointer.setValue(UNDEFINED_NODE_NUMBER);
 
@@ -511,7 +511,7 @@ unsigned int LeafNode::setNextLeaf(unsigned int nodeNumber)
 	m_block->getNextRegister();
 
 	VarRegister reg;
-	//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 	reg.setValue(nodeNumber);
 
 	m_block->modifyRegister(reg);
@@ -530,7 +530,7 @@ unsigned int LeafNode::setPreviousLeaf(unsigned int nodeNumber)
 	m_block->getNextRegister();
 
 	VarRegister reg;
-	//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 	reg.setValue(nodeNumber);
 
 	m_block->modifyRegister(reg);
