@@ -45,7 +45,7 @@ public:
 	 * Lee del archivo un bit.
 	 * @return bit leido.
 	 */
-	Bit read();
+	Bit read() throw (PhysicalException);
 
 
 private:

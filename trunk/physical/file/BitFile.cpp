@@ -42,7 +42,7 @@ void BitFile::write(Bit bit) throw (PhysicalException)
 		writeBitZero();
 }
 
-Bit BitFile::read()
+Bit BitFile::read() throw (PhysicalException)
 {
 	Bit bit = ZERO;
 
