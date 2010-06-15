@@ -18,7 +18,7 @@ Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputDa
 	if (m_block->getRegisterAmount()==0)
 	{
 		VarRegister regLevel;
-		//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 		regLevel.setValue(level);
 
 		m_block->restartCounter();
@@ -75,7 +75,7 @@ void Node::setLevel(const unsigned int level)
 	m_block->restartCounter();
 
 	VarRegister regLevel;
-	//TODO pablo - mati, revisa esto que puede q el valor que tenes que setear sea string.
+
 	regLevel.setValue(level);
 
 	m_block->modifyRegister(regLevel);
