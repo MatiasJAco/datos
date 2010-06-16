@@ -4,37 +4,39 @@
  *  @date: 01/05/2010
  *  @author: kira
  */
-#include <iostream>
-#include <typeinfo>
+//#include <iostream>
+//#include <typeinfo>
 
 #include "NodeException.h"
+#include "ManagerException.h"
 
 #ifndef BPLUSTREEEXCEPTION_H_
 #define BPLUSTREEEXCEPTION_H_
 
-class BPlusTreeException: public std::exception {
+class BPlusTreeException: public ManagerException {
+
+//public:
+//	typedef enum
+//	{
+//		DUPLICATED = 0,
+//		INEXISTENT_ELEM,
+//		ANOMALOUS_LOADRESULT,
+//		INNEXISTENT_ROOT,
+//		DELETED_FREENODE,
+//		INSUFFICIENT_ALLOCK_PARAM,
+//		CORRUPTED,
+//		UNDEFINED
+//	}ExceptionCause;
 
 public:
-	typedef enum
-	{
-		DUPLICATED = 0,
-		INEXISTENT_ELEM,
-		ANOMALOUS_LOADRESULT,
-		INNEXISTENT_ROOT,
-		DELETED_FREENODE,
-		INSUFFICIENT_ALLOCK_PARAM,
-		CORRUPTED,
-		UNDEFINED
-	}ExceptionCause;
+	//BPlusTreeException(){}
 
-public:
-	BPlusTreeException(){}
-
-	BPlusTreeException(ExceptionCause cause): std::exception(){
-		m_cause = cause;
+	BPlusTreeException(ExceptionCause cause): ManagerException(cause){
+		//m_cause = cause;
 	}
 
-	BPlusTreeException(NodeException& e): std::exception(){
+	//BPlusTreeException(NodeException& e): std::exception(){
+	BPlusTreeException(NodeException& e): ManagerException(m_cause){
 
 		switch(e.getCause())
 		{
@@ -87,8 +89,8 @@ public:
 			return "Error inesperado";
 		}
 
-private:
-	ExceptionCause m_cause;
+//private:
+//	ExceptionCause m_cause;
 };
 
 #endif /* BPLUSTREEEXCEPTION_H_ */

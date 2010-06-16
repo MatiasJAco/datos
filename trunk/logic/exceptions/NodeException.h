@@ -4,32 +4,34 @@
  *  @date: 01/05/2010
  *  @author: kira
  */
-#include <iostream>
-#include <typeinfo>
+//#include <iostream>
+//#include <typeinfo>
+
+#include "ManagerException.h"
 
 #ifndef NODEEXCEPTION_H_
 #define NODEEXCEPTION_H_
 
 
-class NodeException: public std::exception  {
+class NodeException: public ManagerException  {
+
+//public:
+//	typedef enum
+//	{
+//		DUPLICATED_IN_INNER,
+//		DUPLICATED_IN_LEAF,
+//		INVALID_REF,
+//		INEXISTENT_ELEMINNER,
+//		INEXISTENT_ELEMLEAF,
+//		ANOMALOUS_LOADRESULT,
+//		INSUFFICIENT_ALLOCK_PARAM,
+//		BAD_CALL_OPERATION,
+//		UNDEFINED
+//	}ExceptionCause;
 
 public:
-	typedef enum
-	{
-		DUPLICATED_IN_INNER,
-		DUPLICATED_IN_LEAF,
-		INVALID_REF,
-		INEXISTENT_ELEMINNER,
-		INEXISTENT_ELEMLEAF,
-		ANOMALOUS_LOADRESULT,
-		INSUFFICIENT_ALLOCK_PARAM,
-		BAD_CALL_OPERATION,
-		UNDEFINED
-	}ExceptionCause;
-
-public:
-	NodeException(ExceptionCause cause): std::exception(){
-		m_cause = cause;
+	NodeException(ExceptionCause cause):ManagerException(cause){
+		//m_cause = cause;
 	}
 
 	ExceptionCause getCause() const
@@ -70,9 +72,9 @@ public:
 			}
 			return "Error inesperado";
 		}
-
-private:
-	ExceptionCause m_cause;
+//
+//private:
+//	ExceptionCause m_cause;
 };
 
 #endif /* NODEEXCEPTION_H_ */
