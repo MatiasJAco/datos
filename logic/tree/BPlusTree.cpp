@@ -67,7 +67,7 @@ BPlusTree::~BPlusTree()
 }
 
 bool BPlusTree::insert(const InputData& data)
-throw (BPlusTreeException)
+throw (ManagerException)
 {
 	bool retVal = true;
 
@@ -197,7 +197,7 @@ throw (BPlusTreeException)
 	return retVal;
 }
 
-bool BPlusTree::remove(const InputData& data) throw (BPlusTreeException)
+bool BPlusTree::remove(const InputData& data) throw (ManagerException)
 {
 	bool retVal = true;
 	loadResultEnum result = NORMAL_LOAD;
@@ -338,7 +338,7 @@ void BPlusTree::deleteTree()
 	file.deleteFile();
 }
 
-bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) throw (BPlusTreeException){
+bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) throw (ManagerException){
 	bool retVal = true;
 	INodeData promotedKey;
 	unsigned int level = Node::UNDEFINED_NODE_LEVEL;
@@ -481,7 +481,7 @@ bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) t
 
 }
 
-bool BPlusTree::find(const InputData & key, InputData & data)throw(BPlusTreeException){
+bool BPlusTree::find(const InputData & key, InputData & data)throw(ManagerException){
 
 	bool retVal = true;
 
