@@ -8,8 +8,9 @@
 #ifndef BPLUSTREE_H_
 #define BPLUSTREE_H_
 
-#include "exceptions/BPlusTreeException.h"
-#include "exceptions/NodeException.h"
+#include "../exceptions/BPlusTreeException.h"
+#include "../exceptions/NodeException.h"
+#include "../exceptions/ManagerException.h"
 
 #include "../input/InputData.h"
 #include "dataNode/INodeData.h"
@@ -84,21 +85,21 @@ public:
 
 	/**
 	 * Inserta un elemento en el arbol.
-	 * @param data. El elemento a remover.
+	 * @param data. El elemento a insertar.
 	 * @return TRUE si pudo ejecutar la operacion.
 	 */
-	bool insert(const InputData& data) throw (BPlusTreeException);
+	bool insert(const InputData& data) throw (ManagerException);
 
 	/**
 	 * Elimina un elemento del arbol.
 	 * @param data. Contiene la clave del elemento a remover.
 	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
 	 */
-	bool remove(const InputData& data) throw (BPlusTreeException);
+	bool remove(const InputData& data) throw (ManagerException);
 
-	bool modifyElement(const InputData & dato, const InputData & dato2) throw (BPlusTreeException);
+	bool modifyElement(const InputData & dato, const InputData & dato2) throw (ManagerException);
 
-	bool find(const InputData & key, InputData & data)throw(BPlusTreeException);
+	bool find(const InputData & key, InputData & data)throw(ManagerException);
 
 	bool getNext(InputData& data);
 
