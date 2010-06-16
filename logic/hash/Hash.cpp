@@ -8,9 +8,7 @@
 #include "Hash.h"
 #include <sstream>
 #include <iostream>
-#include "../../logic/input/StringInputData.h"
-#include "../logic/bigint/BigIntegerLibrary.hh"
-#include "../logic/md5/MD5.h"
+
 
 Hash::Hash() {
 	this->hashTable->createFile();

@@ -34,7 +34,7 @@ void TestTree::run()
 //	testInsertComplejo();
 //	testRemove();
 	testModify();
-	testFind();
+	//testFind();
 //	testFindInodeData();
 //	testRemoveInnerNode();
 //	testReadNext();

@@ -3,8 +3,8 @@
 #include "../logic/hash/Table.h"
 #include "../logic/input/StringInputData.h"
 #include "../logic/hash/Hash.h"
-#include "../logic/md5/MD5.h"
-#include "../logic/bigint/BigIntegerLibrary.hh"
+#include "../logic/ppmc/md5/MD5.h"
+#include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
 #include "../logic/ppmc/PpmcHash.h"
 
 using namespace std;
@@ -427,7 +427,7 @@ int main(int argc, const char* argv[]){
 	//testTable4();
 	//testDelete();
 	//tests();
-	//testEjemplo();
+	testEjemplo();
 	//testBigInt();
 	//testMd5();
 	//testHashFunction();
@@ -437,7 +437,7 @@ int main(int argc, const char* argv[]){
 	//testPpmc3();
 	//testPpmc4();
 	//testPpmc5();
-	testPpmc6();
+	//testPpmc6();
 
 	//unsigned long long int mitest = 18446744073709551614 / 2;
 	//cout <<mitest;

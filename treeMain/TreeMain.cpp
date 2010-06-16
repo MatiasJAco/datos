@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "../logic/input/StringInputData.h"
 #include "../logic/tree/BPlusTree.h"
-#include "../logic/tree/exceptions/BPlusTreeException.h"
+#include "../logic/exceptions/BPlusTreeException.h"
 
 using namespace std;
 
