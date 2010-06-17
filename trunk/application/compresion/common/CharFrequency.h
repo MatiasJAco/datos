@@ -40,6 +40,8 @@ public:
 
 	unsigned long getFrequency();
 
+	void setFrequency(unsigned long freq);
+
 	static std::string shortToString(short val);
 
 	static std::string longToString(long val);
@@ -52,6 +54,10 @@ public:
 	bool operator < (const CharFrequency &cF) const;
 
 	bool operator == (short &c) const;
+
+	bool operator == (CharFrequency &c) const;
+
+	CharFrequency operator+= (unsigned long const& y);
 
 	//-------------------ATRIBUTES----------------------------------------//
 private:

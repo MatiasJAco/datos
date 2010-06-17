@@ -51,6 +51,17 @@ bool CharFrequency::operator == (short &c) const
 	return m_Char == c;
 }
 
+bool CharFrequency::operator == (CharFrequency &c) const
+{
+	return m_Char == c.m_Char;
+}
+
+CharFrequency CharFrequency::operator+= (unsigned long const& y)
+{
+	m_Frequency += y;
+	return *this;
+}
+
 CharFrequency::CharFrequency(const CharFrequency & cF)
 {
 	m_Char = cF.m_Char;
@@ -67,6 +78,10 @@ unsigned long CharFrequency::getFrequency()
 	return m_Frequency;
 }
 
+void CharFrequency::setFrequency(unsigned long freq)
+{
+	m_Frequency = freq;
+}
 
 string CharFrequency::longToString(long val)
 {

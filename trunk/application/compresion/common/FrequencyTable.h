@@ -63,7 +63,7 @@ public:
 	 */
 	void setFrequency(CharFrequency cf);
 
-	bool increaseCharFrequency(short, unsigned long ammount);
+	bool increaseFrequency(short, unsigned long ammount);
 
 	//------------------------SERIALIZE/DESERIALIZE---------------------------//
 	/**
