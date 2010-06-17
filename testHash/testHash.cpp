@@ -62,95 +62,82 @@ void testTable4(){
 	myTable.print();
 }
 
-StringInputData* createSid( std::string key,char * value){
-	stringstream ss (stringstream::in | stringstream::out);
-	ss.str(value);
-	StringInputData* sid = new StringInputData();
-	sid->setKey(key);
-	sid->setValue(ss.str());
-	return sid;
+void testModify() {
+	Hash* hash = new Hash();
+	/* Se toma el dato que ingresa el usuario. */
+	std::string valor = "paytiti";
+	for (int i = 1; i<=5;i++){
+		std::string clave;
+		std::stringstream aux;
+		aux << i;
+		clave = aux.str();
+
+		hash->insert(clave,valor);
+	}
+
+	hash->print();
+	std::string newValue= "______________";
+	try {
+		hash->modify("3",newValue);
+		hash->print();
+		cout<<endl<< "TUVO QUE HABER MODIFICADO LA CLAVE 3"<<endl;
+	}
+	catch (HashException e){
+		cout<<endl<< e.what()<<endl;
+	}
+
+	delete hash;
 }
 
-//TODO pablo - testhash - aca comente muchos tests para que compilen
+void testDelete() {
+	Hash* hash = new Hash();
 
-//void testModify() {
-//	Hash* hash = new Hash();
-//	/* Se toma el dato que ingresa el usuario. */
-//	char value[8] = "paytiti";
-//	for (int i = 1; i<=70;i++){
-//		StringInputData* sid = createSid(i,value);
-//		hash->insert(sid);
-//		delete sid;
-//	}
-//
-//	hash->print();
-//	char newValue[15]= "______________";
-//	bool result = hash->modify(12,newValue);
-//	if (result==1)
-//		cout<<endl<<"NO existe el sid"<<endl;
-//	else if (result==-1)
-//		cout<<endl<<"Hubo algun prob"<<endl;
-//	else
-//		cout<<endl<<"lo cambio!"<<endl;
-//	hash->print();
-//	delete hash;
-//}
+	hash->insert("1","paytiti");
+	hash->insert("2","pepe");
+	hash->insert("3","luis");
 
-//void testDelete() {
-//	Hash* hash = new Hash();
-//	char value[8] = "paytiti";
-//	char value2[5] = "pepe";
-//	char value3[5] = "luis";
-//
-//	StringInputData* sid = createSid(22, value);
-//	hash->insert(sid);
-//
-//	StringInputData* sid2 = createSid(33, value2);
-//	hash->insert(sid2);
-//
-//	StringInputData* sid3 = createSid(44, value3);
-//	hash->insert(sid3);
-//
-//	hash->print();
-//
-//	hash->remove(22);
-//
-//	hash->print();
-//	delete hash;
-//}
+	hash->print();
 
-//void tests() {
-//	Hash* hash = new Hash();
-//	hash->print();
-//	/* Se toma el dato que ingresa el usuario. */
-//	char value[8] = "paytiti";
-//	for (int i = 1; i<=70;i++){
-//		StringInputData* sid = createSid(i,value);
-//		hash->insert(sid);
-//		delete sid;
-//	}
-//
-//	hash->remove(70);
-//	hash->remove(66);
-//	hash->remove(30);
-//	hash->remove(26);
-//	hash->remove(22);
-//	hash->remove(18);
-//	hash->remove(14);
-//	hash->remove(10);
-//	hash->remove(6);
-//	hash->remove(2);
-//	hash->remove(34);
-//	hash->remove(38);
-//	hash->remove(42);
-//	hash->remove(46);
-//	hash->remove(50);
-//	hash->remove(54);
-//	hash->remove(58);
-//	hash->remove(62);
-//	hash->print();
-//	delete hash;
-//}
+	hash->remove("2");
+
+	hash->print();
+	delete hash;
+}
+
+void tests() {
+	Hash* hash = new Hash();
+	hash->print();
+	/* Se toma el dato que ingresa el usuario. */
+	std::string valor = "paytiti";
+	for (int i = 1; i<=70;i++){
+		std::string clave;
+		std::stringstream aux;
+		aux << i;
+		clave = aux.str();
+		hash->insert(clave,valor);
+	}
+
+	hash->remove("70");
+	hash->remove("66");
+	hash->remove("30");
+	hash->remove("26");
+	hash->remove("22");
+	hash->remove("18");
+	hash->remove("14");
+	hash->remove("10");
+	hash->remove("6");
+	hash->remove("2");
+	hash->remove("34");
+	hash->remove("38");
+	hash->remove("42");
+	hash->remove("46");
+	hash->remove("50");
+	hash->remove("54");
+	hash->remove("58");
+	hash->remove("62");
+	hash->print();
+	delete hash;
+}
 
 // IMPORTANTE !!!!!!!!!!!
 // Para correr este ejemplo hay que eliminar manualmente los 3 archivos generados en los tests anteriores
@@ -166,11 +153,6 @@ void testEjemplo(){
 	hash->print();
 
 	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
-
-	//este es el maximo char[244] que puede entrar, sino pincha
-	//char value[244] = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012";
-
-//	string value = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012";
 
 	cout<< "+123\n"<<endl;
 	hash->insert("123",value);
@@ -244,23 +226,6 @@ void testEjemplo(){
 	catch (HashException e) {
 		cout<< e.what()<<endl;
 	}
-
-//////////////////
-	//todo al sacarle el 775 y poner este , ver que no anda bien.. revisar!
-//	cout<< "+1412080015\n"<<endl;
-//	hash->insert("1412080015",value);
-//	hash->print();
-//	hash->modify("1412080015","kkkkkkkkk");
-//	hash->print();
-/////////////////////////
-
-//	cout<< "+1412080015\n"<<endl;
-//	hash->insert("1412080015",value);
-//	hash->print();
-//	hash->modify("1412080015","pepe");
-//	hash->print();
-
-
 
 	delete hash;
 }
@@ -439,8 +404,9 @@ int main(int argc, const char* argv[]){
 	//testTable3();
 	//testTable4();
 	//testDelete();
-	//tests();
-	testEjemplo();
+	tests();
+	//testEjemplo();
+	//testModify();
 	//testBigInt();
 	//testMd5();
 	//testHashFunction();
@@ -451,57 +417,6 @@ int main(int argc, const char* argv[]){
 	//testPpmc4();
 	//testPpmc5();
 	//testPpmc6();
-
-	//unsigned long long int mitest = 18446744073709551614 / 2;
-	//cout <<mitest;
-//	unsigned long int maximo = 4294967295; //este es el maximo 4294967295
-//	cout <<maximo<<endl;
-
-
-//	unsigned long int prueba = 4294967295 - 4294967295;
-//	cout<<prueba<<endl;
-
-	//	unsigned long long int supermax = 18446744073709551615; // maximo! 18446744073709551615 (longitud de 20)
-	//	cout << supermax <<endl;
-
-	//long double mydouble =  710000811000714080406040107000314051502120803061010050910010700/2;
-
-//	cout << MD5("ivi")<<endl;
-//
-//	//HAY QUE SACARLE EL CERO ADELANTE si es que tiene
-//	long double mydouble =  1105020005030501011204110211150910060810001412140604130909050506;
-//	cout<<mydouble<<endl;
-//
-//	long double igual = 10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10*10;
-//	cout<<igual<<endl;
-//
-//
-//	  int n;
-//	  n=70;
-//	  cout << hex << n << endl;
-//	  cout << dec << n << endl;
-
-
-
-
-
-
-//	long double mydouble2 = 1234567890012345678901234567890123456789012345678901234567890123;
-//	cout<<mydouble2<<endl;
-//
-//	long double resta = 1234567890012345678901234567890123456789012345678901234567890123 - 1234567890012345678901234567890123456789012345678901234567890120;
-//	cout<<resta<<endl;
-
-
-//	cout << MD5("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789")<<endl;
-//  cout << MD5("D")<<endl;
-//	cout << MD5("d")<<endl;
-//	cout << MD5("di")<<endl;
-//	cout << MD5("div")<<endl;
-//	cout << MD5("ivi")<<endl;
-//	cout << MD5("divi")<<endl;
-//	cout << MD5("divi-+sd210ac98-.,<{°!#$%&/()=?")<<endl;
-
 
 	//testBug();
 	//cout << "paso test!" << endl;
