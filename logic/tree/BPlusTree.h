@@ -13,6 +13,7 @@
 #include "../exceptions/ManagerException.h"
 
 #include "../input/InputData.h"
+#include "../input/StringInputData.h"
 #include "dataNode/INodeData.h"
 #include "../../physical/file/Block.h"
 #include "../../physical/file/BlockFile.h"
@@ -88,14 +89,14 @@ public:
 	 * @param data. El elemento a insertar.
 	 * @return TRUE si pudo ejecutar la operacion.
 	 */
-	bool insert(const InputData& data) throw (ManagerException);
+	bool insert(std::string clave, std::string valor) throw (ManagerException);
 
 	/**
 	 * Elimina un elemento del arbol.
 	 * @param data. Contiene la clave del elemento a remover.
 	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
 	 */
-	bool remove(const InputData& data) throw (ManagerException);
+	bool remove(std::string clave) throw (ManagerException);
 
 	bool modify(const InputData & dato, const InputData & dato2) throw (ManagerException);
 

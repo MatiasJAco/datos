@@ -258,14 +258,14 @@ void TestTree::testInsertComplejo()
 //	StringInputData data59("59","13");
 //	StringInputData data60("1","11");
 
-	mainFixture->insert(data1);
-	mainFixture->insert(data2);
-	mainFixture->insert(data3);
-	mainFixture->insert(data4);
-	mainFixture->insert(data5);
-	mainFixture->insert(data6);
-	mainFixture->insert(data7);
-	mainFixture->insert(data8);
+	mainFixture->insert("a","11");
+	mainFixture->insert("b","22");
+	mainFixture->insert("c","33");
+	mainFixture->insert("ca","44");
+	mainFixture->insert("ba","55");
+	mainFixture->insert("*","66");
+	mainFixture->insert("cos","77");
+	mainFixture->insert("d","88");
 //	mainFixture->insert(data9);
 //	mainFixture->insert(data10);
 //	mainFixture->insert(data11);
@@ -447,55 +447,34 @@ void TestTree::testInsertComplejo()
 
 void TestTree::testRemove()
 {
+
 	StringInputData data;
-	StringInputData data1("a","11");
-	StringInputData data2("ca","22");
-	StringInputData data3("r","33");
-	StringInputData data4("ro","44");
-	StringInputData data5("poy","55");
-	StringInputData data6("pp","66");
-	StringInputData data7("reti","77");
-	StringInputData data8("e","88");
-	StringInputData data9("A","99");
-	StringInputData data10("n","100");
-	StringInputData data11("l","02");
-	StringInputData data12("ava","03");
-	StringInputData data13("aba","04");
-	StringInputData data14("m","05");
-	StringInputData data15("rq","06");
-	StringInputData data16("w","07");
-	StringInputData data17("*","08");
-	StringInputData data18("@","09");
-	StringInputData data19("h","10");
+	mainFixture->insert("a","11");
+	mainFixture->insert("ca","22");
+	mainFixture->insert("r","33");
+	mainFixture->insert("ro","44");
+	mainFixture->insert("poy","55");
+	mainFixture->insert("pp","66");
+	mainFixture->insert("reti","77");
+	mainFixture->insert("e","88");
+	mainFixture->insert("A","99");
+	mainFixture->insert("n","100");
+	mainFixture->insert("l","02");
+	mainFixture->insert("ava","03");
+	mainFixture->insert("aba","04");
+	mainFixture->insert("m","05");
+	mainFixture->insert("rq","06");
+	mainFixture->insert("w","07");
+	mainFixture->insert("*","08");
+	mainFixture->insert("@","09");
+	mainFixture->insert("h","10");
 
-
-
-	mainFixture->insert(data1);
-	mainFixture->insert(data2);
-	mainFixture->insert(data3);
-	mainFixture->insert(data4);
-	mainFixture->insert(data5);
-	mainFixture->insert(data6);
-	mainFixture->insert(data7);
-	mainFixture->insert(data8);
-	mainFixture->insert(data9);
-	mainFixture->insert(data10);
-	mainFixture->insert(data11);
-	mainFixture->insert(data12);
-	mainFixture->insert(data13);
-	mainFixture->insert(data14);
-	mainFixture->insert(data15);
-	mainFixture->insert(data16);
-	mainFixture->insert(data17);
-	mainFixture->insert(data18);
 
 	//mainFixture->remove(data8);
 
 
-	mainFixture->showTree(data);
-
-	mainFixture->remove(data1);
-	mainFixture->remove(data2);
+	mainFixture->remove("a");
+	mainFixture->remove("ca");
 //	mainFixture->remove(data3);
 //	mainFixture->remove(data4);
 //	mainFixture->remove(data5);
@@ -513,20 +492,19 @@ void TestTree::testRemove()
 void TestTree::testModify(){
 
 	cout << "\n\t\t*********testModify*********\t\t\n";
+	StringInputData data;
 
-		StringInputData data;
-
-		StringInputData data1("a","11");
-		StringInputData data2("*","22");
-		StringInputData data3("*@","33");
-		StringInputData data4("1","44");
-		StringInputData data5("po","55");
-		StringInputData data6("t","00000000000000000");
-		StringInputData data7("mn","77");
-		StringInputData data8("n","88");
-		StringInputData data9("re","99");
-		StringInputData data10("b","01");
-		StringInputData data11("ñ","0000000000000000");
+//		StringInputData data1("a","11");
+//		StringInputData data2("*","22");
+//		StringInputData data3("*@","33");
+//		StringInputData data4("1","44");
+//		StringInputData data5("po","55");
+//		StringInputData data6("t","00000000000000000");
+//		StringInputData data7("mn","77");
+//		StringInputData data8("n","88");
+//		StringInputData data9("re","99");
+//		StringInputData data10("b","01");
+//		StringInputData data11("ñ","0000000000000000");
 //		StringInputData data12(37,"03");
 //		StringInputData data13(88,"04");
 //		StringInputData data14(55,"05");
@@ -577,21 +555,21 @@ void TestTree::testModify(){
 //		StringInputData data59(59,"13");
 //		StringInputData data60(1,"11");
 
-		mainFixture->insert(data1);
-		mainFixture->insert(data2);
-		mainFixture->insert(data3);
-		mainFixture->insert(data4);
-		mainFixture->insert(data5);
+		mainFixture->insert("a","11");
+		mainFixture->insert("*","22");
+		mainFixture->insert("*@","33");
+		mainFixture->insert("1","44");
+		mainFixture->insert("po","55");
 		mainFixture->showTree(data);
-		mainFixture->insert(data6);
+		mainFixture->insert("t","00000000000000000");
 		mainFixture->showTree(data);
 
-		mainFixture->insert(data7);
+		mainFixture->insert("mn","77");
 
-		mainFixture->insert(data8);
-		mainFixture->insert(data9);
-		mainFixture->insert(data10);
-		mainFixture->insert(data11);
+		mainFixture->insert("n","88");
+		mainFixture->insert("re","99");
+		mainFixture->insert("b","01");
+		mainFixture->insert("ñ","0000000000000000");
 //		mainFixture->insert(data12);
 //		mainFixture->insert(data13);
 //		mainFixture->insert(data14);
