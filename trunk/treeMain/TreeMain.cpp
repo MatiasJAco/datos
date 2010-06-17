@@ -120,7 +120,7 @@ int main(int argc, const char* argv[]){
 //		bool modifyResult = false;
 //		try
 //		{
-//			modifyResult = bPlusTree->modifyElement(sid, sid2);
+//			modifyResult = bPlusTree->modify(sid, sid2);
 //		}
 //		catch(BPlusTreeException e)
 //		{

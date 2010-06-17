@@ -338,7 +338,7 @@ void BPlusTree::deleteTree()
 	file.deleteFile();
 }
 
-bool BPlusTree::modifyElement(const InputData & dato, const InputData & dato2) throw (ManagerException){
+bool BPlusTree::modify(const InputData & dato, const InputData & dato2) throw (ManagerException){
 	bool retVal = true;
 	INodeData promotedKey;
 	unsigned int level = Node::UNDEFINED_NODE_LEVEL;

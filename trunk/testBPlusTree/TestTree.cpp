@@ -645,23 +645,23 @@ void TestTree::testModify(){
 		StringInputData datoMod("t","10");
 		StringInputData datoaMod("t","");
 		mainFixture->showTree(data);
-		mainFixture->modifyElement(datoaMod,datoMod);
+		mainFixture->modify(datoaMod,datoMod);
 		mainFixture->showTree(data);
 
 		StringInputData datoMod2("po","10r00000000000000000");
 		StringInputData datoaMod2("po","");
 
-		mainFixture->modifyElement(datoaMod2,datoMod2);
+		mainFixture->modify(datoaMod2,datoMod2);
 		mainFixture->showTree(data);
 		StringInputData datoMod3("a","10000000000000000000");
 		StringInputData datoaMod3("a","");
 
-		mainFixture->modifyElement(datoaMod3,datoMod3);
+		mainFixture->modify(datoaMod3,datoMod3);
 		mainFixture->showTree(data);
 
 		StringInputData datoMod6("ñ","10");
 		StringInputData datoaMod6("ñ","");
-		mainFixture->modifyElement(datoaMod6,datoMod6);
+		mainFixture->modify(datoaMod6,datoMod6);
 		mainFixture->showTree(data);
 //
 //		StringInputData datoMod4(98,"");
