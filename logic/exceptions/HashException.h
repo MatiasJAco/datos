@@ -11,24 +11,8 @@
 
 class HashException: public ManagerException  {
 
-//public:
-//	typedef enum
-//	{
-//		DUPLICATED_IN_INNER,
-//		DUPLICATED_IN_LEAF,
-//		INVALID_REF,
-//		INEXISTENT_ELEMINNER,
-//		INEXISTENT_ELEMLEAF,
-//		ANOMALOUS_LOADRESULT,
-//		INSUFFICIENT_ALLOCK_PARAM,
-//		BAD_CALL_OPERATION,
-//		UNDEFINED
-//	}ExceptionCause;
-
 public:
-	HashException(ExceptionCause cause):ManagerException(cause){
-		//m_cause = cause;
-	}
+	HashException(ExceptionCause cause):ManagerException(cause){}
 
 	ExceptionCause getCause() const
 	{
@@ -50,9 +34,7 @@ public:
 			}
 			return "Error inesperado";
 		}
-//
-//private:
-//	ExceptionCause m_cause;
+
 };
 
 
