@@ -37,7 +37,7 @@ public:
 		UNDEFINED,
 
 		/* para hash */
-		DATA_ALREADY_EXISTS
+		OPERATION_FAULT
 
 
 	}ExceptionCause;

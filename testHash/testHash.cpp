@@ -79,7 +79,7 @@ StringInputData* createSid( std::string key,char * value){
 //	char value[8] = "paytiti";
 //	for (int i = 1; i<=70;i++){
 //		StringInputData* sid = createSid(i,value);
-//		hash->add(sid);
+//		hash->insert(sid);
 //		delete sid;
 //	}
 //
@@ -103,13 +103,13 @@ StringInputData* createSid( std::string key,char * value){
 //	char value3[5] = "luis";
 //
 //	StringInputData* sid = createSid(22, value);
-//	hash->add(sid);
+//	hash->insert(sid);
 //
 //	StringInputData* sid2 = createSid(33, value2);
-//	hash->add(sid2);
+//	hash->insert(sid2);
 //
 //	StringInputData* sid3 = createSid(44, value3);
-//	hash->add(sid3);
+//	hash->insert(sid3);
 //
 //	hash->print();
 //
@@ -126,7 +126,7 @@ StringInputData* createSid( std::string key,char * value){
 //	char value[8] = "paytiti";
 //	for (int i = 1; i<=70;i++){
 //		StringInputData* sid = createSid(i,value);
-//		hash->add(sid);
+//		hash->insert(sid);
 //		delete sid;
 //	}
 //
@@ -160,7 +160,7 @@ void testEjemplo(){
 	cout<< "Este proximo print deberia mostrar todas las cosas creadas pero vacias!\n"<<endl;
 	hash->print();
 
-	hash->add("123", "paytiti");
+	hash->insert("123", "paytiti");
 	hash->print();
 	hash->erase("123");
 	hash->print();
@@ -173,27 +173,38 @@ void testEjemplo(){
 //	string value = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012";
 
 	cout<< "+123\n"<<endl;
-	hash->add("123",value);
+	hash->insert("123",value);
 	hash->print();
 
+
+	//Ejemplo de como catchear una excepcion para el hash
+//	try{
+//		hash->insert("123",value);
+//	}
+//	catch(HashException &e)
+//	{
+//		cout << e.what() << endl;
+//	}
+
+
 	cout<< "+915\n"<<endl;
-	hash->add("915",value);
+	hash->insert("915",value);
 	hash->print();
 
 	cout<< "+629\n"<<endl;
-	hash->add("629",value);
+	hash->insert("629",value);
 	hash->print();
 
 	cout<< "+411\n"<<endl;
-	hash->add("411",value);
+	hash->insert("411",value);
 	hash->print();
 
 	cout<< "+200\n"<<endl;
-	hash->add("200",value);
+	hash->insert("200",value);
 	hash->print();
 
 	cout<< "+863\n"<<endl;
-	hash->add("863",value);
+	hash->insert("863",value);
 	hash->print();
 
 	cout<< "-629\n"<<endl;
@@ -201,15 +212,15 @@ void testEjemplo(){
 	hash->print();
 
 	cout<< "+408\n"<<endl;
-	hash->add("408",value);
+	hash->insert("408",value);
 	hash->print();
 
 	cout<< "+34\n"<<endl;
-	hash->add("34",value);
+	hash->insert("34",value);
 	hash->print();
 
 	cout<< "+510\n"<<endl;
-	hash->add("510",value);
+	hash->insert("510",value);
 	hash->print();
 
 	cout<< "-863\n"<<endl;
@@ -217,32 +228,34 @@ void testEjemplo(){
 	hash->print();
 
 	cout<< "+775\n"<<endl;
-	hash->add("775",value);
+	hash->insert("775",value);
 	hash->print();
 
 	cout<<"modify value 123"<<endl;
 	hash->modify("123","pepitooooooooo");
 	hash->print();
 
-	cout<<"pruebo el get de hash con 123"<<endl;
-	StringInputData* sid = hash->get("123");
-	if (sid != NULL) {
-		cout << sid->toString() << endl;
-	} else {
-		cout << "No se encontro la clave 123 "<< endl;
+	cout<<"pruebo el find de hash con 123"<<endl;
+	StringInputData sid;
+	try{
+		hash->find("123",sid);
+		cout << sid.toString() << endl;
+	}
+	catch (HashException e) {
+		cout<< e.what()<<endl;
 	}
 
 //////////////////
 	//todo al sacarle el 775 y poner este , ver que no anda bien.. revisar!
 //	cout<< "+1412080015\n"<<endl;
-//	hash->add("1412080015",value);
+//	hash->insert("1412080015",value);
 //	hash->print();
 //	hash->modify("1412080015","kkkkkkkkk");
 //	hash->print();
 /////////////////////////
 
 //	cout<< "+1412080015\n"<<endl;
-//	hash->add("1412080015",value);
+//	hash->insert("1412080015",value);
 //	hash->print();
 //	hash->modify("1412080015","pepe");
 //	hash->print();
@@ -255,7 +268,7 @@ void testEjemplo(){
 void testBug(){
 	Hash* hash = new Hash();
 	char value[8] = "paytiti";
-	hash->add("12",value);
+	hash->insert("12",value);
 	hash->print();
 	hash->erase("12");
 	hash->print();
@@ -519,7 +532,7 @@ int main(int argc, const char* argv[]){
 //	int clave = atoi(claveString.c_str());
 //	if (operacion == "-B") {
 //		cout << "Buscando la clave " << clave << "..." << endl;
-//		StringInputData* sid = hash->get(clave);
+//		StringInputData* sid = hash->(clave);
 //		if (sid != NULL) {
 //			cout << sid->toString() << endl;
 //		} else {

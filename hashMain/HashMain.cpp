@@ -55,7 +55,7 @@ int main(int argc, const char* argv[]){
 //
 //	if (operacion == "-B") {
 //		cout << "Buscando la clave " << clave << "..." << endl;
-//		StringInputData* sid = hash->get(clave);
+//		StringInputData* sid = hash->find(clave);
 //		if (sid != NULL) {
 //			cout << sid->toString() << endl;
 //		} else {
@@ -63,7 +63,7 @@ int main(int argc, const char* argv[]){
 //		}
 //	} else if (operacion == "-I") {
 //		cout << "Ingresando la clave " << clave << " con el valor " << valor << "..." << endl;
-//		int addResult = hash->add(clave, valor);
+//		int addResult = hash->insert(clave, valor);
 //		if (addResult == 0) {
 //			cout << "Se agrego correctamente la clave " << clave << endl;
 //		} else if (addResult == 1) {

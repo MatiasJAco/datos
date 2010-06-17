@@ -27,18 +27,25 @@ void PpmcHash::stoupper(std::string& s) {
 
 int PpmcHash::createContext(std::string context) {
 	string valor = "*/,1/-"; // * es el caracter de escape.
-	this->hash->add(context, valor);
+	this->hash->insert(context, valor);
 	return 0;
 }
 
 bool PpmcHash::existsCharacterInContext(std::string context, std::string character) {
-	bool exists = this->hash->existsElement(context);
-	if (exists) { // Si existe el contexto, lo obtengo y busco el caracter en su tabla.
-		StringInputData* stringInputData = this->hash->get(context);
-		std::string contextTable = stringInputData->getValue();
-		if (contextTable.find(character,0) != string::npos) { // Si encuentra el caracter en la tabla del contexto, devuelve true.
-			return true;
-		}
+	//bool exists = this->hash->existsElement(context);
+
+	StringInputData stringInputData;
+	try{
+		this->hash->find(context,stringInputData);
+	}
+	catch(HashException &e)
+	{
+		return false;
+	}
+
+	std::string contextTable = stringInputData.getValue();
+	if (contextTable.find(character,0) != string::npos) { // Si encuentra el caracter en la tabla del contexto, devuelve true.
+		return true;
 	}
 	return false;
 }
@@ -47,8 +54,15 @@ int PpmcHash::addCharacterToContext(std::string context, std::string character) 
 	if (this->existsCharacterInContext(context, character)) {
 		return 1;
 	}
-	StringInputData* stringInputData = this->hash->get(context);
-	std::string contextTable = stringInputData->getValue();
+	StringInputData stringInputData;
+	try{
+		this->hash->find(context,stringInputData);
+	}
+	catch(HashException &e)
+	{
+		return false;
+	}
+	std::string contextTable = stringInputData.getValue();
 	contextTable.append(character); // Agrega el caracter al contexto.
 	contextTable.append("/,1/-"); // Inicialmente, el caracter se agrega con una ocurrencia.
 	this->hash->modify(context, contextTable);
@@ -59,8 +73,15 @@ int PpmcHash::increaseFrequency(std::string context, std::string character) {
 	if (!this->existsCharacterInContext(context, character)) {
 		return 1;
 	}
-	StringInputData* stringInputData = this->hash->get(context);
-	std::string contextTable = stringInputData->getValue();
+	StringInputData stringInputData;
+		try{
+			this->hash->find(context,stringInputData);
+		}
+		catch(HashException &e)
+		{
+			return -1;
+		}
+	std::string contextTable = stringInputData.getValue();
 	std::string newContextTable = "";
 
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
@@ -89,8 +110,10 @@ int PpmcHash::getCharacterOccurrences(std::string context, std::string character
 	if (!this->existsCharacterInContext(context, character)) {
 		return 1;
 	}
-	StringInputData* stringInputData = this->hash->get(context);
-	std::string contextTable = stringInputData->getValue();
+	StringInputData stringInputData;
+	this->hash->find(context,stringInputData);
+
+	std::string contextTable = stringInputData.getValue();
 
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.
 	size_t dashIndex = contextTable.find("/-",characterIndex); // Busca el primer guión luego del caracter.
@@ -102,8 +125,10 @@ int PpmcHash::getCharacterOccurrences(std::string context, std::string character
 
 int PpmcHash::getTotalOccurencesFromContext(std::string context) {
 	int occurrences = 0;
-	StringInputData* stringInputData = this->hash->get(context);
-	std::string contextTable = stringInputData->getValue();
+	StringInputData stringInputData;
+	this->hash->find(context,stringInputData);
+
+	std::string contextTable = stringInputData.getValue();
 
 	while (contextTable.find("/,",0) != string::npos) {
 		size_t commaIndex = contextTable.find("/,",0);
