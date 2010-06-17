@@ -22,7 +22,7 @@ unsigned long FrequencyTable::getFrequencyTotal()
 	return m_FrequencyTotal;
 }
 
-bool FrequencyTable::increaseCharFrequency(short c, unsigned long ammount=1)
+bool FrequencyTable::increaseFrequency(short c, unsigned long ammount=1)
 {
 	bool retVal= false;
 
@@ -65,9 +65,25 @@ void FrequencyTable::setFrequency(short c, unsigned long freq)
 
 void FrequencyTable::setFrequency(CharFrequency cf)
 {
+	CharFrequencyListIterator it;
+	bool found=false;
 
-	m_Frequencies.push_back(cf);
-	m_isSorted=false;
+	//Voy buscando el caracter si termino la tabla corto el ciclo
+	for(it=m_Frequencies.begin();it !=m_Frequencies.end(); it++)
+	{
+		//Si lo encuentro corto el ciclo
+		if((*it) == cf)
+		{
+			it-> setFrequency(cf.getFrequency());
+			 found= true;
+			break;
+		}
+	}
+	if(!found)
+	{
+		m_Frequencies.push_back(cf);
+		m_isSorted=false;
+	}
 }
 
 
