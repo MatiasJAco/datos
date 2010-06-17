@@ -22,16 +22,21 @@ Hash::~Hash() {
 	delete hashFile;
 }
 
-StringInputData* Hash::get(std::string key) {
+bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
+	if (!this->existsElement(key))
+		throw HashException(HashException::INEXISTENT_ELEM);
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
 	Bucket* bucket = new Bucket(this->hashFile->getBlock(bucketNumber));
 	if (bucket->existsRegister(key)) {
 		VarRegister varRegister = bucket->getRegister(key);
 		StringInputData* stringInputData = new StringInputData();
 		stringInputData->toData(varRegister.getValue());
-		return stringInputData;
+		data.setKey(stringInputData->getKey());
+		data.setValue(stringInputData->getValue());
+		//return stringInputData;
+		return true;
 	}
-	return NULL;
+	return false;
 }
 
 Bucket* Hash::createNewBucket(int depth){
@@ -151,7 +156,7 @@ int Hash::reHash(Bucket* bucketDesbordado) {
 	//recorro toda la lista de sids y redisperso el bloque
 	while (!listaDatos.empty()) {
 		StringInputData sid = listaDatos.front();
-		this->add(&sid);
+		this->insert(&sid);
 		listaDatos.pop_front(); // Borro el primer sid de la lista.
 	}
 	delete bucketDesbordado;
@@ -168,19 +173,20 @@ Bucket* Hash::tryToInsertNewSid(StringInputData* sid, int & result) {
 	return bucket;
 }
 
-int Hash::add(std::string clave, string valor) {
+bool Hash::insert(std::string clave, string valor) throw (ManagerException){
 	StringInputData* sid = new StringInputData();
 	sid->setKey(clave);
 	sid->setValue(valor);
-	int result = this->add(sid);
+	bool result = this->insert(sid);
 	delete sid;
 	return result;
 }
 
-int Hash::add(StringInputData* sid) {
+bool Hash::insert(StringInputData* sid) throw (ManagerException){
 	// Verifico unicidad
 	if (existsElement(sid->getKey())){
-		return 1;
+		//return 1;
+		throw HashException(HashException::DUPLICATED);
 	}
 
 	int insertResult;
@@ -201,7 +207,7 @@ int Hash::add(StringInputData* sid) {
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
-			this->add(sid);
+			this->insert(sid);
 		} else {
 			bucket->duplicateDepth();
 			this->saveBucket(bucket);
@@ -209,13 +215,14 @@ int Hash::add(StringInputData* sid) {
 			this->hashTable->jumpAndReplace(this->calculateHashFunction(sid->getKey()),bucketNuevo->getDepth(),bucketNuevo->getNumber());
 			delete bucketNuevo;
 			this->reHash(bucket); // Redispersa los registros del bloque desbordado.
-			this->add(sid);
+			this->insert(sid);
 		}
 	} else {
 		delete bucket;
-		return insertResult;
+		//return insertResult;
+		throw HashException(HashException::OPERATION_FAULT);
 	}
-	return 0;
+	return true;
 }
 int Hash::modify(std::string key, string newValue) {
 	StringInputData* sid = new StringInputData();
@@ -229,7 +236,7 @@ int Hash::modify(std::string key, string newValue) {
 		int resultErase = this->erase(key);
 
 		if (resultErase == 0) { // Si se pudo borrar correctamente el dato, se trata de reinsertar pero con el nuevo valor.
-			int resultAdd = this->add(sid);
+			int resultAdd = this->insert(sid);
 			if (resultAdd != 0) {
 				return -1;
 			}

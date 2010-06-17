@@ -23,11 +23,15 @@ public:
 		{
 			switch(m_cause)
 			{
-			case DATA_ALREADY_EXISTS:
+			case DUPLICATED:
 				return "Se intento insertar un elemento duplicado ya existente";
 				break;
-
-
+			case OPERATION_FAULT:
+				return "La operación no pudo ser realizada con éxito.";
+				break;
+			case INEXISTENT_ELEM:
+				return "No se encontro elemento que contenga dicha clave.";
+				break;
 			default:
 				return "Error inesperado";
 				break;

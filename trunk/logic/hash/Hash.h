@@ -50,11 +50,12 @@ private:
 	void inicializeHashFile();
 
 	/**
-	 * Agrega un elemento nuevo al archivo Hash.
-	 * @param sid Es el dato que se desea agregar.
-	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
+	 * Agrega un elemento nuevo al archivo Hash. Este metodo debe ser llamado desde
+	 * el metodo add(clave,valor)
+	 * @param sid Es el StringInputData.
+	 * @return true si la operación fue exitosa
 	 */
-	int add(StringInputData* sid);
+	bool insert(StringInputData* sid) throw (ManagerException);
 
 	/**
 	 * Verifica si existe un dato en un bloque, e indica en qué posición.
@@ -104,24 +105,26 @@ public:
 	virtual ~Hash();
 
 	/**
-	 * Agrega un elemento nuevo al archivo Hash.
-	 * @param clave Es la clave del dato a ingresar.
-	 * @param valor Es el valor del dato a ingrear.
-	 * @return int Retorna 1 si el dato ya existe, 0 si fue agregado previamente, o -1 si hubo algun problema.
-	 */
-	int add(std::string clave, string valor);
-
-	/**
 	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
 	 * @param key Es la clave del dato que se desea hallar.
-	 * @return Retorna true si ya existe en el HashFile el elemento (sid) pasado por parametro
+	 * @return Retorna true si ya existe en el HashFile la clave pasada por parametro
 	 */
 	bool existsElement(std::string key);
 
 	/**
-	 * This method gets a Data object, giving it's key.
+	 * Agrega un elemento nuevo al archivo Hash.
+	 * @param clave Es la clave del dato a ingresar.
+	 * @param valor Es el valor del dato a ingrear.
+	 * @return true si la operación fue exitosa
 	 */
-	StringInputData* get(std::string key);
+	bool insert(std::string clave, string valor) throw (ManagerException);
+
+	/**
+	 * Busca y retorna un elemento dado su clave.
+	 * @param key Es la clave del dato a buscar
+	 * @return Retorna el StringInputData que representa al dato de la clave a buscar
+	 */
+	bool find(std::string key, InputData & data) throw (ManagerException);
 
 	/**
 	 * Cambia el valor de un key pasado por parámetro.
