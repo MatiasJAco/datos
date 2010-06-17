@@ -29,8 +29,7 @@ bool PpmcTree::findContext(const char* context, char character, std::string & va
 
 int PpmcTree::createContext(std::string context) {
 
-	StringInputData nuevoContexto(context,"27,1-"); // 27 es el caracter de escape.
-	this->tree->insert(nuevoContexto);
+	this->tree->insert(context,"27,1-"); // 27 es el caracter de escape.
 	return 0;
 }
 

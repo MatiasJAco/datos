@@ -66,9 +66,13 @@ BPlusTree::~BPlusTree()
 		delete m_currentNode;
 }
 
-bool BPlusTree::insert(const InputData& data)
+bool BPlusTree::insert(std::string clave, std::string valor)
 throw (ManagerException)
 {
+	StringInputData data;
+	data.setKey(clave);
+	data.setValue(valor);
+
 	bool retVal = true;
 
 	loadResultEnum result = NORMAL_LOAD;
@@ -197,8 +201,12 @@ throw (ManagerException)
 	return retVal;
 }
 
-bool BPlusTree::remove(const InputData& data) throw (ManagerException)
+bool BPlusTree::remove(std::string clave) throw (ManagerException)
 {
+	StringInputData data;
+	data.setKey(clave);
+	data.setValue("");
+
 	bool retVal = true;
 	loadResultEnum result = NORMAL_LOAD;
 
