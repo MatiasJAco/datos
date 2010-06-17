@@ -58,7 +58,7 @@ int PpmcTree::addCharacterToContext(std::string context, std::string character) 
 	contextTable.append(character); // Agrega el caracter al contexto.
 	contextTable.append(",1-"); // Inicialmente, el caracter se agrega con una ocurrencia.
 	stringInputData.setValue(contextTable);
-	this->tree->modifyElement(datoABuscar,stringInputData);
+	this->tree->modify(datoABuscar,stringInputData);
 	return 0;
 }
 
@@ -91,7 +91,7 @@ int PpmcTree::increaseFrequency(std::string context, std::string character) {
 	newContextTable.append("-");
 	newContextTable.append(contextTable, contextTable.find("-",characterIndex)+1, contextTable.length());
 	stringInputData.setValue(newContextTable);
-	this->tree->modifyElement(datoABuscar,stringInputData);
+	this->tree->modify(datoABuscar,stringInputData);
 	return 0;
 }
 

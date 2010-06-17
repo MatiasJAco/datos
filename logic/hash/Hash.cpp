@@ -185,7 +185,6 @@ bool Hash::insert(std::string clave, string valor) throw (ManagerException){
 bool Hash::insert(StringInputData* sid) throw (ManagerException){
 	// Verifico unicidad
 	if (existsElement(sid->getKey())){
-		//return 1;
 		throw HashException(HashException::DUPLICATED);
 	}
 
@@ -224,92 +223,90 @@ bool Hash::insert(StringInputData* sid) throw (ManagerException){
 	}
 	return true;
 }
-int Hash::modify(std::string key, string newValue) {
+
+bool Hash::modify(std::string key, string newValue) throw (ManagerException){
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
-	bool exists = this->existsElement(sid->getKey());
 
-	if (!exists) {
-		return 1;
-	} else {
-		sid->setValue(newValue);
-		int resultErase = this->erase(key);
+	if (!this->existsElement(sid->getKey()))
+		throw HashException(HashException::INEXISTENT_ELEM);
 
-		if (resultErase == 0) { // Si se pudo borrar correctamente el dato, se trata de reinsertar pero con el nuevo valor.
-			int resultAdd = this->insert(sid);
-			if (resultAdd != 0) {
-				return -1;
-			}
-		} else {
-			return -1;
+	sid->setValue(newValue);
+	bool resultErase = this->remove(key);
+
+	if (resultErase) { // Si se pudo borrar correctamente el dato, se trata de reinsertar pero con el nuevo valor.
+		bool resultAdd = this->insert(sid);
+		if (!resultAdd) {
+			throw HashException(HashException::OPERATION_FAULT);
 		}
+	} else {
+		throw HashException(HashException::OPERATION_FAULT);
 	}
 
-	return 0;
+	return true;
 }
 
-int Hash::erase(std::string key) {
-	bool exists = this->existsElement(key);
+bool Hash::remove(std::string key) throw (ManagerException){
+	if (!this->existsElement(key))
+		throw HashException(HashException::INEXISTENT_ELEM);
+
 	bool result = false;
 
-	if (exists) {
-		unsigned int bucketNumber = this->getNumberOfBucket(key);
-		Block* block = this->hashFile->getBlock(bucketNumber);
-		Bucket* bucket = new Bucket(block);
-		result = bucket->deleteRegister(key);
+	unsigned int bucketNumber = this->getNumberOfBucket(key);
+	Block* block = this->hashFile->getBlock(bucketNumber);
+	Bucket* bucket = new Bucket(block);
+	result = bucket->deleteRegister(key);
 
-		if (result == false) {
-			delete bucket;
-			return -1;
-		} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
+	if (result == false) {
+		delete bucket;
+		throw HashException(HashException::OPERATION_FAULT);
+	} else { // Si se pudo borrar exitosamente, reviso cuantos registros le quedan al bloque.
 
-			this->saveBucket(bucket);
-			unsigned int registerAmount = block->getRegisterAmount();
+		this->saveBucket(bucket);
+		unsigned int registerAmount = block->getRegisterAmount();
 
-			unsigned int depth = bucket->getDepth();
-			delete bucket;
-			unsigned int tamTable = this->hashTable->getSize();
-			int element = -1;
-			bool soloLiberarBq = false;
-			if ((depth>1)&&(tamTable>1))
-				element = this->hashTable->verifyJumps(this->calculateHashFunction(key), depth/2);
-			else if (bucketsUsedAmount > 1)
-				soloLiberarBq = true;
+		unsigned int depth = bucket->getDepth();
+		delete bucket;
+		unsigned int tamTable = this->hashTable->getSize();
+		int element = -1;
+		bool soloLiberarBq = false;
+		if ((depth>1)&&(tamTable>1))
+			element = this->hashTable->verifyJumps(this->calculateHashFunction(key), depth/2);
+		else if (bucketsUsedAmount > 1)
+			soloLiberarBq = true;
 
-			if (((registerAmount == 1) && (depth == tamTable) && (element != -1))  ||  ((registerAmount == 1)&& soloLiberarBq)) {
-				//intento liberar el bloque
-				if (!this->hashFile->deleteBlock(bucketNumber))
-					return -1;
+		if (((registerAmount == 1) && (depth == tamTable) && (element != -1))  ||  ((registerAmount == 1)&& soloLiberarBq)) {
+			//intento liberar el bloque
+			if (!this->hashFile->deleteBlock(bucketNumber))
+				throw HashException(HashException::OPERATION_FAULT);
 
-				if (soloLiberarBq)
-					return 0;
+			if (soloLiberarBq)
+				return true;
 
-				// Un bucket fue liberado
-				bucketsUsedAmount--;
+			// Un bucket fue liberado
+			bucketsUsedAmount--;
 
-				//hago las modificaciones necesarias en la tabla
-				this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
+			//hago las modificaciones necesarias en la tabla
+			this->hashTable->modifyRegister(this->calculateHashFunction(key),element);
 
-				Block *blockAux = this->hashFile->getBlock(element+1);
-				Bucket * bucketAux = new Bucket(blockAux);
-				int tdElement = bucketAux->getDepth();
-				this->hashTable->jumpAndReplace(this->calculateHashFunction(key),tdElement,element);
+			Block *blockAux = this->hashFile->getBlock(element+1);
+			Bucket * bucketAux = new Bucket(blockAux);
+			int tdElement = bucketAux->getDepth();
+			this->hashTable->jumpAndReplace(this->calculateHashFunction(key),tdElement,element);
 
-				if (!bucketAux->divideDepth()){
-					delete bucketAux;
-					return -1;  //esto no deberia de pasar nunca, pero se lanza el error de todos modos
-				}
-				else
-					this->saveBucket(bucketAux);
-
+			if (!bucketAux->divideDepth()){
 				delete bucketAux;
-				this->hashTable->verifyAndDivide();
+				throw HashException(HashException::UNDEFINED);
 			}
+			else
+				this->saveBucket(bucketAux);
+
+			delete bucketAux;
+			this->hashTable->verifyAndDivide();
 		}
-	} else {
-		return 1; // No existe la clave. Se devuelve 1.
 	}
-	return 0;
+
+	return true;
 }
 
 void Hash::print() {

@@ -97,7 +97,7 @@ public:
 	 */
 	bool remove(const InputData& data) throw (ManagerException);
 
-	bool modifyElement(const InputData & dato, const InputData & dato2) throw (ManagerException);
+	bool modify(const InputData & dato, const InputData & dato2) throw (ManagerException);
 
 	bool find(const InputData & key, InputData & data)throw(ManagerException);
 

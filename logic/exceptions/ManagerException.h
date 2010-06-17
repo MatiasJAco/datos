@@ -36,7 +36,7 @@ public:
 		INSUFFICIENT_ALLOCK_PARAM,
 		UNDEFINED,
 
-		/* para hash */
+		/* agregadas para hash */
 		OPERATION_FAULT
 
 

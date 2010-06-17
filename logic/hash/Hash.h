@@ -66,6 +66,13 @@ private:
 	bool existsElement(std::string key, int & position);
 
 	/**
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @return true si ya existe en el HashFile la clave pasada por parametro
+	 */
+	bool existsElement(std::string key);
+
+	/**
 	 * Crea un bucket nuevo.
 	 * @param depth Es el tamaño de dispersión que tendrá el bloque a crearse.
 	 * @return Devuelve un puntero al bucket creado.
@@ -105,24 +112,18 @@ public:
 	virtual ~Hash();
 
 	/**
-	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
-	 * @param key Es la clave del dato que se desea hallar.
-	 * @return Retorna true si ya existe en el HashFile la clave pasada por parametro
-	 */
-	bool existsElement(std::string key);
-
-	/**
 	 * Agrega un elemento nuevo al archivo Hash.
 	 * @param clave Es la clave del dato a ingresar.
 	 * @param valor Es el valor del dato a ingrear.
 	 * @return true si la operación fue exitosa
 	 */
-	bool insert(std::string clave, string valor) throw (ManagerException);
+	bool insert(std::string clave, std::string valor) throw (ManagerException);
 
 	/**
 	 * Busca y retorna un elemento dado su clave.
 	 * @param key Es la clave del dato a buscar
-	 * @return Retorna el StringInputData que representa al dato de la clave a buscar
+	 * @param data Es el StringInputData que representa al dato que contiene la clave a buscar
+	 * @return true si la operación fue exitosa
 	 */
 	bool find(std::string key, InputData & data) throw (ManagerException);
 
@@ -130,16 +131,16 @@ public:
 	 * Cambia el valor de un key pasado por parámetro.
 	 * @param key Es el key al cual se le cambiará el valor.
 	 * @param newValue Es el valor nuevo que tomara la clave pasada por parametro.
-	 * @return int Retorna 1 si el dato no existe, 0 si fue cambiado, o -1 si hubo algun problema.
+	 * @return true si la operación fue exitosa
 	 */
-	int modify(std::string key, string newValue);
+	bool modify(std::string key, std::string newValue) throw (ManagerException);
 
 	/**
 	 * Elimina el dato, cuya clave es la pasada por parametro.
 	 * @param key Es la clave del dato que se desea borrar.
-	 * @return Devuelve 1 si no existe la clave, 0 si pudo borrar el dato, o -1 si hubo algun problema.
+	 * @return true si la operacion fue exitosa
 	 */
-	int erase(std::string key);
+	bool remove(std::string key) throw (ManagerException);
 
 	/**
 	 * Imprime el hash por consola.

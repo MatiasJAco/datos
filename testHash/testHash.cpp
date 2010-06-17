@@ -113,7 +113,7 @@ StringInputData* createSid( std::string key,char * value){
 //
 //	hash->print();
 //
-//	hash->erase(22);
+//	hash->remove(22);
 //
 //	hash->print();
 //	delete hash;
@@ -130,24 +130,24 @@ StringInputData* createSid( std::string key,char * value){
 //		delete sid;
 //	}
 //
-//	hash->erase(70);
-//	hash->erase(66);
-//	hash->erase(30);
-//	hash->erase(26);
-//	hash->erase(22);
-//	hash->erase(18);
-//	hash->erase(14);
-//	hash->erase(10);
-//	hash->erase(6);
-//	hash->erase(2);
-//	hash->erase(34);
-//	hash->erase(38);
-//	hash->erase(42);
-//	hash->erase(46);
-//	hash->erase(50);
-//	hash->erase(54);
-//	hash->erase(58);
-//	hash->erase(62);
+//	hash->remove(70);
+//	hash->remove(66);
+//	hash->remove(30);
+//	hash->remove(26);
+//	hash->remove(22);
+//	hash->remove(18);
+//	hash->remove(14);
+//	hash->remove(10);
+//	hash->remove(6);
+//	hash->remove(2);
+//	hash->remove(34);
+//	hash->remove(38);
+//	hash->remove(42);
+//	hash->remove(46);
+//	hash->remove(50);
+//	hash->remove(54);
+//	hash->remove(58);
+//	hash->remove(62);
 //	hash->print();
 //	delete hash;
 //}
@@ -162,7 +162,7 @@ void testEjemplo(){
 
 	hash->insert("123", "paytiti");
 	hash->print();
-	hash->erase("123");
+	hash->remove("123");
 	hash->print();
 
 	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
@@ -208,7 +208,7 @@ void testEjemplo(){
 	hash->print();
 
 	cout<< "-629\n"<<endl;
-	hash->erase("629");
+	hash->remove("629");
 	hash->print();
 
 	cout<< "+408\n"<<endl;
@@ -224,7 +224,7 @@ void testEjemplo(){
 	hash->print();
 
 	cout<< "-863\n"<<endl;
-	hash->erase("863");
+	hash->remove("863");
 	hash->print();
 
 	cout<< "+775\n"<<endl;
@@ -270,7 +270,7 @@ void testBug(){
 	char value[8] = "paytiti";
 	hash->insert("12",value);
 	hash->print();
-	hash->erase("12");
+	hash->remove("12");
 	hash->print();
 	delete hash;
 }
@@ -540,7 +540,7 @@ int main(int argc, const char* argv[]){
 //		}
 //	} else if (operacion == "-I") {
 //		cout << "Ingresando la clave" << clave << " con el valor " << valor << "..." << endl;
-//		int addResult = hash->add(clave, valor);
+//		int addResult = hash->insert(clave, valor);
 //		if (addResult == 0) {
 //			cout << "Se agrego correctamente la clave " << clave << endl;
 //		} else if (addResult == 1) {
@@ -560,7 +560,7 @@ int main(int argc, const char* argv[]){
 //		}
 //	} else if (operacion == "-Q") {
 //		cout << "Quitando el dato representado por la clave " << clave << "..." << endl;
-//		int eraseResult = hash->erase(clave);
+//		int eraseResult = hash->remove(clave);
 //		if (eraseResult == 0) {
 //			cout << "Se elimino correctamente la clave " << clave << endl;
 //		} else if (eraseResult == 1) {
