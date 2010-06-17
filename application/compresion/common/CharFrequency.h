@@ -2,7 +2,7 @@
  * CharFrequency.h
  *
  *  Created on: 13/06/2010
- *      Author: celeste
+ *      Author: alex
  */
 
 #ifndef CHARFREQUENCY_H_
@@ -10,18 +10,25 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
+#include <string>
+#include "../../../physical/utils/ByteConverter.h"
 
 /**
  * Clase que guarda el par caracter/frecuencia
  */
 class CharFrequency {
+
+	static const unsigned int CHAR_FREQUENCY_SIZE=sizeof(short)+sizeof(unsigned long);
+
 public:
 	//--------------------CONSTRUCTOR/DESTRUCTOR---------------------------//
 	CharFrequency();
 	CharFrequency(const CharFrequency&);
-	CharFrequency(char, unsigned long);
+	CharFrequency(short, unsigned long);
 	virtual ~CharFrequency();
 
+	static unsigned int getSize();
 	/**
 	 * Convierte al par caracter/Frecuencia en un string para su posterior
 	 * guardado en disco
@@ -29,13 +36,27 @@ public:
 	 */
 	std::string toString();
 
+	void deserialize(std::string &, unsigned int &pos);
+
+	unsigned long getFrequency();
+
+	static std::string shortToString(short val);
+
+	static std::string longToString(long val);
+
+	static long StringToLong(std::string &str, unsigned int &pos);
+
+	static short StringToShort(std::string &str,unsigned int &pos);
+
 	//-------------------OPERATORS----------------------------------------//
 	bool operator < (const CharFrequency &cF) const;
+
+	bool operator == (short &c) const;
 
 	//-------------------ATRIBUTES----------------------------------------//
 private:
 
-	char m_Char;
+	short m_Char;
 	unsigned long m_Frequency;
 };
 
