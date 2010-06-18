@@ -17,7 +17,7 @@
 #include "dataNode/INodeData.h"
 #include "../../../physical/file/Block.h"
 #include "../../../physical/file/BlockFile.h"
-
+#include "../GeneralStructure.h"
 
 #include "Node.h"
 #include "InnerNode.h"
@@ -32,7 +32,7 @@ class InnerNode;
  * Implementacion de arbol B+ guardado en disco
  *
  */
-class BPlusTree {
+class BPlusTree : public GeneralStructure {
 
 private:
 	static const unsigned int ROOT_NODENUMBER = 1;
@@ -138,9 +138,15 @@ public:
 
 
 
+
+
+
 public:
 
-	/*------------PRIMITIVAS--------------*/
+    /*----------------------------------------------------------*/
+	/*-----------------------PRIMITIVAS-------------------------*/
+	/*----------------------------------------------------------*/
+
 	/**
 	 * Inserta un elemento en el arbol.
 	 * @param clave. La clave del elemento a insertar.

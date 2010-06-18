@@ -16,13 +16,14 @@
 #include "../../../logic/ppmc/md5/MD5.h"
 #include "../../exceptions/ManagerException.h"
 #include "../../exceptions/HashException.h"
+#include "../GeneralStructure.h"
 /**
  * Clase que permite modelar un Hash.
  * Maneja una tabla que contiene buckets.
  * Cada bucket a su vez posee registros, y en cada registro hay un dato.
  * El usuario puede ingresar, modificar, eliminar o consultar datos.
  */
-class Hash {
+class Hash : public GeneralStructure {
 
 private:
 	Table* hashTable;
@@ -110,6 +111,12 @@ public:
 	 * Cierra el archivo (no lo destruye físicamente)
 	 */
 	virtual ~Hash();
+
+
+
+    /*----------------------------------------------------------*/
+	/*-----------------------PRIMITIVAS-------------------------*/
+	/*----------------------------------------------------------*/
 
 	/**
 	 * Agrega un elemento nuevo al archivo Hash.
