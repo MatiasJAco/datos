@@ -8,7 +8,7 @@
 #ifndef TESTPPMCT_H_
 #define TESTPPMCT_H_
 
-#include "../logic/tree/BPlusTree.h"
+#include "../logic/structures/tree/BPlusTree.h"
 #include "../logic/input/StringInputData.h"
 #include "../logic/ppmc/PpmcTree.h"
 
