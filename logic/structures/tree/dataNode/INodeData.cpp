@@ -11,7 +11,6 @@ const std::string INodeData::UNDEFINED_KEY= "@-1";
 
 
 INodeData::INodeData() {
-	// TODO Auto-generated constructor stub
 
 }
 
@@ -22,7 +21,6 @@ INodeData::INodeData( unsigned int leftPointer,std::string key)
 }
 
 INodeData::~INodeData() {
-	// TODO Auto-generated destructor stub
 }
 
 std::string INodeData::getKey()const

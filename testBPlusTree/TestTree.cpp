@@ -13,7 +13,6 @@ TestTree::TestTree() {
 }
 
 TestTree::~TestTree() {
-	// TODO Auto-generated destructor stub
 	if (mainFixture!=NULL)
 		delete mainFixture;
 }

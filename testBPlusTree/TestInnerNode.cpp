@@ -8,7 +8,6 @@
 #include "TestInnerNode.h"
 
 TestInnerNode::TestInnerNode() {
-	// TODO Auto-generated constructor stub
 //	StringInputData typedata(5,"hola");
 //	Block* block = new Block(8,64,0.5);
 //	InnerNode* node = new InnerNode(8,1,block,typedata);
@@ -16,7 +15,6 @@ TestInnerNode::TestInnerNode() {
 }
 
 TestInnerNode::~TestInnerNode() {
-	// TODO Auto-generated destructor stub
 	if (node!=NULL)
 		delete node;
 }
