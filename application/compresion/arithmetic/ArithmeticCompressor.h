@@ -8,7 +8,7 @@
 #ifndef ARITHMETICCOMPRESSOR_H_
 #define ARITHMETICCOMPRESSOR_H_
 
-#include "../physical/file/BitFile.h"
+#include "../../../physical/file/BitFile.h"
 #include "../common/FrequencyTable.h"
 
 #include <math.h>
