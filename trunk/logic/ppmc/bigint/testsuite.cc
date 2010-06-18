@@ -3,7 +3,7 @@
  * expected output automatically extracted from slash-slash comments below.
  * 
  * NOTE: For now, the test suite expects a 32-bit system.  On others, some tests
- * may fail, and it may be ineffective at catching bugs.  TODO: Remedy this. */
+ * may fail, and it may be ineffective at catching bugs.  */
 
 #include "BigIntegerLibrary.hh"
 
