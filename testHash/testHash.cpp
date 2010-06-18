@@ -6,37 +6,65 @@
 #include "../logic/ppmc/md5/MD5.h"
 #include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
 #include "../logic/ppmc/PpmcHash.h"
+#include "../physical/utils/ByteConverter.h"
 
 using namespace std;
+
+
+void testStringInputData(){
+	StringInputData *fixture = new StringInputData();
+
+	std::string key = "3";
+	string value = "algo";
+
+	fixture->setKey(key);
+	fixture->setValue(value);
+
+	char* streamData = new char[fixture->size()];
+
+	fixture->toStream(streamData);
+
+	StringInputData data;
+	data.toData(streamData);
+
+	cout << "new key "<<data.getKey()<<endl;
+	cout << "new data "<<data.getValue()<<endl;
+
+	bool eqkey = key==data.getKey();
+	bool eqvalue = value==data.getValue();
+
+	if (!eqkey)
+		cout << "fallo en key"<< endl;
+	else
+		cout << "ok en key" << endl;
+
+	if (!eqvalue)
+		cout << "fallo en value" << endl;
+	else
+		cout << "ok en value" << endl;
+}
+
+
 
 void testTable() {
 	Table myTable;
 	myTable.createFile();
-
 	myTable.print();
-
 	myTable.modifyRegister(1,22);
 	myTable.print();
-
 	myTable.duplicate();
 	myTable.print();
-
 	myTable.duplicate();
 	myTable.print();
-
 	myTable.duplicate();
 	myTable.print();
-
 	/*myTable.modifyRegister(70,23);
 	myTable.print();*/
-
 	if (myTable.verifyAndDivide()!= 0)
 		printf("\nno se puede dividir");
 	else printf("\nSI se puede dividir");
-
 	myTable.print();
 }
-
 void testTable2(){
 	Table myTable;
 	myTable.createFile();
@@ -44,7 +72,6 @@ void testTable2(){
 	myTable.changeFirstTimeInTable(24,444);
 	myTable.print();
 }
-
 void testTable3(){
 	Table myTable;
 	myTable.createFile();
@@ -52,8 +79,6 @@ void testTable3(){
 	int result = myTable.verifyJumps(1,2);
 	printf("\nRESULT : %i",result);
 }
-
-
 void testTable4(){
 	Table myTable;
 	myTable.createFile();
@@ -62,7 +87,10 @@ void testTable4(){
 	myTable.print();
 }
 
-void testModify() {
+
+
+
+void testModifyHash() {
 	Hash* hash = new Hash();
 	/* Se toma el dato que ingresa el usuario. */
 	std::string valor = "paytiti";
@@ -71,10 +99,8 @@ void testModify() {
 		std::stringstream aux;
 		aux << i;
 		clave = aux.str();
-
 		hash->insert(clave,valor);
 	}
-
 	hash->print();
 	std::string newValue= "______________";
 	try {
@@ -85,26 +111,19 @@ void testModify() {
 	catch (HashException e){
 		cout<<endl<< e.what()<<endl;
 	}
-
 	delete hash;
 }
-
-void testDelete() {
+void testRemoveHash() {
 	Hash* hash = new Hash();
-
 	hash->insert("1","paytiti");
 	hash->insert("2","pepe");
 	hash->insert("3","luis");
-
 	hash->print();
-
 	hash->remove("2");
-
 	hash->print();
 	delete hash;
 }
-
-void tests() {
+void testRemoveHash2() {
 	Hash* hash = new Hash();
 	hash->print();
 	/* Se toma el dato que ingresa el usuario. */
@@ -116,7 +135,6 @@ void tests() {
 		clave = aux.str();
 		hash->insert(clave,valor);
 	}
-
 	hash->remove("70");
 	hash->remove("66");
 	hash->remove("30");
@@ -146,77 +164,50 @@ void testEjemplo(){
 	Hash* hash = new Hash();
 	cout<< "Este proximo print deberia mostrar todas las cosas creadas pero vacias!\n"<<endl;
 	hash->print();
-
 	hash->insert("123", "paytiti");
 	hash->print();
 	hash->remove("123");
 	hash->print();
-
 	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
-
 	cout<< "+123\n"<<endl;
 	hash->insert("123",value);
 	hash->print();
-
-
-	//Ejemplo de como catchear una excepcion para el hash
-//	try{
-//		hash->insert("123",value);
-//	}
-//	catch(HashException &e)
-//	{
-//		cout << e.what() << endl;
-//	}
-
-
 	cout<< "+915\n"<<endl;
 	hash->insert("915",value);
 	hash->print();
-
 	cout<< "+629\n"<<endl;
 	hash->insert("629",value);
 	hash->print();
-
 	cout<< "+411\n"<<endl;
 	hash->insert("411",value);
 	hash->print();
-
 	cout<< "+200\n"<<endl;
 	hash->insert("200",value);
 	hash->print();
-
 	cout<< "+863\n"<<endl;
 	hash->insert("863",value);
 	hash->print();
-
 	cout<< "-629\n"<<endl;
 	hash->remove("629");
 	hash->print();
-
 	cout<< "+408\n"<<endl;
 	hash->insert("408",value);
 	hash->print();
-
 	cout<< "+34\n"<<endl;
 	hash->insert("34",value);
 	hash->print();
-
 	cout<< "+510\n"<<endl;
 	hash->insert("510",value);
 	hash->print();
-
 	cout<< "-863\n"<<endl;
 	hash->remove("863");
 	hash->print();
-
 	cout<< "+775\n"<<endl;
 	hash->insert("775",value);
 	hash->print();
-
 	cout<<"modify value 123"<<endl;
 	hash->modify("123","pepitooooooooo");
 	hash->print();
-
 	cout<<"pruebo el find de hash con 123"<<endl;
 	StringInputData sid;
 	try{
@@ -226,19 +217,10 @@ void testEjemplo(){
 	catch (HashException e) {
 		cout<< e.what()<<endl;
 	}
-
 	delete hash;
 }
 
-void testBug(){
-	Hash* hash = new Hash();
-	char value[8] = "paytiti";
-	hash->insert("12",value);
-	hash->print();
-	hash->remove("12");
-	hash->print();
-	delete hash;
-}
+
 
 /* Muestra la cadena que representa al numero, por pantalla. */
 void testBigInt() {
@@ -246,13 +228,11 @@ void testBigInt() {
 	BigInteger f = stringToBigInteger(s);
 	std::cout << f << std::endl;
 }
-
 /* Devuelve la cadena: 4d186321c1a7f0f354b297e8914ab240 */
 void testMd5() {
 	MD5 md5("hola");
 	std::cout << md5.hexdigest() << std::endl;
 }
-
 /* El resultado debe dar:
  * ======================
  * md5:  4d186321c1a7f0f354b297e8914ab240
@@ -264,7 +244,6 @@ void testHashFunction() {
 	std::cout << s << std::endl;
 	int i = 0;
 	std::string nueva = "";
-
 	while(i < 32) {
 		if (s.substr(i,1).compare("0") == 0) {
 			nueva.append("00");
@@ -312,6 +291,8 @@ void testHashFunction() {
 	std::cout << (f % g).toInt() << std::endl;
 }
 
+
+
 /* Guarda el contexto "ABC" con la letra "A" y el Escape. Ambos tienen 1 ocurrencia. */
 void testPpmc1() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -325,7 +306,6 @@ void testPpmc1() {
 		std::cout << "fallo test ppmc 1" << std::endl;
 	}
 }
-
 /* Guarda el contexto "ABC". Letra "A": 11 ocurrencias. Escape: 1 ocurrencia. */
 void testPpmc2() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -341,7 +321,6 @@ void testPpmc2() {
 		std::cout << "fallo test ppmc 2" << std::endl;
 	}
 }
-
 /* Crea contexto "ABC". Verifica que el caracter "A" no exista. */
 void testPpmc3() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -353,7 +332,6 @@ void testPpmc3() {
 		std::cout << "fallo test ppmc 3" << std::endl;
 	}
 }
-
 /* Crea contexto "ABC". Carga el caracter "X" y verifica que exista el mismo. */
 void testPpmc4() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -366,7 +344,6 @@ void testPpmc4() {
 		std::cout << "fallo test ppmc 4" << std::endl;
 	}
 }
-
 /* Crea contexto "ABC" con 2 caracteres ("A" y el "B") con 1 ocurrencia cada uno. */
 void testPpmc5() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -380,7 +357,6 @@ void testPpmc5() {
 		std::cout << "fallo test ppmc 5" << std::endl;
 	}
 }
-
 /* Crea contexto "ABC". Carga los caracteres "A" y el "B" con 1 ocurrencia cada uno. */
 void testPpmc6() {
 	PpmcHash* ppmcHash = new PpmcHash();
@@ -398,19 +374,30 @@ void testPpmc6() {
 	}
 }
 
-int main(int argc, const char* argv[]){
-	//testTable();
-	//testTable2();
-	//testTable3();
-	//testTable4();
-	//testDelete();
-	//tests();
-	testEjemplo();
-	//testModify();
-	//testBigInt();
-	//testMd5();
-	//testHashFunction();
 
+
+
+
+
+/*--------------------------------------------------------------------------------*/
+/*---------------------------MAIN PRUEBAS ----------------------------------------*/
+/*--------------------------------------------------------------------------------*/
+
+int main(int argc, const char* argv[]){
+
+
+	/* TESTS DE HASH */
+	//testRemoveHash();
+	//testRemoveHash2();
+	//testEjemplo();
+	//testModifyHash();
+
+
+	/* TESTS VARIOS */
+	testStringInputData();
+
+
+	/* TESTS DE PPMC */
 	//testPpmc1();
 	//testPpmc2();
 	//testPpmc3();
@@ -418,77 +405,19 @@ int main(int argc, const char* argv[]){
 	//testPpmc5();
 	//testPpmc6();
 
-	//testBug();
-	//cout << "paso test!" << endl;
+	/* TESTS PARA LA FUNCION HASH NUEVA */
+	//testBigInt();
+	//testMd5();
+	//testHashFunction();
 
-//	Hash* hash = new Hash();
-//
-//	if (argc == 1 || argc == 2) {
-//		cout << "Comandos para usar el hash:" << endl;
-//		cout << "-B (Busca una clave)" << endl;
-//		cout << "-I (Ingresa un dato a la estructura" << endl;
-//		cout << "-M (Modifica un dato existente de la estructura)" << endl;
-//		cout << "-Q (Quita un dato de la estructura)" << endl;
-//		cout << "-S (Impresion de datos actuales de la estructura)" << endl;
-//		cout << "-h (Ayuda)" << endl;
-//		return 0;
-//	}
-//
-//	string operacion (argv[1]);
-//	string claveString (argv[2]);
-//	string valor (argv[3]);
-//	//string aux (";");
-//
-//	//int separator = claveValor.find(aux);
-//
-//	//int clave = atoi(claveValor.substr(0,separator).c_str());
-//	//string valor = claveValor.substr(separator+1,claveValor.size());
-//
-//	int clave = atoi(claveString.c_str());
-//	if (operacion == "-B") {
-//		cout << "Buscando la clave " << clave << "..." << endl;
-//		StringInputData* sid = hash->(clave);
-//		if (sid != NULL) {
-//			cout << sid->toString() << endl;
-//		} else {
-//			cout << "No se encontro la clave " << clave << endl;
-//		}
-//	} else if (operacion == "-I") {
-//		cout << "Ingresando la clave" << clave << " con el valor " << valor << "..." << endl;
-//		int addResult = hash->insert(clave, valor);
-//		if (addResult == 0) {
-//			cout << "Se agrego correctamente la clave " << clave << endl;
-//		} else if (addResult == 1) {
-//			cout << "No se agrego la clave " << clave << " pues ya existia."<< endl;
-//		} else {
-//			cout << "Se produjo un error al ingresar la clave " << clave << endl;
-//		}
-//	} else if (operacion == "-M") {
-//		cout << "Modificando el valor de la clave" << clave << " por " << valor << "..." << endl;
-//		int modifyResult = hash->modify(clave, valor);
-//		if (modifyResult == 0) {
-//			cout << "Se modifico correctamente el valor de la clave " << clave << endl;
-//		} else if (modifyResult == 1) {
-//			cout << "No se modifico el valor de la clave " << clave << " pues no existia la misma."<< endl;
-//		} else {
-//			cout << "Se produjo un error al modificar el valor de la clave " << clave << endl;
-//		}
-//	} else if (operacion == "-Q") {
-//		cout << "Quitando el dato representado por la clave " << clave << "..." << endl;
-//		int eraseResult = hash->remove(clave);
-//		if (eraseResult == 0) {
-//			cout << "Se elimino correctamente la clave " << clave << endl;
-//		} else if (eraseResult == 1) {
-//			cout << "No se elimino la clave " << clave << " pues no existia la misma."<< endl;
-//		} else {
-//			cout << "Se produjo un error al eliminar la clave " << clave << endl;
-//		}
-//	} else if (operacion == "-S") {
-//		cout << "Impresion del estado actual:" << endl;
-//		hash->print();
-//	} else if (operacion == "-h") {
-//		cout << "Ayuda" << endl;
-//	}
-//	delete hash;
+
+	/*  TESTS TABLE */
+	//testTable();
+	//testTable2();
+	//testTable3();
+	//testTable4();
+
+
+
 	return 0;
 }
