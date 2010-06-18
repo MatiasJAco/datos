@@ -22,15 +22,12 @@ unsigned long FrequencyTable::getFrequencyTotal()
 	return m_FrequencyTotal;
 }
 
-bool FrequencyTable::increaseFrequency(short c, unsigned long ammount=1)
+void FrequencyTable::increaseFrequency(short c, unsigned long ammount=1)
 {
-	bool retVal= false;
-
 	unsigned long freq = getFrequency(c);
 
 	setFrequency(c,freq+ammount);
 
-	return retVal;
 }
 
 string FrequencyTable::toString()
@@ -74,8 +71,9 @@ void FrequencyTable::setFrequency(CharFrequency cf)
 		//Si lo encuentro corto el ciclo
 		if((*it) == cf)
 		{
+			m_FrequencyTotal -= it->getFrequency();
 			it-> setFrequency(cf.getFrequency());
-			 found= true;
+			found= true;
 			break;
 		}
 	}
@@ -84,6 +82,8 @@ void FrequencyTable::setFrequency(CharFrequency cf)
 		m_Frequencies.push_back(cf);
 		m_isSorted=false;
 	}
+	m_FrequencyTotal += cf.getFrequency();
+
 }
 
 
@@ -119,18 +119,20 @@ unsigned long FrequencyTable::getFrequency(short c)
 
 void FrequencyTable::deserialize(string serialized)
 {
-	//unsigned int pieceSize = CharFrequency::getSize();
+	if(!m_Frequencies.empty())
+		m_Frequencies.clear();
+
 	unsigned int serializedSize=serialized.size();
 	m_FrequencyTotal=0;
 	m_Frequencies.clear();
 	unsigned int bytePos=0;
 
+	CharFrequency cF;
+
 	if(serializedSize >0 )
 	{
 		while(bytePos < serializedSize)
 		{
-			CharFrequency cF;
-
 			cF.deserialize(serialized,bytePos);
 
 			m_FrequencyTotal+=cF.getFrequency();
