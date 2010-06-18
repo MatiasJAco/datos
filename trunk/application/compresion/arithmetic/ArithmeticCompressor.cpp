@@ -9,7 +9,6 @@
 
 ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxbits)
 {
-	// TODO Auto-generated constructor stub
 	m_coder = coder;
 	m_maxbits = maxbits;
 
@@ -25,7 +24,6 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 }
 
 ArithmeticCompressor::~ArithmeticCompressor() {
-	// TODO Auto-generated destructor stub
 	m_bitFile->close();
 	delete m_bitFile;
 }

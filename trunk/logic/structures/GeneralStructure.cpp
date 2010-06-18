@@ -8,10 +8,8 @@
 #include "GeneralStructure.h"
 
 GeneralStructure::GeneralStructure() {
-	// TODO Auto-generated constructor stub
 
 }
 
 GeneralStructure::~GeneralStructure() {
-	// TODO Auto-generated destructor stub
 }

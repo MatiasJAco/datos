@@ -8,7 +8,6 @@
 #include "BitFile.h"
 
 BitFile::BitFile(accessModeEnum type) {
-	// TODO Auto-generated constructor stub
 	m_byteFile = new SequentialFile(type);
 
 	if (type == WRITE_FILE)
@@ -18,7 +17,6 @@ BitFile::BitFile(accessModeEnum type) {
 }
 
 BitFile::~BitFile() {
-	// TODO Auto-generated destructor stub
 	delete m_byteFile;
 }
 

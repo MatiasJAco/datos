@@ -53,7 +53,7 @@ TEST(z); //0
 TEST(1); //1
 TEST(10); //10
 
-// TODO: Comprehensively test the general and special cases of each function.
+/* Comprehensively test the general and special cases of each function. */
 
 // === Default constructors ===
 
