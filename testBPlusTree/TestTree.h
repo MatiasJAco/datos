@@ -5,8 +5,8 @@
  *  @author: kira
  */
 
-#include "../logic/tree/BPlusTree.h"
-#include "../logic/tree/LeafNode.h"
+#include "../logic/structures/tree/BPlusTree.h"
+#include "../logic/structures/tree/LeafNode.h"
 #include "../logic/input/InputData.h"
 #include "../logic/input/StringInputData.h"
 

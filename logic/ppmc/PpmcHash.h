@@ -9,7 +9,7 @@
 #define PPMCHASH_H_
 
 #include "Ppmc.h"
-#include "../logic/hash/Hash.h"
+#include "../logic/structures/hash/Hash.h"
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC con almacenamiento de la tabla en un Hash

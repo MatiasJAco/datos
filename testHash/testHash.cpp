@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
-#include "../logic/hash/Table.h"
+#include "../logic/structures/hash/Table.h"
 #include "../logic/input/StringInputData.h"
-#include "../logic/hash/Hash.h"
+#include "../logic/structures/hash/Hash.h"
 #include "../logic/ppmc/md5/MD5.h"
 #include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
 #include "../logic/ppmc/PpmcHash.h"
@@ -404,8 +404,8 @@ int main(int argc, const char* argv[]){
 	//testTable3();
 	//testTable4();
 	//testDelete();
-	tests();
-	//testEjemplo();
+	//tests();
+	testEjemplo();
 	//testModify();
 	//testBigInt();
 	//testMd5();

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
-#include "../logic/hash/Table.h"
+#include "../logic/structures/hash/Table.h"
 #include "../logic/input/StringInputData.h"
-#include "../logic/hash/Hash.h"
+#include "../logic/structures/hash/Hash.h"
 
 using namespace std;
 
