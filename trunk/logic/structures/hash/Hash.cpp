@@ -6,8 +6,6 @@
  */
 
 #include "Hash.h"
-#include <sstream>
-#include <iostream>
 
 
 Hash::Hash() {

@@ -12,10 +12,9 @@
 
 #include "Node.h"
 #include "LeafNode.h"
-
+#include "BPlusTree.h"
 #include "../../../physical/utils/ByteConverter.h"
 
-#include "BPlusTree.h"
 
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.
