@@ -26,11 +26,11 @@ private:
 
 private:
 	//--------------Constructor/Destructor----------------//
-	LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData,BPlusTree* pointerTree);
+	LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree);
 
 public:
 
-	LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData);
+	LeafNode(unsigned int nodeNumber,Block* block);
 
 
 	/// Destructor.
@@ -123,13 +123,6 @@ public:
 	 * Imprime el contenido del nodo por pantalla.
 	 */
 	void printContent();
-
-	/**
-	 * Devuelve un string que tiene el contenido de la hoja.
-	 * @param data un dato del tipo que se emplea internamente, para saber que tipos de dato
-	 * tenemos
-	 */
-	std::string toStringData(InputData & typedata);
 
 	/**
 	 * Devuelve los inputData de una hoja.

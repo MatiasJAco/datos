@@ -11,9 +11,7 @@ using namespace std;
 const string BPlusTree::FILENAME_DEFAULT = "arbolbmas.dat";
 
 
-BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor,const InputData& typeData)
-:m_typeData(typeData)
-{
+BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor){
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
 
@@ -35,9 +33,7 @@ BPlusTree::BPlusTree(unsigned int sizeNodes,float branchFactor,const InputData& 
 
 }
 
-BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor,const InputData& typeData)
-:m_typeData(typeData)
-{
+BPlusTree::BPlusTree(string nameFile,unsigned int sizeNodes,float branchFactor){
 	m_sizeNodes = sizeNodes;
 	m_branchFactor = branchFactor;
 
@@ -282,11 +278,11 @@ Node *BPlusTree::getNode(const unsigned int nodeNumber)
 
 		if (level == Node::LEAF_LEVEL)
 		{
-			node = new LeafNode(nodeNumber,block,m_typeData,this);
+			node = new LeafNode(nodeNumber,block,this);
 		}
 		else
 		{
-			node = new InnerNode(nodeNumber,level,block,m_typeData,this);
+			node = new InnerNode(nodeNumber,level,block,this);
 		}
 	}
 
@@ -305,7 +301,7 @@ InnerNode* BPlusTree::newInnerNode(unsigned int level)
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	InnerNode* node = new InnerNode(nodeNumber,level,block,m_typeData,this);
+	InnerNode* node = new InnerNode(nodeNumber,level,block,this);
 
 	return node;
 }
@@ -315,7 +311,7 @@ LeafNode* BPlusTree::newLeafNode()
 	Block* block = file.getNewBlock();
 	unsigned int nodeNumber = block->getBlockNumber();
 
-	LeafNode* node = new LeafNode(nodeNumber,block,m_typeData,this);
+	LeafNode* node = new LeafNode(nodeNumber,block,this);
 
 	return node;
 }

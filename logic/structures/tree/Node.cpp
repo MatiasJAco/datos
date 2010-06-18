@@ -8,9 +8,7 @@
 #include "Node.h"
 
 //Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,BPlusTree* pointerTree)
-Node::Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData)
-:m_typeData(typeData)
-{
+Node::Node(unsigned int nodeNumber,unsigned int level,Block* block){
 	m_nodeNumber = nodeNumber;
 	m_block = block;
 //	m_tree = pointerTree;

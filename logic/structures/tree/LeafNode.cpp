@@ -7,8 +7,8 @@
 
 #include "LeafNode.h"
 
-LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData)
-:Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block)
+:Node(nodeNumber,Node::LEAF_LEVEL,block)
 {
 	m_block->setFixedRegisterCount(3);
 
@@ -26,8 +26,8 @@ LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeDat
 	m_block->getRegisterN(3);
 }
 
-LeafNode::LeafNode(unsigned int nodeNumber,Block* block,const InputData& typeData,BPlusTree* pointerTree)
-:Node(nodeNumber,Node::LEAF_LEVEL,block,typeData)
+LeafNode::LeafNode(unsigned int nodeNumber,Block* block,BPlusTree* pointerTree)
+:Node(nodeNumber,Node::LEAF_LEVEL,block)
 {
 	m_tree = pointerTree;
 	m_block->setFixedRegisterCount(3);
@@ -432,37 +432,6 @@ void LeafNode::printContent()
 	}
 
 
-}
-
-std::string LeafNode::toStringData(InputData & typedata)
-{
-	std::string retStr = "";
-
-	VarRegister varR;
-	unsigned int dataAmmount;
-	unsigned int i = 0;
-
-	m_block->restartCounter();
-	dataAmmount = m_block->getRegisterAmount();
-
-	varR = m_block->getNextRegister(true);
-	retStr+= "\t Nivel: "+ ByteConverter::bytesToUInt(varR.getValue());
-	varR = m_block->getNextRegister(true);
-	retStr += "\t Nodo anterior: " + ByteConverter::bytesToInt(varR.getValue());
-	varR = m_block->getNextRegister(true);
-	retStr += "\t Nodo siguiente: "+ ByteConverter::bytesToInt(varR.getValue());
-	retStr +=  "\n Datos \n";
-
-	i = m_block->getPosActual();
-
-	for(i = i; i < dataAmmount; i++)
-	{
-		varR = m_block->getNextRegister(true);
-		typedata.toData(varR.getValue());
-		retStr+= typedata.toString();
-	}
-
-	return retStr;
 }
 
 
