@@ -201,10 +201,10 @@ throw (ManagerException)
 	return retVal;
 }
 
-bool BPlusTree::remove(std::string clave) throw (ManagerException)
+bool BPlusTree::remove(std::string key) throw (ManagerException)
 {
 	StringInputData data;
-	data.setKey(clave);
+	data.setKey(key);
 	data.setValue("");
 
 	bool retVal = true;
@@ -346,7 +346,14 @@ void BPlusTree::deleteTree()
 	file.deleteFile();
 }
 
-bool BPlusTree::modify(const InputData & dato, const InputData & dato2) throw (ManagerException){
+bool BPlusTree::modify(std::string key, std::string newValue) throw (ManagerException){
+	StringInputData dato;
+	dato.setKey(key);
+	dato.setValue("");
+	StringInputData dato2;
+	dato2.setKey(key);
+	dato2.setValue(newValue);
+
 	bool retVal = true;
 	INodeData promotedKey;
 	unsigned int level = Node::UNDEFINED_NODE_LEVEL;
@@ -489,7 +496,7 @@ bool BPlusTree::modify(const InputData & dato, const InputData & dato2) throw (M
 
 }
 
-bool BPlusTree::find(const InputData & key, InputData & data)throw(ManagerException){
+bool BPlusTree::find(std::string key, InputData & data)throw(ManagerException){
 
 	bool retVal = true;
 

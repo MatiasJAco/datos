@@ -289,7 +289,7 @@ throw (NodeException)
 }
 
 
-bool LeafNode::find(const InputData & key,InputData & data)
+bool LeafNode::find(std::string key,InputData & data)
 throw (NodeException)
 {
 	bool found = false;
@@ -313,11 +313,11 @@ throw (NodeException)
 		currentValue = currentRegister.getValue();
 		/// Transformo el registro a un InputData
 		currentData->toData(currentValue);
-		if (currentData->getKey() >= key.getKey())
+		if (currentData->getKey() >= key)
 		{
 			found = true;
 
-			if (currentData->getKey() == key.getKey())
+			if (currentData->getKey() == key)
 				keyFound=true;
 //			if (data.size() < currentData->size())
 //			{

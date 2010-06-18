@@ -65,7 +65,7 @@ public:
 	 * @param registro refencia en la cual se va a almacenar el registro encontrado
 	 * @return bool TRUE en caso de encontrar el registro, FALSE en el caso que no se encuentre.
 	 */
-	bool find(const InputData& key,InputData& data)throw (NodeException);
+	bool find(std::string key,InputData& data)throw (NodeException);
 
 	/**
 	 * Modifica el nodo identificado por la clave

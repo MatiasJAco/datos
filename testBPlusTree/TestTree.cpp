@@ -620,26 +620,18 @@ void TestTree::testModify(){
 //		mainFixture->insert(data59);
 //		mainFixture->insert(data60);
 
-		StringInputData datoMod("t","10");
-		StringInputData datoaMod("t","");
-		mainFixture->showTree(data);
-		mainFixture->modify(datoaMod,datoMod);
-		mainFixture->showTree(data);
 
-		StringInputData datoMod2("po","10r00000000000000000");
-		StringInputData datoaMod2("po","");
-
-		mainFixture->modify(datoaMod2,datoMod2);
 		mainFixture->showTree(data);
-		StringInputData datoMod3("a","10000000000000000000");
-		StringInputData datoaMod3("a","");
-
-		mainFixture->modify(datoaMod3,datoMod3);
+		mainFixture->modify("t","10");
 		mainFixture->showTree(data);
 
-		StringInputData datoMod6("ñ","10");
-		StringInputData datoaMod6("ñ","");
-		mainFixture->modify(datoaMod6,datoMod6);
+		mainFixture->modify("po","10r00000000000000000");
+		mainFixture->showTree(data);
+
+		mainFixture->modify("a","10000000000000000000");
+		mainFixture->showTree(data);
+
+		mainFixture->modify("ñ","10");
 		mainFixture->showTree(data);
 //
 //		StringInputData datoMod4(98,"");
