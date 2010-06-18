@@ -13,18 +13,9 @@
  * para el PPMCHASH y PPMCTREE
  */
 class Ppmc {
-private:
-
 
 protected:
 
-	/**
-	 * Lee el proximo caracter del archivo a comprimir. Maneja por dentro un
-	 * buffer interno.
-	 * @param result Es el resultado de la operación: 1 si es fin de archivo, 0 si pudo, o -1 si hubo algun problema.
-	 * @return Retorna el caracter deseado.
-	 */
-	char readNextCharacter( int & result);
 
 	/**
 	 * Obtiene el String del contexto que se le pasa como parametro. Ej: "DIV", "IVI" para sizeOfContext 3.

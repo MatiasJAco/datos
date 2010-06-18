@@ -6,11 +6,10 @@
 #ifndef LEAF_H_
 #define LEAF_H_
 
+#include "BPlusTree.h"
 #include "Node.h"
 #include <iostream>
 #include <sstream>
-
-#include "BPlusTree.h"
 
 /**
  *	Permite el manejo en memoria de los datos almacenados en el arbol.

@@ -8,15 +8,16 @@
 #ifndef HASH_H_
 #define HASH_H_
 
-#include "../../input/StringInputData.h"
-#include "../../../physical/file/BlockFile.h"
+
 #include "Table.h"
 #include "Bucket.h"
-#include "../../../logic/ppmc/bigint/BigIntegerLibrary.hh"
-#include "../../../logic/ppmc/md5/MD5.h"
+#include "../GeneralStructure.h"
+#include "../../input/StringInputData.h"
+#include "../../ppmc/bigint/BigIntegerLibrary.hh"
+#include "../../ppmc/md5/MD5.h"
 #include "../../exceptions/ManagerException.h"
 #include "../../exceptions/HashException.h"
-#include "../GeneralStructure.h"
+#include "../../../physical/file/BlockFile.h"
 /**
  * Clase que permite modelar un Hash.
  * Maneja una tabla que contiene buckets.

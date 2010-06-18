@@ -11,5 +11,5 @@ InputData::InputData() {
 }
 
 InputData::~InputData() {
-	// TODO Auto-generated destructor stub
+
 }
