@@ -34,11 +34,11 @@ private:
 	BPlusTree* m_tree;
 
 private:
-    InnerNode(unsigned int nodeNumber, unsigned int level,Block *block,const InputData& typeData, BPlusTree *pointerTree);
+    InnerNode(unsigned int nodeNumber, unsigned int level,Block *block, BPlusTree *pointerTree);
 
 
 public:
-    InnerNode(unsigned int nodeNumber, unsigned int level, Block *block,const InputData& typeData);
+    InnerNode(unsigned int nodeNumber, unsigned int level, Block *block);
 
     ~InnerNode();
 

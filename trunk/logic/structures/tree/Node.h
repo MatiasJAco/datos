@@ -40,13 +40,10 @@ protected:
 
 	Block* m_block;
 
-	const InputData& m_typeData;
-
-
 
 protected:
 	//--------------Constructor/Destructor----------------//
-	Node(unsigned int nodeNumber,unsigned int level,Block* block,const InputData& typeData);
+	Node(unsigned int nodeNumber,unsigned int level,Block* block);
 
 public:
 

@@ -8,9 +8,7 @@
 #include "TestTree.h"
 
 TestTree::TestTree() {
-	// TODO Auto-generated constructor stub
-	StringInputData typedata("4","hola");
-	mainFixture = new BPlusTree("arbol.dat",95,0.5,typedata);
+	mainFixture = new BPlusTree("arbol.dat",95,0.5);
 
 }
 

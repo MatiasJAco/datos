@@ -8,8 +8,7 @@
 #include "PpmcTree.h"
 
 PpmcTree::PpmcTree() {
-	StringInputData typedata("4","hola");
-	this->tree = new BPlusTree("arbol.dat",95,0.5,typedata);
+	this->tree = new BPlusTree("arbol.dat",95,0.5);
 }
 
 PpmcTree::~PpmcTree() {

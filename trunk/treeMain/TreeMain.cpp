@@ -8,8 +8,7 @@
 using namespace std;
 
 int main(int argc, const char* argv[]){
-	StringInputData data("4","paytiti");
-	BPlusTree* bPlusTree = new BPlusTree("arbol.dat",92,0.5,data);
+	BPlusTree* bPlusTree = new BPlusTree("arbol.dat",92,0.5);
 
 	if (argc == 1) {
 		cout << "Comandos para usar el arbol:" << endl;
