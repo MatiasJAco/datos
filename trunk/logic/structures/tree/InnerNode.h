@@ -141,15 +141,13 @@ public:
 
 	/**
 	 * Imprime en pantalla los elementos de un nodo interno.
-	 * @param tipo de dato de los elementos finales de los nodos.
 	 */
-	void printContent(InputData& data);
+	void printContent();
 
 	/**
 	 * Muestra por pantalla todos los elementos de su nivel y hacia abajo.
-	 * Tipo de dato de los elementos de los nodos.
 	 */
-	void show(InputData& data);
+	void show();
 
 
 	void modifyLastKey();

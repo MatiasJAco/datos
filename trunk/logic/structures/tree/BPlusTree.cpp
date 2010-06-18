@@ -335,9 +335,9 @@ void BPlusTree::deleteNode(Node* node) throw (BPlusTreeException)
 
 
 
-void BPlusTree::showTree(InputData& data){
+void BPlusTree::print(){
 
-	this->m_root->show(data);
+	this->m_root->show();
 
 };
 

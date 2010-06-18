@@ -71,7 +71,7 @@ void TestTree::run()
 //	StringInputData key(3,"");
 //
 //	mainFixture->find(key,data);
-////	mainFixture->showTree(data);
+////	mainFixture->print(data);
 //
 //	// Mientras pueda obtener un dato.
 //	while (mainFixture->getNext(data))
@@ -176,7 +176,7 @@ void TestTree::testRecoverLeaf()
 //	mainFixture->insert(data5);
 //	mainFixture->insert(data6);
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //
 ////	Node* nodoroot = mainFixture->getNode(1);
 ////	Node* leaforig = mainFixture->getNode(2);
@@ -195,7 +195,7 @@ void TestTree::testInsertComplejo()
 {
 	cout << "\n\t\t*********testInsertComplejo*********\t\t\n";
 
-	StringInputData data;
+	//StringInputData data;
 
 	StringInputData data1("a","11");
 	StringInputData data2("b","22");
@@ -362,7 +362,7 @@ void TestTree::testInsertComplejo()
 //	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
 //		cout << "Error en el bigger"<<endl;
 
-	mainFixture->showTree(data);
+	mainFixture->print();
 	mainFixture->deleteTree();
 
 //	Node* leafsplit = mainFixture->getNode(3);
@@ -426,7 +426,7 @@ void TestTree::testInsertComplejo()
 //	//mainFixture->remove(data8);
 //
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //
 //	mainFixture->remove(data1);
 //
@@ -439,7 +439,7 @@ void TestTree::testInsertComplejo()
 //		cout << "Error en el equal"<<endl;
 //
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //
 //	mainFixture->deleteTree();
 //}
@@ -448,7 +448,7 @@ void TestTree::testInsertComplejo()
 void TestTree::testRemove()
 {
 
-	StringInputData data;
+//	StringInputData data;
 	mainFixture->insert("a","11");
 	mainFixture->insert("ca","22");
 	mainFixture->insert("r","33");
@@ -484,7 +484,7 @@ void TestTree::testRemove()
 //	mainFixture->remove(data14);
 
 
-	mainFixture->showTree(data);
+	mainFixture->print();
 
 	mainFixture->deleteTree();
 }
@@ -492,7 +492,7 @@ void TestTree::testRemove()
 void TestTree::testModify(){
 
 	cout << "\n\t\t*********testModify*********\t\t\n";
-	StringInputData data;
+	//StringInputData data;
 
 //		StringInputData data1("a","11");
 //		StringInputData data2("*","22");
@@ -560,9 +560,9 @@ void TestTree::testModify(){
 		mainFixture->insert("*@","33");
 		mainFixture->insert("1","44");
 		mainFixture->insert("po","55");
-		mainFixture->showTree(data);
+		mainFixture->print();
 		mainFixture->insert("t","00000000000000000");
-		mainFixture->showTree(data);
+		mainFixture->print();
 
 		mainFixture->insert("mn","77");
 
@@ -621,27 +621,27 @@ void TestTree::testModify(){
 //		mainFixture->insert(data60);
 
 
-		mainFixture->showTree(data);
+		mainFixture->print();
 		mainFixture->modify("t","10");
-		mainFixture->showTree(data);
+		mainFixture->print();
 
 		mainFixture->modify("po","10r00000000000000000");
-		mainFixture->showTree(data);
+		mainFixture->print();
 
 		mainFixture->modify("a","10000000000000000000");
-		mainFixture->showTree(data);
+		mainFixture->print();
 
 		mainFixture->modify("ñ","10");
-		mainFixture->showTree(data);
+		mainFixture->print();
 //
 //		StringInputData datoMod4(98,"");
 //		StringInputData datoaMod4(98,"");
 //		mainFixture->modifyElement(datoaMod4,datoMod4);
-//		mainFixture->showTree(data);
+//		mainFixture->print(data);
 //		StringInputData datoMod5(99,"");
 //		StringInputData datoaMod5(99,"");
 //		mainFixture->modifyElement(datoaMod5,datoMod5);
-//		mainFixture->showTree(data);
+//		mainFixture->print(data);
 //
 //
 	mainFixture->deleteTree();
@@ -694,7 +694,7 @@ void TestTree::testModify(){
 //	mainFixture->insert(data17);
 //	mainFixture->insert(data18);
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //	StringInputData datoDevuelto(0,"");
 //	//Busca 1.
 //	StringInputData datoABuscar(1,"");
@@ -758,7 +758,7 @@ void TestTree::testModify(){
 //	mainFixture->insert(data19);
 //	mainFixture->insert(data20);
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //
 //
 //
@@ -786,7 +786,7 @@ void TestTree::testModify(){
 ////	mainFixture->remove(data19);
 ////	mainFixture->remove(data20);
 //
-//	mainFixture->showTree(data);
+//	mainFixture->print(data);
 //
 //	mainFixture->deleteTree();
 //}

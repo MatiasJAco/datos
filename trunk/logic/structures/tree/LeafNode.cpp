@@ -391,8 +391,9 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 }
 
 
-void LeafNode::printContent(InputData& data)
+void LeafNode::printContent()
 {
+	StringInputData data;
 	VarRegister varR;
 	char* valueReg = NULL;
 	unsigned int dataAmmount;
@@ -538,9 +539,9 @@ unsigned int LeafNode::setPreviousLeaf(unsigned int nodeNumber)
 	return prevleaf;
 }
 
-void LeafNode::show(InputData &data){
+void LeafNode::show(){
 
-	this->printContent(data);
+	this->printContent();
 
 
 }
