@@ -96,11 +96,11 @@ public:
 	 * @param data. Contiene la clave del elemento a remover.
 	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
 	 */
-	bool remove(std::string clave) throw (ManagerException);
+	bool remove(std::string key) throw (ManagerException);
 
-	bool modify(const InputData & dato, const InputData & dato2) throw (ManagerException);
+	bool modify(std::string key, std::string newValue) throw (ManagerException);
 
-	bool find(const InputData & key, InputData & data)throw(ManagerException);
+	bool find(std::string key, InputData & data) throw (ManagerException);
 
 	bool getNext(InputData& data);
 

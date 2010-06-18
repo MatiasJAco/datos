@@ -357,13 +357,13 @@ throw(NodeException)
 }
 
 
-bool InnerNode::find(const InputData & key, InputData & data)
+bool InnerNode::find(std::string key, InputData & data)
 throw(NodeException)
 {
 	bool found = false;
 
 	// Elemento de nodo interno con referencia a la clave a insertar.
-	INodeData thiskey(Node::UNDEFINED_NODE_NUMBER,key.getKey());
+	INodeData thiskey(Node::UNDEFINED_NODE_NUMBER,key);
 
 	// Busca el nodo interno que referencia a esa clave
 	INodeData refkey;

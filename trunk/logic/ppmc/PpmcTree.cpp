@@ -35,8 +35,8 @@ int PpmcTree::createContext(std::string context) {
 
 bool PpmcTree::existsCharacterInContext(std::string context, std::string character) {
 	StringInputData datoDevuelto("","");
-	StringInputData datoABuscar(context,"");
-	bool exists = this->tree->find(datoABuscar,datoDevuelto);
+
+	bool exists = this->tree->find(context,datoDevuelto);
 	if (exists) { // Si existe el contexto, lo obtengo y busco el caracter en su tabla.
 		std::string contextTable = datoDevuelto.getValue();
 		if (contextTable.find(character,0) != string::npos) { // Si encuentra el caracter en la tabla del contexto, devuelve true.
@@ -51,13 +51,12 @@ int PpmcTree::addCharacterToContext(std::string context, std::string character) 
 		return 1;
 	}
 	StringInputData stringInputData("","");
-	StringInputData datoABuscar(context,"");
-	this->tree->find(datoABuscar,stringInputData);
+	this->tree->find(context,stringInputData);
 	std::string contextTable = stringInputData.getValue();
 	contextTable.append(character); // Agrega el caracter al contexto.
 	contextTable.append(",1-"); // Inicialmente, el caracter se agrega con una ocurrencia.
 	stringInputData.setValue(contextTable);
-	this->tree->modify(datoABuscar,stringInputData);
+	this->tree->modify(context,stringInputData.getValue());
 	return 0;
 }
 
@@ -66,8 +65,7 @@ int PpmcTree::increaseFrequency(std::string context, std::string character) {
 		return 1;
 	}
 	StringInputData stringInputData("","");
-	StringInputData datoABuscar(context,"");
-	this->tree->find(datoABuscar,stringInputData);
+	this->tree->find(context,stringInputData);
 	std::string contextTable = stringInputData.getValue();
 	std::string newContextTable = "";
 
@@ -90,7 +88,7 @@ int PpmcTree::increaseFrequency(std::string context, std::string character) {
 	newContextTable.append("-");
 	newContextTable.append(contextTable, contextTable.find("-",characterIndex)+1, contextTable.length());
 	stringInputData.setValue(newContextTable);
-	this->tree->modify(datoABuscar,stringInputData);
+	this->tree->modify(context,stringInputData.getValue());
 	return 0;
 }
 
@@ -100,8 +98,7 @@ int PpmcTree::getCharacterOccurrences(std::string context, std::string character
 	}
 
 	StringInputData stringInputData("","");
-	StringInputData datoABuscar(context,"");
-	this->tree->find(datoABuscar,stringInputData);
+	this->tree->find(context,stringInputData);
 	std::string contextTable = stringInputData.getValue();
 
 	size_t characterIndex = contextTable.find(character,0); // Busca el indice del caracter.

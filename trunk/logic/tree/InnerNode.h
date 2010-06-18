@@ -50,7 +50,7 @@ public:
 
 	loadResultEnum remove(const InputData& data) throw(NodeException);
 
-    bool find(const InputData & key, InputData & data) throw (NodeException);
+    bool find(std::string key, InputData & data) throw (NodeException);
 
     loadResultEnum modify(const InputData & key, const InputData & dato,INodeData& promotedKey) throw (NodeException);
 
