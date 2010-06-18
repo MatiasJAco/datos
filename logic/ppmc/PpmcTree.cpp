@@ -132,8 +132,7 @@ bool PpmcTree::deCompress(const std::string & path){
 }
 
 void PpmcTree::showContexts(){
-	StringInputData data;
-	this->tree->showTree(data);
+	this->tree->print();
 
 };
 

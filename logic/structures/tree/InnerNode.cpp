@@ -913,7 +913,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 }
 
 
-void InnerNode::printContent(InputData& dato)
+void InnerNode::printContent()
 {
 	INodeData data;
 	VarRegister varR;
@@ -946,9 +946,10 @@ void InnerNode::printContent(InputData& dato)
 	cout << endl;
 }
 
-void InnerNode::show(InputData& data){
+void InnerNode::show(){
 
-	this->printContent(data);
+	StringInputData data;
+	this->printContent();
 
 	bool found = false;
 	m_block->restartCounter();
@@ -969,7 +970,7 @@ void InnerNode::show(InputData& data){
 			//Pido un hijo para decirle que se muestre.
 			hijo = m_tree->getNode(currentData.getLeftPointer());
 
-			hijo->show(data);
+			hijo->show();
 
 			if (hijo!=NULL)
 				delete hijo;

@@ -84,33 +84,7 @@ public:
 	/// Destructor
 	virtual ~BPlusTree();
 
-	/**
-	 * Inserta un elemento en el arbol.
-	 * @param data. El elemento a insertar.
-	 * @return TRUE si pudo ejecutar la operacion.
-	 */
-	bool insert(std::string clave, std::string valor) throw (ManagerException);
-
-	/**
-	 * Elimina un elemento del arbol.
-	 * @param data. Contiene la clave del elemento a remover.
-	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
-	 */
-	bool remove(std::string key) throw (ManagerException);
-
-	bool modify(std::string key, std::string newValue) throw (ManagerException);
-
-	bool find(std::string key, InputData & data) throw (ManagerException);
-
-	bool getNext(InputData& data);
-
 public:
-	/**
-	 * Muestra el arbol por pantalla.
-	 *
-	 * **/
-	void showTree(InputData& data);
-
 	/**
 	 * Elimina el arbol de disco.
 	 */
@@ -161,6 +135,54 @@ public:
 	 * Setea el elemento actual despues de una llamada a una operacion de recuperacion.
 	 */
 	void setCurrent(LeafNode* node);
+
+
+
+public:
+
+	/*------------PRIMITIVAS--------------*/
+	/**
+	 * Inserta un elemento en el arbol.
+	 * @param clave. La clave del elemento a insertar.
+	 * @param valor. El valor del elemento a insertar.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool insert(std::string clave, std::string valor) throw (ManagerException);
+
+	/**
+	 * Elimina un elemento del arbol.
+	 * @param key La clave del elemento a remover.
+	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.
+	 */
+	bool remove(std::string key) throw (ManagerException);
+
+	/**
+	 * Modifica un elemento en el arbol.
+	 * @param key. La clave del elemento a modificar.
+	 * @param valor. El valor del elemento a modificar.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool modify(std::string key, std::string newValue) throw (ManagerException);
+
+	/**
+	 * Busca un elemento en el arbol, segun la clave. El elemento es devuelto en el 2do parametro
+	 * @param key. La clave del elemento a buscar.
+	 * @param data. El elemento buscado.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool find(std::string key, InputData & data) throw (ManagerException);
+
+	/**
+	 * Obtiene el proximo elemento de la secuencia.
+	 * @param data. Es el proximo elemento.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool getNext(InputData& data);
+
+	/**
+	 * Imprime el arbol por pantalla.
+	 */
+	void print();
 
 };
 

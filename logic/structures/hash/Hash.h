@@ -143,7 +143,7 @@ public:
 	bool remove(std::string key) throw (ManagerException);
 
 	/**
-	 * Imprime el hash por consola.
+	 * Imprime el hash por pantalla.
 	 */
 	void print();
 };

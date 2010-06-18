@@ -29,9 +29,8 @@ int main(int argc, const char* argv[]){
 		if (operacion == "-S") {
 
 			cout << "Impresion del estado actual:" << endl;
-			StringInputData data;
 
-			bPlusTree->showTree(data);
+			bPlusTree->print();
 			delete bPlusTree;
 			return 0;
 
