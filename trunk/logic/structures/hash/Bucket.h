@@ -8,9 +8,9 @@
 #ifndef BUCKET_H_
 #define BUCKET_H_
 
-#include "../../physical/file/Block.h"
-#include "../../physical/file/BlockFile.h"
-#include "../input/StringInputData.h"
+#include "../../../physical/file/Block.h"
+#include "../../../physical/file/BlockFile.h"
+#include "../../input/StringInputData.h"
 #include "stdlib.h"
 
 /**

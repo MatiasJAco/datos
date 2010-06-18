@@ -6,7 +6,7 @@
  */
 #include <iostream>
 #include <sstream>
-#include "../logic/tree/BPlusTree.h"
+#include "../logic/structures/tree/BPlusTree.h"
 
 
 #include "TestTree.h"
