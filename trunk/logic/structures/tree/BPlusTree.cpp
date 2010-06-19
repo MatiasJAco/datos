@@ -197,7 +197,7 @@ throw (ManagerException)
 	return retVal;
 }
 
-bool existsElement(std::string key) {
+bool BPlusTree::existsElement(std::string key) {
 	return false;
 }
 

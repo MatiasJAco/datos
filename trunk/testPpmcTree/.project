@@ -3,6 +3,7 @@
 	<name>testPpmcTree</name>
 	<comment></comment>
 	<projects>
+		<project>application</project>
 		<project>logic</project>
 		<project>physical</project>
 	</projects>
