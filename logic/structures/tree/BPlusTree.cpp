@@ -198,7 +198,8 @@ throw (ManagerException)
 }
 
 bool BPlusTree::existsElement(std::string key) {
-	return false;
+	StringInputData datoDescartado("","");
+	return this->find(key,datoDescartado);
 }
 
 bool BPlusTree::remove(std::string key) throw (ManagerException)
