@@ -68,13 +68,6 @@ private:
 	bool existsElement(std::string key, int & position);
 
 	/**
-	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
-	 * @param key Es la clave del dato que se desea hallar.
-	 * @return true si ya existe en el HashFile la clave pasada por parametro
-	 */
-	bool existsElement(std::string key);
-
-	/**
 	 * Crea un bucket nuevo.
 	 * @param depth Es el tamaño de dispersión que tendrá el bloque a crearse.
 	 * @return Devuelve un puntero al bucket creado.
@@ -126,6 +119,13 @@ public:
 	 * @return true si la operación fue exitosa
 	 */
 	bool insert(std::string clave, std::string valor) throw (ManagerException);
+
+	/**
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @return true si ya existe en el HashFile la clave pasada por parametro
+	 */
+	bool existsElement(std::string key);
 
 	/**
 	 * Busca y retorna un elemento dado su clave.

@@ -3,6 +3,7 @@
 	<name>logic</name>
 	<comment></comment>
 	<projects>
+		<project>application</project>
 		<project>physical</project>
 	</projects>
 	<buildSpec>

@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>logic</project>
+		<project>application</project>
 		<project>doc</project>
 	</projects>
 	<buildSpec>
