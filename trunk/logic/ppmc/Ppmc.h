@@ -44,10 +44,10 @@ public:
 	/**
 	 * Este metodo se encarga de la compresión.
 	 * @param path Es el path donde se encuentra el archivo a comprimir.
-	 * @param context Es el número de contexto con el cuál se va a comprimir con ppmc.
+	 * @param maxContext Es el número de contexto máximo con el cuál se va a comprimir con ppmc.
 	 * @return Devuelve true si comprimio correctamente. En caso contrario devuelve false.
 	 */
-	virtual bool compress(std::string path,int context) = 0;
+	virtual bool compress(std::string path,int maxContext) = 0;
 
 	/**
 	 * Este metodo se encarga de la decompresión

@@ -7,9 +7,10 @@
 #include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
 #include "../logic/ppmc/PpmcHash.h"
 #include "../physical/utils/ByteConverter.h"
+#include "../application/compresion/common/FrequencyTable.h"
+#include "../application/compresion/common/CharFrequency.h"
 
 using namespace std;
-
 
 void testStringInputData(){
 	StringInputData *fixture = new StringInputData();
@@ -374,10 +375,46 @@ void testPpmc6() {
 	}
 }
 
+void testFreqTable()
+{
+        FrequencyTable *ft;
+        FrequencyTable *ft2;
+        string serial, deserial;
 
+        ft = new FrequencyTable();
+        ft2 = new FrequencyTable();
 
+        ft->setFrequency('a',2);
+        ft->setFrequency('d',3);
+        ft->setFrequency('c',4);
+        ft->setFrequency('b',5);
+        ft->setFrequency('/',5);
+        ft->setFrequency('\\',5);
 
+        ft->increaseFrequency('c',4);
 
+        serial = ft->toString();
+
+        cout << serial<<endl;
+
+        ft2->deserialize(serial);
+
+        cout << ft2->toString()<<endl;
+
+        cout<< ft->getFrequency('c')<<endl;
+        cout <<"char"<< (char) 98<<endl;
+        cout <<"total1"<< ft->getFrequencyTotal()<<endl;
+        cout <<"total2"<< ft2->getFrequencyTotal()<<endl;
+
+        delete ft;
+        delete ft2;
+
+}
+
+void testPpmcHash() {
+	PpmcHash* ppmcHash = new PpmcHash();
+	ppmcHash->compress("/tmp/hola.txt", 3);
+}
 
 /*--------------------------------------------------------------------------------*/
 /*---------------------------MAIN PRUEBAS ----------------------------------------*/
@@ -394,8 +431,8 @@ int main(int argc, const char* argv[]){
 
 
 	/* TESTS VARIOS */
-	testStringInputData();
-
+	//testStringInputData();
+	//testFreqTable();
 
 	/* TESTS DE PPMC */
 	//testPpmc1();
@@ -404,6 +441,7 @@ int main(int argc, const char* argv[]){
 	//testPpmc4();
 	//testPpmc5();
 	//testPpmc6();
+	testPpmcHash();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testBigInt();

@@ -22,6 +22,11 @@ private:
 	/* El hash se usa para guardar las tablas de estadisticas del algoritmo de compresion. */
 	Hash* hash;
 
+	/**
+	 * Este metodo se usa recursivamente para ir emitiendo la compresion.
+	 */
+	void ppmcEmitter(std::string context, char character, int actualContextNumber, int maxContext);
+
 public:
 	PpmcHash();
 	virtual ~PpmcHash();
@@ -29,10 +34,10 @@ public:
 	/**
 	 * Este metodo se encarga de la compresión.
 	 * @param path Es el path donde se encuentra el archivo a comprimir.
-	 * @param context Es el número de contexto con el cuál se va a comprimir con ppmc.
+	 * @param maxContext Es el número de contexto máximo con el cuál se va a comprimir con ppmc.
 	 * @return Devuelve true si comprimio correctamente. En caso contrario devuelve false.
 	 */
-	virtual bool compress(std::string path,int context);
+	virtual bool compress(std::string path,int maxContext);
 
 	/**
 	 * Este metodo se encarga de la decompresión
