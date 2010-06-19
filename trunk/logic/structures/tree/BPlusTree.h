@@ -153,6 +153,13 @@ public:
 	bool insert(std::string clave, std::string valor) throw (ManagerException);
 
 	/**
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @return true si ya existe en el HashFile la clave pasada por parametro
+	 */
+	bool existsElement(std::string key);
+
+	/**
 	 * Elimina un elemento del arbol.
 	 * @param key La clave del elemento a remover.
 	 * @return TRUE si pudo ejecutar la operacion. FALSE de lo contrario.

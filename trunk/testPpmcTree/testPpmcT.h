@@ -10,8 +10,7 @@
 
 #include "../logic/structures/tree/BPlusTree.h"
 #include "../logic/input/StringInputData.h"
-#include "../logic/ppmc/PpmcTree.h"
-
+#include "../logic/ppmc/Ppmc.h"
 
 class TestPpmcT {
 
@@ -31,10 +30,7 @@ protected:
 
 
 private:
-	PpmcTree* mainFixture;
+	Ppmc* mainFixture;
 };
-
-
-
 
 #endif /* TESTPPMCT_H_ */
