@@ -197,6 +197,10 @@ throw (ManagerException)
 	return retVal;
 }
 
+bool existsElement(std::string key) {
+	return false;
+}
+
 bool BPlusTree::remove(std::string key) throw (ManagerException)
 {
 	StringInputData data;

@@ -30,6 +30,13 @@ public:
 	virtual bool insert(std::string clave, std::string valor) throw (ManagerException) = 0;
 
 	/**
+	 * Verifica si existe un dato en un bloque. El dato está identificado por la clave que se pasa por parámetro.
+	 * @param key Es la clave del dato que se desea hallar.
+	 * @return true si ya existe en el HashFile la clave pasada por parametro
+	 */
+	virtual bool existsElement(std::string key) = 0;
+
+	/**
 	 * Busca y retorna un elemento dado su clave.
 	 * @param key Es la clave del dato a buscar
 	 * @param data Es el StringInputData que representa al dato que contiene la clave a buscar

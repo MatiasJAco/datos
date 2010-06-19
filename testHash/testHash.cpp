@@ -5,8 +5,7 @@
 #include "../logic/structures/hash/Hash.h"
 #include "../logic/ppmc/md5/MD5.h"
 #include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
-#include "../logic/ppmc/PpmcHash.h"
-#include "../physical/utils/ByteConverter.h"
+#include "../logic/ppmc/Ppmc.h"
 #include "../application/compresion/common/FrequencyTable.h"
 #include "../application/compresion/common/CharFrequency.h"
 
@@ -45,8 +44,6 @@ void testStringInputData(){
 		cout << "ok en value" << endl;
 }
 
-
-
 void testTable() {
 	Table myTable;
 	myTable.createFile();
@@ -66,6 +63,7 @@ void testTable() {
 	else printf("\nSI se puede dividir");
 	myTable.print();
 }
+
 void testTable2(){
 	Table myTable;
 	myTable.createFile();
@@ -73,6 +71,7 @@ void testTable2(){
 	myTable.changeFirstTimeInTable(24,444);
 	myTable.print();
 }
+
 void testTable3(){
 	Table myTable;
 	myTable.createFile();
@@ -80,6 +79,7 @@ void testTable3(){
 	int result = myTable.verifyJumps(1,2);
 	printf("\nRESULT : %i",result);
 }
+
 void testTable4(){
 	Table myTable;
 	myTable.createFile();
@@ -87,9 +87,6 @@ void testTable4(){
 	myTable.jumpAndReplace(6,5,23);
 	myTable.print();
 }
-
-
-
 
 void testModifyHash() {
 	Hash* hash = new Hash();
@@ -114,6 +111,7 @@ void testModifyHash() {
 	}
 	delete hash;
 }
+
 void testRemoveHash() {
 	Hash* hash = new Hash();
 	hash->insert("1","paytiti");
@@ -124,6 +122,7 @@ void testRemoveHash() {
 	hash->print();
 	delete hash;
 }
+
 void testRemoveHash2() {
 	Hash* hash = new Hash();
 	hash->print();
@@ -221,19 +220,19 @@ void testEjemplo(){
 	delete hash;
 }
 
-
-
 /* Muestra la cadena que representa al numero, por pantalla. */
 void testBigInt() {
 	std::string s("0123456789012345678901234567890123456789012345678901234567890123");
 	BigInteger f = stringToBigInteger(s);
 	std::cout << f << std::endl;
 }
+
 /* Devuelve la cadena: 4d186321c1a7f0f354b297e8914ab240 */
 void testMd5() {
 	MD5 md5("hola");
 	std::cout << md5.hexdigest() << std::endl;
 }
+
 /* El resultado debe dar:
  * ======================
  * md5:  4d186321c1a7f0f354b297e8914ab240
@@ -292,89 +291,6 @@ void testHashFunction() {
 	std::cout << (f % g).toInt() << std::endl;
 }
 
-
-
-/* Guarda el contexto "ABC" con la letra "A" y el Escape. Ambos tienen 1 ocurrencia. */
-void testPpmc1() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-	ppmcHash->addCharacterToContext("ABC","A");
-
-	/* Busca cantidad de ocurrencias de "A" y de ESCAPE en el contexto "ABC". */
-	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 1) && (ppmcHash->getCharacterOccurrences("ABC","*") == 1)) {
-		std::cout << "ok test ppmc 1" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 1" << std::endl;
-	}
-}
-/* Guarda el contexto "ABC". Letra "A": 11 ocurrencias. Escape: 1 ocurrencia. */
-void testPpmc2() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-	ppmcHash->addCharacterToContext("ABC","A");
-	for (int i = 0; i < 10; i++) {
-		ppmcHash->increaseFrequency("ABC","A");
-	}
-	/* Busca cantidad de ocurrencias de "A" y de ESCAPE en el contexto "ABC". */
-	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 11) && (ppmcHash->getCharacterOccurrences("ABC","*") == 1)) {
-		std::cout << "ok test ppmc 2" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 2" << std::endl;
-	}
-}
-/* Crea contexto "ABC". Verifica que el caracter "A" no exista. */
-void testPpmc3() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-
-	if (!ppmcHash->existsCharacterInContext("ABC","A")) {
-		std::cout << "ok test ppmc 3" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 3" << std::endl;
-	}
-}
-/* Crea contexto "ABC". Carga el caracter "X" y verifica que exista el mismo. */
-void testPpmc4() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-	ppmcHash->addCharacterToContext("ABC","X");
-
-	if (ppmcHash->existsCharacterInContext("ABC","X")) {
-		std::cout << "ok test ppmc 4" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 4" << std::endl;
-	}
-}
-/* Crea contexto "ABC" con 2 caracteres ("A" y el "B") con 1 ocurrencia cada uno. */
-void testPpmc5() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-	ppmcHash->addCharacterToContext("ABC","A");
-	ppmcHash->addCharacterToContext("ABC","B");
-
-	if ((ppmcHash->existsCharacterInContext("ABC","A")) && (ppmcHash->existsCharacterInContext("ABC","B"))) {
-		std::cout << "ok test ppmc 5" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 5" << std::endl;
-	}
-}
-/* Crea contexto "ABC". Carga los caracteres "A" y el "B" con 1 ocurrencia cada uno. */
-void testPpmc6() {
-	PpmcHash* ppmcHash = new PpmcHash();
-	ppmcHash->createContext("ABC");
-	ppmcHash->addCharacterToContext("ABC","A");
-	ppmcHash->addCharacterToContext("ABC","B");
-	ppmcHash->increaseFrequency("ABC","A");
-	ppmcHash->increaseFrequency("ABC","B");
-	ppmcHash->increaseFrequency("ABC","B");
-
-	if ((ppmcHash->getCharacterOccurrences("ABC","A") == 2) && (ppmcHash->getCharacterOccurrences("ABC","B") == 3) && (ppmcHash->getTotalOccurencesFromContext("ABC") == 6)) {
-		std::cout << "ok test ppmc 6" << std::endl;
-	} else {
-		std::cout << "fallo test ppmc 6" << std::endl;
-	}
-}
-
 void testFreqTable()
 {
         FrequencyTable *ft;
@@ -412,7 +328,8 @@ void testFreqTable()
 }
 
 void testPpmcHash() {
-	PpmcHash* ppmcHash = new PpmcHash();
+	GeneralStructure* hash = new Hash();
+	Ppmc* ppmcHash = new Ppmc(hash);
 	ppmcHash->compress("/tmp/hola.txt", 3);
 }
 
@@ -422,25 +339,17 @@ void testPpmcHash() {
 
 int main(int argc, const char* argv[]){
 
-
 	/* TESTS DE HASH */
 	//testRemoveHash();
 	//testRemoveHash2();
 	//testEjemplo();
 	//testModifyHash();
 
-
 	/* TESTS VARIOS */
 	//testStringInputData();
 	//testFreqTable();
 
 	/* TESTS DE PPMC */
-	//testPpmc1();
-	//testPpmc2();
-	//testPpmc3();
-	//testPpmc4();
-	//testPpmc5();
-	//testPpmc6();
 	testPpmcHash();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
@@ -448,14 +357,11 @@ int main(int argc, const char* argv[]){
 	//testMd5();
 	//testHashFunction();
 
-
 	/*  TESTS TABLE */
 	//testTable();
 	//testTable2();
 	//testTable3();
 	//testTable4();
-
-
 
 	return 0;
 }
