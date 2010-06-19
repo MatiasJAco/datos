@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "../logic/structures/GeneralStructure.h"
 #include "../logic/exceptions/ManagerException.h"
+#include "../../application/compresion/common/FrequencyTable.h"
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC.
@@ -20,6 +21,7 @@ class Ppmc {
 
 private:
 	GeneralStructure* generalStructure; // Puede ser un hash, o un arbol.
+	FrequencyTable* minusOneContext; // Contexto -1.
 
 public:
 
