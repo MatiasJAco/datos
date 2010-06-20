@@ -56,7 +56,7 @@ void StringInputData::toData(const char* stream)
 
 unsigned int StringInputData::size()const
 {
-	return (sizeof(key)+value.size()+1);
+	return (key.size()+value.size()+2);
 }
 
 InputData* StringInputData::newInstance()const
