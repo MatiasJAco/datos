@@ -40,7 +40,7 @@ char* StringInputData::toStream(char* stream) const
 {
 	char *p=stream;
 	ByteConverter::stringToBytes(key,p);
-	p += sizeof(key);
+	p += (key.size()+1)*sizeof(char);
 	ByteConverter::stringToBytes(value,p);
 
 	return stream;
@@ -50,7 +50,7 @@ void StringInputData::toData(const char* stream)
 {
 	char *p=(char *)stream;
 	key = ByteConverter::bytesToString(p);
-	p += sizeof(key);
+	p += (key.size()+1)*sizeof(char);
 	value = ByteConverter::bytesToString(p);
 }
 
