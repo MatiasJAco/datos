@@ -229,6 +229,8 @@ void Bucket::getListOfSids(list<StringInputData> &listaDatos){
 		sid = new StringInputData();
 		char * value = varRegister.getValue();
 		sid->toData(value);
+		cout << "Clave: " << sid->getKey();
+		cout << " Valor: " << sid->getValue() << endl;
 		listaDatos.push_back(*sid);
 		if (value!= NULL)
 			delete [] value;
