@@ -33,7 +33,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	stringContext = character;
 	character = sequentialFile->readChar();
 
-	while (contador < 4) { // TODO Adrián: reemplazar por EOF cuando esté implementado en SequentialFile.
+	while (contador < 10) { // TODO Adrián: reemplazar por EOF cuando esté implementado en SequentialFile.
 		this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext);
 		if (actualContextNumber < maxContext) {
 			actualContextNumber++;
