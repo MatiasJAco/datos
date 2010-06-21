@@ -194,12 +194,11 @@ public:
 	 */
 	void print();
 
+	/**
+	 * Borra los archivos que genera el arbol.
+	 */
+	bool deleteGeneratedFiles();
+
 };
 
-
-
-
 #endif /* BPLUSTREE_H_ */
-
-
-

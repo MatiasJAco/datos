@@ -331,3 +331,8 @@ void Hash::print() {
 	}
 	cout << endl;
 }
+
+bool Hash::deleteGeneratedFiles() {
+	std::remove("tabla.txt");
+	return this->hashFile->deleteFile();
+}

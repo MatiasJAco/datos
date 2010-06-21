@@ -154,6 +154,11 @@ public:
 	 * Imprime el hash por pantalla.
 	 */
 	void print();
+
+	/**
+	 * Borra los archivos generados por el Hash. Es útil para las pruebas unitarias.
+	 */
+	bool deleteGeneratedFiles();
 };
 
 #endif /* HASH_H_ */
