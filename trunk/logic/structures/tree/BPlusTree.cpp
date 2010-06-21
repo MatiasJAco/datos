@@ -550,3 +550,7 @@ void BPlusTree::setCurrent(LeafNode* node)
 	m_currentNode = node;
 }
 
+bool BPlusTree::deleteGeneratedFiles()
+{
+	return this->file.deleteFile();
+}

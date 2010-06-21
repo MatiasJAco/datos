@@ -331,6 +331,7 @@ void testPpmcHash() {
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new Ppmc(hash);
 	ppmcHash->compress("/tmp/hola.txt", 3);
+	hash->deleteGeneratedFiles();
 }
 
 /*--------------------------------------------------------------------------------*/
