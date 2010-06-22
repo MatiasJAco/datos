@@ -143,7 +143,6 @@ bool Bucket::deleteRegister(std::string key) {
 		char* registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
-		//if (sid->getKey() == key) {
 		if (strcmp(sid->getKey().c_str(), key.c_str())==0) {
 			result = this->getBlock()->deleteRegister();
 			delete [] registerValue;
@@ -229,8 +228,6 @@ void Bucket::getListOfSids(list<StringInputData> &listaDatos){
 		sid = new StringInputData();
 		char * value = varRegister.getValue();
 		sid->toData(value);
-		cout << "Clave: " << sid->getKey();
-		cout << " Valor: " << sid->getValue() << endl;
 		listaDatos.push_back(*sid);
 		if (value!= NULL)
 			delete [] value;
