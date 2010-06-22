@@ -65,17 +65,19 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 		frequencyTable = new FrequencyTable();
 		frequencyTable->deserialize(stringInputData.getValue());
 
-		if (frequencyTable->getFrequency(character) == 0) { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
+		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
 			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
-		} else { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
+			std::string stringFrequencyTable = frequencyTable->toString();
+			this->generalStructure->modify(stringContext,stringFrequencyTable);
+		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
 			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
 			frequencyTable->increaseFrequency(character,1);
+			std::string stringFrequencyTable = frequencyTable->toString();
+			this->generalStructure->modify(stringContext,stringFrequencyTable);
+			delete frequencyTable;
 			return;
 		}
-
-		std::string stringFrequencyTable = frequencyTable->toString();
-		this->generalStructure->modify(stringContext,stringFrequencyTable);
 		delete frequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
