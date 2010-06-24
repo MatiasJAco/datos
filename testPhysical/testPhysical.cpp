@@ -10,8 +10,11 @@
 #include "../physical/file/FreeBlockFile.h"
 #include "../physical/utils/ByteConverter.h"
 #include "../physical/file/BlockManager.h"
+#include "../physical/file/SequentialFile.h"
+#include "../physical/Exception/PhysicalException.h"
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -795,6 +798,61 @@ void testBlock()
 
 }
 
+
+void testSecuentialFile()
+{
+	try{
+		SequentialFile file1(WRITE_FILE);
+		SequentialFile file2(READ_FILE);
+
+		file1.setBufferSize(10);
+
+		string input= "Devon won't go to heaven";
+		string input2= "she's just another lost soul";
+		char * output=new char[input.size()+1];
+
+		file1.open("devon");
+
+		file1.writeNChar(input.c_str(), input.size()+1);
+		file1.close();
+
+		file1.open("devon");
+		file1.writeNChar(input2.c_str(), input2.size()+1);
+
+
+		file1.close();
+		file2.open("devon");
+		if(!file2.readNChar(output, input.size()+1))
+			cout << "Hubo eof erroneo"<<endl;
+
+		cout  << output<<endl;
+
+		if(!file2.readNChar(output, input2.size()+1))
+			cout << "Hubo eof erroneo"<<endl;
+
+		if(file2.readNChar(output, 1))
+			cout << "Falto eof ok1"<<endl;
+
+		bool isEof;
+
+		file2.readChar(isEof);
+
+		if(isEof)
+			cout << "Falto eof"<<endl;
+
+		file2.close();
+		file2.deleteFile();
+		delete output;
+
+	}
+	catch(PhysicalException e)
+	{
+		cout << "ERROR"<<endl;
+		cout << e.what()<<endl;
+	}
+
+}
+
 int main()
 {
 try
@@ -802,8 +860,14 @@ try
 	//testVarRegister();
 	//testFixedRegister();
 	//testFreeBlockFile();
+/*
 	testBlock();
 	testFile();
+*/
+	testSecuentialFile();
+
+
+
 
 
 }
