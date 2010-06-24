@@ -29,6 +29,11 @@ bool BitFile::open(const std::string fileName)
 
 bool BitFile::close()
 {
+	if (m_posBit < SIZE_BUFFER-1)
+	{
+		m_byteFile->writeChar((char)(m_buffer << m_posBit));
+	}
+
 	return m_byteFile->close();
 }
 
