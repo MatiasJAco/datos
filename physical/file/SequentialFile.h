@@ -49,12 +49,19 @@ public:
 	char readChar();
 
 	/**
+	 * Lee un caracter desde el archivo y lo devuelve
+	 * @return char el caracter leido
+	 * @throws PhysicalException en caso de error
+	 */
+	char readChar(bool &didRead);
+
+	/**
 	 * Lee N caracteres desde el archivo
 	 * @param stream puntero al array de caracteres en los que se va a guardar lo que se lee. tiene que tener espacio asignado desde afuera
 	 * @param ammount cantidad de caracteres a leer
 	 * @throws PhysicalException en caso de un error al pasar algun parametro incorrecto
 	 */
-	void readNChar(char * stream,unsigned int ammount);
+	bool readNChar(char * stream,unsigned int ammount);
 
 	/**
 	 * Escribe un caracter en el archivo
@@ -136,6 +143,8 @@ private:
 	 * Tamaño del buffer
 	 */
 	unsigned int m_BufferSize;
+
+	unsigned int m_AmmountRead;
 };
 
 #endif /* SECUENCIALFILE_H_ */

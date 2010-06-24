@@ -16,6 +16,7 @@ SequentialFile::SequentialFile(accessModeEnum mode) {
 	m_BufferSize = DEFAULT_BUFFER_SIZE;
 	m_Buffer = NULL;
 	m_CurrentPos =0;
+	m_AmmountRead=0;
 
 }
 
@@ -111,8 +112,18 @@ char SequentialFile::readChar()
 	return retChar;
 }
 
-void SequentialFile::readNChar(char * stream, unsigned int ammount)
+char SequentialFile::readChar(bool &didRead)
 {
+	char  retChar;
+
+	didRead = readNChar(&retChar,1);
+
+	return retChar;
+}
+
+bool SequentialFile::readNChar(char * stream, unsigned int ammount)
+{
+	bool retVal=false;
 	if(m_AccessMode == WRITE_FILE)
 		throw  PhysicalException(PhysicalException::INVALID_FILE_OPERATION);
 
@@ -121,7 +132,7 @@ void SequentialFile::readNChar(char * stream, unsigned int ammount)
 
 	unsigned int i;
 
-	for(i=0; i < ammount; i++)
+	for(i=0; i < ammount && (m_CurrentPos <m_AmmountRead); i++)
 	{
 		if(m_CurrentPos >= m_BufferSize)
 		{
@@ -133,7 +144,10 @@ void SequentialFile::readNChar(char * stream, unsigned int ammount)
 		m_CurrentPos++;
 	}
 
+	if(i == ammount)
+		retVal = true;
 
+	return retVal;
 }
 
 void SequentialFile::writeNChar(const char *stream, unsigned int ammount)
@@ -166,6 +180,7 @@ void SequentialFile::writeNChar(const char *stream, unsigned int ammount)
 void SequentialFile::fillBuffer()
 {
 	m_FileHandler.read(m_Buffer, m_BufferSize*sizeof(char));
+	m_AmmountRead = m_FileHandler.gcount();
 }
 
 void SequentialFile::writeBuffer()

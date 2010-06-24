@@ -93,6 +93,18 @@ char *ByteConverter::uIntToBytes(const unsigned int entero, char *bytes)
 	return bytes;
 }
 
+char *ByteConverter::uLongToBytes(const unsigned long longInt, char *bytes)
+{
+	memcpy(bytes,&longInt,sizeof(unsigned long));
+	return bytes;
+}
+
+char *ByteConverter::shortToBytes(const short shortInt, char *bytes)
+{
+	memcpy(bytes,&shortInt,sizeof(short));
+	return bytes;
+}
+
 unsigned int ByteConverter::bytesToUInt(const char *bytes)
 {
 	unsigned int entero = 0;
