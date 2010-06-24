@@ -12,6 +12,10 @@
 
 typedef enum {ONE,ZERO} Bit;
 
+/**
+ * Clase para el manejo de escritura y lectura de bits sobre un archivo.
+ *
+ */
 class BitFile{
 
 public:
@@ -56,7 +60,7 @@ private:
 	// Escribe en el archivo un bit cero.
 	void writeBitZero()throw (PhysicalException);
 
-	// Lee de a un buffer
+	// Lee el buffer.
 	void readBuffer() throw (PhysicalException);
 
 	// Limpia el buffer
@@ -64,8 +68,8 @@ private:
 
 
 private:
-	// Usa buffer del tamaño de un byte. (ARCHIVOS ASCII).
-	static const unsigned int SIZE_BUFFER = sizeof(char);
+	// Usa buffer del tamaño de un byte (8 bits). (ARCHIVOS ASCII).
+	static const int SIZE_BUFFER = 8;
 
 private:
 	// Archivo de bytes (char)
