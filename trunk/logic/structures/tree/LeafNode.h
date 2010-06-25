@@ -129,6 +129,11 @@ public:
 	 */
 	bool getNextData(InputData& data);
 
+	/**
+	* Devuelve los inputData de una hoja recorriendo en sentido inverso.
+	*/
+	bool getPreviousData(InputData& data);
+
 	void show();
 
 };

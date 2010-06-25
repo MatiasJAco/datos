@@ -189,6 +189,15 @@ public:
 	 */
 	bool getNext(InputData& data);
 
+
+	/**
+	 * Obtiene el anterior elemento de la secuencia.
+	 * @param data. Es el proximo elemento.
+	 * @return TRUE si pudo ejecutar la operacion.
+	 */
+	bool getPrevious(InputData& data);
+
+
 	/**
 	 * Imprime el arbol por pantalla.
 	 */

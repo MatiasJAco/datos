@@ -22,36 +22,41 @@ PpmcTree::~PpmcTree() {
 //-- Para el Arbol NO se usan las primitivas como estaban - Hay que cambiarlas
 
 bool PpmcTree::insertInStructure(std::string clave, std::string valor) throw (ManagerException){
-	//TODO mati
-	return this->generalStructure->insert(clave,valor);
+	//Invierto la clave.
+	string claveInvertida = string(clave.rbegin(), clave.rend());
+	return this->generalStructure->insert(claveInvertida,valor);
 }
 
 bool PpmcTree::existsElementInStructure(std::string key){
-	//TODO mati
-	return this->generalStructure->existsElement(key) ;
+	//Invierto la clave.
+	string claveInvertida = string(key.rbegin(), key.rend());
+	return this->generalStructure->existsElement(claveInvertida) ;
 }
 
 bool PpmcTree::findInStructure(std::string key, InputData & data) throw (ManagerException){
-	//TODO mati
-	return this->generalStructure->find(key,data);
+	//Invierto la clave.
+	string claveInvertida = string(key.rbegin(), key.rend());
+	return this->generalStructure->find(claveInvertida,data);
 }
 
 bool PpmcTree::modifyInStructure(std::string key, std::string newValue) throw (ManagerException){
-	//TODO mati
+	//Invierto la clave.
+	string claveInvertida = string(key.rbegin(), key.rend());
 	return this->generalStructure->modify(key,newValue);
 }
 
 bool PpmcTree::removeInStructure(std::string key) throw (ManagerException){
-	//TODO mati
+	//Invierto la clave.
+	string claveInvertida = string(key.rbegin(), key.rend());
 	return this->generalStructure->remove(key);
 }
 
 void PpmcTree::printStructure(){
-	//TODO mati
+
 	return this->generalStructure->print();
 }
 
 bool PpmcTree::deleteGeneratedFilesInStructure(){
-	//TODO mati
+
 	return this->generalStructure->deleteGeneratedFiles();
 }

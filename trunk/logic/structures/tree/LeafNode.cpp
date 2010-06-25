@@ -542,3 +542,31 @@ bool LeafNode::getNextData(InputData& data)
 
 	return retVal;
 }
+
+bool LeafNode::getPreviousData(InputData& data)
+{
+	bool retVal = false;
+
+	VarRegister reg;
+	char* currentValue = NULL;
+	InputData* currentData = data.newInstance();
+
+
+	if (!m_block->isFirstRegister())
+	{
+		reg = m_block->getPreviousRegister();
+		currentValue = reg.getValue();
+		currentData->toData(currentValue);
+
+		data.setKey(currentData->getKey());
+		data.setValue(currentData->getValue());
+
+		delete[] currentValue;
+
+		retVal = true;
+	}
+
+	delete currentData;
+
+	return retVal;
+}

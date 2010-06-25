@@ -545,6 +545,41 @@ bool BPlusTree::getNext(InputData& data)
 }
 
 
+bool  BPlusTree::getPrevious(InputData& data){
+
+	bool retVal = false;
+
+	unsigned int nodeNumber = Node::UNDEFINED_NODE_NUMBER;
+
+	if (m_currentNode!=NULL)
+	{
+		// Obtiene el dato actual.
+		retVal = m_currentNode->getPreviousData(data);
+
+		// Si ya no tiene mas para leer de la propia hoja, sigue en la siguiente.
+		if (!retVal)
+		{
+			nodeNumber = m_currentNode->getPreviousLeaf();
+
+			if (nodeNumber!=Node::UNDEFINED_NODE_NUMBER )
+			{
+				delete m_currentNode;
+
+				m_currentNode = (LeafNode*)getNode(nodeNumber);
+
+				// Leo de la hoja.
+				retVal = m_currentNode->getPreviousData(data);
+			}
+		}
+	}
+
+	return retVal;
+
+
+
+}
+
+
 void BPlusTree::setCurrent(LeafNode* node)
 {
 	m_currentNode = node;
