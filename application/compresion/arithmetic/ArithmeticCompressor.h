@@ -11,12 +11,15 @@
 #include "../../../physical/file/BitFile.h"
 #include "../common/FrequencyTable.h"
 
-#include <math.h>
+#include <cmath>
 
 class ArithmeticCompressor {
 
 public:
 	typedef enum {COMPRESSOR,DECOMPRESSOR} Coder;
+
+private:
+	static const unsigned int SIZEBYTE = 8;
 
 public:
 	/**
@@ -25,9 +28,9 @@ public:
 	 * @param fileName	Nombre del archivo comprimido.
 	 * 					Si coder = COMPRESSOR entonces se trata del archivo de salida,
 	 * 					Si coder = DECOMPRESSOR entonces se trata del archivo de entrada.
-	 * @param maxbits	Precision. Maxima cantidad de bits para la representacion de un simbolo.
+	 * @param maxsymbols Precision. Maxima cantidad de simbolos posible.
 	 */
-	ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxbits);
+	ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxsymbols);
 
 	/// Destructor
 	virtual ~ArithmeticCompressor();
@@ -55,7 +58,6 @@ private:
 	bool underflow();
 
 	/// Emite los bits a la salida.
-	// 	PROBABLEMENTE CAMBIAR EL PROTOTIPO DE ESTE METODO.
 	bool emit();
 
 // Para el manejo de los intervalos de la compresion.
@@ -66,14 +68,14 @@ private:
 	 * @param ft		Tabla de frecuencias
 	 * @return Piso del simbolo.
 	 */
-	int getFloorSymbol(short symbol,FrequencyTable& ft);
+	int getFloor(short symbol,FrequencyTable& ft);
 	/**
 	 * Devuelve el techo que corresponde a un simbolo determinado dentro del intervalo.
 	 * @param symbol	Simbolo.
 	 * @param ft		Tabla de frecuencias
 	 * @return Techo del simbolo.
 	 */
-	int getRoofSymbol(short symbol,FrequencyTable& ft);
+	int getCeil(short symbol,FrequencyTable& ft);
 
 	/**
 	 * Devuelve el simbolo que esta asociado al numero dentro de un intervalo.
@@ -81,7 +83,7 @@ private:
 	 * @param ft	Tabla de frecuencias
 	 * @return Simbolo asociado al numero.
 	 */
-	int getSymbol(int num,FrequencyTable& ft);
+	short getSymbol(int num,FrequencyTable& ft);
 
 	// Normaliza el piso y el techo
 	void normalize();
@@ -101,9 +103,11 @@ private:
 	int m_floor;
 	int m_roof;
 
-	/// Contiene los bits de overflow
-	short m_bitsOverflow;
+	// Bits de overflow
+	Bit* m_overflow;
 
+	// Contador de overflow;
+	short m_counterOverflow;
 	/// Contador de underflow.
 	short m_counterUnderflow;
 };
