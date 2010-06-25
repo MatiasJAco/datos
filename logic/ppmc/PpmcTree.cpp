@@ -51,12 +51,3 @@ bool PpmcTree::removeInStructure(std::string key) throw (ManagerException){
 	return this->generalStructure->remove(key);
 }
 
-void PpmcTree::printStructure(){
-
-	return this->generalStructure->print();
-}
-
-bool PpmcTree::deleteGeneratedFilesInStructure(){
-
-	return this->generalStructure->deleteGeneratedFiles();
-}

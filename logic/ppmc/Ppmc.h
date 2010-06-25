@@ -101,15 +101,5 @@ protected:
 	 */
 	virtual bool removeInStructure(std::string key) throw (ManagerException) = 0;
 
-	/**
-	 * Imprime la estructura por pantalla.
-	 */
-	virtual void printStructure() = 0;
-
-	/**
-	 * Elimina los archivos generados por el hash o el arbol.
-	 */
-	virtual bool deleteGeneratedFilesInStructure() = 0;
-
 };
 #endif /* PPMC_H_ */

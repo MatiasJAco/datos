@@ -39,10 +39,3 @@ bool PpmcHash::removeInStructure(std::string key) throw (ManagerException){
 	return this->generalStructure->remove(key);
 }
 
-void PpmcHash::printStructure(){
-	return this->generalStructure->print();
-}
-
-bool PpmcHash::deleteGeneratedFilesInStructure(){
-	return this->generalStructure->deleteGeneratedFiles();
-}
