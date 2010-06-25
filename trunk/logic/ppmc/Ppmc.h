@@ -19,6 +19,10 @@
  */
 class Ppmc {
 
+private:
+	/// Default del caracter del contexto 0
+	static const std::string ZERO_CONTEXT;
+
 protected:
 	GeneralStructure* generalStructure; // Puede ser un hash, o un arbol.
 	FrequencyTable* minusOneContext; // Contexto -1.
