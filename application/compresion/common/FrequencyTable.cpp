@@ -14,6 +14,14 @@ FrequencyTable::FrequencyTable() {
 	m_isSorted= true;
 }
 
+FrequencyTable::FrequencyTable(const FrequencyTable &ft )
+{
+	m_Frequencies =ft.m_Frequencies;
+	m_isSorted=true;
+	m_FrequencyTotal =ft.m_FrequencyTotal;
+	m_Frequencies.sort();
+}
+
 FrequencyTable::~FrequencyTable() {
 }
 
@@ -115,7 +123,57 @@ unsigned long FrequencyTable::getFrequency(short c)
 	return retVar;
 }
 
+FrequencyTable FrequencyTable::excludeFromTable(FrequencyTable &ft)
+{
+	CharFrequencyListIterator it;
+	CharFrequencyListIterator itDel;
 
+	FrequencyTable retFt(*this);
+
+	if(!ft.m_isSorted)
+	{
+		ft.m_Frequencies.sort();
+		ft.m_isSorted=true;
+	}
+
+	itDel = ft.m_Frequencies.begin();
+
+	//Voy buscando el caracter si termino la tabla corto el ciclo
+	for(it=retFt.m_Frequencies.begin();it !=retFt.m_Frequencies.end(); it++)
+	{
+		while(((*itDel) < (*it)||(*itDel)==ESC_CHAR)&&itDel!=ft.m_Frequencies.end())
+			itDel++;
+
+		if( (*itDel) == (*it))
+		{
+			m_FrequencyTotal = it->getFrequency();
+			it = retFt.m_Frequencies.erase(it);
+			itDel++;
+
+			if((*itDel)==ESC_CHAR)
+				itDel++;
+		}
+
+		if(itDel==ft.m_Frequencies.end())
+			break;
+	}
+	return retFt;
+}
+
+FrequencyTable FrequencyTable::operator= (FrequencyTable ft)
+{
+	if(!ft.m_isSorted)
+	{
+		ft.m_Frequencies.sort();
+		ft.m_isSorted=true;
+	}
+
+	m_Frequencies =ft.m_Frequencies;
+	m_isSorted=true;
+	m_FrequencyTotal =ft.m_FrequencyTotal;
+
+	return *this;
+}
 
 void FrequencyTable::deserialize(string serialized)
 {

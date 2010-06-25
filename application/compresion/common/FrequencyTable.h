@@ -34,6 +34,8 @@ public:
 	//-----------------------CONSTRUCTOR/DESTRUCTOR---------------------------//
 	FrequencyTable();
 
+	FrequencyTable(const FrequencyTable &ft );
+
 	virtual ~FrequencyTable();
 
 	/**
@@ -99,6 +101,9 @@ public:
 	 */
 	std::string toString();
 
+	FrequencyTable excludeFromTable(FrequencyTable &ft);
+
+	FrequencyTable operator= (FrequencyTable ft);
 
 
 	//--------------------------ATTRIBUTES------------------------------------//
