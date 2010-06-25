@@ -13,6 +13,7 @@
 #include "../logic/structures/GeneralStructure.h"
 #include "../logic/exceptions/ManagerException.h"
 #include "../../application/compresion/common/FrequencyTable.h"
+#include "../../application/compresion/arithmetic/ArithmeticCompressor.h"
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC.
@@ -22,10 +23,11 @@ class Ppmc {
 private:
 	/// Default del caracter del contexto 0
 	static const std::string ZERO_CONTEXT;
+	static const std::string MINUS_ONE_CONTEXT;
 
 protected:
 	GeneralStructure* generalStructure; // Puede ser un hash, o un arbol.
-	FrequencyTable* minusOneContext; // Contexto -1.
+	FrequencyTable* minusOneCtxtFreqTable; // Contexto -1.
 
 public:
 
@@ -57,9 +59,21 @@ private:
 
 	/**
 	 * Este metodo se usa recursivamente para ir emitiendo la compresion.
+	 * @param context Es el contexto en donde quiero emitir
+	 * @param character Es el caracter que quiero emitir
+	 * @param actualContextNumber Es el numero de contexto actual
+	 * @param maxContext Es el maximo contexto para la compresion
 	 */
-	void ppmcEmitter(std::string context, char character, int actualContextNumber, int maxContext);
+	void ppmcCompressionEmitter(std::string context, char character, int actualContextNumber, int maxContext);
 
+	/**
+	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
+	 * @param context Es el contexto en donde quiero emitir
+	 * @param character Es el caracter que quiero emitir
+	 * @param actualContextNumber Es el numero de contexto actual
+	 * @param maxContext Es el maximo contexto para la compresion
+	 */
+	void updateFrequencyTables(std::string context, char character, int actualContextNumber, int maxContext);
 
 protected:
 

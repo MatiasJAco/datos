@@ -328,10 +328,16 @@ void testFreqTable()
 
 }
 
-void testPpmcHash() {
+void testPpmcHashComprimir() {
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress("./archivoAComprimir.txt", 3);
+	hash->deleteGeneratedFiles();
+}
+void testPpmcHashDescomprimir() {
+	GeneralStructure* hash = new Hash();
+	Ppmc* ppmcHash = new PpmcHash(hash);
+	ppmcHash->deCompress("./archivoComprimido.txt");
 	hash->deleteGeneratedFiles();
 }
 
@@ -352,7 +358,8 @@ int main(int argc, const char* argv[]){
 	//testFreqTable();
 
 	/* TESTS DE PPMC */
-	testPpmcHash();
+	//testPpmcHashComprimir();
+	testPpmcHashDescomprimir();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testBigInt();
