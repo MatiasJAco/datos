@@ -7,6 +7,8 @@
 #include "Ppmc.h"
 #include "../../physical/file/SequentialFile.h"
 
+const string Ppmc::ZERO_CONTEXT = "0";
+
 Ppmc::Ppmc(GeneralStructure* generalStructure){
 	this->generalStructure = generalStructure;
 	this->minusOneContext = new FrequencyTable();
@@ -25,7 +27,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	sequentialFile->open(path);
 	char character = sequentialFile->readChar();
 	//TODO no seria strinContext = "_" o  " " (vacio) ?? (para indicar el ctx cero)
-	std::string stringContext = "0";
+	std::string stringContext = ZERO_CONTEXT;
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 
 	this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext);
@@ -96,10 +98,11 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 	if (actualContextNumber > 0) {
 		this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo de contexto progresivamente.
 	} else if (actualContextNumber == 0) {
-		stringContext = "0";
+		stringContext = ZERO_CONTEXT;
 		this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo al contexto 0 que es el último.
 	} else { // Llegamos al contexto -1.
 		std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << this->minusOneContext->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
+		//TODO adrian esto habia que sacarlo no?
 		this->minusOneContext->increaseFrequency(character,1);
 	}
 }
