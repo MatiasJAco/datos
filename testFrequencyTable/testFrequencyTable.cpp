@@ -14,22 +14,32 @@ void testFreqTable()
 {
 	FrequencyTable *ft;
 	FrequencyTable *ft2;
+	FrequencyTable *ft3;
+	FrequencyTable ft4;
 	string serial, deserial;
 
 	ft = new FrequencyTable();
 	ft2 = new FrequencyTable();
+	ft3 = new FrequencyTable();
 
 	ft->setFrequency('a',2);
 	ft->setFrequency('d',3);
 	ft->setFrequency('c',4);
 	ft->setFrequency('b',5);
 	ft->setFrequency('/',5);
-	ft->setFrequency('\\',5);
+	ft->setFrequency('\\',7);
+	ft->setFrequency(258,1000);
 	ft->setFrequency(EOF_CHAR,5);
 	ft->setFrequency(ESC_CHAR,5);
 
 	ft->increaseFrequency('c',4);
 	ft->increaseFrequency(ESC_CHAR,2);
+
+	ft3->setFrequency('b',2);
+	ft3->setFrequency('\\',2);
+	ft3->setFrequency('j',2);
+	ft3->setFrequency(ESC_CHAR,5);
+
 	serial = ft->toString();
 
 	cout << serial<<endl;
@@ -49,9 +59,16 @@ void testFreqTable()
 	cout <<"total1"<< ft->getFrequencyTotal()<<endl;
 	cout <<"total2"<< ft2->getFrequencyTotal()<<endl;
 
+	//ft->excludeFromTable(*ft2);
+
+	ft4 = ft->excludeFromTable(*ft3);
+
+	cout << "ft4 " << ft4.toString()<<endl;
+
+
 	delete ft;
 	delete ft2;
-
+	delete ft3;
 }
 
 int main()
