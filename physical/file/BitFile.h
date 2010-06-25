@@ -8,6 +8,7 @@
 #ifndef BITFILE_H_
 #define BITFILE_H_
 
+#include <bitset>
 #include "SequentialFile.h"
 
 typedef enum {ONE,ZERO} Bit;
@@ -46,10 +47,27 @@ public:
 	void write(Bit bit)throw (PhysicalException);
 
 	/**
+	 * Escribe una tira de bits en el archivo.
+	 * @param bits Tira de bits a escribir.
+	 * @param nbits Cantidad de bits en la tira.
+	 * @return TRUE en caso de exito. FALSE de lo contrario.
+	 */
+	bool writeNBits(Bit bits[],unsigned int nbits)throw (PhysicalException);
+
+	/**
 	 * Lee del archivo un bit.
 	 * @return bit leido.
 	 */
 	Bit read() throw (PhysicalException);
+
+	/**
+	 * Lee una tira de bits y lo guarda en el arreglo pasado por param.
+	 * @param bits Tira de bits donde se guarda el arreglo levantado al leer.
+	 * @param nbits Cantidad de bits a leer.
+	 * @return TRUE en caso de exito. FALSE de lo contrario.
+	 */
+	bool readNBits(Bit bits[],unsigned int nbits) throw (PhysicalException);
+
 
 
 private:
