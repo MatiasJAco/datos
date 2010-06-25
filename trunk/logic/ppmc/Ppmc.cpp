@@ -28,12 +28,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 
 	this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext);
-	int contador = 1;    // Seria el limite para no tener EOF.
 	actualContextNumber++;
 	stringContext = character;
-	character = sequentialFile->readChar();
+	bool isNotEof = false;
+	character = sequentialFile->readChar(isNotEof);
 
-	while (contador < 10) { // TODO Adrián: reemplazar por EOF cuando esté implementado en SequentialFile.
+	while (isNotEof) {
 		this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext);
 		if (actualContextNumber < maxContext) {
 			actualContextNumber++;
@@ -42,7 +42,6 @@ bool Ppmc::compress(std::string path,int maxContext) {
 			stringContext.append(1,character);
 			stringContext.substr(1,stringContext.length());
 		}
-		contador++;
 		character = sequentialFile->readChar();
 	}
 	sequentialFile->close();
