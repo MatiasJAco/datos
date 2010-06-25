@@ -9,11 +9,19 @@
 #include "Logger.h"
 using namespace std;
 
- Logger::Logger(){
+Logger* Logger::pinstance = 0;// Inicializo el puntero
 
-};
+Logger* Logger::Instance (){
+  if (pinstance == 0)  // ¿Es la primera llamada?
+  {
+    pinstance = new Logger; // Creo la instancia
+  }
+  return pinstance; // Retornamos la dirección de la instancia
+}
 
- Logger::~Logger(){};
+Logger::Logger(){};
+
+Logger::~Logger(){};
 
 
 string Logger::itos(int i){                                                 //   int to string en c++
