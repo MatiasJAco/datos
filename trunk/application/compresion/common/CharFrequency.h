@@ -53,9 +53,14 @@ public:
 	//-------------------OPERATORS----------------------------------------//
 	bool operator < (const CharFrequency &cF) const;
 
-	bool operator == (short &c) const;
+	bool operator > (const CharFrequency &cF) const;
+
+
+	bool operator == (const short &c) const;
 
 	bool operator == (CharFrequency &c) const;
+
+	CharFrequency operator= (const  CharFrequency & cf);
 
 	CharFrequency operator+= (unsigned long const& y);
 

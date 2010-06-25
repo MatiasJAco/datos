@@ -46,7 +46,12 @@ bool CharFrequency::operator < (const CharFrequency &cF) const
 	return m_Char < cF.m_Char;
 }
 
-bool CharFrequency::operator == (short &c) const
+bool CharFrequency::operator > (const CharFrequency &cF) const
+{
+	return m_Char > cF.m_Char;
+}
+
+bool CharFrequency::operator == (const short &c) const
 {
 	return m_Char == c;
 }
@@ -54,6 +59,13 @@ bool CharFrequency::operator == (short &c) const
 bool CharFrequency::operator == (CharFrequency &c) const
 {
 	return m_Char == c.m_Char;
+}
+
+CharFrequency CharFrequency::operator= (const  CharFrequency & cF)
+{
+	m_Char = cF.m_Char;
+	m_Frequency = cF.m_Frequency;
+	return *this;
 }
 
 CharFrequency CharFrequency::operator+= (unsigned long const& y)
