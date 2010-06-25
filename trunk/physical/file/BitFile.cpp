@@ -113,5 +113,32 @@ void BitFile::writeBitZero() throw (PhysicalException)
 	}
 }
 
+bool BitFile::writeNBits(Bit bits[],unsigned int nbits)throw (PhysicalException)
+{
+	bool bret = true;
+
+	unsigned int i = 0;
+
+	for (i = nbits; i >= 0;i--)
+	{
+		write(bits[i]);
+	}
+
+	return bret;
+}
+
+bool BitFile::readNBits(Bit bits[],unsigned int nbits) throw (PhysicalException)
+{
+	bool bret = true;
+
+	unsigned int i = 0;
+
+	for (i = nbits; i >= 0;i--)
+	{
+		bits[i] = read();
+	}
+
+	return bret;
+}
 
 
