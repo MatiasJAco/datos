@@ -34,6 +34,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	actualContextNumber++;
 	stringContext = character;
 	bool isNotEof = false;
+
 	character = sequentialFile->readChar(isNotEof);
 
 	while (isNotEof) {
@@ -45,7 +46,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 			stringContext.append(1,character);
 			stringContext.substr(1,stringContext.length());
 		}
-		character = sequentialFile->readChar();
+		character = sequentialFile->readChar(isNotEof);
 	}
 	sequentialFile->close();
 	std::cout << "Fin de compresion" << std::endl;
