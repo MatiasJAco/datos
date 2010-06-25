@@ -21,7 +21,7 @@ int main(int argc, const char* argv[]){
 		string operacion (argv[1]);
 		if (operacion == "-S") {
 			cout << "Impresion del estado actual:" << endl;
-			logger->recorrer_log();
+			logger->print();
 			delete logger;
 			return 0;
 		} else if (operacion == "-h") {
@@ -44,7 +44,7 @@ int main(int argc, const char* argv[]){
 
 	if (operacion == "-B") {
 		cout << "Buscando la cadena de caracteres " << cadena << "..." << endl;
-		bool findResult = logger->buscar_cadena(&cadena[0]);
+		bool findResult = logger->findString(&cadena[0]);
 		if (findResult == true) {
 			cout << "Se encontro la cadena \"" << cadena  << "\"" << endl;
 		} else {
@@ -52,11 +52,11 @@ int main(int argc, const char* argv[]){
 		}
 	} else if (operacion == "-I") {
 		cout << "Ingresando la cadena de caracteres \"" << cadena  << "\"" << endl;
-		logger->ingresar(&cadena2[0]);
+		logger->insert(&cadena2[0]);
 		cout << "Se ingreso correctamente la cadena de caracteres \"" << cadena << "\"" << endl;
 	} else if (operacion == "-S") {
 		cout << "Impresion del estado actual:" << endl;
-		logger->recorrer_log();
+		logger->print();
 	} else if (operacion == "-h") {
 		cout << "Ayuda - Algunos ejemplos de ejecucion:" << endl;
 		cout << "./loggerMain -I \"cadena de caracteres\"" << endl;
