@@ -90,6 +90,11 @@ unsigned long CharFrequency::getFrequency()
 	return m_Frequency;
 }
 
+short CharFrequency::getChar()
+{
+	return m_Char;
+}
+
 void CharFrequency::setFrequency(unsigned long freq)
 {
 	m_Frequency = freq;
