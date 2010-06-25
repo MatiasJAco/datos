@@ -59,9 +59,9 @@ void Ppmc::getStatistics() {
 
 void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext) {
 	FrequencyTable* frequencyTable;
-	if (this->generalStructure->existsElement(stringContext)) { // Existe el contexto pasado por parametro.
+	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
 		StringInputData stringInputData;
-		this->generalStructure->find(stringContext,stringInputData);
+		this->findInStructure(stringContext,stringInputData);
 		frequencyTable = new FrequencyTable();
 		frequencyTable->deserialize(stringInputData.getValue());
 
@@ -69,12 +69,12 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 			std::string stringFrequencyTable = frequencyTable->toString();
-			this->generalStructure->modify(stringContext,stringFrequencyTable);
+			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
 			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
-			this->generalStructure->modify(stringContext,stringFrequencyTable);
+			this->modifyInStructure(stringContext,stringFrequencyTable);
 			delete frequencyTable;
 			return;
 		}
@@ -84,7 +84,7 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
 		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
-		this->generalStructure->insert(stringContext,frequencyTable->toString());
+		this->insertInStructure(stringContext,frequencyTable->toString());
 		delete frequencyTable;
 	}
 	stringContext = stringContext.substr(1,stringContext.length());
@@ -99,3 +99,4 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 		this->minusOneContext->increaseFrequency(character,1);
 	}
 }
+
