@@ -56,6 +56,13 @@ private:
 	 */
 	bool removeInStructure(std::string key) throw (ManagerException);
 
+	/**
+	* Busca y retorna un elemento dado su clave.
+	* @param key Es la clave del dato a buscar
+	* @param data Es el StringInputData que representa al dato que contiene la clave a buscar
+	* @return true si la operación fue exitosa
+	*/
+	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException);
 };
 
 #endif /* PPMCHASH_H_ */

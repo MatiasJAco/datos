@@ -51,3 +51,21 @@ bool PpmcTree::removeInStructure(std::string key) throw (ManagerException){
 	return this->generalStructure->remove(key);
 }
 
+bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerException){
+	//Invierto la clave.
+	string claveInvertida = string(key.rbegin(), key.rend());
+	StringInputData comparado;
+	bool encontrado=false;
+	this->generalStructure->getPrevious(comparado);
+	while ((!encontrado)&&(comparado.getKey()<=key)){
+		if(comparado.getKey()==key){
+			data.setKey(comparado.getKey());
+			data.setValue(comparado.getValue());
+			encontrado=true;
+		}
+		if(!encontrado)
+			this->generalStructure->getPrevious(comparado);
+	};
+	return encontrado;
+
+}

@@ -13,3 +13,8 @@ GeneralStructure::GeneralStructure() {
 
 GeneralStructure::~GeneralStructure() {
 }
+
+bool GeneralStructure::getPrevious(InputData& data) {
+	string key="";
+	return this->find(key,data);
+}

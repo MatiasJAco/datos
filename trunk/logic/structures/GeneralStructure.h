@@ -65,6 +65,13 @@ public:
 	virtual void print() = 0;
 
 	/**
+	* Obtiene el anterior elemento de la secuencia.
+	* @param data. Es el proximo elemento.
+	* @return TRUE si pudo ejecutar la operacion.
+	*/
+	virtual bool getPrevious(InputData& data);
+
+	/**
 	 * Elimina los archivos generados por el hash o el arbol.
 	 */
 	virtual bool deleteGeneratedFiles() = 0;
