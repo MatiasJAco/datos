@@ -38,6 +38,8 @@ public:
 
 	void deserialize(std::string &, unsigned int &pos);
 
+	short getChar();
+
 	unsigned long getFrequency();
 
 	void setFrequency(unsigned long freq);

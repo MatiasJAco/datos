@@ -123,6 +123,33 @@ unsigned long FrequencyTable::getFrequency(short c)
 	return retVar;
 }
 
+short FrequencyTable::getChar(unsigned long freq)
+{
+	short retVal = UNDEFINED_CHAR;
+	unsigned long acum = 0;
+
+	CharFrequencyListIterator it;
+
+	if(!m_isSorted)
+	{
+		m_Frequencies.sort();
+		m_isSorted=true;
+	}
+
+	for(it=m_Frequencies.begin();(it !=m_Frequencies.end()); it++)
+	{
+		acum +=it->getFrequency();
+		if( acum>=freq)
+			break;
+	}
+
+	if(acum>=freq&&it !=m_Frequencies.end())
+	{
+		retVal = it->getChar();
+	}
+	return retVal;
+}
+
 FrequencyTable FrequencyTable::excludeFromTable(FrequencyTable &ft)
 {
 	CharFrequencyListIterator it;

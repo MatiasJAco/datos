@@ -13,6 +13,7 @@
 
 #define EOF_CHAR 256
 #define ESC_CHAR 257
+#define UNDEFINED_CHAR 258
 
 /**
  * Clase encargada de manejar la tabla de frecuencias
@@ -47,10 +48,18 @@ public:
 	unsigned long getFrequency(short c);
 
 	/**
+	 * Obtiene el caracter que corresponde a una determinada frecuencia acumulada.
+	 * @param freq la frecuencia acumulada que se esta buscando
+	 * @return short el caracter UNDEFINED_CHAR en caso de no encontrarlo
+	 */
+	short getChar(unsigned long freq);
+
+	/**
 	 * Devuelve la suma de todas las frecuencias
 	 * @return unsigned long la suma de todas las frecuencias
 	 */
 	unsigned long getFrequencyTotal();
+
 
 	/**
 	 * Obtiene la suma de los caracteres anteriores hasta el actual
@@ -101,6 +110,13 @@ public:
 	 */
 	std::string toString();
 
+
+	/**
+	 * Excluye de una tabla los caracteres de otra tabla.
+	 * El ESC_CHAR no se borra de la tabla resultante, aunque estuviera en la tabla a restar.
+	 * @param ft tabla con caracteres a restar
+	 * @return FrequencyTable tabla resultante de restar los caracteres contenidos en ft
+	 */
 	FrequencyTable excludeFromTable(FrequencyTable &ft);
 
 	FrequencyTable operator= (FrequencyTable ft);
