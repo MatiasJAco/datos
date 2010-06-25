@@ -39,7 +39,7 @@ string Logger::itos(int i){                                                 //  
        return num;
 }
 
-std::string Logger::procesar_linea(char *line) {
+std::string Logger::processLine(char *line) {
 
 	//Puntero que se utilizará para barrer toda la línea.
 	char *line_index = line;
@@ -93,7 +93,7 @@ std::string Logger::procesar_linea(char *line) {
 	return cadena;
 }
 
-bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
+bool Logger::findFile(char *ptrArchivo, std::string cadena)
 {
     archivo = new ArchivoTexto(ptrArchivo);
     char caracterABuscar;
@@ -134,7 +134,7 @@ bool Logger::buscarArchivo(char *ptrArchivo, std::string cadena)
     return cadenaEncontrada;
 }
 
-bool Logger::buscar(std::string cadena){
+bool Logger::find(std::string cadena){
 	int buffer[1];
 	buffer[0]=0;
 	FILE *archdisco;
@@ -147,16 +147,16 @@ bool Logger::buscar(std::string cadena){
 		string nuevoNombre=nombre+numeroLog+".txt";
 
 		char* ptrArchivo=&nuevoNombre[0];
-		buscarArchivo(ptrArchivo, cadena);
+		findFile(ptrArchivo, cadena);
 	};
 	string nuevoNombre=nombre+".txt";
 	char* ptrArchivo=&nuevoNombre[0];
-	if(!buscarArchivo(ptrArchivo,cadena))
+	if(!findFile(ptrArchivo,cadena))
 		return false;
 	return true;
 };
 
-void Logger::escribir_archivo(std::string cadena){
+void Logger::writeFile(std::string cadena){
 	archivo=new ArchivoTexto("logger.txt");
 	long tamanio=0;
 	FILE *archdisco;
@@ -205,13 +205,13 @@ void Logger::escribir_archivo(std::string cadena){
 };
 
 //Busca la cadena de caracteres en el log.
-bool Logger::buscar_cadena(char * e_arg){
+bool Logger::findString(char * e_arg){
 	std::string cadena = "";
-	cadena = cadena + this->procesar_linea(e_arg);
-    return this->buscar(cadena);
+	cadena = cadena + this->processLine(e_arg);
+    return this->find(cadena);
 }
 
-void Logger::recorrer_log(){
+void Logger::print(){
 	std::string cadenaLeida="";
 	archivo=new ArchivoTexto("logger.txt");
 	while (archivo->leerLinea(cadenaLeida)){
@@ -220,14 +220,14 @@ void Logger::recorrer_log(){
 	archivo->~ArchivoTexto();
 };
 
-void Logger::ingresar(char *e_arg)
+void Logger::insert(char *e_arg)
 {
     std::string cadena = "";
-    cadena = cadena + this->procesar_linea(e_arg);
-    this->escribir_archivo(cadena);
+    cadena = cadena + this->processLine(e_arg);
+    this->writeFile(cadena);
 }
 
-void Logger::imprimir_ayuda(void) {
+void Logger::printHelp(void) {
 	printf("\t-B, --buscar \t\tBuscar cadena de caracteres.\n");
 	printf("\t-h, --ayuda \t\tAyuda para la operacion de la aplicacion.\n");
 	printf("\t-I, --ingresar \tIngresar datos a la estructura.\n");

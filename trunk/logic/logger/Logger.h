@@ -39,7 +39,7 @@ private:
 	 * @param cadena Es la cadena a buscar
 	 * @return bool Retorna true si se pudo realizar, false en caso contrario.
 	 */
-	bool buscar(std::string cadena);
+	bool find(std::string cadena);
 
 	/**
 	 * Procesa una linea particular, quedandose solo con caracteres validos y detectando si
@@ -47,13 +47,13 @@ private:
 	 * @param line Es la linea a procesar
 	 * @return string Retorna la cadena de caracteres validos
 	 */
-	std::string procesar_linea(char *line);
+	std::string processLine(char *line);
 
 	/**
 	 * Ingresa datos al archivo de texto.
 	 * @param cadena Es la cadena a ingresar
 	 */
-	void escribir_archivo(std::string cadena);
+	void writeFile(std::string cadena);
 
 	/**
 	 * Convierte un entero a string
@@ -68,7 +68,7 @@ private:
 	 * @param cadena Es la cadena de caracteres a ser buscada
 	 * @return bool Retorna true si se encontro la cadena, false en caso contrario
 	 */
-	bool buscarArchivo(char *ptrArchivo, std::string cadena);
+	bool findFile(char *ptrArchivo, std::string cadena);
 
 private:
 	Logger();
@@ -85,23 +85,23 @@ public:
 	/**
 	 * Imprime la ayuda
 	 */
-	void imprimir_ayuda(void);
+	void printHelp(void);
 
 	/**
 	 * Busca la cadena de caracteres en el log
 	 * @return bool Retorna true si se encontro la cadena, false en caso contrario
 	 */
-	bool buscar_cadena(char*);
+	bool findString(char*);
 
 	/**
 	 * Recorre el log actual y lo imprime por pantalla
 	 */
-	void recorrer_log(void);
+	void print(void);
 
 	/**
 	 * Permite ingresar datos al log.
 	 */
-	void ingresar(char *);
+	void insert(char *);
 
 };
 
