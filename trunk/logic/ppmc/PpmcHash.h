@@ -56,15 +56,6 @@ private:
 	 */
 	bool removeInStructure(std::string key) throw (ManagerException);
 
-	/**
-	 * Imprime la estructura por pantalla.
-	 */
-	void printStructure();
-
-	/**
-	 * Elimina los archivos generados por el hash o el arbol.
-	 */
-	bool deleteGeneratedFilesInStructure();
 };
 
 #endif /* PPMCHASH_H_ */
