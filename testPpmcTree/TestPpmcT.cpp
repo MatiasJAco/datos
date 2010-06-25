@@ -9,7 +9,7 @@
 
 TestPpmcT::TestPpmcT() {
 	BPlusTree* bPlusTree = new BPlusTree("arbol.dat",92,0.5);
-	this->mainFixture=new Ppmc(bPlusTree);
+	this->mainFixture=new PpmcTree(bPlusTree);
 }
 
 TestPpmcT::~TestPpmcT() {

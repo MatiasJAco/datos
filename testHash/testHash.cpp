@@ -6,6 +6,7 @@
 #include "../logic/ppmc/md5/MD5.h"
 #include "../logic/ppmc/bigint/BigIntegerLibrary.hh"
 #include "../logic/ppmc/Ppmc.h"
+#include "../logic/ppmc/PpmcHash.h"
 #include "../application/compresion/common/FrequencyTable.h"
 #include "../application/compresion/common/CharFrequency.h"
 
@@ -329,7 +330,7 @@ void testFreqTable()
 
 void testPpmcHash() {
 	GeneralStructure* hash = new Hash();
-	Ppmc* ppmcHash = new Ppmc(hash);
+	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress("/tmp/hola.txt", 3);
 	hash->deleteGeneratedFiles();
 }
