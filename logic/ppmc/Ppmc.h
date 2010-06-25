@@ -58,6 +58,13 @@ public:
 private:
 
 	/**
+	 * Este metodo obtiene una tabla de frecuencias, dado un contexto.
+	 * @param stringContext Es el contexto para el cual se quiere obtener su tabla de frecuencias.
+	 * @return Devuelve la tabla de frecuencias del contexto pasado por parámetro.
+	 */
+	FrequencyTable* getFrequencyTable(std::string stringContext);
+
+	/**
 	 * Este metodo se usa recursivamente para ir emitiendo la compresion.
 	 * @param context Es el contexto en donde quiero emitir
 	 * @param character Es el caracter que quiero emitir

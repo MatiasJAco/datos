@@ -27,6 +27,15 @@ Ppmc::~Ppmc() {
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------COMPRESION -------------------------------------------------
 //-----------------------------------------------------------------------------------------------
+
+FrequencyTable* Ppmc::getFrequencyTable(std::string stringContext) {
+	FrequencyTable* frequencyTable = new FrequencyTable();
+	StringInputData stringInputData;
+	this->findInStructure(stringContext,stringInputData);
+	frequencyTable->deserialize(stringInputData.getValue());
+	return frequencyTable;
+}
+
 bool Ppmc::compress(std::string path,int maxContext) {
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
@@ -62,12 +71,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 
 void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext) {
 	FrequencyTable* frequencyTable;
-	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
-		StringInputData stringInputData;
-		this->findInStructure(stringContext,stringInputData);
-		frequencyTable = new FrequencyTable();
-		frequencyTable->deserialize(stringInputData.getValue());
+	FrequencyTable* previousFrequencyTable;
 
+	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
+		frequencyTable = this->getFrequencyTable(stringContext);
+
+		// TODO Adrian excluir aca.
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
 			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
@@ -99,13 +108,11 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 		stringContext = ZERO_CONTEXT;
 		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo al contexto 0 que es el último.
 	} else { // Llegamos al contexto -1.
-		std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << this->minusOneCtxtFreqTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
+		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 		//TODO adrian esto habia que sacarlo no?
 		this->minusOneCtxtFreqTable->increaseFrequency(character,1);
 	}
 }
-
-
 
 
 
