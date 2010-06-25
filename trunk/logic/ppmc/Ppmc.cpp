@@ -24,6 +24,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
 	sequentialFile->open(path);
 	char character = sequentialFile->readChar();
+	//TODO no seria strinContext = "_" o  " " (vacio) ?? (para indicar el ctx cero)
 	std::string stringContext = "0";
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 
@@ -81,6 +82,9 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+		int difference = stringContext.size()-maxContext;
+		if (difference > 0)
+			stringContext = stringContext.substr(stringContext.size()-maxContext,maxContext);
 		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
@@ -94,7 +98,7 @@ void Ppmc::ppmcEmitter(std::string stringContext, char character, int actualCont
 		stringContext = "0";
 		this->ppmcEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo al contexto 0 que es el último.
 	} else { // Llegamos al contexto -1.
-		std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << this->minusOneContext->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
+		std::cout << "4 " << character <<  " en " << stringContext << " con " << this->minusOneContext->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 		this->minusOneContext->increaseFrequency(character,1);
 	}
 }
