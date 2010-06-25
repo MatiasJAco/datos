@@ -39,3 +39,6 @@ bool PpmcHash::removeInStructure(std::string key) throw (ManagerException){
 	return this->generalStructure->remove(key);
 }
 
+bool PpmcHash::getNextContext(std::string key, InputData & data) throw (ManagerException){
+	return this->generalStructure->find(key,data);
+}

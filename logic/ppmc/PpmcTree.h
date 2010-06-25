@@ -56,6 +56,13 @@ private:
 	 */
 	bool removeInStructure(std::string key) throw (ManagerException);
 
+	/**
+	 * Busca y retorna el proximo contexto aprovechando sequence set.
+	* @param key Es la clave del dato a buscar
+	* @param data Es el StringInputData que representa al dato que contiene la clave a buscar
+	* @return true si la operación fue exitosa
+	*/
+	bool getNextContext(std::string key, InputData & data) throw (ManagerException);
 };
 
 #endif /* PPMCTREE_H_ */

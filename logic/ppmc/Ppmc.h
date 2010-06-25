@@ -60,9 +60,10 @@ private:
 	/**
 	 * Este metodo obtiene una tabla de frecuencias, dado un contexto.
 	 * @param stringContext Es el contexto para el cual se quiere obtener su tabla de frecuencias.
+	 * @param newRead Indica si se acaba de leer un nuevo caracter o si se esta retrocediendo en contextos
 	 * @return Devuelve la tabla de frecuencias del contexto pasado por parámetro.
 	 */
-	FrequencyTable* getFrequencyTable(std::string stringContext);
+	FrequencyTable* getFrequencyTable(std::string stringContext,bool newRead);
 
 	/**
 	 * Este metodo se usa recursivamente para ir emitiendo la compresion.
@@ -70,8 +71,9 @@ private:
 	 * @param character Es el caracter que quiero emitir
 	 * @param actualContextNumber Es el numero de contexto actual
 	 * @param maxContext Es el maximo contexto para la compresion
+	 * @param newRead Indica si se acaba de leer un nuevo caracter o si se esta retrocediendo en contextos
 	 */
-	void ppmcCompressionEmitter(std::string context, char character, int actualContextNumber, int maxContext);
+	void ppmcCompressionEmitter(std::string context, char character, int actualContextNumber, int maxContext,bool newRead);
 
 	/**
 	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
@@ -122,5 +124,12 @@ protected:
 	 */
 	virtual bool removeInStructure(std::string key) throw (ManagerException) = 0;
 
+	/**
+	* Busca y retorna un elemento dado su clave, en caso del arbol aprovechando sequence set.
+	* @param key Es la clave del dato a buscar
+	* @param data Es el StringInputData que representa al dato que contiene la clave a buscar
+	* @return true si la operación fue exitosa
+	*/
+	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException);
 };
 #endif /* PPMC_H_ */

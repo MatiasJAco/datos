@@ -28,15 +28,20 @@ Ppmc::~Ppmc() {
 //-----------------------------------COMPRESION -------------------------------------------------
 //-----------------------------------------------------------------------------------------------
 
-FrequencyTable* Ppmc::getFrequencyTable(std::string stringContext) {
+FrequencyTable* Ppmc::getFrequencyTable(std::string stringContext,bool newRead) {
 	FrequencyTable* frequencyTable = new FrequencyTable();
 	StringInputData stringInputData;
-	this->findInStructure(stringContext,stringInputData);
+	if (newRead){
+		this->findInStructure(stringContext,stringInputData);
+	} else{
+		this->getNextContext(stringContext,stringInputData);
+	};
 	frequencyTable->deserialize(stringInputData.getValue());
 	return frequencyTable;
 }
 
 bool Ppmc::compress(std::string path,int maxContext) {
+	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
 	sequentialFile->open(path);
@@ -46,7 +51,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	std::string stringContext = ZERO_CONTEXT;
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 
-	this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext);
+	this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead);
 	actualContextNumber++;
 	stringContext = character;
 	bool isNotEof = false;
@@ -54,7 +59,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	character = sequentialFile->readChar(isNotEof);
 
 	while (isNotEof) {
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext);
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead);
 		if (actualContextNumber < maxContext) {
 			actualContextNumber++;
 			stringContext.append(1,character);
@@ -69,12 +74,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	return true;
 }
 
-void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext) {
+void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext,bool newRead) {
 	FrequencyTable* frequencyTable;
 	FrequencyTable* previousFrequencyTable;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
-		frequencyTable = this->getFrequencyTable(stringContext);
+		frequencyTable = this->getFrequencyTable(stringContext,newRead);
 
 		// TODO Adrian excluir aca.
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
@@ -103,10 +108,12 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 	stringContext = stringContext.substr(1,stringContext.length());
 	actualContextNumber--;
 	if (actualContextNumber > 0) {
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo de contexto progresivamente.
+		newRead=false;
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead); // Bajo de contexto progresivamente.
 	} else if (actualContextNumber == 0) {
 		stringContext = ZERO_CONTEXT;
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo al contexto 0 que es el último.
+		newRead=true;
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead); // Bajo al contexto 0 que es el último.
 	} else { // Llegamos al contexto -1.
 		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 		//TODO adrian esto habia que sacarlo no?
