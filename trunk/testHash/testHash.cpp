@@ -337,7 +337,7 @@ void testPpmcHashComprimir() {
 void testPpmcHashDescomprimir() {
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoComprimido.txt");
+	ppmcHash->deCompress("./archivoDescomprimido.txt");
 	hash->deleteGeneratedFiles();
 }
 
