@@ -6,7 +6,8 @@
 using namespace std;
 
 int main(int argc, const char* argv[]){
-	Logger* logger = new Logger();
+	//Logger* logger = new Logger();
+	Logger* logger = Logger::Instance();
 
 	if (argc == 1) {
 		cout << "Comandos para usar el logger:" << endl;

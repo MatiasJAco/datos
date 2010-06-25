@@ -70,9 +70,15 @@ private:
 	 */
 	bool buscarArchivo(char *ptrArchivo, std::string cadena);
 
-public:
-
+private:
 	Logger();
+	Logger(const Logger&);
+	Logger &operator= (const Logger &);
+	static Logger* pinstance;
+
+public:
+	/// Para uso del patron singleton
+	static Logger* Instance();
 
 	virtual ~Logger();
 

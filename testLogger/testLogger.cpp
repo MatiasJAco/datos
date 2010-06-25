@@ -10,7 +10,8 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-	Logger*MiLogger=new Logger();
+	//Logger*MiLogger=new Logger();
+	Logger *MiLogger = Logger::Instance();
 
 	MiLogger->imprimir_ayuda();
 
