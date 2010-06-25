@@ -331,7 +331,7 @@ void testFreqTable()
 void testPpmcHash() {
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->compress("/tmp/hola.txt", 3);
+	ppmcHash->compress("./archivoAComprimir.txt", 3);
 	hash->deleteGeneratedFiles();
 }
 
