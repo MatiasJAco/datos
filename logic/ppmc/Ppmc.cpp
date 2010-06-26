@@ -14,7 +14,7 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 	this->generalStructure = generalStructure;
 	this->minusOneCtxtFreqTable = new FrequencyTable();
 
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i <= 256; i++) {
 		this->minusOneCtxtFreqTable->setFrequency(i,1); // Llena con 1 ocurrencia los 256 caracteres ASCII y el EOF.
 	}
 }
@@ -124,7 +124,7 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 		(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
 		std::cout << "Tabla excluida: " << this->minusOneCtxtFreqTable->toString() << std::endl;
 
-		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
+		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 	}
 }
 
