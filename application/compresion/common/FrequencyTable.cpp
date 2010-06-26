@@ -173,7 +173,7 @@ FrequencyTable FrequencyTable::excludeFromTable(FrequencyTable &ft)
 
 		if( (*itDel) == (*it))
 		{
-			m_FrequencyTotal = it->getFrequency();
+			retFt.m_FrequencyTotal -= it->getFrequency();
 			it = retFt.m_Frequencies.erase(it);
 			itDel++;
 
