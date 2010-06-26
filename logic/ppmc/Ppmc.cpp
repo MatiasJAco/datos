@@ -14,7 +14,7 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 	this->generalStructure = generalStructure;
 	this->minusOneCtxtFreqTable = new FrequencyTable();
 
-	for (int i = 1; i <= 257; i++) {
+	for (int i = 0; i < 256; i++) {
 		this->minusOneCtxtFreqTable->setFrequency(i,1); // Llena con 1 ocurrencia los 256 caracteres ASCII y el EOF.
 	}
 }
@@ -50,8 +50,9 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	//TODO no seria strinContext = "_" o  " " (vacio) ?? (para indicar el ctx cero)
 	std::string stringContext = ZERO_CONTEXT;
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
+	FrequencyTable* previousFrequencyTable = new FrequencyTable();
 
-	this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead);
+	this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
 	actualContextNumber++;
 	stringContext = character;
 	bool isNotEof = false;
@@ -59,7 +60,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	character = sequentialFile->readChar(isNotEof);
 
 	while (isNotEof) {
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead);
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
 		if (actualContextNumber < maxContext) {
 			actualContextNumber++;
 			stringContext.append(1,character);
@@ -74,33 +75,37 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	return true;
 }
 
-void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext,bool newRead) {
+void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable) {
 	FrequencyTable* frequencyTable;
-	FrequencyTable* previousFrequencyTable;
+	FrequencyTable* exclusionTable = previousFrequencyTable;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
-		frequencyTable = this->getFrequencyTable(stringContext,newRead);
+		frequencyTable = this->getFrequencyTable(stringContext, newRead);
 
-		// TODO Adrian excluir aca.
+		std::cout << "Tabla sin excluir: " << frequencyTable->toString() << std::endl;
+		(*frequencyTable) = frequencyTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
+		std::cout << "Tabla excluida: " << frequencyTable->toString() << std::endl;
+
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
-			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
+			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
-			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
+			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 			delete frequencyTable;
 			return;
 		}
+		exclusionTable = frequencyTable;
 		delete frequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
-		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
+		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
 		delete frequencyTable;
@@ -109,15 +114,17 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 	actualContextNumber--;
 	if (actualContextNumber > 0) {
 		newRead=false;
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead); // Bajo de contexto progresivamente.
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, exclusionTable); // Bajo de contexto progresivamente.
 	} else if (actualContextNumber == 0) {
 		stringContext = ZERO_CONTEXT;
 		newRead=true;
-		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext,newRead); // Bajo al contexto 0 que es el último.
+		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, exclusionTable); // Bajo al contexto 0 que es el anteúltimo.
 	} else { // Llegamos al contexto -1.
-		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
-		//TODO adrian esto habia que sacarlo no?
-		this->minusOneCtxtFreqTable->increaseFrequency(character,1);
+		std::cout << "Tabla sin excluir: " << this->minusOneCtxtFreqTable->toString() << std::endl;
+		(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
+		std::cout << "Tabla excluida: " << this->minusOneCtxtFreqTable->toString() << std::endl;
+
+		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 	}
 }
 
