@@ -10,11 +10,11 @@
 ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxSymbols)
 {
 	m_coder = coder;
-	m_maxbits = (int)floor(log10(maxSymbols)/log10(2)+1);
-	bitmask = (int)pow(2,m_maxbits)-1;
+	m_maxbits = (int)floor(log10(maxSymbols-1)/log10(2)+1);
+	bitmask = (int)pow(2,m_maxbits)-1; // Maximo numero que se puede representar.
 
 	m_floor = 0;
-	m_roof = maxSymbols;
+	m_ceil = bitmask;
 
 	// Bits de overflow.
 	m_overflow = new Bit[m_maxbits];
@@ -47,8 +47,11 @@ ArithmeticCompressor::~ArithmeticCompressor() {
 
 void ArithmeticCompressor::compress(short symbol,FrequencyTable & ft)
 {
-	m_floor = getFloor(symbol,ft);
-	m_roof = getCeil(symbol,ft);
+	int newFloor = getFloor(symbol,ft);
+	int newCeil = getCeil(symbol,ft);
+
+	m_floor = newFloor;
+	m_ceil = newCeil;
 
 	normalize();
 
@@ -62,8 +65,11 @@ short ArithmeticCompressor::decompress(FrequencyTable& ft)
 	if (symbol != EOF_CHAR)
 	{
 		// Actualizo el piso y el techo.
-		m_floor = getFloor(symbol,ft);
-		m_roof = getCeil(symbol,ft);
+		int newFloor = getFloor(symbol,ft);
+		int newCeil = getCeil(symbol,ft);
+
+		m_floor = newFloor;
+		m_ceil = newCeil;
 
 		normalize();
 
@@ -75,10 +81,10 @@ short ArithmeticCompressor::decompress(FrequencyTable& ft)
 
 void ArithmeticCompressor::normalize()
 {
-	int posBit = m_maxbits;
+	int posBit = m_maxbits-1;
 
 	// Si hay overflow (entre piso y techo).
-	while (overflow()&&(posBit>0))
+	while (overflow()&&(posBit>=0))
 	{
 		// Obtengo el primer bit y lo guardo.
 		m_overflow[posBit] = (m_floor >> (m_maxbits-1))?ONE:ZERO;
@@ -86,7 +92,7 @@ void ArithmeticCompressor::normalize()
 
 		// Normalizo el piso y el techo
 		m_floor = (m_floor << 1)&bitmask;
-		m_roof = ((m_roof << 1)|1)&bitmask;
+		m_ceil = ((m_ceil << 1)|1)&bitmask;
 
 		--posBit;
 	}
@@ -98,14 +104,14 @@ void ArithmeticCompressor::normalize()
 
 		// Normalizo el piso y el techo.
 		m_floor = (m_floor << 1)&(bitmask >> 1);
-		m_roof = ((m_roof<< 1)&bitmask)|(1<< (m_maxbits-1));
-		m_roof = m_roof|1;
+		m_ceil = ((m_ceil<< 1)&bitmask)|(1<< (m_maxbits-1));
+		m_ceil = m_ceil|1;
 	}
 }
 
 bool ArithmeticCompressor::encode()
 {
-	int posBit = m_maxbits;
+	int posBit = m_maxbits-1;
 	Bit bit;
 
 	// Si hay algo en el contador de overflow;
@@ -167,7 +173,7 @@ bool ArithmeticCompressor::overflow()
 	int posbits = m_maxbits-1;
 
 	// si coinciden
-	if (m_floor >> posbits == m_roof >> posbits)
+	if (m_floor >> posbits == m_ceil >> posbits)
 	{
 		bret = true;
 	}
@@ -183,7 +189,7 @@ bool ArithmeticCompressor::underflow()
 	int posbits = m_maxbits-2;
 
 	// Si piso = 01... y techo = 10...
-	if ((m_floor >> posbits == 1)&&(m_roof >> posbits == 2))
+	if ((m_floor >> posbits == 1)&&(m_ceil >> posbits == 2))
 		bret = true;
 
 	return bret;
@@ -194,11 +200,11 @@ int ArithmeticCompressor::getFloor(short symbol,FrequencyTable& ft)
 	// Piso truncado.
 	int tfloor = 0;
 
-	int sizeInterval = m_roof - m_floor +1;
+	int sizeInterval = m_ceil - m_floor +1;
 
 	// el piso es en base al acumulado del caracter inmediatamente menor,
 	// resto la frecuencia del mismo.
-	double coef = (ft.getCumFrequency(symbol)-ft.getFrequency(symbol))/ft.getFrequencyTotal();
+	double coef = (double)(ft.getCumFrequency(symbol)-ft.getFrequency(symbol))/ft.getFrequencyTotal();
 	tfloor = m_floor + (int)floor(coef*sizeInterval);
 
 	return tfloor;
@@ -209,10 +215,10 @@ int ArithmeticCompressor::getCeil(short symbol,FrequencyTable& ft)
 	// Techo truncado.
 	int tceil = 0;
 
-	int sizeInterval = m_roof - m_floor +1;
+	int sizeInterval = m_ceil - m_floor +1;
 
 	// el piso es en base al acumulado del caracter.
-	double coef = ft.getCumFrequency(symbol)/ft.getFrequencyTotal();
+	double coef = (double)ft.getCumFrequency(symbol)/ft.getFrequencyTotal();
 	tceil = m_floor + (int)floor(coef*sizeInterval)-1;
 
 	return tceil;
@@ -222,7 +228,7 @@ short ArithmeticCompressor::getSymbol(int num,FrequencyTable& ft)
 {
 	short symbol = UNDEFINED_CHAR;
 
-	double coef = (num-m_floor+1)/m_roof;
+	double coef = (double)(num-m_floor+1)/m_ceil;
 	unsigned long freq = floor(ft.getFrequencyTotal()*coef);
 
 	symbol = ft.getChar(freq);

@@ -105,7 +105,7 @@ private:
 
 	// Para el manejo de intervalos de la compresion: piso y techo.
 	int m_floor;
-	int m_roof;
+	int m_ceil;
 
 	// Numero comprimido
 	int m_number;
