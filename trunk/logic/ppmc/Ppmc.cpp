@@ -17,6 +17,7 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 	for (int i = 0; i <= 256; i++) {
 		this->minusOneCtxtFreqTable->setFrequency(i,1); // Llena con 1 ocurrencia los 256 caracteres ASCII y el EOF.
 	}
+	this->contextStats=NULL;
 }
 
 Ppmc::~Ppmc() {
@@ -41,6 +42,7 @@ FrequencyTable* Ppmc::getFrequencyTable(std::string stringContext,bool newRead) 
 }
 
 bool Ppmc::compress(std::string path,int maxContext) {
+	this->setContextStats(maxContext);
 	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
@@ -97,6 +99,7 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
 			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(character) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
+			this->countHit(stringContext);
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
@@ -307,27 +310,24 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character, int
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void Ppmc::getStatistics() {
+
 }
 
+int Ppmc::setContextStats(int maxContexts){
+	if( (this->contextStats = (int*) malloc(sizeof(int)*(maxContexts+1)) ) == NULL)
+	return -1;
+	// Construye un vector dinamico de maxContexts enteros y se inicializan a 0.
+	for(int i=0;i<(maxContexts+1);i++)
+	contextStats[i] = 0;
+	//TODO Recordar liberar memoria cuando se dejen de necesitar las estadisticas.
+	return 0;
+};
+
+void Ppmc::countHit(std::string successfulContext) {
+	int contextNumber=successfulContext.size();
+	this->contextStats[contextNumber]++;
+
+
+
+}
