@@ -135,6 +135,24 @@ std::string ByteConverter::bytesToString(const char *bytes)
 	return str;
 }
 
+
+int ByteConverter::bitsToInt(Bit bits[],unsigned int nbits)
+{
+	int bytes = 0;
+
+	int pos =  nbits;
+
+	for (pos = nbits;pos >= 0;pos--)
+	{
+		if (bits[pos]&ONE)
+			bytes = (bytes << 1)|1;
+		else
+			bytes = bytes << 1;
+	}
+
+	return bytes;
+}
+
 void ByteConverter::printHexa(char *stream, unsigned int size)
 {
 	int fin =size;
