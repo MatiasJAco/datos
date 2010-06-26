@@ -121,11 +121,10 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 		newRead=true;
 		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, exclusionTable); // Bajo al contexto 0 que es el anteúltimo.
 	} else { // Llegamos al contexto -1.
-		std::cout << "Tabla exclusion  :" << exclusionTable->toString() << std::endl << std::endl;
-		std::cout << "Tabla sin excluir: " << this->minusOneCtxtFreqTable->toString() << std::endl;
-		std::cout << "total caracteres: " << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl;
+		//std::cout << "Tabla exclusion  :" << exclusionTable->toString() << std::endl << std::endl;
+		//std::cout << "Tabla sin excluir: " << this->minusOneCtxtFreqTable->toString() << std::endl;
 		(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
-		std::cout << "Tabla excluida   : " << this->minusOneCtxtFreqTable->toString() << std::endl;
+		//std::cout << "Tabla excluida   : " << this->minusOneCtxtFreqTable->toString() << std::endl;
 
 		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 	}
