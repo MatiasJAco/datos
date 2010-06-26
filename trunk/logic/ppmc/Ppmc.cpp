@@ -146,32 +146,71 @@ bool Ppmc::deCompress(const std::string & path) {
 
 	//mando la tabla de frecuencias del contexto -1 para que me retorne el primer caracter
 	//short shortCharacter = arithmeticCompressor->decompress(*this->minusOneCtxtFreqTable);
-	//TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
-	short shortCharacter = 68; // 68 = "D"
-	char character;
-	if (shortCharacter != EOF_CHAR)
-		character = (char) shortCharacter;
-	else {
+
+
+	short shortCharacter = 68; // 68 = "D"           //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+
+	if (shortCharacter == EOF_CHAR){
 		cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor";
 		return false; //TODO false o true?
 	}
 
-	std::string stringContext = ZERO_CONTEXT;
-	int actualContextNumber = 0; // Representa el número de contexto -1 (de donde arranca la descompresion)
+	std::string stringContext;
+	int actualContextNumber = -1; // Representa el número de contexto -1 (de donde arranca la descompresion)
+	int maxContext = 3;  //TODO IMPORTANTE! ver como obtener este valor!
+	char character;
+	FrequencyTable * frequencyTable;
+	short cantidadContextosAActualizar;
 
-	//TODO IMPORTANTE! ver como obtener este valor!
-	int maxContext = 3;
+	while(shortCharacter!= EOF_CHAR){
 
+		cantidadContextosAActualizar = 1;
 
-	//escribo en el archivo de salida el caracter.
-	//sequentialFile->writeChar(character);
+			if (actualContextNumber == -1)
+				stringContext = MINUS_ONE_CONTEXT;
+			else if (actualContextNumber == 0)
+				stringContext = ZERO_CONTEXT;
 
-	this->updateFrequencyTables(stringContext, character, actualContextNumber, maxContext);
+		this->ppmcDecompressionEmitter(stringContext, shortCharacter, actualContextNumber, maxContext); //TODO ver si se usan todos los params
 
+		//escribo en el archivo de salida el caracter.
+		character = (char) shortCharacter;
+		//sequentialFile->writeChar(character);
+		cout<<"EMITO : '" << character << "'" << endl;	//TODO aca hay que mandar al archivo de descompresion
 
+		shortCharacter = ESC_CHAR;
+		while (shortCharacter == ESC_CHAR){
+			StringInputData stringInputData;
+			this->findInStructure(stringContext,stringInputData);
+			frequencyTable = new FrequencyTable();
+			frequencyTable->deserialize(stringInputData.getValue());
+			//shortCharacter = arithmeticCompressor->decompress(frequencyTable);
+					string borrar = frequencyTable->toString();
+					cout << borrar << endl;
+			shortCharacter = ESC_CHAR;           //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+			delete frequencyTable;
+			actualContextNumber--;
+				if (actualContextNumber == -1)
+					stringContext = MINUS_ONE_CONTEXT;
+				else if (actualContextNumber == 0)
+					stringContext = ZERO_CONTEXT;
+			cantidadContextosAActualizar ++;
+		}
+		//sale del while con el ctxt donde el aritmetico emitio un caracter distinto a ESC. En character esta el caracter distinto a ESC.
+		for (short i = cantidadContextosAActualizar; i>0 ; i--){
 
+			if (actualContextNumber == -1){ //voy al contexto siguiente si estoy en el -1
+				actualContextNumber++;
+				stringContext = ZERO_CONTEXT;
+			}
 
+			updateFrequencyTables(stringContext,shortCharacter,actualContextNumber,maxContext);
+			actualContextNumber++;
+			//TODO ver aca como hago para obtener el listado de contextos q se tienen que actualizar (listado de stringContexts)
 
+		}
+
+	}
 //-------falta ver este pedazo----------------
 //	actualContextNumber--;
 //	stringContext = character;
@@ -198,15 +237,29 @@ bool Ppmc::deCompress(const std::string & path) {
 	std::cout << "Fin de descompresion" << std::endl;
 	return true;
 }
-void Ppmc::updateFrequencyTables(std::string stringContext, char character, int actualContextNumber, int maxContext) {
+void Ppmc::ppmcDecompressionEmitter(std::string &stringContext, short shortCharacter, int &actualContextNumber, int maxContext) {
 
-	FrequencyTable* frequencyTable;
+	char character;
 
-	if (strcmp(stringContext.c_str(),MINUS_ONE_CONTEXT.c_str()) == 0){ //Estoy en contexto -1
-			//ver si este if  sirve realmente
+	if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
+		character = (char) shortCharacter;
+		actualContextNumber++;
+		if (actualContextNumber == 0)
+			stringContext = ZERO_CONTEXT;
+
+		updateFrequencyTables(stringContext, character, actualContextNumber, maxContext);
+
+	}
+	else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior
 
 	}
 
+}
+
+
+void Ppmc::updateFrequencyTables(std::string stringContext, short character, int actualContextNumber, int maxContext) {
+
+	FrequencyTable* frequencyTable;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
 		StringInputData stringInputData;
@@ -215,13 +268,13 @@ void Ppmc::updateFrequencyTables(std::string stringContext, char character, int 
 		frequencyTable->deserialize(stringInputData.getValue());
 
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
-			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
+			//std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
-			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
+			//std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);

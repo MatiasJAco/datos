@@ -76,14 +76,24 @@ private:
 	 */
 	void ppmcCompressionEmitter(std::string context, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
 
+
+	/**
+	 * Este metodo se usa recursivamente para ir emitiendo la descompresion.
+	 * @param context Es el contexto en donde quiero emitir.
+	 * @param character Es el caracter que quiero emitir.
+	 * @param actualContextNumber Es el numero de contexto actual.
+	 * @param maxContext Es el maximo contexto que se uso para la compresion.
+	 */
+	void ppmcDecompressionEmitter(std::string& context, short character, int &actualContextNumber, int maxContext);
+
 	/**
 	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
 	 * @param context Es el contexto en donde quiero emitir
 	 * @param character Es el caracter que quiero emitir
 	 * @param actualContextNumber Es el numero de contexto actual
-	 * @param maxContext Es el maximo contexto para la compresion
+	 * @param maxContext Es el maximo contexto que se uso para la compresion
 	 */
-	void updateFrequencyTables(std::string context, char character, int actualContextNumber, int maxContext);
+	void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext);
 
 protected:
 
