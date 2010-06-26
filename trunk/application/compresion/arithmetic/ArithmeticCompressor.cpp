@@ -11,16 +11,29 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 {
 	m_coder = coder;
 	m_maxbits = (int)floor(log10(maxSymbols)/log10(2)+1);
+	bitmask = (int)pow(2,m_maxbits)-1;
 
 	m_floor = 0;
 	m_roof = maxSymbols;
 
-	if (m_coder == COMPRESSOR)
-		m_bitFile = new BitFile(WRITE_FILE);
-	else
-		m_bitFile = new BitFile(READ_FILE);
-
+	// Bits de overflow.
 	m_overflow = new Bit[m_maxbits];
+
+	// Inicializo los contadores de underflow y overflow.
+	m_counterOverflow = 0;
+	m_counterUnderflow = 0;
+
+	if (m_coder == COMPRESSOR)
+	{
+		m_bitFile = new BitFile(WRITE_FILE);
+	}
+	else
+	{
+		m_bitFile = new BitFile(READ_FILE);
+		m_bitFile->readNBits(m_overflow,m_maxbits);
+		m_number = ByteConverter::bitsToInt(m_overflow,m_maxbits);
+	}
+
 	m_bitFile->open(fileName);
 }
 
@@ -39,14 +52,25 @@ void ArithmeticCompressor::compress(short symbol,FrequencyTable & ft)
 
 	normalize();
 
-	emit();
+	encode();
 }
 
 short ArithmeticCompressor::decompress(FrequencyTable& ft)
 {
+	short symbol = getSymbol(m_number,ft);
 
+	if (symbol != EOF_CHAR)
+	{
+		// Actualizo el piso y el techo.
+		m_floor = getFloor(symbol,ft);
+		m_roof = getCeil(symbol,ft);
 
-	return 0;
+		normalize();
+
+		decode();
+	}
+
+	return symbol;
 }
 
 void ArithmeticCompressor::normalize()
@@ -61,25 +85,25 @@ void ArithmeticCompressor::normalize()
 		++m_counterOverflow;
 
 		// Normalizo el piso y el techo
-		m_floor = (m_floor << 1);
-		m_roof = (m_roof << 1)|1;
+		m_floor = (m_floor << 1)&bitmask;
+		m_roof = ((m_roof << 1)|1)&bitmask;
 
 		--posBit;
 	}
 
 	while (underflow())
 	{
-		int bitmask = (~0 >> (sizeof(m_floor)*SIZEBYTE -m_maxbits));
 		// Incremento contador de underflow
 		++m_counterUnderflow;
 
 		// Normalizo el piso y el techo.
 		m_floor = (m_floor << 1)&(bitmask >> 1);
-		m_roof = (m_roof << 1)| (1<< (m_maxbits-1)|1);
+		m_roof = ((m_roof<< 1)&bitmask)|(1<< (m_maxbits-1));
+		m_roof = m_roof|1;
 	}
 }
 
-bool ArithmeticCompressor::emit()
+bool ArithmeticCompressor::encode()
 {
 	int posBit = m_maxbits;
 	Bit bit;
@@ -103,6 +127,33 @@ bool ArithmeticCompressor::emit()
 
 		--posBit;
 		--m_counterOverflow;
+	}
+
+	return true;
+}
+
+bool ArithmeticCompressor::decode()
+{
+	Bit bit;
+
+	while (m_counterOverflow>0)
+	{
+		// Quito 1 bit del inicio y leo un bit mas del archivo.
+		m_number = (m_number<<1)&bitmask;
+		bit = m_bitFile->read();
+
+		if (bit&ONE)
+			m_number = m_number|1;
+	}
+
+	while (m_counterUnderflow>0)
+	{
+		// Quito el segundo bit y leo un bit mas del archivo.
+		m_number = ((m_number<< 1)&bitmask)|(1<< (m_maxbits-1));
+		bit = m_bitFile->read();
+
+		if (bit&ONE)
+			m_number = m_number|1;
 	}
 
 	return true;
@@ -169,6 +220,13 @@ int ArithmeticCompressor::getCeil(short symbol,FrequencyTable& ft)
 
 short ArithmeticCompressor::getSymbol(int num,FrequencyTable& ft)
 {
-	return 0;
+	short symbol = UNDEFINED_CHAR;
+
+	double coef = (num-m_floor+1)/m_roof;
+	unsigned long freq = floor(ft.getFrequencyTotal()*coef);
+
+	symbol = ft.getChar(freq);
+
+	return symbol;
 }
 
