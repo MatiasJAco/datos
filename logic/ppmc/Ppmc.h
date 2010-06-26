@@ -130,6 +130,6 @@ protected:
 	* @param data Es el StringInputData que representa al dato que contiene la clave a buscar
 	* @return true si la operación fue exitosa
 	*/
-	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException);
+	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException)=0;
 };
 #endif /* PPMC_H_ */
