@@ -10,6 +10,8 @@
 BitFile::BitFile(accessModeEnum type) {
 	m_byteFile = new SequentialFile(type);
 
+	m_byteFile->setBufferSize(SIZE_BUFFER);
+
 	if (type == WRITE_FILE)
 		clearBuffer();
 	else
@@ -31,7 +33,7 @@ bool BitFile::close()
 {
 	if (m_posBit < SIZE_BUFFER-1)
 	{
-		m_byteFile->writeChar((char)(m_buffer << m_posBit));
+		m_byteFile->writeChar((char)m_buffer << m_posBit);
 	}
 
 	return m_byteFile->close();
