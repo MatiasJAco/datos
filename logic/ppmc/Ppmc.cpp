@@ -82,9 +82,13 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
 		frequencyTable = this->getFrequencyTable(stringContext, newRead);
 
+		std::cout << "Tabla exclusion  :" << exclusionTable->toString() << std::endl << std::endl;
 		std::cout << "Tabla sin excluir: " << frequencyTable->toString() << std::endl;
 		(*frequencyTable) = frequencyTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
-		std::cout << "Tabla excluida: " << frequencyTable->toString() << std::endl;
+		std::cout << "Tabla excluida   : " << frequencyTable->toString() << std::endl;
+
+		exclusionTable = new FrequencyTable(*frequencyTable);
+		std::cout << "Tabla exclusion  :" << exclusionTable->toString() << std::endl << std::endl;
 
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
 			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
@@ -100,7 +104,6 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 			delete frequencyTable;
 			return;
 		}
-		exclusionTable = frequencyTable;
 		//delete frequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
@@ -120,9 +123,10 @@ void Ppmc::ppmcCompressionEmitter(std::string stringContext, char character, int
 		newRead=true;
 		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext, newRead, exclusionTable); // Bajo al contexto 0 que es el anteúltimo.
 	} else { // Llegamos al contexto -1.
+		std::cout << "Tabla exclusion  :" << exclusionTable->toString() << std::endl << std::endl;
 		std::cout << "Tabla sin excluir: " << this->minusOneCtxtFreqTable->toString() << std::endl;
 		(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*exclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
-		std::cout << "Tabla excluida: " << this->minusOneCtxtFreqTable->toString() << std::endl;
+		std::cout << "Tabla excluida   : " << this->minusOneCtxtFreqTable->toString() << std::endl;
 
 		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
 	}
