@@ -19,6 +19,7 @@ public:
 	typedef enum {COMPRESSOR,DECOMPRESSOR} Coder;
 
 private:
+	//Tamaño en bits de un byte.
 	static const unsigned int SIZEBYTE = 8;
 
 public:
@@ -57,8 +58,11 @@ private:
 	/// Detecta si hubo underflow y setea el contador.
 	bool underflow();
 
-	/// Emite los bits a la salida.
-	bool emit();
+	/// Codifica los simbolos y emite los bits a la salida.
+	bool encode();
+
+	/// Lee bits de la compresion y lo decodifica.
+	bool decode();
 
 // Para el manejo de los intervalos de la compresion.
 private:
@@ -103,6 +107,9 @@ private:
 	int m_floor;
 	int m_roof;
 
+	// Numero comprimido
+	int m_number;
+
 	// Bits de overflow
 	Bit* m_overflow;
 
@@ -110,6 +117,11 @@ private:
 	short m_counterOverflow;
 	/// Contador de underflow.
 	short m_counterUnderflow;
+
+	// Mascara de bits en uno segun maxbits.
+	int bitmask;
+
+
 };
 
 #endif /* ARITHMETICCOMPRESSOR_H_ */
