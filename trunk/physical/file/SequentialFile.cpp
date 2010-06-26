@@ -121,6 +121,11 @@ char SequentialFile::readChar(bool &didRead)
 	return retChar;
 }
 
+void SequentialFile::writeChar(char c)
+{
+	writeNChar(&c,1);
+}
+
 bool SequentialFile::readNChar(char * stream, unsigned int ammount)
 {
 	bool retVal=false;
