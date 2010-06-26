@@ -24,6 +24,7 @@ private:
 	/// Default del caracter del contexto 0
 	static const std::string ZERO_CONTEXT;
 	static const std::string MINUS_ONE_CONTEXT;
+	int* contextStats;
 
 protected:
 	GeneralStructure* generalStructure; // Puede ser un hash, o un arbol.
@@ -94,6 +95,19 @@ private:
 	 * @param maxContext Es el maximo contexto que se uso para la compresion
 	 */
 	void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext);
+
+	/**
+	* Este metodo se usa para registrar los hits durante la compresion.
+	* @param successfulContext Es el contexto que tuvo hit.
+	*/
+	void countHit(std::string successfulContext);
+
+	/**
+	* Este metodo se usa para inicializar un verctor dinamico con la cantidad de contextos maxima.
+	* @param successfulContext Es el contexto que tuvo hit.
+	*/
+	int setContextStats(int maxContext);
+
 
 protected:
 
