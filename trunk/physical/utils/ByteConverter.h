@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iomanip>
 
+typedef enum {ONE,ZERO} Bit;
 
 /**
  * Clase con métodos estáticos para transformar tipos de datos a cadena de bytes y viceversa.
@@ -121,6 +122,14 @@ public:
 	 * @return El puntero a la cadena de bytes.
 	 */
 	static char* stringToBytes(const std::string str,char* bytes);
+
+	/**
+	 * Convierte una conjunto de bits a un short.
+	 * @param bits Tira de bits a convertir.
+	 * @param nbits Cantidad de bits.
+	 * @return Numero tipo short que tiene el contenido de la tira de bits.
+	 */
+	static int bitsToInt(Bit bits[],unsigned int nbits);
 
 	/**
 	 * Imprime el contenido del stream en hexadecimal. Su uso es para debug

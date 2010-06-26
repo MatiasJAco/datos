@@ -10,8 +10,7 @@
 
 #include <bitset>
 #include "SequentialFile.h"
-
-typedef enum {ONE,ZERO} Bit;
+#include "../utils/ByteConverter.h"
 
 /**
  * Clase para el manejo de escritura y lectura de bits sobre un archivo.
