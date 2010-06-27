@@ -72,6 +72,19 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 
 void PpmcTree::printAllContexts()
 {
+	StringInputData stringInputData;
 
+	bool hasLeaf = true;
 
+	//TODO ver si valido arbol vacio
+	((BPlusTree *) generalStructure)->getFirstElement(stringInputData);
+
+	while(hasLeaf)
+	{
+		FrequencyTable ft;
+
+		ft.deserialize(stringInputData.getValue());
+		cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
+		hasLeaf = ((BPlusTree *) generalStructure)->getNext(stringInputData);
+	}
 }

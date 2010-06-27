@@ -48,7 +48,6 @@ void PpmcHash::printAllContexts()
 {
 	keyList keys;
 	StringInputData stringInputData;
-	string s;
 
 	keys = ((Hash *) generalStructure)->getKeys();
 
