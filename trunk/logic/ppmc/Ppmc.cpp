@@ -64,8 +64,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	FrequencyTable* previousFrequencyTable = new FrequencyTable();
 
 	this->ppmcCompressionEmitter(compressor, stringContext, character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
-	actualContextNumber++;
-	stringContext = character;
+
+	if (actualContextNumber < maxContext) { // Si el contexto maximo es mayor a cero, se incrementa el contexto actual a 1.
+		actualContextNumber++;
+		stringContext = character;
+	}
+
 	bool isNotEof = false;
 
 	character = sequentialFile->readChar(isNotEof);
@@ -77,7 +81,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 			stringContext.append(1,character);
 		} else {
 			stringContext.append(1,character);
-			stringContext = stringContext.substr(1,maxContext);
+			stringContext = stringContext.substr(1, stringContext.length());
 		}
 		character = sequentialFile->readChar(isNotEof);
 	}
