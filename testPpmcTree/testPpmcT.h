@@ -12,6 +12,12 @@
 #include "../logic/input/StringInputData.h"
 #include "../logic/ppmc/Ppmc.h"
 #include "../logic/ppmc/PpmcTree.h"
+#include <iostream>
+#include <sstream>
+
+
+using namespace std;
+
 
 class TestPpmcT {
 
@@ -28,7 +34,7 @@ protected:
 	void testAddCharacterToContext();
 	void testIncreaseFrequency();
 	void testPrintAllContexts();
-
+	void testGetNextContext();
 
 private:
 	PpmcTree* mainFixture;

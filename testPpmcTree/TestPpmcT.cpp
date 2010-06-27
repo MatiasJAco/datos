@@ -23,7 +23,8 @@ void TestPpmcT::run()
 //	testExistsCharacterInContext();
 //	testAddCharacterToContext();
 //	testIncreaseFrequency();
-	testPrintAllContexts();
+//	testPrintAllContexts();
+	testGetNextContext();
 }
 
 void TestPpmcT::testCreateContext(){
@@ -34,12 +35,33 @@ void TestPpmcT::testCreateContext(){
 }
 
 void TestPpmcT::testAddCharacterToContext(){
-	/*mainFixture->createContext("a");
-	mainFixture->createContext("abs");
-	mainFixture->createContext("n");
-	mainFixture->addCharacterToContext("abs","a");
-	mainFixture->showContexts();*/
-}
+	short character=150;
+	std::string stringContext="ab";
+	FrequencyTable* frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	character=25;
+	stringContext="s";
+	delete frequencyTable;
+	frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,3); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	character=176;
+	stringContext="b";
+	delete frequencyTable;
+	frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	StringInputData stringInputData;
+	mainFixture->findInStructure("ab",stringInputData);
+	frequencyTable->deserialize(stringInputData.getValue());
+	frequencyTable->setFrequency(15,1);
+	mainFixture->modifyInStructure("ab",frequencyTable->toString());
+	mainFixture->printAllContexts();
+	}
 
 void TestPpmcT::testIncreaseFrequency(){
 	/*mainFixture->createContext("a");
@@ -68,3 +90,34 @@ void TestPpmcT::testPrintAllContexts(){
 	mainFixture->printAllContexts();
 
 }
+
+void TestPpmcT::testGetNextContext(){
+
+	short character=150;
+	std::string stringContext="tb";
+	FrequencyTable* frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,2); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	character=25;
+	stringContext="ab";
+	delete frequencyTable;
+	frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,3); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	character=176;
+	stringContext="b";
+	delete frequencyTable;
+	frequencyTable = new FrequencyTable();
+	frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+	frequencyTable->setFrequency(character,5); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+	mainFixture->insertInStructure(stringContext,frequencyTable->toString());
+	mainFixture->printAllContexts();
+	StringInputData stringInputData;
+	mainFixture->findInStructure("tb",stringInputData);
+	mainFixture->getNextContext("b",stringInputData);
+	frequencyTable->deserialize(stringInputData.getValue());
+	std::cout<<frequencyTable->toPrintableString();
+
+};
