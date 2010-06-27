@@ -139,7 +139,7 @@ short FrequencyTable::getChar(unsigned long freq)
 	for(it=m_Frequencies.begin();(it !=m_Frequencies.end()); it++)
 	{
 		acum +=it->getFrequency();
-		if( acum>=freq)
+		if( acum>freq)
 			break;
 	}
 
