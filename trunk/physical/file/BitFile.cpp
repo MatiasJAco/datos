@@ -14,10 +14,6 @@ BitFile::BitFile(accessModeEnum type) {
 
 	m_byteFile->setInputType(BINARY);
 
-	if (type == WRITE_FILE)
-		clearBuffer();
-	else
-		readBuffer();
 }
 
 BitFile::~BitFile() {
@@ -27,7 +23,14 @@ BitFile::~BitFile() {
 
 bool BitFile::open(const std::string fileName)
 {
-	return m_byteFile->open(fileName);
+	bool bret = m_byteFile->open(fileName);
+
+	if (m_byteFile->getAccessMode() == WRITE_FILE)
+		clearBuffer();
+	else
+		readBuffer();
+
+	return bret;
 }
 
 
