@@ -16,11 +16,6 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 	m_floor = 0;
 	m_ceil = bitmask;
 
-	// Bits de overflow.
-//	m_overflow = new Bit[m_maxbits];
-
-	// Inicializo los contadores de underflow y overflow.
-//	m_counterOverflow = 0;
 	m_counterUnderflow = 0;
 
 	if (m_coder == COMPRESSOR)
@@ -42,8 +37,6 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 }
 
 ArithmeticCompressor::~ArithmeticCompressor() {
-
-//	delete m_overflow;
 
 	m_bitFile->close();
 	delete m_bitFile;
