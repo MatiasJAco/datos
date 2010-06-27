@@ -62,6 +62,8 @@ private:
 	/// Codifica los simbolos y emite los bits a la salida.
 	bool encode();
 
+	bool encodeFloor();
+
 	/// Lee bits de la compresion y lo decodifica.
 	bool decode();
 
