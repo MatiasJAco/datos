@@ -148,7 +148,8 @@ bool ArithmeticCompressor::decode()
 		normalize(UNDERFLOW_BITS);
 
 		// Quito el segundo bit y leo un bit mas del archivo.
-		m_number = ((m_number<< 1)&bitmask)|(1<< (m_maxbits-1));
+		int firstbit = m_number >> (m_maxbits-1);
+		m_number = (((m_number<< 1)&bitmask)&(bitmask>>1))|(firstbit<< (m_maxbits-1));
 		bit = m_bitFile->read();
 
 		if (bit&ONE)
