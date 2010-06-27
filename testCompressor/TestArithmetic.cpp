@@ -45,7 +45,7 @@ void TestArithmetic::testCompress()
 	int i = 0;
 	int qchars = m_tocompress.size();
 
-	for (i = 0;i <= qchars;i++)
+	for (i = 0;i < qchars;i++)
 	{
 		char c = m_tocompress[i];
 		m_compressor->compress(c,m_ft);
@@ -61,7 +61,7 @@ void TestArithmetic::testDecompress()
 	int i = 0;
 	int qchars = m_ft.getFrequencyTotal();
 
-	for (i = 0; i<= qchars; i++)
+	for (i = 0; i< qchars; i++)
 	{
 		char c = m_compressor->decompress(m_ft);
 		cout << c << endl;
