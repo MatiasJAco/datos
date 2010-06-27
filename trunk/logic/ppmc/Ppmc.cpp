@@ -40,8 +40,17 @@ FrequencyTable* Ppmc::getFrequencyTable(std::string stringContext,bool newRead) 
 	return frequencyTable;
 }
 
+std::string Ppmc::getCompressionOutFile(std::string path, int maxContext) {
+	std::string outFile = path;
+	outFile.append(".ppmc");
+	stringstream ss;
+	ss << maxContext;
+	outFile.append(ss.str());
+	return outFile;
+}
+
 bool Ppmc::compress(std::string path,int maxContext) {
-	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, "comprimido.gzip", 256);
+	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 256);
 	this->setContextStats(maxContext);
 	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;

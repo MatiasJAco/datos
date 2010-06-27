@@ -382,12 +382,22 @@ void testFreqTable()
 }
 
 void testPpmcHashComprimir() {
-	std::remove("comprimido.gzip");
+	std::string path = "./archivoAComprimir.txt";
+	int maxContext = 2;
+
+	std::string previousCompressionFile = "archivoAComprimir.txt";
+	previousCompressionFile.append(".ppmc");
+	stringstream ss;
+	ss << maxContext;
+	previousCompressionFile.append(ss.str());
+
+	std::remove(previousCompressionFile.c_str());
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->compress("./archivoAComprimir.txt", 2);
+	ppmcHash->compress(path, maxContext);
 	hash->deleteGeneratedFiles();
 }
+
 void testPpmcHashDescomprimir() {
 	//TODO BORRAR ESTO
 	std::remove("tabla.txt");
@@ -417,8 +427,8 @@ int main(int argc, const char* argv[]){
 	//testFreqTable();
 
 	/* TESTS DE PPMC */
-	//testPpmcHashComprimir();
-	testPpmcHashDescomprimir();
+	testPpmcHashComprimir();
+	//testPpmcHashDescomprimir();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testBigInt();

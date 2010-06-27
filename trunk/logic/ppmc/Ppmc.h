@@ -131,6 +131,13 @@ private:
 	*/
 	int setContextStats(int maxContext);
 
+	/**
+	 * Este metodo devuelve el nombre del archivo de salida de la compresion.
+	 * @param path Es el path del archivo a comprimir.
+	 * @param maxContext Es el orden de contexto maximo para comprimir.
+	 * @return Devuelve el nombre del archivo de salida de la compresion.
+	 */
+	std::string getCompressionOutFile(std::string path, int maxContext);
 
 protected:
 
