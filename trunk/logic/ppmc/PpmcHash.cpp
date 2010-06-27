@@ -53,12 +53,13 @@ void PpmcHash::printAllContexts()
 	keys = ((Hash *) generalStructure)->getKeys();
 
 	keyListIterator it;
+	FrequencyTable ft;
 
 	for(it=keys.begin(); it!= keys.end(); it++)
 	{
 		generalStructure->find(*it,stringInputData);
-		FrequencyTable ft;
 
+		ft.clearTable();
 		ft.deserialize(stringInputData.getValue());
 		cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
 

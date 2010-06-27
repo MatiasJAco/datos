@@ -82,10 +82,10 @@ void PpmcTree::printAllContexts()
 	//TODO ver si valido arbol vacio
 	((BPlusTree *) generalStructure)->getFirstElement(stringInputData);
 
+	FrequencyTable ft;
 	while(hasLeaf)
 	{
-		FrequencyTable ft;
-
+		ft.clearTable();
 		ft.deserialize(stringInputData.getValue());
 		cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
 		hasLeaf = ((BPlusTree *) generalStructure)->getNext(stringInputData);
