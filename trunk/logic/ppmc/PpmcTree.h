@@ -8,6 +8,7 @@
 #ifndef PPMCTREE_H_
 #define PPMCTREE_H_
 
+#include "../structures/tree/BPlusTree.h"
 #include "Ppmc.h"
 
 class PpmcTree: public Ppmc {
