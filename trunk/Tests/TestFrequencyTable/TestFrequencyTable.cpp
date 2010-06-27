@@ -10,6 +10,9 @@
 #include "../application/compresion/common/CharFrequency.h"
 #include <iostream>
 
+using namespace std;
+
+
 TestFrequencyTable::TestFrequencyTable() {
 }
 
@@ -21,6 +24,7 @@ void TestFrequencyTable::testFreqTable() {
 	FrequencyTable *ft2;
 	FrequencyTable *ft3;
 	FrequencyTable ft4;
+	FrequencyTable ft5;
 	std::string serial, deserial;
 
 	ft = new FrequencyTable();
@@ -69,7 +73,16 @@ void TestFrequencyTable::testFreqTable() {
 	ft4 = ft->excludeFromTable(*ft3);
 
 	std::cout << "ft4 " << ft4.toString()<<std::endl;
+	ft5.setFrequency('D',3);
+	ft5.setFrequency('I',3);
+	ft5.setFrequency('O',1);
+	ft5.setFrequency('S',1);
+	ft5.setFrequency('V',1);
 
+	cout << "V "<< (char) ft5.getChar(8)<<endl;
+
+	ft2->clearTable();
+	cout << ft2->toPrintableString()<<endl;
 
 	delete ft;
 	delete ft2;
