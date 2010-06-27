@@ -21,16 +21,33 @@ public:
 
 protected:
 
-	void testCompress();
-	void testDecompress();
+	void testStatic(std::string toCompress,std::string output);
+	void testDinamic(std::string toCompress,std::string output);
+
+protected:
+	void testStaticCompress();
+	void testStaticDecompress();
+
+	void testDinamicCompress();
+	void testDinamicDecompress();
+
+private:// Utilitarios.
+
+	void initializeToCompress(std::string str);
+	void loadStaticFTable(std::string);
+	void loadDinamicFTable();
+	unsigned long getFrequencySymbol(std::string frase,char c);
 
 private:
 	ArithmeticCompressor* m_compressor;
 
 	FrequencyTable m_ft;
 
-	std::string m_tocompress;
+	short* m_tocompress;
+	short m_sizetoCompress;
+
 	std::string m_filecompressed;
+	int m_maxsymbols;
 };
 
 #endif /* TESTARITHMETIC_H_ */
