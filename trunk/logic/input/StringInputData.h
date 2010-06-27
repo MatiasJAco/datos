@@ -9,6 +9,10 @@
 #define STRINGINPUTDATA_H_
 
 #include "InputData.h"
+#include <list>
+
+typedef  list<std::string> keyList;
+typedef keyList::iterator keyListIterator;
 
 /**
  * Esta clase representa un dato ingresado por el usuario, siendo el valor del dato una cadena de caracteres.
@@ -43,7 +47,7 @@ public:
 	 * Devuelve el valor del dato ingresado por el usuario.
 	 * @return Devuelve el valor del dato.
 	 */
-	string getValue()const;
+	std::string getValue()const;
 
 	/**
 	 * Convierte a stream el dato.

@@ -58,6 +58,12 @@ public:
 	 */
 	void getStatistics();
 
+
+	/**
+	 *
+	 */
+	virtual void printAllContexts()=0;
+
 private:
 
 	/**
@@ -158,5 +164,8 @@ protected:
 	* @return true si la operación fue exitosa
 	*/
 	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException)=0;
+
+
+
 };
 #endif /* PPMC_H_ */

@@ -337,8 +337,8 @@ bool Hash::deleteGeneratedFiles() {
 	return this->hashFile->deleteFile();
 }
 
-list<std::string> Hash::getKeys() {
-	list<std::string> keys;
+keyList Hash::getKeys() {
+	keyList keys;
 
 	unsigned int i = 1;
 	Block* actualBlock = this->hashFile->getBlock(i);

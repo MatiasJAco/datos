@@ -15,7 +15,10 @@ public:
 	PpmcTree(GeneralStructure* generalStructure);
 	virtual ~PpmcTree();
 
-
+	/**
+	 *
+	 */
+	virtual void printAllContexts();
 
 private:
 	/**
@@ -63,6 +66,8 @@ private:
 	* @return true si la operación fue exitosa
 	*/
 	bool getNextContext(std::string key, InputData & data) throw (ManagerException);
+
+
 };
 
 #endif /* PPMCTREE_H_ */

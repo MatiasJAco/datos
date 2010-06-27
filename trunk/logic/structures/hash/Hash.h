@@ -24,6 +24,8 @@
  * Cada bucket a su vez posee registros, y en cada registro hay un dato.
  * El usuario puede ingresar, modificar, eliminar o consultar datos.
  */
+
+
 class Hash : public GeneralStructure {
 
 private:
@@ -164,7 +166,7 @@ public:
 	 * Este metodo devuelve todas las claves del hash en una lista.
 	 * @return Devuelve todas las claves del hash en una lista.
 	 */
-	list<std::string> getKeys();
+	keyList getKeys();
 };
 
 #endif /* HASH_H_ */
