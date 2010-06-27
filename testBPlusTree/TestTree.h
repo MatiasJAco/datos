@@ -33,6 +33,7 @@ protected:
 	void testRemoveInnerNode();
 	void testFindInodeData();
 	void testReadNext();
+	void testReadPrevious();
 
 
 private:

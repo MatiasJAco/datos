@@ -567,6 +567,8 @@ bool  BPlusTree::getPrevious(InputData& data){
 
 				m_currentNode = (LeafNode*)getNode(nodeNumber);
 
+				//Situo puntero a lo ultimo del bloque
+				m_currentNode->m_block->jumpEndBlock();
 				// Leo de la hoja.
 				retVal = m_currentNode->getPreviousData(data);
 			}

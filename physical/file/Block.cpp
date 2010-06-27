@@ -45,6 +45,13 @@ void Block::restartCounter()
 	}
 }
 
+void Block::jumpEndBlock()
+{
+	m_actualReg = m_registers.end();
+	m_posActual = m_registers.size();
+}
+
+
 void Block::jumpEndCounter()
 {
 	m_actualReg = m_registers.end();
@@ -435,15 +442,20 @@ VarRegister Block::getPreviousRegister(bool backward)
 
 	if(m_registers.size()>0)
 	{
-		if(it!=m_registers.end())
+		if(it!=m_registers.begin()&&m_posActual!=3)
 		{
-			current=*it;
 			it--;
+//			it--;
+			current=*it;
 
 			if(backward)
 			{
 				m_actualReg =it;
+//				m_posActual--;
 				m_posActual--;
+
+
+
 			}
 		}
 	}
