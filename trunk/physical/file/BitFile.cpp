@@ -10,7 +10,9 @@
 BitFile::BitFile(accessModeEnum type) {
 	m_byteFile = new SequentialFile(type);
 
-	m_byteFile->setBufferSize(SIZE_BUFFER);
+	m_byteFile->setBufferSize(1);
+
+	m_byteFile->setInputType(BINARY);
 
 	if (type == WRITE_FILE)
 		clearBuffer();
