@@ -221,6 +221,33 @@ void testEjemplo(){
 	delete hash;
 }
 
+void testGetKeys() {
+	Hash* hash = new Hash();
+	char value[131] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
+	hash->insert("123",value);
+	hash->insert("915",value);
+	hash->insert("629",value);
+	hash->insert("411",value);
+	hash->insert("200",value);
+	hash->insert("863",value);
+	hash->remove("629");
+	hash->insert("408",value);
+	hash->insert("34",value);
+	hash->insert("510",value);
+	hash->remove("863");
+	hash->insert("775",value);
+	list<std::string> keys = hash->getKeys();
+	std::string key = "";
+
+	while (!keys.empty()) {
+		key = keys.back();
+		keys.pop_back();
+		std::cout << "Key: " << key << std::endl;
+	}
+	hash->deleteGeneratedFiles();
+	delete hash;
+}
+
 /* Muestra la cadena que representa al numero, por pantalla. */
 void testBigInt() {
 	std::string s("0123456789012345678901234567890123456789012345678901234567890123");
@@ -378,6 +405,7 @@ int main(int argc, const char* argv[]){
 	//testRemoveHash2();
 	//testEjemplo();
 	//testModifyHash();
+	//testGetKeys();
 
 	/* TESTS VARIOS */
 	//testStringInputData();
