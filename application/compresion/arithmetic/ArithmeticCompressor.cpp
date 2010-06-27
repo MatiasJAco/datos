@@ -19,21 +19,19 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 	m_counterUnderflow = 0;
 
 	if (m_coder == COMPRESSOR)
-	{
 		m_bitFile = new BitFile(WRITE_FILE);
-	}
 	else
-	{
 		m_bitFile = new BitFile(READ_FILE);
 
+	m_bitFile->open(fileName);
+
+	if (m_coder == DECOMPRESSOR)
+	{
 		Bit* bits = new Bit[m_maxbits];
 		m_bitFile->readNBits(bits,m_maxbits);
 		m_number = ByteConverter::bitsToInt(bits,m_maxbits);
 		delete [] bits;
-
 	}
-
-	m_bitFile->open(fileName);
 }
 
 ArithmeticCompressor::~ArithmeticCompressor() {
