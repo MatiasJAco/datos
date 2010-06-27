@@ -24,7 +24,9 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1534376172" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 <option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1621935029" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.exe.debug.option.debugging.level.598077330" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.cpp.compiler.option.include.paths.1164336630" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<option id="gnu.cpp.compiler.option.include.paths.1164336630" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.632998101" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -32,18 +34,24 @@
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.763685984" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1281509380" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option id="gnu.c.compiler.exe.debug.option.debugging.level.503098658" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.1003321051" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<option id="gnu.c.compiler.option.include.paths.1003321051" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1612609165" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.878999393" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.616790391" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
-<option id="gnu.cpp.link.option.paths.1087663131" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+<option id="gnu.cpp.link.option.paths.1087663131" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application/Debug}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical/Debug}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic/Debug}&quot;"/>
 </option>
-<option id="gnu.cpp.link.option.libs.500924572" superClass="gnu.cpp.link.option.libs" valueType="libs">
+<option id="gnu.cpp.link.option.libs.500924572" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+<listOptionValue builtIn="false" value="application"/>
 <listOptionValue builtIn="false" value="physical"/>
+<listOptionValue builtIn="false" value="logic"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1784908433" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -51,8 +59,10 @@
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.80203047" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
-<option id="gnu.both.asm.option.include.paths.644768924" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<option id="gnu.both.asm.option.include.paths.644768924" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.2050481964" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
@@ -476,6 +486,18 @@
 </scannerConfigBuildInfo>
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+<externalSettings containerId="logic;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+<externalSetting>
+<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/logic"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/logic/Debug"/>
+</externalSetting>
+</externalSettings>
+<externalSettings containerId="application;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+<externalSetting>
+<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/application"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/application/Debug"/>
+</externalSetting>
+</externalSettings>
 <externalSettings containerId="physical;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 <externalSetting>
 <entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/physical"/>
