@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "../logic/structures/GeneralStructure.h"
 #include "../logic/exceptions/ManagerException.h"
+#include "../logic/exceptions/HashException.h"
 #include "../../application/compresion/common/FrequencyTable.h"
 #include "../../application/compresion/arithmetic/ArithmeticCompressor.h"
 
@@ -90,16 +91,6 @@ private:
 	 */
 	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
 
-
-	/**
-	 * Este metodo se usa recursivamente para ir emitiendo la descompresion.
-	 * @param context Es el contexto en donde quiero emitir.
-	 * @param character Es el caracter que quiero emitir.
-	 * @param actualContextNumber Es el numero de contexto actual.
-	 * @param maxContext Es el maximo contexto que se uso para la compresion.
-	 */
-	void ppmcDecompressionEmitter(std::string& context, short character, int &actualContextNumber, int maxContext);
-
 	/**
 	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
 	 * @param context Es el contexto en donde quiero emitir
@@ -108,6 +99,25 @@ private:
 	 * @param maxContext Es el maximo contexto que se uso para la compresion
 	 */
 	void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext);
+
+	/**
+	 * crea una nueva tabla de frecuencia con el caracter ESC(1)
+	 * @param context Es el contexto en donde quiero emitir
+	 * @param actualContextNumber Es el numero de contexto actual
+	 */
+	void createFrequencyTable(std::string stringContext,int actualContextNumber);
+
+	/**
+	 * Arma el maximo (y ultimo) stringContext
+	 * @param maxStringContext Es el string que tengo que modificar
+	 */
+	//void getMaxStringContext(std::string &maxStringContext,char character,unsigned int maxContext); //todo borrar
+	void getMaxStringContext(std::string &maxStringContext,char characterAnterior,unsigned int maxContext,bool primeraVez);
+
+	void getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,char character,unsigned int maxContext,bool primeraVez);
+
+	//todo HACERLE CASO AL NOMBRE DEL METODO :D
+	short borrarEsteMetodo(int contador);
 
 	/**
 	* Este metodo se usa para registrar los hits durante la compresion.
