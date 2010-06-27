@@ -11,7 +11,7 @@
 #include <iostream>
 #include <iomanip>
 
-typedef enum {ONE,ZERO} Bit;
+typedef enum {ZERO = 0,ONE = 1} Bit;
 
 /**
  * Clase con métodos estáticos para transformar tipos de datos a cadena de bytes y viceversa.

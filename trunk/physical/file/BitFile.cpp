@@ -121,7 +121,7 @@ bool BitFile::writeNBits(Bit bits[],unsigned int nbits)throw (PhysicalException)
 
 	unsigned int i = 0;
 
-	for (i = nbits; i >= 0;i--)
+	for (i = nbits -1; i >= 0;i--)
 	{
 		write(bits[i]);
 	}
@@ -135,7 +135,7 @@ bool BitFile::readNBits(Bit bits[],unsigned int nbits) throw (PhysicalException)
 
 	unsigned int i = 0;
 
-	for (i = nbits; i >= 0;i--)
+	for (i = nbits -1; i >= 0;i--)
 	{
 		bits[i] = read();
 	}
