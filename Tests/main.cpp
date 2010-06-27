@@ -12,6 +12,8 @@
 #include "../Tests/TestCompressor/TestArithmetic.h"
 #include "../Tests/TestPpmcTree/TestPpmcT.h"
 #include "../Tests/TestHash/TestHash.h"
+#include "../Tests/TestFrequencyTable/TestFrequencyTable.h"
+#include "../Tests/TestStadistic/TestStadistic.h"
 
 void testAllPhysical() {
 	TestPhysical* testPhysical = new TestPhysical();
@@ -85,6 +87,22 @@ void testAllHash() {
 	//testHash->testTable4();
 }
 
+void testAllFrequencyTable() {
+	try {
+		TestFrequencyTable* testFrequencyTable = new TestFrequencyTable();
+		testFrequencyTable->testFreqTable();
+	}
+	catch (exception e)
+	{
+		cout <<e.what()<<endl;
+	}
+}
+
+void testAllStadistic() {
+	TestStadistic* testStadistic = new TestStadistic();
+	testStadistic->testStadistic();
+}
+
 int main() {
 	//testAllPhysical();
 	//testAllNode();
@@ -93,5 +111,7 @@ int main() {
 	//testAllArithmetic();
 	//testAllPpmcTree();
 	testAllHash();
+	//testAllFrequencyTable();
+	//testAllStadistic();
 	return 0;
 }
