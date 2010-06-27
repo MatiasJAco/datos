@@ -221,7 +221,9 @@ short ArithmeticCompressor::getSymbol(int num,FrequencyTable& ft)
 {
 	short symbol = UNDEFINED_CHAR;
 
-	double coef = (double)(num-m_floor+1)/m_ceil;
+	int sizeInterval = m_ceil - m_floor +1;
+
+	double coef = (double)(num-m_floor+1)/sizeInterval;
 	unsigned long freq = floor(ft.getFrequencyTotal()*coef);
 
 	symbol = ft.getChar(freq);
