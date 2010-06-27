@@ -42,13 +42,13 @@ bool PpmcTree::findInStructure(std::string key, InputData & data) throw (Manager
 bool PpmcTree::modifyInStructure(std::string key, std::string newValue) throw (ManagerException){
 	//Invierto la clave.
 	string claveInvertida = string(key.rbegin(), key.rend());
-	return this->generalStructure->modify(key,newValue);
+	return this->generalStructure->modify(claveInvertida,newValue);
 }
 
 bool PpmcTree::removeInStructure(std::string key) throw (ManagerException){
 	//Invierto la clave.
 	string claveInvertida = string(key.rbegin(), key.rend());
-	return this->generalStructure->remove(key);
+	return this->generalStructure->remove(claveInvertida);
 }
 
 bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerException){
@@ -56,9 +56,12 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 	string claveInvertida = string(key.rbegin(), key.rend());
 	StringInputData comparado;
 	bool encontrado=false;
+	//Para saltear al ultimo buscado.
 	this->generalStructure->getPrevious(comparado);
-	while ((!encontrado)&&(comparado.getKey()<=key)){
-		if(comparado.getKey()==key){
+	this->generalStructure->getPrevious(comparado);
+	//Comienza busqueda.
+	while ((!encontrado)&&(comparado.getKey()>=claveInvertida)){
+		if(comparado.getKey()==claveInvertida){
 			data.setKey(comparado.getKey());
 			data.setValue(comparado.getValue());
 			encontrado=true;

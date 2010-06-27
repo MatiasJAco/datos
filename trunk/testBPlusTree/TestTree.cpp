@@ -28,14 +28,14 @@ void TestTree::run()
 //	testInsertComplejo();
 
 //	testInsertComplejo();
- testGetFirstElement();
+//testGetFirstElement();
 //	testRemove();
 //	testModify();
 //	testFind();
 //	testFindInodeData();
 //	testRemoveInnerNode();
 //	testReadNext();
-
+	testReadPrevious();
 }
 
 void TestTree::testReadNext()
@@ -553,3 +553,35 @@ void TestTree::testGetFirstElement(){
 
 	mainFixture->deleteTree();
 };
+
+void TestTree::testReadPrevious(){
+
+	cout << "\n\t\t*********testReadNext*********\t\t\n";
+		StringInputData data;
+		mainFixture->insert("1","11");
+		mainFixture->insert("2","22");
+		mainFixture->insert("3","33");
+		mainFixture->insert("4","44");
+		mainFixture->insert("5","55");
+		mainFixture->insert("6","66");
+		mainFixture->insert("7","77");
+		mainFixture->insert("8","88");
+		mainFixture->insert("9","99");
+
+
+
+		mainFixture->find("7",data);
+		mainFixture->print();
+		mainFixture->getPrevious(data);
+		// Mientras pueda obtener un dato.
+		while (mainFixture->getPrevious(data))
+		{
+			cout << "Clave: " << data.getKey() << endl;
+			cout << "Value: " << data.getValue() << endl;
+		}
+
+		mainFixture->deleteTree();
+
+
+};
+

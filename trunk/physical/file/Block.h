@@ -182,6 +182,12 @@ public:
 	void jumpEndCounter();
 
 	/**
+	* Posiciona el iterador despues del ultimo elemento
+	*/
+	void jumpEndBlock();
+
+
+	/**
 	 * Posiciona el iterador en el ultimo elemento
 	 */
 	void jumpLastRegister();
@@ -293,7 +299,7 @@ private:
 	unsigned int m_blockNumber;
 
 	/**
-	 * Tamaño en bytes del bloque
+	 * Tamaï¿½o en bytes del bloque
 	 */
 	unsigned int m_blockSize;
 
