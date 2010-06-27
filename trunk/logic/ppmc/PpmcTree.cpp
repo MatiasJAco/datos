@@ -34,9 +34,13 @@ bool PpmcTree::existsElementInStructure(std::string key){
 }
 
 bool PpmcTree::findInStructure(std::string key, InputData & data) throw (ManagerException){
+	bool encontrado=false;
 	//Invierto la clave.
 	string claveInvertida = string(key.rbegin(), key.rend());
-	return this->generalStructure->find(claveInvertida,data);
+	encontrado=this->generalStructure->find(claveInvertida,data);
+	claveInvertida=string(data.getKey().rbegin(), data.getKey().rend());
+	data.setKey(claveInvertida);
+	return encontrado;
 }
 
 bool PpmcTree::modifyInStructure(std::string key, std::string newValue) throw (ManagerException){
@@ -69,6 +73,9 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 		if(!encontrado)
 			this->generalStructure->getPrevious(comparado);
 	};
+	claveInvertida=data.getKey();
+	string claveInvertidaDevuelta=string(claveInvertida.rbegin(), claveInvertida.rend());
+	data.setKey(claveInvertidaDevuelta);
 	return encontrado;
 
 }
@@ -76,6 +83,8 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 void PpmcTree::printAllContexts()
 {
 	StringInputData stringInputData;
+	string claveAInvertir;
+	string claveInvertida;
 
 	bool hasLeaf = true;
 
@@ -87,7 +96,9 @@ void PpmcTree::printAllContexts()
 	{
 		ft.clearTable();
 		ft.deserialize(stringInputData.getValue());
-		cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
+		claveAInvertir=stringInputData.getKey();
+		claveInvertida=string(claveAInvertir.rbegin(), claveAInvertir.rend());
+		cout <<"Contexto: " <<claveInvertida<< " "<< ft.toPrintableString()<<endl;
 		hasLeaf = ((BPlusTree *) generalStructure)->getNext(stringInputData);
 	}
 }
