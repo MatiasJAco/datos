@@ -8,12 +8,9 @@
 #include "BitFile.h"
 
 BitFile::BitFile(accessModeEnum type) {
+
 	m_byteFile = new SequentialFile(type);
-
-	m_byteFile->setBufferSize(1);
-
 	m_byteFile->setInputType(BINARY);
-
 }
 
 BitFile::~BitFile() {
