@@ -4,23 +4,14 @@
  *  Created on: 13/04/2010
  *      Author: alex
  */
-#include "../physical/file/VarRegister.h"
-#include "../physical/file/FixedRegister.h"
-#include "../physical/file/BlockFile.h"
-#include "../physical/file/FreeBlockFile.h"
-#include "../physical/utils/ByteConverter.h"
-#include "../physical/file/BlockManager.h"
-#include "../physical/file/SequentialFile.h"
-#include "../physical/Exception/PhysicalException.h"
-#include <sstream>
-#include <fstream>
-#include <vector>
+
+#include "TestPhysical.h"
 
 using namespace std;
 
 ////////////////////////////////////////////////////////////////
 
-void testVarRegister()
+void TestPhysical::testVarRegister()
 {
 	cout<< "Testeo reg variables"<<endl;
 
@@ -97,7 +88,7 @@ void testVarRegister()
 
 
 
-void testFixedRegister()
+void TestPhysical::testFixedRegister()
 {
 	cout<< "Testeo reg fijos"<<endl;
 
@@ -174,7 +165,7 @@ void testFixedRegister()
 
 }
 
-void testFreeBlockFile()
+void TestPhysical::testFreeBlockFile()
 {
 	cout << "testeo archivo bloques libres"<<endl;
 	FreeBlockFile *archivo=new FreeBlockFile();
@@ -239,7 +230,7 @@ void testFreeBlockFile()
 
 
 }
-void testFile()
+void TestPhysical::testFile()
 {
 	cout << "Testeo de file"<<endl;
 	char * streamVar2;
@@ -358,7 +349,7 @@ void testFile()
 
 }
 
-void testBlock()
+void TestPhysical::testBlock()
 {
 	cout << "Testeo de block"<<endl;
 	BlockFile *archivo=new BlockFile("./pepito2", 0.5);
@@ -508,15 +499,15 @@ void testBlock()
 
 
 	try{
-		string enorme = "sadlnaslndsak,ndskljanñkljndaLKJNSDAÑKLASNKLJDASNKLJSD"
+		string enorme = "sadlnaslndsak,ndskljanï¿½kljndaLKJNSDAï¿½KLASNKLJDASNKLJSD"
 				"NKLJASDNLKJNLDKJSNkljjklJKLKJASJKASDJKLJKSADJKJKSADASDDASKKDSJAK"
-				"ASasdlhakljkñljlñkasdñlasñlkjñlkjñsdaDKJDHJsdkhkassadhdsahjkasdsa"
-				"daJKLÑSDJKLDJLKDJSjhdshJKDHHDlkAJHDLKAJSHdlakHDLShdAKLJHDKLJSHdkljALK"
-				"LKLkjsdalkjadslkjslkñAJDÑLKAJdñlkjaDÑLKJSlñdkjALDJALÑKSdjñlAJDLASJDLKA"
-				"sdañKJDSLKJLKDJlkdjldñasjdñlJADLKHDSFKJHHLKDJJHFlkjhaskjhkljfsdhlkjSDLKJSAD"
+				"ASasdlhakljkï¿½ljlï¿½kasdï¿½lasï¿½lkjï¿½lkjï¿½sdaDKJDHJsdkhkassadhdsahjkasdsa"
+				"daJKLï¿½SDJKLDJLKDJSjhdshJKDHHDlkAJHDLKAJSHdlakHDLShdAKLJHDKLJSHdkljALK"
+				"LKLkjsdalkjadslkjslkï¿½AJDï¿½LKAJdï¿½lkjaDï¿½LKJSlï¿½dkjALDJALï¿½KSdjï¿½lAJDLASJDLKA"
+				"sdaï¿½KJDSLKJLKDJlkdjldï¿½asjdï¿½lJADLKHDSFKJHHLKDJJHFlkjhaskjhkljfsdhlkjSDLKJSAD"
 				"LKDJALKjdsalkjsdaLKJDLKJASDLKJLKjdsalkjsadlkjasdlkkdjdlkdJLSKADJLKASDJ"
-				"ASDLÑJKLjdslkjsadlkjkljLKJSADLKJSADLKJLKSDJALKSADHJX MZ,MNDLAMÑLSAKADsd"
-				"lsakdjlkjf,MN KJXHYOEWJPWPOUPOwepoeipoerkñEKOERIAJÑDLFÑLASDKÑAKLFFsadsda";
+				"ASDLï¿½JKLjdslkjsadlkjkljLKJSADLKJSADLKJLKSDJALKSADHJX MZ,MNDLAMï¿½LSAKADsd"
+				"lsakdjlkjf,MN KJXHYOEWJPWPOUPOwepoeipoerkï¿½EKOERIAJï¿½DLFï¿½LASDKï¿½AKLFFsadsda";
 
 		varR->setValue(enorme);
 		block->addRegister(*varR);
@@ -799,7 +790,7 @@ void testBlock()
 }
 
 
-void testSecuentialFile()
+void TestPhysical::testSecuentialFile()
 {
 	try{
 		SequentialFile file1(WRITE_FILE);
@@ -851,35 +842,4 @@ void testSecuentialFile()
 		cout << e.what()<<endl;
 	}
 
-}
-
-int main()
-{
-try
-{
-	//testVarRegister();
-	//testFixedRegister();
-	//testFreeBlockFile();
-/*
-	testBlock();
-	testFile();
-*/
-	testSecuentialFile();
-
-
-
-
-
-}
-catch (exception e)
-{
-	cout <<e.what()<<endl;
-}
-
-
-
-
-
-
-	return 0;
 }
