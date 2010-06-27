@@ -33,7 +33,7 @@ TestArithmetic::~TestArithmetic() {
 void TestArithmetic::run()
 {
 	testCompress();
-//	testDecompress();
+	testDecompress();
 }
 
 void TestArithmetic::testCompress()
@@ -66,5 +66,7 @@ void TestArithmetic::testDecompress()
 		char c = m_compressor->decompress(m_ft);
 		cout << c << endl;
 	}
+
+	delete m_compressor;
 
 }
