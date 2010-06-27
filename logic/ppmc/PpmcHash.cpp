@@ -44,6 +44,7 @@ bool PpmcHash::getNextContext(std::string key, InputData & data) throw (ManagerE
 	return this->generalStructure->find(key,data);
 }
 
+
 void PpmcHash::printAllContexts()
 {
 	keyList keys;
@@ -63,3 +64,5 @@ void PpmcHash::printAllContexts()
 
 	}
 }
+
+
