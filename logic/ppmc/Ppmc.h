@@ -60,12 +60,16 @@ public:
 
 
 	/**
-	 *
+	 *	Imprime las tablas de frecuencias para todos los contextos para un ppmc dado.
+	 *	La forma de acceder a los elementos depende de la estructura de datos subyacente.
 	 */
 	virtual void printAllContexts()=0;
 
-
-	virtual void printContext(std::string key);
+	/**
+	 * Imprime la tabla de frecuencia para un contexto pasado como parametro
+	 * @param key el contexto cuya tabla de frecuencias se busca imprimir
+	 */
+	virtual bool printContext(std::string key);
 
 private:
 
