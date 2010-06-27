@@ -570,3 +570,30 @@ bool LeafNode::getPreviousData(InputData& data)
 
 	return retVal;
 }
+
+bool LeafNode::getFirstData(InputData & data){
+	char* currentValue = NULL;
+		VarRegister currentRegister;
+		InputData* currentData = data.newInstance();
+		/// Busco el primer dato dentro del bloque de hoja.
+		m_block->restartCounter();
+		/// Tengo que avanzar primero los datos de control siempre.
+		/// TODO ver si poner esto dentro de un metodo de Nodo.
+		VarRegister level = m_block->getNextRegister();
+		VarRegister prevPointer = m_block->getNextRegister();
+		VarRegister nextPointer = m_block->getNextRegister();
+
+		currentRegister = m_block->getNextRegister();
+		currentValue = currentRegister.getValue();
+		/// Transformo el registro a un InputData
+		currentData->toData(currentValue);
+		data.setKey(currentData->getKey());
+		data.setValue(currentData->getValue());
+		m_block->isLastRegister();
+		delete[] currentValue;
+		m_tree->setCurrent(this);
+		delete currentData;
+
+		return true;
+
+};

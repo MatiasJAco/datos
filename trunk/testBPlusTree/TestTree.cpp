@@ -28,8 +28,8 @@ void TestTree::run()
 //	testInsertComplejo();
 
 //	testInsertComplejo();
-
-	testRemove();
+ testGetFirstElement();
+//	testRemove();
 //	testModify();
 //	testFind();
 //	testFindInodeData();
@@ -513,3 +513,43 @@ void TestTree::testRemoveInnerNode()
 
 	mainFixture->deleteTree();
 }
+
+void TestTree::testGetFirstElement(){
+	mainFixture->insert("a","11");
+	mainFixture->insert("ca","22");
+	mainFixture->insert("r","33");
+	mainFixture->insert("ro","44");
+	mainFixture->insert("poy","55");
+	mainFixture->insert("pp","66");
+	mainFixture->insert("reti","77");
+	mainFixture->insert("e","88");
+	mainFixture->insert("A","99");
+	mainFixture->insert("n","100");
+	mainFixture->insert("l","02");
+	mainFixture->insert("ava","03");
+	mainFixture->insert("aba","04");
+	mainFixture->insert("m","05");
+	mainFixture->insert("rq","06");
+	mainFixture->insert("w","07");
+	mainFixture->insert("*","08");
+	mainFixture->insert("@","09");
+	mainFixture->insert("h","10");
+	mainFixture->print();
+	StringInputData datoDevuelto("0","");
+	mainFixture->getFirstElement(datoDevuelto);
+
+	cout<<endl;
+	cout << "Clave: " << datoDevuelto.getKey() << endl;
+	cout << "Value: " << datoDevuelto.getValue() << endl;
+
+
+	while (mainFixture->getNext(datoDevuelto))
+		{
+			cout << "Clave: " << datoDevuelto.getKey() << endl;
+			cout << "Value: " << datoDevuelto.getValue() << endl;
+		}
+
+
+
+	mainFixture->deleteTree();
+};

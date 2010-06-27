@@ -110,6 +110,11 @@ public:
 	virtual void printContent() = 0;
 
 	virtual void show() = 0;
+
+	/**
+	* Permite obtener el primer dato de una hoja.
+	*/
+	virtual bool getFirstData(InputData &data) = 0;
 	/**
 	 * Evalua si el nodo esta vacio.
 	 * @return bool TRUE si esta vacio FALSE en caso contrario

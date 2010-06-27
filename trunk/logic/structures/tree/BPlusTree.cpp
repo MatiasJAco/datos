@@ -580,6 +580,18 @@ bool  BPlusTree::getPrevious(InputData& data){
 }
 
 
+/**
+* Obtiene el primer elemento de la primer hoja.
+* @param data. Es el elemento en cuestion.
+* @return TRUE si pudo ejecutar la operacion.
+*/
+bool BPlusTree::getFirstElement(InputData& data){
+	return this->m_root->getFirstData(data);
+
+
+};
+
+
 void BPlusTree::setCurrent(LeafNode* node)
 {
 	m_currentNode = node;

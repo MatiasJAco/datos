@@ -22,6 +22,7 @@ public:
 	void run();
 
 protected:
+	void testGetFirstElement();
 	void testRecoverLeaf();
 	void testInsertLeafSinOverflow();
 	void testInsertRoot();
