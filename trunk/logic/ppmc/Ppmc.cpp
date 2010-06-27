@@ -161,20 +161,30 @@ short Ppmc::borrarEsteMetodo(int contador){
 	}
 	return result;
 }
+
 bool Ppmc::deCompress(const std::string & path) {
+	std::string outPath = "";
+	int maxContext = 0;
+	size_t position = path.find(".ppmc");
+	if (position != string::npos) {
+		outPath = path.substr(0, position);
+		maxContext = atoi(path.substr(position+5, path.length()-position-5).c_str());
+	} else {
+		return false; // El archivo no posee la extension ".ppmc".
+	}
+
 	std::cout << "Descomprimiendo archivo... (" << path << ")" << std::endl;
-	//SequentialFile* sequentialFile = new SequentialFile(WRITE_FILE);
-	//sequentialFile->open(path);
+	SequentialFile* sequentialFile = new SequentialFile(WRITE_FILE);
+	sequentialFile->open(outPath);
 
 	//instancio el compresor aritmetico como Decompresor.
-	//ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,path,8);
+	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 256);
 
 	std::string stringContext;
 	std::string previousStringContext="";
 	std::string maxStringContext = "";
 	std::string maxStringContextDesfasadoEn1 = "";
 	int actualContextNumber = -1; // Representa el número de contexto -1 (de donde arranca la descompresion)
-	int maxContext = 2;  //TODO IMPORTANTE! ver como obtener este valor!
 	char character;
 	char characterAnterior;
 	short shortCharacter;
