@@ -155,6 +155,12 @@ public:
 
 	INodeData getLastINodeData();
 
+	/**
+	* Le pide el primer dato a su hijo.
+	*/
+	bool getFirstData(InputData & data);
+
+
 };
 
 #endif /* INNERNODE_H_ */

@@ -1103,3 +1103,29 @@ INodeData InnerNode::getLastINodeData(){
 	return iNodeData;
 
 };
+
+
+bool InnerNode::getFirstData(InputData & data){
+		bool retval=false;
+		m_block->restartCounter();
+		m_block->getNextRegister();
+
+		char* valueReg = NULL;
+		VarRegister reg;
+		INodeData currentData;
+		Node* hijo;
+
+		reg = m_block->peekRegister();
+		valueReg = reg.getValue();
+		// Transformo el registro a un INodeData
+		currentData.toNodeData(valueReg);
+		//Pido el primer hijo y le pido el primer elemento.
+		hijo = m_tree->getNode(currentData.getLeftPointer());
+		retval=hijo->getFirstData(data);
+
+
+		delete[] valueReg;
+
+return retval;
+
+};

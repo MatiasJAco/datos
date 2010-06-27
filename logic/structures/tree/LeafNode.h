@@ -136,6 +136,11 @@ public:
 
 	void show();
 
+	/**
+	*Permite obener el primer dato de la hoja.
+	*/
+	bool getFirstData(InputData & data);
+
 };
 
 #endif /* LEAF_H_ */

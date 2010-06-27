@@ -197,6 +197,12 @@ public:
 	 */
 	bool getPrevious(InputData& data);
 
+	/**
+	* Obtiene el primer elemento de la primer hoja.
+	* @param data. Es el elemento en cuestion.
+	* @return TRUE si pudo ejecutar la operacion.
+	*/
+	bool getFirstElement(InputData& data);
 
 	/**
 	 * Imprime el arbol por pantalla.
