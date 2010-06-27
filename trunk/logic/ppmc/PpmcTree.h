@@ -17,7 +17,9 @@ public:
 	virtual ~PpmcTree();
 
 	/**
-	 *
+	 * Imprime las tablas de frecuencias para todos los contextos para un ppmc dado.
+	 * Para ello busca el primer elemento del arbol y luego va avanzando hasta el ultimo
+	 * usando el sequence set
 	 */
 	virtual void printAllContexts();
 

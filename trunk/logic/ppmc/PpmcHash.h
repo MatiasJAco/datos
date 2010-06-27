@@ -18,7 +18,9 @@ public:
 	virtual ~PpmcHash();
 
 	/**
-	 *
+	 * Imprime las tablas de frecuencias para todos los contextos para un ppmc dado.
+	 * Para ello pide todas las claves del hash y luego va pidiendo uno a uno todos
+	 * los contextos
 	 */
 	virtual void printAllContexts();
 

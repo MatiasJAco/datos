@@ -337,14 +337,21 @@ void Ppmc::countHit(std::string successfulContext) {
 
 }
 
-void Ppmc::printContext(string key)
+bool Ppmc::printContext(string key)
 {
+	bool retVal;
+
 	StringInputData stringInputData;
 
 	FrequencyTable ft;
 
-	generalStructure->find(key, stringInputData);
-	ft.deserialize(stringInputData.getValue());
-	cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
+	retVal = generalStructure->find(key, stringInputData);
 
+	if(retVal)
+	{
+		ft.deserialize(stringInputData.getValue());
+		cout <<"Contexto: " <<stringInputData.getKey()<< " "<< ft.toPrintableString()<<endl;
+	}
+
+	return retVal;
 }
