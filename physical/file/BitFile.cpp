@@ -36,7 +36,9 @@ bool BitFile::open(const std::string fileName)
 
 bool BitFile::close()
 {
-	if (m_posBit < SIZE_BUFFER-1)
+	accessModeEnum access = m_byteFile->getAccessMode();
+
+	if (m_posBit < SIZE_BUFFER-1&&access ==WRITE_FILE)
 	{
 		m_byteFile->writeChar((char)m_buffer << m_posBit);
 	}
