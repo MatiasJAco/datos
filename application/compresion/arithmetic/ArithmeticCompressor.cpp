@@ -17,10 +17,10 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 	m_ceil = bitmask;
 
 	// Bits de overflow.
-	m_overflow = new Bit[m_maxbits];
+//	m_overflow = new Bit[m_maxbits];
 
 	// Inicializo los contadores de underflow y overflow.
-	m_counterOverflow = 0;
+//	m_counterOverflow = 0;
 	m_counterUnderflow = 0;
 
 	if (m_coder == COMPRESSOR)
@@ -30,8 +30,12 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 	else
 	{
 		m_bitFile = new BitFile(READ_FILE);
-		m_bitFile->readNBits(m_overflow,m_maxbits);
-		m_number = ByteConverter::bitsToInt(m_overflow,m_maxbits);
+
+		Bit* bits = new Bit[m_maxbits];
+		m_bitFile->readNBits(bits,m_maxbits);
+		m_number = ByteConverter::bitsToInt(bits,m_maxbits);
+		delete [] bits;
+
 	}
 
 	m_bitFile->open(fileName);
@@ -39,7 +43,7 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 
 ArithmeticCompressor::~ArithmeticCompressor() {
 
-	delete m_overflow;
+//	delete m_overflow;
 
 	m_bitFile->close();
 	delete m_bitFile;
@@ -52,8 +56,6 @@ void ArithmeticCompressor::compress(short symbol,FrequencyTable & ft)
 
 	m_floor = newFloor;
 	m_ceil = newCeil;
-
-	normalize();
 
 	encode();
 }
@@ -71,37 +73,26 @@ short ArithmeticCompressor::decompress(FrequencyTable& ft)
 		m_floor = newFloor;
 		m_ceil = newCeil;
 
-		normalize();
-
 		decode();
 	}
 
 	return symbol;
 }
 
-void ArithmeticCompressor::normalize()
+
+void ArithmeticCompressor::normalize(StateBits sb)
 {
-	int posBit = m_maxbits-1;
-
-	// Si hay overflow (entre piso y techo).
-	while (overflow()&&(posBit>=0))
+	// Si se llama a normalizar el overflow y hay overflow
+	if ((sb == OVERFLOW_BITS)&&overflow())
 	{
-		// Obtengo el primer bit y lo guardo.
-		m_overflow[posBit] = (m_floor >> (m_maxbits-1))?ONE:ZERO;
-		++m_counterOverflow;
-
 		// Normalizo el piso y el techo
 		m_floor = (m_floor << 1)&bitmask;
 		m_ceil = ((m_ceil << 1)|1)&bitmask;
-
-		--posBit;
 	}
 
-	while (underflow())
+	// Si se llama a normalizar el underflow y hay underflow.
+	if ((sb == UNDERFLOW_BITS)&&underflow())
 	{
-		// Incremento contador de underflow
-		++m_counterUnderflow;
-
 		// Normalizo el piso y el techo.
 		m_floor = (m_floor << 1)&(bitmask >> 1);
 		m_ceil = ((m_ceil<< 1)&bitmask)|(1<< (m_maxbits-1));
@@ -111,16 +102,15 @@ void ArithmeticCompressor::normalize()
 
 bool ArithmeticCompressor::encode()
 {
-	int posBit = m_maxbits-1;
 	Bit bit;
 
-	// Si hay algo en el contador de overflow;
-	while (m_counterOverflow>0)
+	while (overflow())
 	{
-		bit = m_overflow[posBit];
+		// Obtengo el primer bit y lo emito.
+		bit = (m_floor >> (m_maxbits-1))?ONE:ZERO;
 		m_bitFile->write(bit);
 
-		while(m_counterUnderflow>0)
+		while (m_counterUnderflow>0)
 		{
 			// Escribo el primer bit de overflow negado, en el archivo.
 			if (bit&ONE)
@@ -131,8 +121,16 @@ bool ArithmeticCompressor::encode()
 			--m_counterUnderflow;
 		}
 
-		--posBit;
-		--m_counterOverflow;
+		normalize(OVERFLOW_BITS);
+	}
+
+	while (underflow())
+	{
+		// Incremento contador de underflow.
+		++m_counterUnderflow;
+
+		// Normalizo piso y techo
+		normalize(UNDERFLOW_BITS);
 	}
 
 	return true;
@@ -142,8 +140,10 @@ bool ArithmeticCompressor::decode()
 {
 	Bit bit;
 
-	while (m_counterOverflow>0)
+	while (overflow())
 	{
+		normalize(OVERFLOW_BITS);
+
 		// Quito 1 bit del inicio y leo un bit mas del archivo.
 		m_number = (m_number<<1)&bitmask;
 		bit = m_bitFile->read();
@@ -152,8 +152,10 @@ bool ArithmeticCompressor::decode()
 			m_number = m_number|1;
 	}
 
-	while (m_counterUnderflow>0)
+	while (underflow())
 	{
+		normalize(UNDERFLOW_BITS);
+
 		// Quito el segundo bit y leo un bit mas del archivo.
 		m_number = ((m_number<< 1)&bitmask)|(1<< (m_maxbits-1));
 		bit = m_bitFile->read();
@@ -235,4 +237,3 @@ short ArithmeticCompressor::getSymbol(int num,FrequencyTable& ft)
 
 	return symbol;
 }
-

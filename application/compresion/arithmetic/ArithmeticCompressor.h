@@ -21,6 +21,7 @@ public:
 private:
 	//Tamaño en bits de un byte.
 	static const unsigned int SIZEBYTE = 8;
+	typedef enum {OVERFLOW_BITS,UNDERFLOW_BITS} StateBits;
 
 public:
 	/**
@@ -90,7 +91,7 @@ private:
 	short getSymbol(int num,FrequencyTable& ft);
 
 	// Normaliza el piso y el techo
-	void normalize();
+	void normalize(StateBits sb);
 
 // Atributos
 private:
@@ -111,12 +112,14 @@ private:
 	int m_number;
 
 	// Bits de overflow
-	Bit* m_overflow;
+//	Bit* m_overflow;
 
 	// Contador de overflow;
-	short m_counterOverflow;
+//	short m_counterOverflow;
+
 	/// Contador de underflow.
 	short m_counterUnderflow;
+//	short m_nextCounterUnderflow;
 
 	// Mascara de bits en uno segun maxbits.
 	int bitmask;
