@@ -36,6 +36,7 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 
 ArithmeticCompressor::~ArithmeticCompressor() {
 
+	encodeFloor();
 	m_bitFile->close();
 	delete m_bitFile;
 }
@@ -187,6 +188,35 @@ bool ArithmeticCompressor::underflow()
 		bret = true;
 
 	return bret;
+}
+
+bool ArithmeticCompressor::encodeFloor()
+{
+	Bit bit;
+	int floor = m_floor;
+
+	int posBit = m_maxbits-1;
+
+	for (posBit = m_maxbits-1;posBit>=0;posBit--)
+	{
+		bit = (floor >> (m_maxbits-1))?ONE:ZERO;
+		m_bitFile->write(bit);
+
+		while (m_counterUnderflow>0)
+		{
+			// Escribo el primer bit de overflow negado, en el archivo.
+			if (bit&ONE)
+				m_bitFile->write(ZERO);
+			else
+				m_bitFile->write(ONE);
+
+			--m_counterUnderflow;
+		}
+		--posBit;
+
+		floor = (floor<< 1)&bitmask;
+	}
+	return true;
 }
 
 int ArithmeticCompressor::getFloor(short symbol,FrequencyTable& ft)
