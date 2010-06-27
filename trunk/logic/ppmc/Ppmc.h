@@ -64,6 +64,9 @@ public:
 	 */
 	virtual void printAllContexts()=0;
 
+
+	virtual void printContext(std::string key);
+
 private:
 
 	/**
