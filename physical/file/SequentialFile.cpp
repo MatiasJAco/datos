@@ -21,8 +21,8 @@ SequentialFile::SequentialFile(accessModeEnum mode) {
 }
 
 SequentialFile::~SequentialFile() {
-	close();
-
+	if (m_FileHandler.is_open())
+		close();
 }
 
 bool SequentialFile::close()
