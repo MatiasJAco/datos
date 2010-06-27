@@ -314,17 +314,14 @@ bool Ppmc::deCompress(const std::string & path) {
 							if (actualContextNumber<-1) //TODO solo para debug
 								cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
 
-					//todo falta aca implementar si se viene desde un contexto 2,
 				}
-
-			//this->ppmcDecompressionEmitter(stringContext, shortCharacter, actualContextNumber, maxContext,cantidadContextosAActualizar); //TODO ver si se usan todos los params
 
 			primeraVez = false;
 			characterAnterior = character;
 
 			//ya actualice las tablas necesarias si hacian falta. Ahora obtengo tabla de frecs para volver al ciclo
 			if (this->existsElementInStructure(stringContext)) { // si Existe el contexto obtengo la tabla
-				frequencyTable = this->getFrequencyTable(stringContext, true);//todo se la estoy pasando mal
+				frequencyTable = this->getFrequencyTable(stringContext, true);
 			}
 			else {	//no existe el ctxt
 				if (actualContextNumber > -1){
@@ -398,7 +395,7 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character, int
 			//cout << borrar << endl;
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
 			//std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
-			//this->countHit(stringContext);
+			//this->countHit(stringContext);		//TODO MAti - countHit!
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
