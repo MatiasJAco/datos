@@ -27,11 +27,11 @@ protected:
 	void testExistsCharacterInContext();
 	void testAddCharacterToContext();
 	void testIncreaseFrequency();
-	void testGetCharacterOccurrences();
+	void testPrintAllContexts();
 
 
 private:
-	Ppmc* mainFixture;
+	PpmcTree* mainFixture;
 };
 
 #endif /* TESTPPMCT_H_ */
