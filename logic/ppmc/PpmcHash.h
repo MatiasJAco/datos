@@ -8,14 +8,19 @@
 #ifndef PPMCHASH_H_
 #define PPMCHASH_H_
 
+#include <iostream>
 #include "Ppmc.h"
+#include "../structures/hash/Hash.h"
 
 class PpmcHash: public Ppmc {
 public:
 	PpmcHash(GeneralStructure* generalStructure);
 	virtual ~PpmcHash();
 
-
+	/**
+	 *
+	 */
+	virtual void printAllContexts();
 
 private:
 	/**
@@ -63,6 +68,8 @@ private:
 	* @return true si la operación fue exitosa
 	*/
 	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException);
+
+
 };
 
 #endif /* PPMCHASH_H_ */

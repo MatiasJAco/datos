@@ -69,3 +69,9 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 	return encontrado;
 
 }
+
+void PpmcTree::printAllContexts()
+{
+
+
+}
