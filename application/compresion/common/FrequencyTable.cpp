@@ -287,3 +287,9 @@ unsigned long FrequencyTable::getCumFrequency(short c)
 	return retVar;
 }
 
+void FrequencyTable::clearTable()
+{
+	m_FrequencyTotal=0;
+	m_isSorted=true;
+	m_Frequencies.clear();
+}

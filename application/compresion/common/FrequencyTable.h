@@ -60,6 +60,11 @@ public:
 	 */
 	unsigned long getFrequencyTotal();
 
+	/**
+	 * Vacia la tabla de caracteres.
+	 * Pone la frecuencia total a 0
+	 */
+	void clearTable();
 
 	/**
 	 * Obtiene la suma de los caracteres anteriores hasta el actual
