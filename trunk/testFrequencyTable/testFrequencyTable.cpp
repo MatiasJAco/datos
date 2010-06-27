@@ -16,6 +16,7 @@ void testFreqTable()
 	FrequencyTable *ft2;
 	FrequencyTable *ft3;
 	FrequencyTable ft4;
+	FrequencyTable ft5;
 	string serial, deserial;
 
 	ft = new FrequencyTable();
@@ -50,8 +51,13 @@ void testFreqTable()
 	cout << ft2->toString()<<endl;
 
 
-	cout<<"cum frec "<< ft->getCumFrequency('c')<<endl;
+	cout<<"cum frec "<< ft->getCumFrequency('c')-ft->getFrequency('c')<<endl;
 	cout<<"cum frec2 "<< ft->getCumFrequency('j')<<endl;
+
+	cout << "short1 "<< (char) ft->getChar(19)<< " "<< (short) 'c'<<endl;
+	cout << ft->toString()<<endl;
+	cout << "short2 "<< (char) ft->getChar(1)<< " "<< (char) 47<<endl;
+
 	cout<< "frec "<<ft->getFrequency('c')<<endl;
 	cout<< "frec2 "<<ft->getFrequency('j')<<endl;
 	cout <<"char"<< (char) 98<<endl;
@@ -65,6 +71,21 @@ void testFreqTable()
 
 	cout << "ft4 " << ft4.toString()<<endl;
 
+	cout << "ft4 frec"<< ft4.getFrequencyTotal()<<endl;
+
+	cout << ft2->toPrintableString()<<endl;
+
+
+	ft5.setFrequency('D',3);
+	ft5.setFrequency('I',3);
+	ft5.setFrequency('O',1);
+	ft5.setFrequency('S',1);
+	ft5.setFrequency('V',1);
+
+	cout << "V "<< (char) ft5.getChar(8)<<endl;
+
+	ft2->clearTable();
+	cout << ft2->toPrintableString()<<endl;
 
 	delete ft;
 	delete ft2;
