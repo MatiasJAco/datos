@@ -23,7 +23,7 @@ public:
 	 */
 	virtual void printAllContexts();
 
-private:
+public:
 	/**
 	 * Agrega un elemento nuevo al archivo de la estructura.
 	 * @param clave Es la clave del dato a ingresar.
