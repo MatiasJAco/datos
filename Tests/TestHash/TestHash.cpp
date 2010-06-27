@@ -391,8 +391,12 @@ void TestHash::testPpmcHashComprimir() {
 }
 
 void TestHash::testPpmcHashDescomprimir() {
+	//TODO BORRAR ESTO
+	std::remove("tabla.txt");
+	std::remove("hash.bin");
+	std::remove("hash.bin.free");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoDescomprimido.txt");
+	ppmcHash->deCompress("./archivoDescomprimido.txt.ppmc2");
 	hash->deleteGeneratedFiles();
 }
