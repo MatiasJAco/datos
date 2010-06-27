@@ -382,6 +382,7 @@ void testFreqTable()
 }
 
 void testPpmcHashComprimir() {
+	std::remove("comprimido.gzip");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress("./archivoAComprimir.txt", 2);

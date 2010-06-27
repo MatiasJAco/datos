@@ -29,6 +29,8 @@ private:
 protected:
 	GeneralStructure* generalStructure; // Puede ser un hash, o un arbol.
 	FrequencyTable* minusOneCtxtFreqTable; // Contexto -1.
+	ArithmeticCompressor* compressor;
+	ArithmeticCompressor* decompressor;
 
 public:
 
