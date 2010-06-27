@@ -159,6 +159,12 @@ public:
 	 * Borra los archivos generados por el Hash. Es útil para las pruebas unitarias.
 	 */
 	bool deleteGeneratedFiles();
+
+	/**
+	 * Este metodo devuelve todas las claves del hash en una lista.
+	 * @return Devuelve todas las claves del hash en una lista.
+	 */
+	list<std::string> getKeys();
 };
 
 #endif /* HASH_H_ */

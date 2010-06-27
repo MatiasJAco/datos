@@ -336,3 +336,36 @@ bool Hash::deleteGeneratedFiles() {
 	std::remove("tabla.txt");
 	return this->hashFile->deleteFile();
 }
+
+list<std::string> Hash::getKeys() {
+	list<std::string> keys;
+
+	unsigned int i = 1;
+	Block* actualBlock = this->hashFile->getBlock(i);
+
+	while (actualBlock != NULL) {
+		VarRegister varReg;
+		bool primeraVez = true;
+		actualBlock->restartCounter();
+
+		while (actualBlock->hasNextRegister()) {
+			varReg=actualBlock->getNextRegister(true);
+			StringInputData* sid = new StringInputData();
+			char* value = varReg.getValue();
+			sid->toData(value);
+			if (!primeraVez) {
+				keys.push_back(sid->getKey());
+			}
+			primeraVez=false;
+
+			if (value !=NULL) {
+				delete [] value;
+			}
+			delete sid;
+		}
+
+		i++;
+		actualBlock = this->hashFile->getBlock(i);
+	}
+	return keys;
+}
