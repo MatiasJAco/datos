@@ -93,8 +93,12 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 		//std::cout << "Tabla excluida   : " << frequencyTable->toString() << std::endl << std::endl;
 
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
-			compressor->compress(ESC_CHAR, (*excludedFrequencyTable));
-			std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(ESC_CHAR) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
+			if ((excludedFrequencyTable->getFrequency(ESC_CHAR) == 1) && (excludedFrequencyTable->getFrequencyTotal() == 1)) {
+				std::cout << "Emitiria el caracter Escape en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(ESC_CHAR) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
+			} else {
+				compressor->compress(ESC_CHAR, (*excludedFrequencyTable));
+				std::cout << "Emito el caracter Escape en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(ESC_CHAR) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
+			}
 			frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 			std::string stringFrequencyTable = frequencyTable->toString();
@@ -106,18 +110,15 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
-			//delete frequencyTable;
 			return;
 		}
-		//delete frequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
-		compressor->compress(ESC_CHAR, (*frequencyTable));
-		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl;
+		//compressor->compress(ESC_CHAR, (*frequencyTable));
+		std::cout << "Emitiria el caracter Escape en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl;
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
-		//delete frequencyTable;
 	}
 	stringContext = stringContext.substr(1,stringContext.length());
 	actualContextNumber--;
