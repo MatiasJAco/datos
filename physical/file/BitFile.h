@@ -51,7 +51,7 @@ public:
 	 * @param nbits Cantidad de bits en la tira.
 	 * @return TRUE en caso de exito. FALSE de lo contrario.
 	 */
-	bool writeNBits(Bit bits[],unsigned int nbits)throw (PhysicalException);
+	bool writeNBits(Bit bits[],int nbits)throw (PhysicalException);
 
 	/**
 	 * Lee del archivo un bit.
@@ -65,7 +65,7 @@ public:
 	 * @param nbits Cantidad de bits a leer.
 	 * @return TRUE en caso de exito. FALSE de lo contrario.
 	 */
-	bool readNBits(Bit bits[],unsigned int nbits) throw (PhysicalException);
+	bool readNBits(Bit bits[],int nbits) throw (PhysicalException);
 
 
 
