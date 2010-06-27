@@ -111,15 +111,8 @@ private:
 	// Numero comprimido
 	int m_number;
 
-	// Bits de overflow
-//	Bit* m_overflow;
-
-	// Contador de overflow;
-//	short m_counterOverflow;
-
 	/// Contador de underflow.
 	short m_counterUnderflow;
-//	short m_nextCounterUnderflow;
 
 	// Mascara de bits en uno segun maxbits.
 	int bitmask;
