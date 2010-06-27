@@ -229,7 +229,32 @@ void FrequencyTable::deserialize(string serialized)
 
 }
 
+string FrequencyTable::toPrintableString()
+{
+	stringstream retStr;
 
+	CharFrequencyListIterator it;
+	if(!m_isSorted)
+	{
+		m_Frequencies.sort();
+		m_isSorted=true;
+	}
+
+	retStr << "Suma de frecuencias para la tabla :"<<m_FrequencyTotal<<endl;
+
+	short c;
+	//Voy buscando el caracter si termino la tabla corto el ciclo
+	for(it=m_Frequencies.begin();it !=m_Frequencies.end(); it++)
+	{
+		c = it->getChar();
+		if(c <256)
+			retStr << (char)c <<" "<<it->getFrequency()<<endl;
+		else
+			retStr << c <<" "<<it->getFrequency()<<endl;
+	}
+
+	return retStr.str();
+}
 
 unsigned long FrequencyTable::getCumFrequency(short c)
 {

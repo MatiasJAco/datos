@@ -111,6 +111,8 @@ public:
 	std::string toString();
 
 
+	std::string toPrintableString();
+
 	/**
 	 * Excluye de una tabla los caracteres de otra tabla.
 	 * El ESC_CHAR no se borra de la tabla resultante, aunque estuviera en la tabla a restar.
