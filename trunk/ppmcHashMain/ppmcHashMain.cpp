@@ -11,7 +11,7 @@ typedef enum {COMPRESS, DECOMPRESS, UNDEFINED_ACTION} actionTypeEnum;
 
 int main(int argc, const char* argv[])
 {
-/*	if (argc == 1)
+	if (argc == 1)
 	{
 		cout << "Comandos para usar el ppmc:" << endl;
 		cout << "-c [orden] (comprime con contextos hasta el orden dado)" << endl;
@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 		cout << "-vv [contexto] (Imprime las tablas de frecuencias para un contexto dado)" << endl;
 		cout << "-h (Ayuda)" << endl;
 		return 0;
-	}*/
+	}
 	int i;
 	string saux;
 
@@ -124,11 +124,6 @@ int main(int argc, const char* argv[])
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-	//action =UNDEFINED_ACTION;
-	//showAllCTX=true;
-
 	//------------------------Validacion--------------------------------//
 
 	//--------------------------compress/decompress---------------------//
@@ -162,27 +157,36 @@ int main(int argc, const char* argv[])
 	{
 
 		cout << "Ayuda - Algunos ejemplos de ejecucion:" << endl;
-		cout << argv[0]<< " -I \"(12;paytiti)\"" << endl;
-		cout << argv[0]<< " -B \"(12;)\"" << endl;
-		cout << argv[0]<< " -M \"(12;pepe)\"" << endl;
-		cout << argv[0]<< " -Q \"(12;)\"" << endl;
-		cout << argv[0]<< " -S" << endl;
+		cout << argv[0]<< " -c 2 -f texto.txt" << endl;
+		cout << argv[0]<< " -c 2 -f texto.txt -e" << endl;
+		cout << argv[0]<< " -v" << endl;
+		cout << argv[0]<< " -vv DI" << endl;
+		cout << argv[0]<< " -d -f texto.txt.ppmc2" << endl;
+
 
 
 	}
 
 	if(showAllCTX)
 	{
-		hash->print();
 		ppmcCompresor->printAllContexts();
 	}
 
 	else
 		if(showOneCTX)
-			ppmcCompresor->printContext(ctxName);
+		{
+			try{
+				ppmcCompresor->printContext(ctxName);
+			}
+			catch (ManagerException e)
+			{
+				cout << "No se encontro el contexto "<< ctxName<<endl;
+			}
+		}
 
-	if(showStatistics)
-		ppmcCompresor->getStatistics();
+
+	if(showStatistics &&action == COMPRESS )
+		ppmcCompresor->getStatistics(ctxOrder);
 
 
 	delete hash;
