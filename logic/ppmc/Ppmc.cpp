@@ -491,7 +491,11 @@ void Ppmc::getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,c
 }
 
 
-void Ppmc::getStatistics() {
+void Ppmc::getStatistics(int row) {
+	for (int i=0;i<row;i++){
+	printf("Cantidad de aciertos en contexto de orden %d : %d \n",i,this->contextStats[i]);
+
+	}
 
 }
 

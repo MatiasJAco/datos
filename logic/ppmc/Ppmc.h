@@ -55,7 +55,7 @@ public:
 	/**
 	 * Este metodo muestra las estadisticas de la compresión
 	 */
-	void getStatistics();
+	void getStatistics(int contxtMax);
 
 
 	/**
