@@ -405,7 +405,6 @@ void testPpmcHashDescomprimir() {
 	std::remove("hash.bin.free");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	//ppmcHash->deCompress("./archivoDescomprimido.txt.ppmc2");
 	ppmcHash->deCompress("./archivoADescomprimir.txt.ppmc2");
 	hash->deleteGeneratedFiles();
 }
