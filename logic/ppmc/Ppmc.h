@@ -70,6 +70,9 @@ public:
 	 */
 	virtual bool printContext(std::string key);
 
+
+	int getFileSize(char* filename);
+
 private:
 
 	/**
