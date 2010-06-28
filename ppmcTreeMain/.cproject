@@ -24,7 +24,7 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.2103216774" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 <option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1775426153" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.exe.debug.option.debugging.level.212821952" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.cpp.compiler.option.include.paths.907218187" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<option id="gnu.cpp.compiler.option.include.paths.907218187" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
@@ -34,7 +34,7 @@
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1261555165" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1235641656" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option id="gnu.c.compiler.exe.debug.option.debugging.level.2022425482" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.783242576" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<option id="gnu.c.compiler.option.include.paths.783242576" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
@@ -44,8 +44,8 @@
 <tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1882295966" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.1404384944" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 <option id="gnu.cpp.link.option.libs.2046744716" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-<listOptionValue builtIn="false" value="logic"/>
 <listOptionValue builtIn="false" value="application"/>
+<listOptionValue builtIn="false" value="logic"/>
 <listOptionValue builtIn="false" value="physical"/>
 </option>
 <option id="gnu.cpp.link.option.paths.1195771648" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
@@ -59,7 +59,7 @@
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.43415246" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
-<option id="gnu.both.asm.option.include.paths.699604713" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<option id="gnu.both.asm.option.include.paths.699604713" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "../logic/ppmc/PpmcHash.h"
+#include "../application/compresion/ppmc/PpmcHash.h"
 #include "../logic/structures/hash/Hash.h"
 #include <cstdlib>
 
