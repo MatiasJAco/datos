@@ -38,8 +38,9 @@ bool PpmcTree::findInStructure(std::string key, InputData & data) throw (Manager
 	//Invierto la clave.
 	string claveInvertida = string(key.rbegin(), key.rend());
 	encontrado=this->generalStructure->find(claveInvertida,data);
-	claveInvertida=string(data.getKey().rbegin(), data.getKey().rend());
-	data.setKey(claveInvertida);
+	claveInvertida=data.getKey();
+	string claveInvertidaDevuelta=string(claveInvertida.rbegin(), claveInvertida.rend());
+	data.setKey(claveInvertidaDevuelta);
 	return encontrado;
 }
 
