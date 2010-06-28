@@ -27,7 +27,7 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 
 	if (m_coder == DECOMPRESSOR)
 	{
-		Bit* bits = new Bit[m_maxbits+1];
+		Bit* bits = new Bit[m_maxbits];
 		m_bitFile->readNBits(bits,m_maxbits);
 		m_number = ByteConverter::bitsToInt(bits,m_maxbits);
 		delete [] bits;
