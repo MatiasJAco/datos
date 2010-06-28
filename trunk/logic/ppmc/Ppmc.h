@@ -105,16 +105,9 @@ private:
 	void updateFrequencyTables(std::string stringContext, short character) ;
 
 	/**
-	 * crea una nueva tabla de frecuencia con el caracter ESC(1) si es que no esta creada anteriormente
-	 * @param context Es el contexto en donde quiero emitir
-	 */
-	void createFrequencyTable(std::string stringContext);
-
-	/**
 	 * Arma el maximo (y ultimo) stringContext
 	 * @param maxStringContext Es el string que tengo que modificar
 	 */
-	//void getMaxStringContext(std::string &maxStringContext,char character,unsigned int maxContext); //todo borrar
 	void getMaxStringContext(std::string &maxStringContext,char characterAnterior,unsigned int maxContext,bool primeraVez);
 
 	void getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,char character,unsigned int maxContext,bool primeraVez);
