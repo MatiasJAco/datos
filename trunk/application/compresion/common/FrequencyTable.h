@@ -67,6 +67,11 @@ public:
 	void clearTable();
 
 	/**
+	 * Obtiene la cantidad de caracteres con f distinta de 0 que no sean el escape
+	 */
+	int getCharCount();
+
+	/**
 	 * Obtiene la suma de los caracteres anteriores hasta el actual
 	 *  Si el caracter no existe se devuelve 0
 	 * @param c caracter a buscar
