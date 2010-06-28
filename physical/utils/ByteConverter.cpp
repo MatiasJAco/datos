@@ -142,7 +142,7 @@ int ByteConverter::bitsToInt(Bit bits[], int nbits)
 
 	int pos =  nbits;
 
-	for (pos = nbits;pos >= 0;pos--)
+	for (pos = nbits-1;pos >= 0;pos--)
 	{
 		if (bits[pos]&ONE)
 			bytes = (bytes << 1)|1;
