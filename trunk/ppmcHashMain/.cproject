@@ -49,8 +49,8 @@
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic/Debug}&quot;"/>
 </option>
 <option id="gnu.cpp.link.option.libs.1394682354" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-<listOptionValue builtIn="false" value="logic"/>
 <listOptionValue builtIn="false" value="application"/>
+<listOptionValue builtIn="false" value="logic"/>
 <listOptionValue builtIn="false" value="physical"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.462839404" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">

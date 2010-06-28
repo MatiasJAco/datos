@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "../logic/ppmc/PpmcTree.h"
+#include "../application/compresion/ppmc/PpmcTree.h"
 #include "../logic/structures/tree/BPlusTree.h"
 #include <cstdlib>
 
@@ -11,7 +11,7 @@ typedef enum {COMPRESS, DECOMPRESS, UNDEFINED_ACTION} actionTypeEnum;
 
 int main(int argc, const char* argv[])
 {
-	if (argc == 1)
+/*	if (argc == 1)
 	{
 		cout << "Comandos para usar el ppmc:" << endl;
 		cout << "-c [orden] (comprime con contextos hasta el orden dado)" << endl;
@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 		cout << "-vv [contexto] (Imprime las tablas de frecuencias para un contexto dado)" << endl;
 		cout << "-h (Ayuda)" << endl;
 		return 0;
-	}
+	}*/
 	int i;
 	string saux;
 
@@ -127,6 +127,9 @@ int main(int argc, const char* argv[])
 	//------------------------Validacion--------------------------------//
 
 	//--------------------------compress/decompress---------------------//
+
+	action = COMPRESS;ctxOrder=2; filePath="Debug/texto.txt";
+
 	if(action !=UNDEFINED_ACTION)
 	{
 		std::remove("arbol.dat");
