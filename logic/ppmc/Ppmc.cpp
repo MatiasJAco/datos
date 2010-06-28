@@ -223,6 +223,7 @@ bool Ppmc::deCompress(const std::string & path) {
 		cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		if (borrarContador == 13){
 			cout<< "cagamos: 13"<<endl;
+			sequentialFile->close();
 			return false;}
 								if (primeraVez && (shortCharacter == EOF_CHAR)){
 									cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor";
@@ -354,29 +355,6 @@ bool Ppmc::deCompress(const std::string & path) {
 
 		}//fin if(continuarCiclo)
 	}//fin While(continuarCiclo)
-
-
-//-------falta ver este pedazo que estaba en el compress de ppmc----------------
-//	actualContextNumber--;
-//	stringContext = character;
-//	bool isNotEof = false;
-//	character = sequentialFile->readChar(isNotEof);
-//
-//	while (isNotEof) {
-//		this->updateFrequencyTables(stringContext, character, actualContextNumber, maxContext);
-//		if (actualContextNumber < maxContext) {
-//			actualContextNumber++;
-//			stringContext.append(1,character);
-//		} else {
-//			stringContext.append(1,character);
-//			stringContext.substr(1,stringContext.length());
-//		}
-//		character = sequentialFile->readChar();
-//	}
-//--------------------------------------------------
-
-
-
 
 	sequentialFile->close();
 	std::cout << "Fin de descompresion" << std::endl;
