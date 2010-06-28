@@ -11,7 +11,7 @@ typedef enum {COMPRESS, DECOMPRESS, UNDEFINED_ACTION} actionTypeEnum;
 
 int main(int argc, const char* argv[])
 {
-/*	if (argc == 1)
+	if (argc == 1)
 	{
 		cout << "Comandos para usar el ppmc:" << endl;
 		cout << "-c [orden] (comprime con contextos hasta el orden dado)" << endl;
@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 		cout << "-vv [contexto] (Imprime las tablas de frecuencias para un contexto dado)" << endl;
 		cout << "-h (Ayuda)" << endl;
 		return 0;
-	}*/
+	}
 	int i;
 	string saux;
 
@@ -141,7 +141,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 
-	GeneralStructure* tree = new BPlusTree("arbol.dat",92,0.5);
+	GeneralStructure* tree = new BPlusTree("arbol.dat",1024,0.5);
 	Ppmc* ppmcCompresor = new PpmcTree(tree);
 
 
