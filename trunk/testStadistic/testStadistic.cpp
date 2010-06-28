@@ -6,7 +6,7 @@
  */
 
 using namespace std;
-#include "../logic/ppmc/stadistic/stadistic.h"
+#include "../application/compresion/ppmc/stadistic/stadistic.h"
 
 int main(int argc, char *argv[]){
 	char  path [20];

@@ -3,7 +3,7 @@
 	<name>testStadistic</name>
 	<comment></comment>
 	<projects>
-		<project>logic</project>
+		<project>application</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
