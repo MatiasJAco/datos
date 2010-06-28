@@ -11,7 +11,7 @@ typedef enum {COMPRESS, DECOMPRESS, UNDEFINED_ACTION} actionTypeEnum;
 
 int main(int argc, const char* argv[])
 {
-	if (argc == 1)
+/*	if (argc == 1)
 	{
 		cout << "Comandos para usar el ppmc:" << endl;
 		cout << "-c [orden] (comprime con contextos hasta el orden dado)" << endl;
@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 		cout << "-vv [contexto] (Imprime las tablas de frecuencias para un contexto dado)" << endl;
 		cout << "-h (Ayuda)" << endl;
 		return 0;
-	}
+	}*/
 	int i;
 	string saux;
 
@@ -72,6 +72,12 @@ int main(int argc, const char* argv[])
 						return 0;
 					}
 				}
+
+				if(ctxOrder <0 || ctxOrder >1000)
+				{
+					cout << "Contexto maximo fuera de rango(debe estar entre 0 y 1000). Utilice \""<< argv[0]<< " -h\" para obtener mas ayuda. " << endl;
+					return 0;
+				}
 			}
 			else
 			{
@@ -120,17 +126,30 @@ int main(int argc, const char* argv[])
 
 
 
+	//action =UNDEFINED_ACTION;
+	//showAllCTX=true;
+
+	//------------------------Validacion--------------------------------//
+
+	//--------------------------compress/decompress---------------------//
+	if(action !=UNDEFINED_ACTION)
+	{
+		std::remove("tabla.txt");
+		std::remove("hash.bin");
+		std::remove("hash.bin.free");
+		if(filePath == "")
+		{
+			cout << "Debe ingresar el nombre del archivo. Utilice \""<< argv[0]<< " -h\" para obtener mas ayuda. " << endl;
+			return 0;
+		}
+	}
+
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcCompresor = new PpmcHash(hash);
 
-	//------------------------Validacion--------------------------------//
-	if(filePath == "")
-	{
-		cout << "Debe ingresar el nombre del archivo. Utilice \""<< argv[0]<< " -h\" para obtener mas ayuda. " << endl;
-		return 0;
-	}
 
-	//--------------------------compress/decompress---------------------//
+
+
 	if(action == COMPRESS)
 		ppmcCompresor->compress(filePath, ctxOrder);
 	else
@@ -153,7 +172,11 @@ int main(int argc, const char* argv[])
 	}
 
 	if(showAllCTX)
+	{
+		hash->print();
 		ppmcCompresor->printAllContexts();
+	}
+
 	else
 		if(showOneCTX)
 			ppmcCompresor->printContext(ctxName);
@@ -162,6 +185,7 @@ int main(int argc, const char* argv[])
 		ppmcCompresor->getStatistics();
 
 
+	delete hash;
 	delete ppmcCompresor;
 
 	return 0;
