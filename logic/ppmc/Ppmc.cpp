@@ -17,6 +17,7 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 		this->minusOneCtxtFreqTable->setFrequency(i,1); // Llena con 1 ocurrencia los 256 caracteres ASCII y el EOF.
 	}
 	this->contextStats=NULL;
+	this->logger = Logger::Instance();
 }
 
 Ppmc::~Ppmc() {
@@ -50,6 +51,10 @@ std::string Ppmc::getCompressionOutFile(std::string path, int maxContext) {
 }
 
 bool Ppmc::compress(std::string path,int maxContext) {
+	std::string log = ";Comprimiendo archivo: ";
+	log.append(path);
+	this->logger->insert(&log[0]);
+
 	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 258);
 	this->setContextStats(maxContext);
 	bool newRead=true;
@@ -88,6 +93,11 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	sequentialFile->close();
 	delete compressor;
 	std::cout << "Fin de compresion" << std::endl;
+
+	log = ";Se termino de comprimir el archivo: ";
+	log.append(path);
+	this->logger->insert(&log[0]);
+
 	return true;
 }
 
@@ -176,6 +186,10 @@ short Ppmc::borrarEsteMetodo(int contador){
 }
 
 bool Ppmc::deCompress(const std::string & path) {
+	std::string log = ";Descomprimiendo archivo: ";
+	log.append(path);
+	this->logger->insert(&log[0]);
+
 	std::string outPath = "";
 	int maxContext = 0;
 	size_t position = path.find(".ppmc");
@@ -358,6 +372,11 @@ bool Ppmc::deCompress(const std::string & path) {
 
 	sequentialFile->close();
 	std::cout << "Fin de descompresion" << std::endl;
+
+	log = ";Se termino de descomprimir el archivo: ";
+	log.append(path);
+	this->logger->insert(&log[0]);
+
 	return true;
 }
 
