@@ -36,7 +36,9 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 
 ArithmeticCompressor::~ArithmeticCompressor() {
 
-	encodeFloor();
+	if (m_coder == COMPRESSOR)
+		encodeFloor();
+
 	m_bitFile->close();
 	delete m_bitFile;
 }
@@ -193,13 +195,13 @@ bool ArithmeticCompressor::underflow()
 bool ArithmeticCompressor::encodeFloor()
 {
 	Bit bit;
-	int floor = m_floor;
+	int lastbyte = m_floor;
 
 	int posBit = m_maxbits-1;
 
 	for (posBit = m_maxbits-1;posBit>=0;posBit--)
 	{
-		bit = (floor >> (m_maxbits-1))?ONE:ZERO;
+		bit = (lastbyte >> (m_maxbits-1))?ONE:ZERO;
 		m_bitFile->write(bit);
 
 		while (m_counterUnderflow>0)
@@ -212,9 +214,8 @@ bool ArithmeticCompressor::encodeFloor()
 
 			--m_counterUnderflow;
 		}
-		--posBit;
 
-		floor = (floor<< 1)&bitmask;
+		lastbyte = (lastbyte<< 1)&bitmask;
 	}
 	return true;
 }
