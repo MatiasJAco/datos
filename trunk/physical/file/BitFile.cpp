@@ -7,6 +7,9 @@
 
 #include "BitFile.h"
 
+#include <iostream>
+using namespace std;
+
 BitFile::BitFile(accessModeEnum type) {
 
 	m_byteFile = new SequentialFile(type);
