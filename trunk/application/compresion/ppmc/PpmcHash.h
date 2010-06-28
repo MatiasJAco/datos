@@ -1,29 +1,30 @@
 /*
- * PpmcTree.h
+ * PpmcHash.h
  *
  *  Created on: Jun 24, 2010
  *      Author: pablolisio
  */
 
-#ifndef PPMCTREE_H_
-#define PPMCTREE_H_
+#ifndef PPMCHASH_H_
+#define PPMCHASH_H_
 
-#include "../structures/tree/BPlusTree.h"
+#include <iostream>
 #include "Ppmc.h"
+#include "../../../logic/structures/hash/Hash.h"
 
-class PpmcTree: public Ppmc {
+class PpmcHash: public Ppmc {
 public:
-	PpmcTree(GeneralStructure* generalStructure);
-	virtual ~PpmcTree();
+	PpmcHash(GeneralStructure* generalStructure);
+	virtual ~PpmcHash();
 
 	/**
 	 * Imprime las tablas de frecuencias para todos los contextos para un ppmc dado.
-	 * Para ello busca el primer elemento del arbol y luego va avanzando hasta el ultimo
-	 * usando el sequence set
+	 * Para ello pide todas las claves del hash y luego va pidiendo uno a uno todos
+	 * los contextos
 	 */
 	virtual void printAllContexts();
 
-public:
+private:
 	/**
 	 * Agrega un elemento nuevo al archivo de la estructura.
 	 * @param clave Es la clave del dato a ingresar.
@@ -63,14 +64,14 @@ public:
 	bool removeInStructure(std::string key) throw (ManagerException);
 
 	/**
-	 * Busca y retorna el proximo contexto aprovechando sequence set.
+	* Busca y retorna un elemento dado su clave.
 	* @param key Es la clave del dato a buscar
 	* @param data Es el StringInputData que representa al dato que contiene la clave a buscar
 	* @return true si la operación fue exitosa
 	*/
-	bool getNextContext(std::string key, InputData & data) throw (ManagerException);
+	virtual bool getNextContext(std::string key, InputData & data) throw (ManagerException);
 
 
 };
 
-#endif /* PPMCTREE_H_ */
+#endif /* PPMCHASH_H_ */

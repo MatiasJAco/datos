@@ -73,7 +73,7 @@ void testAllHash() {
 
 	/* TESTS DE PPMC */
 	testHash->testPpmcHashComprimir();
-	//testHash->testPpmcHashDescomprimir();
+	testHash->testPpmcHashDescomprimir();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testHash->testBigInt();

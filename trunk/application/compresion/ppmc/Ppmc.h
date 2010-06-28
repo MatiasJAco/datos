@@ -10,12 +10,12 @@
 
 #include <iostream>
 #include "stdlib.h"
-#include "../logic/structures/GeneralStructure.h"
-#include "../logic/exceptions/ManagerException.h"
-#include "../logic/exceptions/HashException.h"
-#include "../logic/logger/Logger.h"
-#include "../../application/compresion/common/FrequencyTable.h"
-#include "../../application/compresion/arithmetic/ArithmeticCompressor.h"
+#include "../../../logic/structures/GeneralStructure.h"
+#include "../../../logic/exceptions/ManagerException.h"
+#include "../../../logic/exceptions/HashException.h"
+#include "../../../logic/logger/Logger.h"
+#include "../common/FrequencyTable.h"
+#include "../arithmetic/ArithmeticCompressor.h"
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC.
