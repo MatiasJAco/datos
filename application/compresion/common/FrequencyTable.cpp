@@ -123,6 +123,29 @@ unsigned long FrequencyTable::getFrequency(short c)
 	return retVar;
 }
 
+int FrequencyTable::getCharCount()
+{
+	int retVal=0;
+	retVal = m_Frequencies.size();
+
+	CharFrequencyListIterator it=m_Frequencies.end();
+
+	if(retVal > 0)
+	{
+		while( it->getChar() >= ESC_CHAR)
+		{
+			if((*it) == ESC_CHAR)
+				retVal--;
+
+			it--;
+		}
+	}
+
+
+	return retVal;
+}
+
+
 short FrequencyTable::getChar(unsigned long freq)
 {
 	short retVal = UNDEFINED_CHAR;
