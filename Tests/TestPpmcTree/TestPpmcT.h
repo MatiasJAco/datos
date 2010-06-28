@@ -10,8 +10,8 @@
 
 #include "../logic/structures/tree/BPlusTree.h"
 #include "../logic/input/StringInputData.h"
-#include "../logic/ppmc/Ppmc.h"
-#include "../logic/ppmc/PpmcTree.h"
+#include "../application/compresion/ppmc/Ppmc.h"
+#include "../application/compresion/ppmc/PpmcTree.h"
 #include <iostream>
 #include <sstream>
 

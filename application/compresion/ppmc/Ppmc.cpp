@@ -5,7 +5,7 @@
  *      Author: Adrián Bernardi - Matias Acosta - Pablo Lisio
  */
 #include "Ppmc.h"
-#include "../../physical/file/SequentialFile.h"
+#include "../../../physical/file/SequentialFile.h"
 
 const string Ppmc::ZERO_CONTEXT = "0";
 const string Ppmc::MINUS_ONE_CONTEXT = "-1";
