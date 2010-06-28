@@ -37,7 +37,7 @@ bool SequentialFile::close()
 		m_FileHandler.close();
 
 	if(m_Buffer!=NULL)
-		delete m_Buffer;
+		delete []m_Buffer;
 
 	m_Buffer=NULL;
 
