@@ -84,6 +84,9 @@ void TestFrequencyTable::testFreqTable() {
 	ft2->clearTable();
 	cout << ft2->toPrintableString()<<endl;
 
+	cout << ft4.toPrintableString()<<endl;
+	cout << ft4.getCharCount()<<endl;
+
 	delete ft;
 	delete ft2;
 	delete ft3;
