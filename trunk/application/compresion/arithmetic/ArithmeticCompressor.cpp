@@ -29,7 +29,7 @@ ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileNam
 	{
 		Bit* bits = new Bit[m_maxbits];
 		m_bitFile->readNBits(bits,m_maxbits);
-		m_number = ByteConverter::bitsToInt(bits,m_maxbits);
+		m_number = ByteConverter::bitsToInt(bits,sizeof(int));
 		delete [] bits;
 	}
 }
