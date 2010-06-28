@@ -232,8 +232,8 @@ bool Ppmc::deCompress(const std::string & path) {
 				else if (actualContextNumber == 0)
 					stringContext = ZERO_CONTEXT;
 		cout<<"mando a aritmetico : stringContext : '"<<stringContext<<"', actualContextNum: "<<actualContextNumber<<endl;
-		//shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+//		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		if (borrarContador == 13){
 			cout<< "cagamos: 13"<<endl;

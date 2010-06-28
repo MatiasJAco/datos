@@ -13,6 +13,10 @@
 
 #include <cmath>
 
+/**
+ * Compresor aritmetico. Funciona como compresor y descompresor.
+ */
+
 class ArithmeticCompressor {
 
 public:
