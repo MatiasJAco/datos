@@ -50,7 +50,7 @@ std::string Ppmc::getCompressionOutFile(std::string path, int maxContext) {
 }
 
 bool Ppmc::compress(std::string path,int maxContext) {
-	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 256);
+	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 258);
 	this->setContextStats(maxContext);
 	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
@@ -191,7 +191,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	sequentialFile->open(outPath);
 
 	//instancio el compresor aritmetico como Decompresor.
-	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 256);
+	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 258);
 
 	std::string stringContext;
 	std::string previousStringContext="";
@@ -219,10 +219,12 @@ bool Ppmc::deCompress(const std::string & path) {
 				else if (actualContextNumber == 0)
 					stringContext = ZERO_CONTEXT;
 		cout<<"mando a aritmetico : stringContext : '"<<stringContext<<"', actualContextNum: "<<actualContextNumber<<endl;
-		//shortCharacter = arithmeticCompressor->decompress(frequencyTable);
-		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+		//shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
-		if (borrarContador == 13){		cout<< "cagamos: 13"<<endl; return false;}
+		if (borrarContador == 13){
+			cout<< "cagamos: 13"<<endl;
+			return false;}
 								if (primeraVez && (shortCharacter == EOF_CHAR)){
 									cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor";
 									return false; //TODO false o true?
@@ -240,7 +242,7 @@ bool Ppmc::deCompress(const std::string & path) {
 //					if (actualContextNumber == 0)
 //						stringContext = ZERO_CONTEXT;
 //					else{
-//						//todo IMPLEMENTAR - caso en que salgo antes de llegar al ctxt -1
+//						//IMPLEMENTAR - caso en que salgo antes de llegar al ctxt -1
 //					}
 				actualContextNumber=0;
 				stringContext = ZERO_CONTEXT;
@@ -262,7 +264,6 @@ bool Ppmc::deCompress(const std::string & path) {
 					//actualizo la del contexto 0
 						updateFrequencyTables(stringContext,shortCharacter);
 						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-						//cout << "UPDATE: ctx " << stringContext<<","<<actualContextNumber<<","<<(char) shortCharacter<<endl;
 
 						std::string maxStringContextAux;
 
@@ -273,7 +274,6 @@ bool Ppmc::deCompress(const std::string & path) {
 									actualContextNumber++;
 									stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
 									updateFrequencyTables(stringContext,shortCharacter);
-									//cout << "UPDATE: ctx " << stringContext<<","<<actualContextNumber<<","<<(char) shortCharacter<<endl;
 									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 								}
 							}
@@ -283,7 +283,6 @@ bool Ppmc::deCompress(const std::string & path) {
 									actualContextNumber++;
 									stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
 									updateFrequencyTables(stringContext,shortCharacter);
-									//cout << "UPDATE: ctx " << stringContext<<","<<actualContextNumber<<","<<(char) shortCharacter<<endl;
 									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 								}
 							}
@@ -358,15 +357,9 @@ bool Ppmc::deCompress(const std::string & path) {
 			else {	//no existe el ctxt -> lo creo
 				if (actualContextNumber > -1){
 					cout<<"paso por aca! sino se pasa por aca, hay qe borrar este else"<<endl;//todo ver si pasa por aca, me pa que hay que sacar este else
-//					frequencyTable = new FrequencyTable();
-//					frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
-//					frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
-//					this->insertInStructure(stringContext,frequencyTable->toString());
-//							string borrar = frequencyTable->toString();
-//							cout << borrar << endl;	//llego bien hasta UPDATE: ctx IV,I
 					//updateFrequencyTables(stringContext, character);
-					createFrequencyTable(stringContext);
-					frequencyTable = this->getFrequencyTable(stringContext, true);
+//					createFrequencyTable(stringContext);
+//					frequencyTable = this->getFrequencyTable(stringContext, true);
 					//delete frequencyTable;
 				}
 			}
@@ -397,7 +390,7 @@ bool Ppmc::deCompress(const std::string & path) {
 
 
 
-	//sequentialFile->close();
+	sequentialFile->close();
 	std::cout << "Fin de descompresion" << std::endl;
 	return true;
 }
@@ -429,7 +422,7 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 			//std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
 			//frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
 				//acaaaaaaaaa setear frecuencia del esc = cant de caracteres con frec mayor a cero
-			unsigned long cantCaract = 1;	//todo llamar al metodo de alex!!!!
+			unsigned long cantCaract = frequencyTable->getCharCount();	//todo llamar al metodo de alex!!!!
 			frequencyTable->setFrequency(ESC_CHAR,cantCaract);
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 			std::string stringFrequencyTable = frequencyTable->toString();
