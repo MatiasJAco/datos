@@ -136,7 +136,7 @@ std::string ByteConverter::bytesToString(const char *bytes)
 }
 
 
-int ByteConverter::bitsToInt(Bit bits[],unsigned int nbits)
+int ByteConverter::bitsToInt(Bit bits[], int nbits)
 {
 	int bytes = 0;
 
