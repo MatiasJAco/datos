@@ -12,8 +12,8 @@
 #include "CharFrequency.h"
 
 #define EOF_CHAR 256
-#define ESC_CHAR 258
-#define UNDEFINED_CHAR 257
+#define ESC_CHAR 257
+#define UNDEFINED_CHAR 258
 
 /**
  * Clase encargada de manejar la tabla de frecuencias
