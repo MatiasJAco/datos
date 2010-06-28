@@ -98,14 +98,14 @@ private:
 	 * @param actualContextNumber Es el numero de contexto actual
 	 * @param maxContext Es el maximo contexto que se uso para la compresion
 	 */
-	void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext);
+	//void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext); //todo borrars
+	void updateFrequencyTables(std::string stringContext, short character) ;
 
 	/**
-	 * crea una nueva tabla de frecuencia con el caracter ESC(1)
+	 * crea una nueva tabla de frecuencia con el caracter ESC(1) si es que no esta creada anteriormente
 	 * @param context Es el contexto en donde quiero emitir
-	 * @param actualContextNumber Es el numero de contexto actual
 	 */
-	void createFrequencyTable(std::string stringContext,int actualContextNumber);
+	void createFrequencyTable(std::string stringContext);
 
 	/**
 	 * Arma el maximo (y ultimo) stringContext
