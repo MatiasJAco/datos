@@ -230,7 +230,9 @@ int ArithmeticCompressor::getFloor(short symbol,FrequencyTable& ft)
 	// el piso es en base al acumulado del caracter inmediatamente menor,
 	// resto la frecuencia del mismo.
 	double coef = (double)(ft.getCumFrequency(symbol)-ft.getFrequency(symbol))/ft.getFrequencyTotal();
-	tfloor = m_floor + (int)floor(coef*sizeInterval);
+//	tfloor = m_floor + (int)floor(coef*sizeInterval);
+	tfloor = floor(m_floor + coef*sizeInterval);
+
 
 	return tfloor;
 }
@@ -244,7 +246,8 @@ int ArithmeticCompressor::getCeil(short symbol,FrequencyTable& ft)
 
 	// el piso es en base al acumulado del caracter.
 	double coef = (double)ft.getCumFrequency(symbol)/ft.getFrequencyTotal();
-	tceil = m_floor + (int)floor(coef*sizeInterval)-1;
+//	tceil = m_floor + (int)floor(coef*sizeInterval)-1;
+	tceil = floor(m_floor + coef*sizeInterval-1);
 
 	return tceil;
 }
