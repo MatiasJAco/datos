@@ -25,6 +25,7 @@ void TestFrequencyTable::testFreqTable() {
 	FrequencyTable *ft3;
 	FrequencyTable ft4;
 	FrequencyTable ft5;
+	FrequencyTable ft6;
 	std::string serial, deserial;
 
 	ft = new FrequencyTable();
@@ -83,9 +84,14 @@ void TestFrequencyTable::testFreqTable() {
 
 	ft2->clearTable();
 	cout << ft2->toPrintableString()<<endl;
+	cout << ft2->getCharCount()<<endl;
 
 	cout << ft4.toPrintableString()<<endl;
 	cout << ft4.getCharCount()<<endl;
+
+	ft6.setFrequency('a',2);
+	ft6.setFrequency(ESC_CHAR,2);
+	cout << ft6.getCharCount()<<endl;
 
 	delete ft;
 	delete ft2;
