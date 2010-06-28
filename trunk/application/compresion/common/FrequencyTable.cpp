@@ -128,10 +128,16 @@ int FrequencyTable::getCharCount()
 	int retVal=0;
 	retVal = m_Frequencies.size();
 
+	if(!m_isSorted)
+	{
+		m_Frequencies.sort();
+		m_isSorted=true;
+	}
 	CharFrequencyListIterator it=m_Frequencies.end();
 
 	if(retVal > 0)
 	{
+		it--;
 		while( it->getChar() >= ESC_CHAR)
 		{
 			if((*it) == ESC_CHAR)
