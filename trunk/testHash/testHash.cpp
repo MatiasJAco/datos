@@ -405,7 +405,8 @@ void testPpmcHashDescomprimir() {
 	std::remove("hash.bin.free");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoDescomprimido.txt.ppmc2");
+	//ppmcHash->deCompress("./archivoDescomprimido.txt.ppmc2");
+	ppmcHash->deCompress("./archivoADescomprimir.txt.ppmc2");
 	hash->deleteGeneratedFiles();
 }
 
@@ -427,8 +428,8 @@ int main(int argc, const char* argv[]){
 	//testFreqTable();
 
 	/* TESTS DE PPMC */
-	testPpmcHashComprimir();
-	//testPpmcHashDescomprimir();
+	//testPpmcHashComprimir();
+	testPpmcHashDescomprimir();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testBigInt();
