@@ -122,7 +122,7 @@ void BitFile::writeBitZero() throw (PhysicalException)
 	}
 }
 
-bool BitFile::writeNBits(Bit bits[],int nbits)throw (PhysicalException)
+bool BitFile::writeNBits(Bit *bits,int nbits)throw (PhysicalException)
 {
 	bool bret = true;
 
@@ -136,7 +136,7 @@ bool BitFile::writeNBits(Bit bits[],int nbits)throw (PhysicalException)
 	return bret;
 }
 
-bool BitFile::readNBits(Bit bits[],int nbits) throw (PhysicalException)
+bool BitFile::readNBits(Bit *bits,int nbits) throw (PhysicalException)
 {
 	bool bret = true;
 

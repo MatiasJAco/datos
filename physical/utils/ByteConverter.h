@@ -129,7 +129,7 @@ public:
 	 * @param nbits Cantidad de bits.
 	 * @return Numero tipo short que tiene el contenido de la tira de bits.
 	 */
-	static int bitsToInt(Bit bits[], int nbits);
+	static int bitsToInt(Bit *bits, int nbits);
 
 	/**
 	 * Imprime el contenido del stream en hexadecimal. Su uso es para debug
