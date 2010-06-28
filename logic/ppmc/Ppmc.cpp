@@ -206,7 +206,6 @@ bool Ppmc::deCompress(const std::string & path) {
 	bool continuarCiclo = true;
 
 	//primer llamado para inicializar al ctxt 0
-	//createFrequencyTable(ZERO_CONTEXT);
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
 
 	int borrarContador = 0; //todo hacerle caso al nombre de la variable :D
@@ -219,8 +218,8 @@ bool Ppmc::deCompress(const std::string & path) {
 				else if (actualContextNumber == 0)
 					stringContext = ZERO_CONTEXT;
 		cout<<"mando a aritmetico : stringContext : '"<<stringContext<<"', actualContextNum: "<<actualContextNumber<<endl;
-		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-		//shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+		//shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		if (borrarContador == 13){
 			cout<< "cagamos: 13"<<endl;
@@ -238,12 +237,6 @@ bool Ppmc::deCompress(const std::string & path) {
 		if (continuarCiclo){
 			//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
 			if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
-//					actualContextNumber++;
-//					if (actualContextNumber == 0)
-//						stringContext = ZERO_CONTEXT;
-//					else{
-//						//IMPLEMENTAR - caso en que salgo antes de llegar al ctxt -1
-//					}
 				actualContextNumber=0;
 				stringContext = ZERO_CONTEXT;
 
@@ -251,7 +244,7 @@ bool Ppmc::deCompress(const std::string & path) {
 					//escribo en el archivo de salida el caracter.
 					character = (char) shortCharacter;
 					sequentialFile->writeChar(character);
-					cout<<"EMITO : '" << character << "'" << endl;	//TODO aca hay que mandar al archivo de descompresion
+					cout<<"EMITO : '" << character << "'" << endl;
 
 					getMaxStringContext(maxStringContext,characterAnterior,maxContext,primeraVez);
 					//cout << "maxStringContext: " << maxStringContext<<", ";
@@ -261,7 +254,7 @@ bool Ppmc::deCompress(const std::string & path) {
 
 
 					//-----------actualizo todas las tablas de frecuencias que necesite--------------
-					//actualizo la del contexto 0
+					//actualizo primero la del contexto 0
 						updateFrequencyTables(stringContext,shortCharacter);
 						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 
@@ -293,7 +286,6 @@ bool Ppmc::deCompress(const std::string & path) {
 						std::string stringContextAux;
 						if (primeraVez){	//actualizo contexto 1
 							stringContextAux = character;
-							//createFrequencyTable(stringContextAux); //todo borrar createFrecTable
 							updateFrequencyTables(stringContextAux, ESC_CHAR);//creo la tabla del contexto con esc(1)
 							cout << "CREATE: " << stringContextAux<<","<<1<<endl;
 						}
@@ -302,10 +294,8 @@ bool Ppmc::deCompress(const std::string & path) {
 							for (unsigned int i = 1; i<=maxStringContextDesfasadoEn1.length();i++){
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								stringContext = maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-i,i);
-								//updateFrequencyTables(stringContext,ESC_CHAR,actualContextNumber,maxContext); //todo borrar createFrecTable y en realidad no hay que llamar a esta funcion
-								//createFrequencyTable(stringContext);
 								updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
-								cout << "CREATE: " << stringContext<<","<<actualContextNumber<<endl;//todo creo que es crear si no esta creado, nada mas.
+								cout << "CREATE: " << stringContext<<","<<actualContextNumber<<endl;
 								if (i!=maxStringContextDesfasadoEn1.length())
 									actualContextNumber++;
 							}
@@ -340,7 +330,7 @@ bool Ppmc::deCompress(const std::string & path) {
 								stringContext = stringContext.substr(1,stringContext.length()-1);
 							}
 
-							if (actualContextNumber<-1) //TODO solo para debug
+							if (actualContextNumber<-1) //TODO solo para debug - borrar desp de q ande todo
 								cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
 
 				}
@@ -358,9 +348,7 @@ bool Ppmc::deCompress(const std::string & path) {
 				if (actualContextNumber > -1){
 					cout<<"paso por aca! sino se pasa por aca, hay qe borrar este else"<<endl;//todo ver si pasa por aca, me pa que hay que sacar este else
 					//updateFrequencyTables(stringContext, character);
-//					createFrequencyTable(stringContext);
 //					frequencyTable = this->getFrequencyTable(stringContext, true);
-					//delete frequencyTable;
 				}
 			}
 
@@ -395,19 +383,6 @@ bool Ppmc::deCompress(const std::string & path) {
 	return true;
 }
 
-//todo borrar este metodo! ya no se usa
-void Ppmc::createFrequencyTable(std::string stringContext){
-	if (!this->existsElementInStructure(stringContext)) { // si no Existe el contexto pasado por parametro
-		FrequencyTable * frequencyTable = new FrequencyTable();
-		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega solo al escape en el contexto a crearse.
-		this->insertInStructure(stringContext,frequencyTable->toString());
-		string borrar = frequencyTable->toString();
-		cout << "se creo tabla nueva (ctx "<<stringContext<<") : "<<borrar << endl;
-		delete frequencyTable;
-	}
-}
-
-//void Ppmc::updateFrequencyTables(std::string stringContext, short character, int actualContextNumber, int maxContext) {
 void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 
 	FrequencyTable* frequencyTable;
@@ -419,18 +394,18 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 		frequencyTable->deserialize(stringInputData.getValue());
 
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado,
-			//std::cout << "Emito el caracter " << "Escape" << " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
-			//frequencyTable->increaseFrequency(ESC_CHAR,1);//incremento frecuencia al escape
-				//acaaaaaaaaa setear frecuencia del esc = cant de caracteres con frec mayor a cero
-			unsigned long cantCaract = frequencyTable->getCharCount();	//todo llamar al metodo de alex!!!!
-			frequencyTable->setFrequency(ESC_CHAR,cantCaract);
 			frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+			unsigned long cantCaract = frequencyTable->getCharCount();	//todo llamar al metodo de alex!!!!
+
+			string borrar = frequencyTable->toString();
+						cout << borrar << endl;
+
+			frequencyTable->setFrequency(ESC_CHAR,cantCaract);
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
-			string borrar = frequencyTable->toString();
+			borrar = frequencyTable->toString();
 			cout << borrar << endl;
 		} else { // Si ya existe el caracter en el contexto dado, se incrementa su frecuencia.
-			//std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto ACÁ.
 			//this->countHit(stringContext);		//TODO MAti - countHit!
 			frequencyTable->increaseFrequency(character,1);
 			std::string stringFrequencyTable = frequencyTable->toString();
@@ -442,33 +417,16 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 		}
 		delete frequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
-		//cout<< "ver si pasa por aca, sino borrar este else!"<<endl; //todo leer el cout de aca / o bien cambiar el createFrecTable usando este else
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
-		//if (character!= ESC_CHAR)
-			//cout<<"se esperaba q este metodo se use solo como parametro de entrada a ESC"<<endl;    //todo borrar renglon
-//		int difference = stringContext.size()-maxContext;
-//		if (difference > 0)
-//			stringContext = stringContext.substr(stringContext.size()-maxContext,maxContext);
-//		std::cout << "Emito el caracter " << "Escape" <<  " en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del escape en el contexto ACÁ.
+		if (character!= ESC_CHAR)
+			cout<<"se esperaba q este metodo se use solo como parametro de entrada a ESC"<<endl;    //todo borrar desp de que ande todo
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
 		string borrar = frequencyTable->toString();
 		cout << borrar << endl;
 		delete frequencyTable;
 	}
-//	stringContext = stringContext.substr(1,stringContext.length());
-//	actualContextNumber--;
-//	if (actualContextNumber > 0) {
-//		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo de contexto progresivamente.
-//	} else if (actualContextNumber == 0) {
-//		stringContext = ZERO_CONTEXT;
-//		this->ppmcCompressionEmitter(stringContext, character, actualContextNumber, maxContext); // Bajo al contexto 0 que es el último.
-//	} else { // Llegamos al contexto -1.
-//		std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << this->minusOneCtxtFreqTable->getFrequency(character) << " ocurrencias" << std::endl; // TODO Adrián: emitir la probabilidad del caracter en el contexto -1 ACÁ.
-//		//TODO adrian esto habia que sacarlo no?
-//		this->minusOneCtxtFreqTable->increaseFrequency(character,1);
-//	}
 }
 void Ppmc::getMaxStringContext(std::string &maxStringContext,char characterAnterior,unsigned int maxContext,bool primeraVez){
 	if (primeraVez)	//no hay contexto anterior la primera vez
