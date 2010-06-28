@@ -6,7 +6,7 @@
  */
 
 #include "TestStadistic.h"
-#include "../logic/ppmc/stadistic/stadistic.h"
+#include "../application/compresion/ppmc/stadistic/stadistic.h"
 
 TestStadistic::TestStadistic() {
 }
