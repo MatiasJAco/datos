@@ -24,7 +24,7 @@ void TestArithmetic::run()
 //	testStatic("DIVIDIDOS","divididos.gzip");
 
 	// Con este string se ve el bug.
-	testStatic("estas","estas.gzip");
+	testStatic("I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n","random.gzip");
 
 //	testStatic("Maria Celeste Maldonado","celeste.gzip");
 }
@@ -40,7 +40,7 @@ void TestArithmetic::testStatic(std::string toCompress,std::string output)
 	cout << m_ft.toPrintableString();
 
 	m_filecompressed = output;
-	m_maxsymbols = 256;
+	m_maxbits = 12;
 
 	testStaticCompress();
 	testStaticDecompress();
@@ -58,7 +58,7 @@ void TestArithmetic::testDinamic(std::string toCompress,std::string output)
 	loadDinamicFTable();
 
 	m_filecompressed = output;
-	m_maxsymbols = 257;
+	m_maxbits = 12;
 
 	testDinamicCompress();
 	testDinamicDecompress();
@@ -70,7 +70,7 @@ void TestArithmetic::testDinamic(std::string toCompress,std::string output)
 void TestArithmetic::testStaticCompress()
 {
 	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
-	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxsymbols);
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
 
 	unsigned long i = 0;
 	unsigned long qchars = m_ft.getFrequencyTotal();
@@ -86,7 +86,7 @@ void TestArithmetic::testStaticCompress()
 
 void TestArithmetic::testStaticDecompress()
 {
-	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxsymbols);
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
 
 	int i = 0;
 	int qchars = m_ft.getFrequencyTotal();
@@ -103,7 +103,7 @@ void TestArithmetic::testStaticDecompress()
 void TestArithmetic::testDinamicCompress()
 {
 	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
-	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxsymbols);
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
 
 	int i = 0;
 
@@ -120,7 +120,7 @@ void TestArithmetic::testDinamicCompress()
 
 void TestArithmetic::testDinamicDecompress()
 {
-	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxsymbols);
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
 	short c =  UNDEFINED_CHAR;
 
 	while (c!=EOF_CHAR)
