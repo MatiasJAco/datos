@@ -24,6 +24,7 @@ class TestPpmcT {
 public:
 	TestPpmcT();
 	virtual ~TestPpmcT();
+	void testPpmcTreeCompress();
 
 public:
 	void run();
