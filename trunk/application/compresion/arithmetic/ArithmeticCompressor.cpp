@@ -7,10 +7,11 @@
 
 #include "ArithmeticCompressor.h"
 
-ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxSymbols)
+ArithmeticCompressor::ArithmeticCompressor(Coder coder,const std::string fileName,int maxbits)
 {
 	m_coder = coder;
-	m_maxbits = (int)floor(log10(maxSymbols-1)/log10(2)+1);
+//	m_maxbits = (int)floor(log10(maxSymbols-1)/log10(2)+1);
+	m_maxbits = maxbits;
 	bitmask = (int)pow(2,m_maxbits)-1; // Maximo numero que se puede representar.
 
 	m_floor = 0;
@@ -230,7 +231,6 @@ int ArithmeticCompressor::getFloor(short symbol,FrequencyTable& ft)
 	// el piso es en base al acumulado del caracter inmediatamente menor,
 	// resto la frecuencia del mismo.
 	double coef = (double)(ft.getCumFrequency(symbol)-ft.getFrequency(symbol))/ft.getFrequencyTotal();
-//	tfloor = m_floor + (int)floor(coef*sizeInterval);
 	tfloor = floor(m_floor + coef*sizeInterval);
 
 
@@ -246,7 +246,6 @@ int ArithmeticCompressor::getCeil(short symbol,FrequencyTable& ft)
 
 	// el piso es en base al acumulado del caracter.
 	double coef = (double)ft.getCumFrequency(symbol)/ft.getFrequencyTotal();
-//	tceil = m_floor + (int)floor(coef*sizeInterval)-1;
 	tceil = floor(m_floor + coef*sizeInterval-1);
 
 	return tceil;

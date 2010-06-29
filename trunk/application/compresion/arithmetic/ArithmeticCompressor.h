@@ -36,7 +36,7 @@ public:
 	 * 					Si coder = DECOMPRESSOR entonces se trata del archivo de entrada.
 	 * @param maxsymbols Precision. Maxima cantidad de simbolos posible.
 	 */
-	ArithmeticCompressor(Coder coder,const std::string fileName,unsigned int maxsymbols);
+	ArithmeticCompressor(Coder coder,const std::string fileName,int maxbits);
 
 	/// Destructor
 	virtual ~ArithmeticCompressor();
