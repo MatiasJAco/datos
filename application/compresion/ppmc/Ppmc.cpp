@@ -245,7 +245,7 @@ int test = 1;
 		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
 //		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
-		else cout<<"aritmetico emitio : ESC "<<endl;	//todo hacer cout de if EOF
+		else cout<<"aritmetico emitio : ESC "<<endl;
 		if (borrarContador == 13){
 			cout<< "cagamos: 13"<<endl;
 			sequentialFile->close();
