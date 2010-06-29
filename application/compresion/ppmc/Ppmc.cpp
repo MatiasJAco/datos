@@ -204,7 +204,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	log.append(path);
 	this->logger->insert(&log[0]);
 	std::string outPath = "";
-	int maxContext = 0;
+	int maxContext;
 	if (!getMetadata( path, outPath, maxContext))
 		return false; // El archivo no posee la extension ".ppmc".
 
@@ -262,10 +262,6 @@ bool Ppmc::deCompress(const std::string & path) {
 		if (continuarCiclo){
 			//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
 			if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
-				actualContextNumber=0;
-				stringContext = ZERO_CONTEXT;
-
-
 					//escribo en el archivo de salida el caracter.
 					character = (char) shortCharacter;
 					sequentialFile->writeChar(character);
@@ -280,25 +276,22 @@ bool Ppmc::deCompress(const std::string & path) {
 
 					//-----------actualizo todas las tablas de frecuencias que necesite--------------
 					//actualizo primero la del contexto 0
-						updateFrequencyTables(stringContext,shortCharacter);
-						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-
 						std::string maxStringContextAux;
 
 						if(!primeraVez){
 							if (previousStringContext.length()!=maxContext){
-								for (unsigned int i = 1; i<=maxStringContext.length();i++){
+								for (unsigned int i = maxStringContext.length(); i>=1;i--){
 									maxStringContextAux = maxStringContext;
-									actualContextNumber++;
+									//actualContextNumber++;
 									stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
 									updateFrequencyTables(stringContext,shortCharacter);
 									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 								}
 							}
 							else {   //previousContext tiene mismo tam que maxContext
-								for (unsigned int i = 1; i<=previousStringContext.length();i++){
+								for (unsigned int i = previousStringContext.length(); i>=1;i--){
 									maxStringContextAux = previousStringContext;
-									actualContextNumber++;
+									//actualContextNumber++;
 									stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
 									updateFrequencyTables(stringContext,shortCharacter);
 									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
@@ -306,23 +299,28 @@ bool Ppmc::deCompress(const std::string & path) {
 							}
 						}
 
+						actualContextNumber=0;
+						stringContext = ZERO_CONTEXT;
+							updateFrequencyTables(stringContext,shortCharacter);
+							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+
 
 						// -------creo todas las tablas de frecuencias nuevas--
 						std::string stringContextAux;
 						if (primeraVez){	//actualizo contexto 1
 							stringContextAux = character;
 							updateFrequencyTables(stringContextAux, ESC_CHAR);//creo la tabla del contexto con esc(1)
-							cout << "CREATE (o update): " << stringContextAux<<","<<1<<endl;
+							cout << "CREATE (o update): " << stringContextAux<<endl;
 						}
 						else{
-							actualContextNumber=1;
-							for (unsigned int i = 1; i<=maxStringContextDesfasadoEn1.length();i++){
+//							actualContextNumber=1;
+							for (unsigned int i = maxStringContextDesfasadoEn1.length(); i>=1;i--){
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								stringContext = maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-i,i);
 								updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
-								cout << "CREATE (o update): " << stringContext<<","<<actualContextNumber<<endl;
-								if (i!=maxStringContextDesfasadoEn1.length())
-									actualContextNumber++;
+								cout << "CREATE (o update): " << stringContext<<endl;
+//								if (i!=maxStringContextDesfasadoEn1.length())
+//									actualContextNumber++;
 							}
 						}
 
@@ -334,8 +332,9 @@ bool Ppmc::deCompress(const std::string & path) {
 						}
 						else{//aca me llega con actualContextNumber==maxContext
 							if(maxStringContextDesfasadoEn1.length()!=maxContext){
-								maxStringContextAux = maxStringContextDesfasadoEn1;
+								maxStringContextAux = maxStringContextDesfasadoEn1; //todo actualContextNumber ??
 								stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
+								cout << "nunca paso por aca todavia"<<endl;
 							}else{
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
