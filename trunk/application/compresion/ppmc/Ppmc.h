@@ -147,6 +147,14 @@ private:
 	 */
 	bool getMetadata(std::string path, std::string & outPath, int & maxContext);
 
+	/**
+	 * Compara contextos y te dice si el anterior es >, < o = al actual
+	 * @param previousStringContext string a comparar
+	 * @param stringContext string a comparar
+	 * @return -1 si el primero es menor al segundo, 0 si son iguales, 1 si el primero es mayor al segundo
+	 */
+	int compareStringContexts(std::string previousStringContext,std::string stringContext);
+
 protected:
 
 	/**
