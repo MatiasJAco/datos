@@ -8,7 +8,7 @@
 #include "TestPpmcT.h"
 
 TestPpmcT::TestPpmcT() {
-	BPlusTree* bPlusTree = new BPlusTree("arbol.dat",92,0.5);
+	BPlusTree* bPlusTree = new BPlusTree("arbol.dat", 120, 0.5);
 	this->mainFixture=new PpmcTree(bPlusTree);
 }
 
@@ -135,4 +135,10 @@ void TestPpmcT::testPpmcTreeCompress() {
 
 	std::remove(previousCompressionFile.c_str());
 	this->mainFixture->compress(path, maxContext);
+
+	std::remove("arbol.dat");
+	std::remove("arbol.dat.free");
+	std::remove("contador.dat");
+	std::remove("logger.txt");
+	std::remove("logger1.txt");
 }
