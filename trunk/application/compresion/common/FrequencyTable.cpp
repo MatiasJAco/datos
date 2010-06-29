@@ -127,6 +127,7 @@ int FrequencyTable::getCharCount()
 {
 	int retVal=0;
 	retVal = m_Frequencies.size();
+	int retValBackup = retVal;
 
 	if(!m_isSorted)
 	{
@@ -143,6 +144,8 @@ int FrequencyTable::getCharCount()
 			if((*it) == ESC_CHAR)
 				retVal--;
 
+			if (retValBackup == 1)	//solo tiene un elemento (el ESC)
+				return 0;
 			it--;
 		}
 	}
