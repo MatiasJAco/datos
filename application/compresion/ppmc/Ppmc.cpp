@@ -55,7 +55,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	log.append(path);
 	this->logger->insert(&log[0]);
 
-	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 258);
+	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 24);
 	this->setContextStats(maxContext);
 	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
@@ -205,7 +205,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	sequentialFile->open(outPath);
 
 	//instancio el compresor aritmetico como Decompresor.
-	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 258);
+	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 24);
 
 	std::string stringContext;
 	std::string previousStringContext="";
