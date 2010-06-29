@@ -199,6 +199,19 @@ bool Ppmc::getMetadata(std::string path, std::string & outPath, int & maxContext
 	return true;
 }
 
+// -1 si el primero es menor al segundo, 0 si son iguales, 1 si el primero es mayor al segundo
+int Ppmc::compareStringContexts(std::string previousStringContext,std::string stringContext){
+	if (previousStringContext == ZERO_CONTEXT && stringContext==MINUS_ONE_CONTEXT )
+		return 1;
+	else if (previousStringContext.length()==1 && previousStringContext!=ZERO_CONTEXT)
+		return 1;
+	else if (previousStringContext==MINUS_ONE_CONTEXT && stringContext != MINUS_ONE_CONTEXT)
+		return -1;
+	else if (previousStringContext == stringContext)
+		return 0;
+	return -1;
+}
+
 bool Ppmc::deCompress(const std::string & path) {
 	std::string log = ";Descomprimiendo archivo: ";
 	log.append(path);
@@ -223,7 +236,9 @@ bool Ppmc::deCompress(const std::string & path) {
 	char character;
 	char characterAnterior;
 	short shortCharacter;
+	FrequencyTable* previousFrequencyTable;
 	FrequencyTable * frequencyTable;
+	FrequencyTable * excludedFrequencyTable;
 	bool primeraVez = true;
 	bool continuarCiclo = true;
 
@@ -238,11 +253,47 @@ bool Ppmc::deCompress(const std::string & path) {
 				}
 //				else if (actualContextNumber == 0)
 //					stringContext = ZERO_CONTEXT;
+				if (primeraVez) {//si es la primera vez no tengo tabla excluida aun -> la lleno con la del ctx-1
+					previousFrequencyTable = frequencyTable;
+					excludedFrequencyTable = frequencyTable;
+				} else {// Se excluyen los caracteres que estaban en el contexto anterior.
+					if (compareStringContexts(previousStringContext,stringContext)>0){
+						if (stringContext==MINUS_ONE_CONTEXT){
+//							string borrar1 = minusOneCtxtFreqTable->toString();
+//							cout << "borrar1 CantElemSinESC "<< minusOneCtxtFreqTable->getCharCount()<<" :"<<borrar1<<endl;
+							string borrar3 = previousFrequencyTable->toString();
+							cout << "borrar3 CantElemSinESC "<< previousFrequencyTable->getCharCount()<<" :"<<borrar3<<endl;
+							excludedFrequencyTable = new FrequencyTable(minusOneCtxtFreqTable->excludeFromTable(*previousFrequencyTable));
+							string borrar2 = excludedFrequencyTable->toString();
+							cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
+							previousFrequencyTable = excludedFrequencyTable;
+						}
+						string borrar1 = previousFrequencyTable->toString();
+						cout << "borrar1 CantElemSinESC "<< previousFrequencyTable->getCharCount()<<" :"<<borrar1<<endl;
+						excludedFrequencyTable = new FrequencyTable(frequencyTable->excludeFromTable(*previousFrequencyTable));
+						string borrar2 = excludedFrequencyTable->toString();
+						cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
+						previousFrequencyTable = excludedFrequencyTable;
+					}
+					else if (compareStringContexts(previousStringContext,stringContext)==0){
+						string borrar1 = minusOneCtxtFreqTable->toString();
+						cout << "borrar1 CantElemSinESC "<< minusOneCtxtFreqTable->getCharCount()<<" :"<<borrar1<<endl;
+						string borrar3 = frequencyTable->toString();
+						cout << "borrar3 CantElemSinESC "<< frequencyTable->getCharCount()<<" :"<<borrar3<<endl;
+						excludedFrequencyTable = new FrequencyTable(minusOneCtxtFreqTable->excludeFromTable(*frequencyTable));
+						string borrar2 = excludedFrequencyTable->toString();
+						cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
+						previousFrequencyTable = excludedFrequencyTable;
+					}else{
+						excludedFrequencyTable = frequencyTable;
+						previousFrequencyTable = excludedFrequencyTable;
+					}
+				}
 
-		string borrar = frequencyTable->toString();
-		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-//		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+		string borrar = excludedFrequencyTable->toString();
+		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
+		shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
+	//	shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		else cout<<"aritmetico emitio : ESC "<<endl;
 		if (borrarContador == 13){
@@ -341,20 +392,28 @@ bool Ppmc::deCompress(const std::string & path) {
 								//actualContextNumber = stringContext.length();
 							}
 						}
+						previousStringContext = stringContext;
 					}
-					previousStringContext = stringContext;
+					else{// es primeraVez
+						previousStringContext = MINUS_ONE_CONTEXT;
+					}
+
 			}
 			else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
 				//actualContextNumber--;
-				if (stringContext==ZERO_CONTEXT)
+				if (stringContext==ZERO_CONTEXT){
+					previousStringContext = stringContext;
 					stringContext = MINUS_ONE_CONTEXT;
-				else if (stringContext==MINUS_ONE_CONTEXT)
+				}else if (stringContext==MINUS_ONE_CONTEXT){
 					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
-				else if (stringContext.length()==1)
+				}else if (stringContext.length()==1){
+					previousStringContext = stringContext;
 					stringContext=ZERO_CONTEXT;
-				else
+				}else{
+					previousStringContext = stringContext;
 					stringContext = stringContext.substr(1,stringContext.length()-1);
 				}
+			}
 
 			primeraVez = false;
 			characterAnterior = character;
