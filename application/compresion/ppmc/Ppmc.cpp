@@ -215,11 +215,11 @@ bool Ppmc::deCompress(const std::string & path) {
 	//instancio el compresor aritmetico como Decompresor.
 	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 24);
 
-	std::string stringContext;
+	std::string stringContext = MINUS_ONE_CONTEXT;
 	std::string previousStringContext="";
 	std::string maxStringContext = "";
 	std::string maxStringContextDesfasadoEn1 = "";
-	int actualContextNumber = -1; // Representa el número de contexto -1 (de donde arranca la descompresion)
+	//int actualContextNumber = -1; // Representa el número de contexto -1 (de donde arranca la descompresion)
 	char character;
 	char characterAnterior;
 	short shortCharacter;
@@ -232,15 +232,15 @@ bool Ppmc::deCompress(const std::string & path) {
 	int borrarContador = 0; //todo hacerle caso al nombre de la variable :D
 	while(continuarCiclo){
 				borrarContador++;
-				if (actualContextNumber ==-1){
+				if (stringContext == MINUS_ONE_CONTEXT){//if (actualContextNumber ==-1){
 					frequencyTable = this->minusOneCtxtFreqTable;
-					stringContext = MINUS_ONE_CONTEXT;
+					//stringContext = MINUS_ONE_CONTEXT;
 				}
-				else if (actualContextNumber == 0)
-					stringContext = ZERO_CONTEXT;
+//				else if (actualContextNumber == 0)
+//					stringContext = ZERO_CONTEXT;
 
 		string borrar = frequencyTable->toString();
-		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / numCtxt '"<<actualContextNumber<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
+		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
 //		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
 		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
@@ -256,7 +256,8 @@ bool Ppmc::deCompress(const std::string & path) {
 								else if (shortCharacter == EOF_CHAR){
 									continuarCiclo = false;
 								}
-								if (actualContextNumber != -1)	//libero memoria
+								//if (actualContextNumber != -1)	//libero memoria
+								if (stringContext!= MINUS_ONE_CONTEXT)
 									delete frequencyTable;
 
 		if (continuarCiclo){
@@ -275,9 +276,7 @@ bool Ppmc::deCompress(const std::string & path) {
 
 
 					//-----------actualizo todas las tablas de frecuencias que necesite--------------
-					//actualizo primero la del contexto 0
 						std::string maxStringContextAux;
-
 						if(!primeraVez){
 							if (previousStringContext.length()!=maxContext){
 								for (unsigned int i = maxStringContext.length(); i>=1;i--){
@@ -299,7 +298,8 @@ bool Ppmc::deCompress(const std::string & path) {
 							}
 						}
 
-						actualContextNumber=0;
+						//actualizo la del cero
+//						actualContextNumber=0;
 						stringContext = ZERO_CONTEXT;
 							updateFrequencyTables(stringContext,shortCharacter);
 							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
@@ -327,7 +327,7 @@ bool Ppmc::deCompress(const std::string & path) {
 					//actualizo stringContext para entrar al ciclo de nuevo
 					if (!primeraVez){
 						if (previousStringContext == ZERO_CONTEXT){
-							actualContextNumber = 1;
+							//actualContextNumber = 1;
 							stringContext =  character;
 						}
 						else{//aca me llega con actualContextNumber==maxContext
@@ -338,25 +338,22 @@ bool Ppmc::deCompress(const std::string & path) {
 							}else{
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
-								actualContextNumber = stringContext.length();
+								//actualContextNumber = stringContext.length();
 							}
 						}
 					}
 					previousStringContext = stringContext;
 			}
 			else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
-				actualContextNumber--;
-							if (actualContextNumber == -1)
-								stringContext = MINUS_ONE_CONTEXT;
-							else if (actualContextNumber == 0)
-								stringContext = ZERO_CONTEXT;
-							else {
-								stringContext = stringContext.substr(1,stringContext.length()-1);
-							}
-
-							if (actualContextNumber<-1) //TODO solo para debug - borrar desp de q ande todo
-								cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
-
+				//actualContextNumber--;
+				if (stringContext==ZERO_CONTEXT)
+					stringContext = MINUS_ONE_CONTEXT;
+				else if (stringContext==MINUS_ONE_CONTEXT)
+					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
+				else if (stringContext.length()==1)
+					stringContext=ZERO_CONTEXT;
+				else
+					stringContext = stringContext.substr(1,stringContext.length()-1);
 				}
 
 			primeraVez = false;
@@ -367,11 +364,11 @@ bool Ppmc::deCompress(const std::string & path) {
 				frequencyTable = this->getFrequencyTable(stringContext, true);
 			}
 			else {	//no existe el ctxt -> lo creo
-				if (actualContextNumber > -1){
-					cout<<"paso por aca! sino se pasa por aca, hay qe borrar este else"<<endl;//todo ver si pasa por aca, me pa que hay que sacar este else
+//				if (actualContextNumber > -1){
+					cout<<"paso por aca! sino se pasa por aca, hay qe borrar este else"<<endl;
 					//updateFrequencyTables(stringContext, character);
 //					frequencyTable = this->getFrequencyTable(stringContext, true);
-				}
+//				}
 			}
 
 		}//fin if(continuarCiclo)
