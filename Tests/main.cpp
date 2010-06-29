@@ -73,7 +73,7 @@ void testAllHash() {
 
 	/* TESTS DE PPMC */
 	testHash->testPpmcHashComprimir();
-	testHash->testPpmcHashDescomprimir();
+	//testHash->testPpmcHashDescomprimir();
 
 	/* TESTS PARA LA FUNCION HASH NUEVA */
 	//testHash->testBigInt();
@@ -109,8 +109,8 @@ int main() {
 	//testAllLogger();
 	//testAllBPlusTree();
 	//testAllArithmetic();
-	//testAllPpmcTree();
-	testAllHash();
+	testAllPpmcTree();
+	//testAllHash();
 	//testAllFrequencyTable();
 	//testAllStadistic();
 	return 0;

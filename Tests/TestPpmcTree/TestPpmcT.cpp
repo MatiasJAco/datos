@@ -24,7 +24,8 @@ void TestPpmcT::run()
 //	testAddCharacterToContext();
 //	testIncreaseFrequency();
 //	testPrintAllContexts();
-	testGetNextContext();
+//	testGetNextContext();
+	testPpmcTreeCompress();
 }
 
 void TestPpmcT::testCreateContext(){
@@ -120,4 +121,18 @@ void TestPpmcT::testGetNextContext(){
 	frequencyTable->deserialize(stringInputData.getValue());
 	std::cout<<frequencyTable->toPrintableString();
 
-};
+}
+
+void TestPpmcT::testPpmcTreeCompress() {
+	std::string path = "./archivoAComprimir.txt";
+	int maxContext = 2;
+
+	std::string previousCompressionFile = "archivoAComprimir.txt";
+	previousCompressionFile.append(".ppmc");
+	stringstream ss;
+	ss << maxContext;
+	previousCompressionFile.append(ss.str());
+
+	std::remove(previousCompressionFile.c_str());
+	this->mainFixture->compress(path, maxContext);
+}
