@@ -62,7 +62,7 @@ bool PpmcTree::getNextContext(std::string key, InputData & data) throw (ManagerE
 	StringInputData comparado;
 	bool encontrado=false;
 	//Para saltear al ultimo buscado.
-	this->generalStructure->getPrevious(comparado);
+
 	this->generalStructure->getPrevious(comparado);
 	//Comienza busqueda.
 	while ((!encontrado)&&(comparado.getKey()>=claveInvertida)){
