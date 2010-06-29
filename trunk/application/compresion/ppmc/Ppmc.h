@@ -16,6 +16,7 @@
 #include "../../../logic/logger/Logger.h"
 #include "../common/FrequencyTable.h"
 #include "../arithmetic/ArithmeticCompressor.h"
+#include "../../../physical/file/SequentialFile.h"
 
 /**
  * Clase que modela el algoritmo de compresión de PPMC.
