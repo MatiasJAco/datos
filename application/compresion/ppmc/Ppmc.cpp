@@ -224,7 +224,7 @@ bool Ppmc::deCompress(const std::string & path) {
 
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
-
+int test = 1;
 	int borrarContador = 0; //todo hacerle caso al nombre de la variable :D
 	while(continuarCiclo){
 				borrarContador++;
@@ -235,10 +235,15 @@ bool Ppmc::deCompress(const std::string & path) {
 				else if (actualContextNumber == 0)
 					stringContext = ZERO_CONTEXT;
 
+		if (test == 3)
+			frequencyTable->setFrequency(68,0); //borro la frecuencia de la D (por exclusion)
+
+		test++;
+
 		string borrar = frequencyTable->toString();
 		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / numCtxt '"<<actualContextNumber<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-//		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+//		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		else cout<<"aritmetico emitio : ESC "<<endl;	//todo hacer cout de if EOF
 		if (borrarContador == 13){
