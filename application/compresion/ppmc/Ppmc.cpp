@@ -184,13 +184,7 @@ short Ppmc::borrarEsteMetodo(int contador){
 	return result;
 }
 
-bool Ppmc::deCompress(const std::string & path) {
-	std::string log = ";Descomprimiendo archivo: ";
-	log.append(path);
-	this->logger->insert(&log[0]);
-
-	std::string outPath = "";
-	int maxContext = 0;
+bool Ppmc::getMetadata(std::string path, std::string & outPath, int & maxContext){
 	size_t position = path.find(".ppmc");
 	if (position != string::npos) {
 		outPath = path.substr(0, position);
@@ -201,7 +195,18 @@ bool Ppmc::deCompress(const std::string & path) {
 
 	position = outPath.find(".txt");
 	outPath = outPath.substr(0, position);
-	outPath.append("Comprimido.txt");
+	outPath.append("Descomprimido.txt");
+	return true;
+}
+
+bool Ppmc::deCompress(const std::string & path) {
+	std::string log = ";Descomprimiendo archivo: ";
+	log.append(path);
+	this->logger->insert(&log[0]);
+	std::string outPath = "";
+	int maxContext = 0;
+	if (!getMetadata( path, outPath, maxContext))
+		return false; // El archivo no posee la extension ".ppmc".
 
 	std::cout << "Descomprimiendo archivo... (" << path << ") con contexto "<<maxContext << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(WRITE_FILE);
@@ -224,7 +229,6 @@ bool Ppmc::deCompress(const std::string & path) {
 
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
-int test = 1;
 	int borrarContador = 0; //todo hacerle caso al nombre de la variable :D
 	while(continuarCiclo){
 				borrarContador++;
@@ -235,15 +239,10 @@ int test = 1;
 				else if (actualContextNumber == 0)
 					stringContext = ZERO_CONTEXT;
 
-		if (test == 3)
-			frequencyTable->setFrequency(68,0); //borro la frecuencia de la D (por exclusion)
-
-		test++;
-
 		string borrar = frequencyTable->toString();
 		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / numCtxt '"<<actualContextNumber<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-//		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
+//		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+		shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
 		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
 		else cout<<"aritmetico emitio : ESC "<<endl;
 		if (borrarContador == 13){

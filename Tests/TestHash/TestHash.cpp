@@ -403,7 +403,7 @@ void TestHash::testPpmcHashDescomprimir() {
 	std::remove("tabla.txt");
 	std::remove("hash.bin");
 	std::remove("hash.bin.free");
-	std::remove("archivoAComprimirComprimido.txt");
+	std::remove("archivoAComprimirDescomprimido.txt");
 	std::remove("logger.txt");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);

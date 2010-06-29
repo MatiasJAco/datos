@@ -138,6 +138,15 @@ private:
 	 */
 	std::string getCompressionOutFile(std::string path, int maxContext);
 
+	/**
+	 * Obtiene metadata del archivo
+	 * @param path Es el path del archivo a desComprimir.
+	 * @param outPath Es el path del archivo de salida del descompresor
+	 * @param maxContext Es el contexto con el que se comprimio el archivo a descomprimir
+	 * @return false en caso de que El archivo no posee la extension ".ppmc".. Sino devuelve true
+	 */
+	bool getMetadata(std::string path, std::string & outPath, int & maxContext);
+
 protected:
 
 	/**
