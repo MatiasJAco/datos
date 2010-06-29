@@ -47,7 +47,7 @@ private:
 	short m_sizetoCompress;
 
 	std::string m_filecompressed;
-	int m_maxsymbols;
+	int m_maxbits;
 };
 
 #endif /* TESTARITHMETIC_H_ */
