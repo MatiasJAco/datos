@@ -397,6 +397,9 @@ void TestHash::testPpmcHashComprimir() {
 	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress(path, maxContext);
 	hash->deleteGeneratedFiles();
+	std::remove("logger.txt");
+	std::remove("logger1.txt");
+	std::remove("contador.dat");
 }
 
 void TestHash::testPpmcHashDescomprimir() {
