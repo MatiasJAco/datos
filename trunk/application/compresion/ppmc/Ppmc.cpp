@@ -52,7 +52,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	log.append(path);
 	this->logger->insert(&log[0]);
 
-	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 24);
+	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 24);   //todo ta bien 3er param?
 	this->setContextStats(maxContext);
 	bool newRead=true;
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
@@ -223,7 +223,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	sequentialFile->open(outPath);
 
 	//instancio el compresor aritmetico como Decompresor.
-	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 24);
+	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 24);   //todo ta bien 3er param?
 
 	std::string stringContext = MINUS_ONE_CONTEXT;
 	std::string previousStringContext="";
@@ -290,6 +290,8 @@ bool Ppmc::deCompress(const std::string & path) {
 	else cout<<"aritmetico emitio : ESC "<<endl;
 	excludedFrequencyTable = frequencyTable;	//es la misma
 
+	int EscCount = 0;
+
 	while(isNotEOF){
 				borrarContador++;
 //				if (borrarContador == 14){
@@ -316,26 +318,33 @@ bool Ppmc::deCompress(const std::string & path) {
 					for (unsigned int i = maxStringContext.length(); i>=1;i--){
 						maxStringContextAux = maxStringContext;
 						stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
-						updateFrequencyTables(stringContext,shortCharacter);
-						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+						if (EscCount>=0){//para verificar si realmente hay que actualizar ese contexto
+							updateFrequencyTables(stringContext,shortCharacter);
+							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+						}
+						EscCount--;
 					}
 				}
 				else {   //previousContext tiene mismo tam que maxContext
 					for (unsigned int i = previousStringContext.length(); i>=1;i--){
 						maxStringContextAux = previousStringContext;
 						stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
-						updateFrequencyTables(stringContext,shortCharacter);
-						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+						if (EscCount>=0){ //para verificar si realmente hay que actualizar ese contexto
+							updateFrequencyTables(stringContext,shortCharacter);
+							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+						}
+						EscCount--;
 					}
 				}
 
-				//-------actualizo la del cero
-				stringContext = ZERO_CONTEXT;
-				updateFrequencyTables(stringContext,shortCharacter);
-				cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+				if (EscCount>=0){ //para verificar si realmente hay que actualizar el contexto cero
+					stringContext = ZERO_CONTEXT;//actualizo la del cero
+					updateFrequencyTables(stringContext,shortCharacter);
+					cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+				}
+				EscCount--;   //todo necesario?
 
-
-				// -------creo todas las tablas de frecuencias nuevas--
+				// -------creo todas las tablas de frecuencias nuevas----------------------------
 				std::string stringContextAux;
 				for (unsigned int i = maxStringContextDesfasadoEn1.length(); i>=1;i--){
 					maxStringContextAux = maxStringContextDesfasadoEn1;
@@ -344,7 +353,7 @@ bool Ppmc::deCompress(const std::string & path) {
 					cout << "CREATE (o update): " << stringContext<<endl;
 				}
 
-				//-------actualizo stringContext para mandarle su tabla de frecuencia al aritmetico
+				//-------actualizo stringContext para mandarle su tabla de frecuencia al aritmetico----------------
 				if (previousStringContext == ZERO_CONTEXT && maxStringContext.length()==1){
 					previousStringContext = stringContext;
 					stringContext =  character;
@@ -361,6 +370,9 @@ bool Ppmc::deCompress(const std::string & path) {
 						stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
 					}
 				}
+
+				//restart del escCount
+				EscCount = 0;
 
 				// ----------EXCLUSION --------
 				if (this->existsElementInStructure(stringContext)) { // si Existe el contexto obtengo la tabla
@@ -384,6 +396,8 @@ bool Ppmc::deCompress(const std::string & path) {
 				previousStringContext = stringContext;
 				stringContext = stringContext.substr(1,stringContext.length()-1);
 			}
+
+			EscCount++;
 
 			//----------EXCLUSION
 
