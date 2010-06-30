@@ -49,6 +49,9 @@ void ArithmeticCompressor::compress(short symbol,FrequencyTable & ft)
 	int newFloor = getFloor(symbol,ft);
 	int newCeil = getCeil(symbol,ft);
 
+	if (newFloor == newCeil)
+		throw CompressionException(CompressionException::BITS_NOT_ENOUGH);
+
 	m_floor = newFloor;
 	m_ceil = newCeil;
 
@@ -64,6 +67,9 @@ short ArithmeticCompressor::decompress(FrequencyTable& ft)
 		// Actualizo el piso y el techo.
 		int newFloor = getFloor(symbol,ft);
 		int newCeil = getCeil(symbol,ft);
+
+		if (newFloor == newCeil)
+			throw CompressionException(CompressionException::BITS_NOT_ENOUGH);
 
 		m_floor = newFloor;
 		m_ceil = newCeil;
