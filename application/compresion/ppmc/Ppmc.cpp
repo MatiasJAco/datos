@@ -414,7 +414,7 @@ bool Ppmc::deCompress(const std::string & path) {
 				cout<<"frequencyTable : "<<frequencyTableString<<endl;
 				frequencyTable = this->getFrequencyTable(stringContext, true);
 				(*excludedFrequencyTable) = frequencyTable->excludeFromTable((*previousFrequencyTable));
-				previousFrequencyTable = excludedFrequencyTable;
+				previousFrequencyTable = frequencyTable;
 				previousFrequencyTableString = stringContext;
 			}
 
