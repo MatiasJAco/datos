@@ -27,7 +27,7 @@ SequentialFile::~SequentialFile() {
 
 bool SequentialFile::close()
 {
-	bool retVal;
+	bool retVal=true;
 
 	//Si el modo del archivo es escritura, hago un flush
 	if(m_AccessMode == WRITE_FILE)

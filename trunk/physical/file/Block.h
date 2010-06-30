@@ -10,6 +10,7 @@
 #include "Register.h"
 #include "VarRegister.h"
 #include "../utils/ByteConverter.h"
+#include "../Exception/PhysicalException.h"
 #include <sstream>
 #include <list>
 
