@@ -28,12 +28,18 @@ void TestArithmetic::run()
 //	testStatic("I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n","random.gzip");
 	std::string b = "ab";
 
-	std::string file="ocean-soul";
+	std::string file="she-is-my-sin";
 
 	std::remove((file+".gzip").c_str());
-	testDinamicFile((file+".txt").c_str());
 
-	//testDinamicString("ab","ab.gzip");
+	try
+	{
+		testDinamicFile((file+".txt").c_str());
+	}
+	catch(CompressionException e)
+	{
+		cout << e.what() << endl;
+	}
 }
 
 
@@ -216,7 +222,7 @@ void TestArithmetic::testDinamicString(string toCompress,string archcomprimido)
 
 	m_filecompressed = archcomprimido;
 
-	m_maxbits = 15;
+	m_maxbits = 8;
 
 
 	loadDinamicFTable();
