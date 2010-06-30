@@ -281,7 +281,6 @@ bool Ppmc::deCompress(const std::string & path) {
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
 	stringContext=ZERO_CONTEXT;
 	frequencyTable = this->getFrequencyTable(stringContext, true);
-	excludedFrequencyTable = frequencyTable;
 	frequencyTableString = ZERO_CONTEXT;
 	borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
@@ -289,6 +288,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	shortCharacter = borrarEsteMetodo(borrarContador);
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
 	else cout<<"aritmetico emitio : ESC "<<endl;
+	excludedFrequencyTable = frequencyTable;	//es la misma
 
 	while(isNotEOF){
 				borrarContador++;
@@ -499,7 +499,7 @@ void Ppmc::getMaxStringContext(std::string &maxStringContext,char characterAnter
 	else{
 		maxStringContext  = maxStringContext.append(1,characterAnterior);
 		if (maxStringContext.length()>maxContext)
-			maxStringContext = maxStringContext.substr(0,maxContext);
+			maxStringContext = maxStringContext.substr(1,maxContext);
 	}
 }
 
