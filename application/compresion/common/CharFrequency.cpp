@@ -125,7 +125,7 @@ long CharFrequency::StringToLong(string &str,unsigned int &pos)
 	unsigned int tempPos = str.find(LONG_SEPARATOR, pos);
 
 	if (tempPos ==string::npos)
-		throw "NO ES UN STRING VALIDO";
+		throw CompressionException(CompressionException::INVALID_CHAR);
 
 	strPiece = str.substr (pos,tempPos-pos);
 
@@ -144,7 +144,7 @@ short CharFrequency::StringToShort(string &str,unsigned int &pos)
 	unsigned int tempPos = str.find(SHORT_SEPARATOR, pos);
 
 	if (tempPos ==string::npos)
-		throw "NO ES UN STRING VALIDO";
+		throw CompressionException(CompressionException::INVALID_CHAR);
 
 	strPiece = str.substr (pos,tempPos-pos);
 

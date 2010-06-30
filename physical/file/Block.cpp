@@ -14,7 +14,7 @@ Block::Block(unsigned int blocknumber, unsigned int blocksize, float loadFactor)
 	m_FirstRegisterOffset= sizeof(m_registerCount)+sizeof(m_usedBytes);
 
 	if(blocksize < m_FirstRegisterOffset+1)
-		throw "El tama�o del bloque debe poder por lo menos comprender los datos de control";
+		throw PhysicalException(PhysicalException::UNDER_MIN_BLOCK_SIZE);
 
 	restartCounter();
 	m_blockNumber = blocknumber;
@@ -113,10 +113,10 @@ VarRegister Block::peekNextRegister()
                     current=*it;
             }
             else
-                    throw "No se puede hacer peek";
+                    throw PhysicalException(PhysicalException::PEEK_FAIL);
     }
     else
-    	throw "No se puede hacer peek";
+    	throw PhysicalException(PhysicalException::PEEK_FAIL);
 
     return current;
 }
@@ -288,7 +288,7 @@ bool Block::addRegister(const VarRegister & reg, loadResultEnum &load)
 
 	//Valido que el registro a insertar no sea mas grande que un bloque
 	if(reg.getDiskSize()> (m_blockSize-m_FirstRegisterOffset)/2)
-		throw "Registro demasiado grande";
+		throw PhysicalException(PhysicalException::REGISTER_OVERSIZE);
 
 	//Si no va a haber overflow
 	if(load != OVERFLOW_LOAD)
@@ -407,7 +407,7 @@ bool Block::deleteRegister(loadResultEnum &load)
 		retVal=true;
 	}
 	else
-		throw "Error al eliminar el bloque";
+		throw PhysicalException(PhysicalException::BLOCK_DELETE_ERROR);
 
 	return retVal;
 }
@@ -417,7 +417,7 @@ VarRegister Block::getRegisterN(unsigned int number)
 	VarRegister reg;
 
 	if(number > m_registers.size())
-		throw "El numero del registro no existe en el bloque";
+		throw PhysicalException(PhysicalException::UNEXISTENT_REGISTER);
 
 	unsigned int i;
 	restartCounter();

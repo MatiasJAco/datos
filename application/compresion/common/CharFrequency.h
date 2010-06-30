@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <string>
 #include "../../../physical/utils/ByteConverter.h"
+#include "../exceptions/CompressionException.h"
 
 /**
  * Clase que guarda el par caracter/frecuencia

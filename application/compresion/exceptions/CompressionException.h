@@ -16,7 +16,8 @@ class CompressionException: public std::exception  {
 public:
 	typedef enum
 	{
-		BITS_NOT_ENOUGH
+		BITS_NOT_ENOUGH,
+		INVALID_CHAR
 	}CompressionExceptionCause;
 
 public:
@@ -35,6 +36,9 @@ public:
 			switch(m_cause)
 			{
 			case BITS_NOT_ENOUGH:
+				retVal = "Cantidad de bits insuficiente. Piso y techo iguales!!";
+				break;
+			case INVALID_CHAR:
 				retVal = "Cantidad de bits insuficiente. Piso y techo iguales!!";
 				break;
 			default:

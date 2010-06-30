@@ -20,6 +20,11 @@ public:
 		BUFFER_SIZE_EXCEDED,
 		ERROR_OPENING_FILE,
 		INVALID_FILE_OPERATION,
+		PEEK_FAIL,
+		UNDER_MIN_BLOCK_SIZE,
+		REGISTER_OVERSIZE,
+		UNEXISTENT_REGISTER,
+		BLOCK_DELETE_ERROR,
 		UNDEFINED
 	}PhysicalExceptionCause;
 
@@ -49,6 +54,18 @@ public:
 				break;
 			case ERROR_OPENING_FILE:
 				retVal = "Error al abrir el archivo";
+				break;
+			case UNDER_MIN_BLOCK_SIZE:
+				retVal = "El tama�o del bloque debe poder por lo menos comprender los datos de control";
+				break;
+			case REGISTER_OVERSIZE:
+				retVal = "Registro demasiado grande";
+				break;
+			case UNEXISTENT_REGISTER:
+				retVal = "El numero del registro no existe en el bloque";
+				break;
+			case BLOCK_DELETE_ERROR:
+				retVal = "Error al eliminar el bloque";
 				break;
 			default:
 				retVal = "Error inesperado";

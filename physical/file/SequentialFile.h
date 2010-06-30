@@ -23,7 +23,7 @@ class SequentialFile: public File {
 
 
 public:
-	static const int DEFAULT_BUFFER_SIZE = 100;
+	static const int DEFAULT_BUFFER_SIZE = 524288;
 
 	SequentialFile(accessModeEnum type);
 	virtual ~SequentialFile();
@@ -140,7 +140,7 @@ private:
 	unsigned int m_CurrentPos;
 
 	/**
-	 * Tamaño del buffer
+	 * Tamaï¿½o del buffer
 	 */
 	unsigned int m_BufferSize;
 
