@@ -21,53 +21,131 @@ TestArithmetic::~TestArithmetic() {
 
 void TestArithmetic::run()
 {
+//	std::string b = "I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n";
 //	testStatic("DIVIDIDOS","divididos.gzip");
 
 	// Con este string se ve el bug.
-	testStatic("I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n","random.gzip");
+//	testStatic("I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n","random.gzip");
+	std::string b = "ab";
 
-//	testStatic("Maria Celeste Maldonado","celeste.gzip");
+	testDinamicFile("ab.txt");
+
+	testDinamicString("ab","ab.gzip");
 }
 
-void TestArithmetic::testStatic(std::string toCompress,std::string output)
+
+void TestArithmetic::testDinamicFile(string archToCompress)
 {
-	m_tocompress = new short[toCompress.size()];
-	m_sizetoCompress = toCompress.size();
+	SequentialFile* file;
 
-	initializeToCompress(toCompress);
-	loadStaticFTable(toCompress);
+	m_filecompressed = archToCompress.substr(0,archToCompress.find(".txt"))+".gzip";
+	m_maxbits = 8;
 
-	cout << m_ft.toPrintableString();
+	file = new SequentialFile(READ_FILE);
+	file->setInputType(TEXT);
+	string fileOrig = "filesOrig/"+archToCompress;
 
-	m_filecompressed = output;
-	m_maxbits = 12;
-
-	testStaticCompress();
-	testStaticDecompress();
-
-	m_ft.clearTable();
-	delete[] m_tocompress;
-}
-
-void TestArithmetic::testDinamic(std::string toCompress,std::string output)
-{
-	m_tocompress = new short[toCompress.size()];
-	m_sizetoCompress = toCompress.size();
-
-	initializeToCompress(toCompress);
+	file->open(fileOrig);
 	loadDinamicFTable();
-
-	m_filecompressed = output;
-	m_maxbits = 12;
-
-	testDinamicCompress();
-	testDinamicDecompress();
-
+	testDinamicCompress(file);
+	file->close();
 	m_ft.clearTable();
-	delete [] m_tocompress;
+
+	delete file;
+
+	file = new SequentialFile(WRITE_FILE);
+	file->setInputType(TEXT);
+	string fileDesc = "filesDescomp/"+archToCompress;
+
+	file->open(fileDesc);
+	loadDinamicFTable();
+	testDinamicDecompress(file);
+	file->close();
+	m_ft.clearTable();
+
+	delete file;
 }
 
-void TestArithmetic::testStaticCompress()
+void TestArithmetic::testDinamicCompress(SequentialFile* archToCompress)
+{
+	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
+
+	int i = 0;
+	bool isNotEOF = true;
+
+	while (isNotEOF)
+	{
+		char c = archToCompress->readChar(isNotEOF);
+
+		if (isNotEOF)
+		{
+			m_compressor->compress(c,m_ft);
+			m_ft.increaseFrequency(c,1);
+			i++;
+		}
+	}
+
+	m_compressor->compress(EOF_CHAR,m_ft);
+
+
+	delete m_compressor;
+}
+
+void TestArithmetic::testDinamicDecompress(SequentialFile* archdescomprimido)
+{
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
+	short c =  UNDEFINED_CHAR;
+	int i = 0;
+
+	while (c!=EOF_CHAR)
+	{
+		c = m_compressor->decompress(m_ft);
+
+		if (c!=EOF_CHAR)
+		{
+			m_ft.increaseFrequency(c,1);
+			archdescomprimido->writeChar(c);
+			i++;
+		}
+	}
+
+	delete m_compressor;
+}
+
+void TestArithmetic::testStaticFile(string archToCompress)
+{
+	throw "No esta implementado completamente el estatico para un archivo porque tendria que cargar la tabla de frecuencias";
+
+	SequentialFile* file;
+
+	m_filecompressed = archToCompress.substr(archToCompress.find(".txt"))+".gzip";
+	m_maxbits = 8;
+
+	file = new SequentialFile(READ_FILE);
+	string fileOrig = "filesOrig/"+archToCompress;
+
+	loadStaticFTable(file);
+
+	file->open(fileOrig);
+	testStaticCompress(file);
+	file->close();
+
+	delete file;
+
+	file = new SequentialFile(WRITE_FILE);
+	string fileDesc = "filesDescomp/"+archToCompress;
+
+	file->open(fileDesc);
+	testStaticDecompress(file);
+	file->close();
+
+	delete file;
+
+}
+
+
+void TestArithmetic::testStaticCompress(SequentialFile* archToCompress)
 {
 	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
 	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
@@ -77,14 +155,15 @@ void TestArithmetic::testStaticCompress()
 
 	for (i = 0;i < qchars;i++)
 	{
-		char c = m_tocompress[i];
+		char c = archToCompress->readChar();
 		m_compressor->compress(c,m_ft);
 	}
 
 	delete m_compressor;
+
 }
 
-void TestArithmetic::testStaticDecompress()
+void TestArithmetic::testStaticDecompress(SequentialFile* archdescomprimido)
 {
 	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
 
@@ -94,66 +173,132 @@ void TestArithmetic::testStaticDecompress()
 	for (i = 0; i< qchars; i++)
 	{
 		char c = m_compressor->decompress(m_ft);
-		cout << c;
+		archdescomprimido->writeChar(c);
 	}
 
 	delete m_compressor;
 }
 
-void TestArithmetic::testDinamicCompress()
+void TestArithmetic::testStaticString(string toCompress,string archcomprimido)
+{
+	std::string decompressed;
+
+	loadStaticFTable(toCompress);
+
+	cout << m_ft.toPrintableString();
+
+	m_filecompressed = archcomprimido;
+	m_maxbits = 3;
+
+	testStaticCompress(toCompress);
+	testStaticDecompress(decompressed);
+
+	m_ft.clearTable();
+
+	cout << decompressed.c_str() << endl;
+}
+
+void TestArithmetic::testDinamicString(string toCompress,string archcomprimido)
+{
+	std::string decompressed;
+
+	m_filecompressed = archcomprimido;
+
+	m_maxbits = 15;
+
+
+	loadDinamicFTable();
+	testDinamicCompress(toCompress);
+	m_ft.clearTable();
+
+	loadDinamicFTable();
+	testDinamicDecompress(decompressed);
+	m_ft.clearTable();
+
+	cout << decompressed.c_str() << endl;
+
+}
+
+void TestArithmetic::testStaticCompress(string toCompress)
+{
+	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
+
+	unsigned long i = 0;
+	unsigned long qchars = m_ft.getFrequencyTotal();
+
+	for (i = 0;i < qchars;i++)
+	{
+		char c = toCompress[i];
+		m_compressor->compress(c,m_ft);
+	}
+
+	delete m_compressor;
+}
+
+void TestArithmetic::testStaticDecompress(string& decompressed)
+{
+	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
+
+	int i = 0;
+	int qchars = m_ft.getFrequencyTotal();
+
+	for (i = 0; i< qchars; i++)
+	{
+		char c = m_compressor->decompress(m_ft);
+		decompressed[i] = c;
+	}
+
+	delete m_compressor;
+}
+
+void TestArithmetic::testDinamicCompress(string toCompress)
 {
 	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
 	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
 
 	int i = 0;
+	int qchars = toCompress.size();
 
-	for (i = 0;i < m_sizetoCompress;i++)
+	for (i = 0;i <= qchars ;i++)
 	{
-		char c = m_tocompress[i];
+		char c = toCompress[i];
 		m_compressor->compress(c,m_ft);
 		m_ft.increaseFrequency(c,1);
 	}
 
+	m_compressor->compress(EOF_CHAR,m_ft);
 
 	delete m_compressor;
 }
 
-void TestArithmetic::testDinamicDecompress()
+void TestArithmetic::testDinamicDecompress(string& decompressed)
 {
 	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR,m_filecompressed,m_maxbits);
 	short c =  UNDEFINED_CHAR;
+	int i = 0;
 
 	while (c!=EOF_CHAR)
 	{
-		short c = m_compressor->decompress(m_ft);
+		c = m_compressor->decompress(m_ft);
 
 		if (c!=EOF_CHAR)
 		{
 			m_ft.increaseFrequency(c,1);
-			cout << (char)c;
+			decompressed[i] = c;
+			i++;
 		}
 	}
 
 	delete m_compressor;
 }
 
-// ------------------Metodos utilitarios--------------------------------
 
-void TestArithmetic::initializeToCompress(std::string toCompress)
-{
-	int i = 0;
-	m_sizetoCompress = toCompress.size();
-	// Guardo en el arreglo el string.
-	for (i = 0;i< m_sizetoCompress ;i++)
-	{
-		char c = toCompress[i];
-		m_tocompress[i] = (short)c;
-	}
-}
+// ------------------Metodos utilitarios--------------------------------
 
 // Devuelve la frecuencia de un simbolo en un string,
 // podria llevarse a TableFrequency en un constructor con string.
-unsigned long TestArithmetic::getFrequencySymbol(std::string frase,char c)
+unsigned long TestArithmetic::getFrequencySymbol(string frase,char c)
 {
 	int i = 0;
 	int qchars = frase.size();
@@ -185,16 +330,35 @@ void TestArithmetic::loadDinamicFTable()
 }
 
 
-void TestArithmetic::loadStaticFTable(std::string toCompress)
+void TestArithmetic::loadStaticFTable(string toCompress)
 {
 	int i = 0;
-	m_sizetoCompress = toCompress.size();
+	int qchars = toCompress.size();
 	// Guardo las frecuencia de los caracteres.
-	for (i = 0;i< m_sizetoCompress;i++)
+	for (i = 0;i< qchars;i++)
 	{
-		unsigned long freq = m_ft.getFrequency(m_tocompress[i]);
+		char c = toCompress[i];
+		unsigned long freq = m_ft.getFrequency(c);
 
 		if (freq==0)
-			m_ft.setFrequency(m_tocompress[i],getFrequencySymbol(toCompress,m_tocompress[i]));
+			m_ft.setFrequency(c,getFrequencySymbol(toCompress,c));
+	}
+}
+
+
+void TestArithmetic::loadStaticFTable(SequentialFile* file)
+{
+	bool isNotEOF = false;
+
+	while (isNotEOF)
+	{
+		char c = file->readChar(isNotEOF);
+		if (isNotEOF)
+			{
+			unsigned long freq = m_ft.getFrequency(c);
+			if (freq==0)
+				///FALTA IMPLEMENTARLO PERO SE USA EL DINAMICO POR AHORA.
+				m_ft.setFrequency(c,getFrequencySymbol("agadsgas",c));
+			}
 	}
 }
