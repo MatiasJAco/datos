@@ -346,19 +346,22 @@ bool Ppmc::deCompress(const std::string & path) {
 
 				//-------actualizo stringContext para mandarle su tabla de frecuencia al aritmetico
 				if (previousStringContext == ZERO_CONTEXT && maxStringContext.length()==1){
+					previousStringContext = stringContext;
 					stringContext =  character;
 				}
 				else{
 					if(maxStringContextDesfasadoEn1.length()!=maxContext){
 						maxStringContextAux = maxStringContextDesfasadoEn1; //todo actualContextNumber ??
+						previousStringContext = stringContext;
 						stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
 						cout << "nunca paso por aca todavia"<<endl;
 					}else{
 						maxStringContextAux = maxStringContextDesfasadoEn1;
+						previousStringContext = stringContext;
 						stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
 					}
 				}
-				previousStringContext = stringContext;
+				//previousStringContext = stringContext;
 
 
 				// ----------EXCLUSION --------
