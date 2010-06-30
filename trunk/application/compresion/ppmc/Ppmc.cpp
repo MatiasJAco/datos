@@ -249,8 +249,8 @@ bool Ppmc::deCompress(const std::string & path) {
 //-----------------------------PRIMER PASADA-----------------------------
 	string borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-//	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-	shortCharacter = borrarEsteMetodo(borrarContador);
+	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+	//shortCharacter = borrarEsteMetodo(borrarContador);
 	character = (char) shortCharacter;
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
 	if (shortCharacter == EOF_CHAR){
@@ -284,18 +284,18 @@ bool Ppmc::deCompress(const std::string & path) {
 	frequencyTableString = ZERO_CONTEXT;
 	borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-//	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-	shortCharacter = borrarEsteMetodo(borrarContador);
+	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+	//shortCharacter = borrarEsteMetodo(borrarContador);
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
 	else cout<<"aritmetico emitio : ESC "<<endl;
 	excludedFrequencyTable = frequencyTable;	//es la misma
 
 	while(isNotEOF){
 				borrarContador++;
-				if (borrarContador == 14){
-					cout<< "cagamos: 13"<<endl;
-					sequentialFile->close();
-					return false;}
+//				if (borrarContador == 14){
+//					cout<< "cagamos: 13"<<endl;
+//					sequentialFile->close();
+//					return false;}
 
 		//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
 		if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
@@ -361,8 +361,6 @@ bool Ppmc::deCompress(const std::string & path) {
 						stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
 					}
 				}
-				//previousStringContext = stringContext;
-
 
 				// ----------EXCLUSION --------
 				if (this->existsElementInStructure(stringContext)) { // si Existe el contexto obtengo la tabla
@@ -417,15 +415,16 @@ bool Ppmc::deCompress(const std::string & path) {
 
 			string borrar = excludedFrequencyTable->toString();
 			cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
-		//	shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
-			shortCharacter = borrarEsteMetodo(borrarContador);
+			shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
+		//	shortCharacter = borrarEsteMetodo(borrarContador);
 
 			if (shortCharacter != ESC_CHAR) {
 				characterAnterior = character;
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
 			}
-			else cout<<"aritmetico emitio : ESC "<<endl;
+			else
+				cout<<"aritmetico emitio : ESC "<<endl;
 
 			if (shortCharacter == EOF_CHAR){
 				isNotEOF = false;
@@ -499,7 +498,7 @@ void Ppmc::getMaxStringContext(std::string &maxStringContext,char characterAnter
 	else{
 		maxStringContext  = maxStringContext.append(1,characterAnterior);
 		if (maxStringContext.length()>maxContext)
-			maxStringContext = maxStringContext.substr(1,maxContext);
+			maxStringContext = maxStringContext.substr(1,maxContext);	//todo anda para contexto > 2 ??
 	}
 }
 
@@ -509,7 +508,7 @@ void Ppmc::getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,c
 	else{
 		maxStringContextDesfasado  = maxStringContextDesfasado.append(1,character);
 		if (maxStringContextDesfasado.length()>maxContext)
-			maxStringContextDesfasado = maxStringContextDesfasado.substr(maxStringContextDesfasado.length()-maxContext,maxContext);
+			maxStringContextDesfasado = maxStringContextDesfasado.substr(maxStringContextDesfasado.length()-maxContext,maxContext); //todo anda para contexto > 2 ??
 	}
 }
 
