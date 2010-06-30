@@ -3,8 +3,6 @@
 	<name>logic</name>
 	<comment></comment>
 	<projects>
-		<project>application</project>
-		<project>physical</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -33,7 +31,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/logic/Debug}</value>
+					<value>${workspace_loc:/logic/Release}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>

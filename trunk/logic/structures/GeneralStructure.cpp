@@ -8,7 +8,6 @@
 #include "GeneralStructure.h"
 
 GeneralStructure::GeneralStructure() {
-
 }
 
 GeneralStructure::~GeneralStructure() {
