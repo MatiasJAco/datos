@@ -128,10 +128,11 @@ int main(int argc, const char* argv[])
 
 	//--------------------------compress/decompress---------------------//
 
-	action = COMPRESS;ctxOrder=2; filePath="Debug/texto.txt";
+	//action = COMPRESS;ctxOrder=2; filePath="dead-gardens.txt";
 
 	if(action !=UNDEFINED_ACTION)
 	{
+		std::remove("contador.dat");
 		std::remove("arbol.dat");
 		std::remove("arbol.dat.free");
 		if(filePath == "")
@@ -141,7 +142,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 
-	GeneralStructure* tree = new BPlusTree("arbol.dat",1024,0.5);
+	GeneralStructure* tree = new BPlusTree("arbol.dat",8192,0.5);
 	Ppmc* ppmcCompresor = new PpmcTree(tree);
 
 
