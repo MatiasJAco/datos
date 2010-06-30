@@ -12,7 +12,12 @@
 #include "../exceptions/ManagerException.h"
 
 class GeneralStructure {
+
+private:
+	unsigned int m_BlockSize;
+
 public:
+
 	GeneralStructure();
 	virtual ~GeneralStructure();
 
@@ -20,7 +25,6 @@ public:
     /*----------------------------------------------------------*/
 	/*-------------PRIMITIVAS de las ESTRUCTURAS----------------*/
 	/*----------------------------------------------------------*/
-
 	/**
 	 * Agrega un elemento nuevo al archivo de la estructura.
 	 * @param clave Es la clave del dato a ingresar.

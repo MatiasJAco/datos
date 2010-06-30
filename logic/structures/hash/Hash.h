@@ -28,11 +28,15 @@
 
 class Hash : public GeneralStructure {
 
+	static unsigned const int BUCKET_SIZE_DEFAULT = 8192;
+
 private:
 	Table* hashTable;
 	BlockFile* hashFile;
 	unsigned int bucketsUsedAmount;
+	unsigned int m_BlockSize;
 
+	void setBlockSize(unsigned int size);
 	/**
 	 * Retorna el resultado de la funcion Hash. En este caso estamos usando el metodo de "bits sufijos".
 	 * @param key Es la clave sobre la cual se aplicará la función de hash.

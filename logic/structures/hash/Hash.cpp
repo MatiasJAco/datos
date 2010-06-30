@@ -9,9 +9,10 @@
 
 
 Hash::Hash() {
+	m_BlockSize = BUCKET_SIZE_DEFAULT;
 	this->hashTable->createFile();
 	this->hashFile = new BlockFile();
-	this->hashFile->open("./hash.bin", 512);
+	this->hashFile->open("./hash.bin", m_BlockSize);
 	this->inicializeHashFile();
 }
 
@@ -19,6 +20,13 @@ Hash::~Hash() {
 	this->hashFile->close();
 	delete hashFile;
 }
+
+void Hash::setBlockSize(unsigned int size)
+{
+	if(size >0)
+		m_BlockSize = size;
+}
+
 
 bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
 	if (!this->existsElement(key))
