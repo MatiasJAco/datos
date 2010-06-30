@@ -24,11 +24,21 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.2116591545" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 <option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1751909181" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.exe.debug.option.debugging.level.647959471" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.option.include.paths.1906678440" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2097397090" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.730490504" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.170324224" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option id="gnu.c.compiler.exe.debug.option.debugging.level.283230764" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.c.compiler.option.include.paths.979923315" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.238266135" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.2127608160" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
@@ -38,6 +48,7 @@
 <listOptionValue builtIn="false" value="physical"/>
 </option>
 <option id="gnu.cpp.link.option.paths.539644309" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic/Debug}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/application/Debug}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical/Debug}&quot;"/>
 </option>
@@ -47,6 +58,11 @@
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1070150085" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
+<option id="gnu.both.asm.option.include.paths.1968600815" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/physical}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/logic}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/application}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.634724668" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 </toolChain>
@@ -468,7 +484,26 @@
 </profile>
 </scannerConfigBuildInfo>
 </storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+<externalSettings containerId="logic;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+<externalSetting>
+<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/logic"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/logic/Debug"/>
+</externalSetting>
+</externalSettings>
+<externalSettings containerId="application;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+<externalSetting>
+<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/application"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/application/Debug"/>
+</externalSetting>
+</externalSettings>
+<externalSettings containerId="physical;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+<externalSetting>
+<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/physical"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/physical/Debug"/>
+</externalSetting>
+</externalSettings>
+</storageModule>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 </cconfiguration>
