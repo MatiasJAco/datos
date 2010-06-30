@@ -235,201 +235,170 @@ bool Ppmc::deCompress(const std::string & path) {
 	char character;
 	char characterAnterior;
 	short shortCharacter;
-	FrequencyTable* previousFrequencyTable;
-	FrequencyTable * frequencyTable;
-	FrequencyTable * excludedFrequencyTable;
-	bool primeraVez = true;
-	bool continuarCiclo = true;
+	FrequencyTable * frequencyTable = minusOneCtxtFreqTable;
+//	FrequencyTable* previousFrequencyTable;
+//	FrequencyTable * excludedFrequencyTable;
+	bool isNotEOF = true;
+	int borrarContador = 1; //todo hacerle caso al nombre de la variable :D
+
 
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
-	int borrarContador = 0; //todo hacerle caso al nombre de la variable :D
-	while(continuarCiclo){
+
+
+//-----------------------------PRIMER PASADA-----------------------------
+	string borrar = frequencyTable->toString();
+	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
+//	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+	shortCharacter = borrarEsteMetodo(borrarContador);
+	character = (char) shortCharacter;
+	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
+	if (shortCharacter == EOF_CHAR){
+		cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor";
+		return false; //TODO false o true?
+	}
+	//escribo en el archivo de salida el caracter.
+	sequentialFile->writeChar(character);
+	cout<<"MANDO AL ARCHIVO ( "<<outPath<<" ) : '" << character << "'" << endl;
+	characterAnterior = character;
+	getMaxStringContext(maxStringContext,characterAnterior,maxContext,true);
+	//cout << "maxStringContext: " << maxStringContext<<", ";
+	getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,true);
+	//cout << "maxStringContextDesfasadoEn1: " << maxStringContextDesfasadoEn1<<", ";
+	//cout << "previousStringContext: " << previousStringContext<<endl;
+
+	//actualizo contexto cero
+	stringContext = ZERO_CONTEXT;
+	updateFrequencyTables(stringContext,shortCharacter);
+	cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+	//actualizo contexto 1
+	stringContext = character;
+	updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
+	cout << "CREATE (o update): " << stringContext<<endl;
+	previousStringContext = MINUS_ONE_CONTEXT;
+	borrarContador++;
+
+	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
+	stringContext=ZERO_CONTEXT;
+	frequencyTable = this->getFrequencyTable(stringContext, true);
+	borrar = frequencyTable->toString();
+	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
+//	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+	shortCharacter = borrarEsteMetodo(borrarContador);
+	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
+	else cout<<"aritmetico emitio : ESC "<<endl;
+
+	while(isNotEOF){
 				borrarContador++;
-				if (stringContext == MINUS_ONE_CONTEXT){//if (actualContextNumber ==-1){
-					frequencyTable = this->minusOneCtxtFreqTable;
-					//stringContext = MINUS_ONE_CONTEXT;
-				}
-//				else if (actualContextNumber == 0)
-//					stringContext = ZERO_CONTEXT;
-				if (primeraVez) {//si es la primera vez no tengo tabla excluida aun -> la lleno con la del ctx-1
-					previousFrequencyTable = frequencyTable;
-					excludedFrequencyTable = frequencyTable;
-				} else {// Se excluyen los caracteres que estaban en el contexto anterior.
-					if (compareStringContexts(previousStringContext,stringContext)>0){
-						if (stringContext==MINUS_ONE_CONTEXT){
-//							string borrar1 = minusOneCtxtFreqTable->toString();
-//							cout << "borrar1 CantElemSinESC "<< minusOneCtxtFreqTable->getCharCount()<<" :"<<borrar1<<endl;
-							string borrar3 = previousFrequencyTable->toString();
-							cout << "borrar3 CantElemSinESC "<< previousFrequencyTable->getCharCount()<<" :"<<borrar3<<endl;
-							excludedFrequencyTable = new FrequencyTable(minusOneCtxtFreqTable->excludeFromTable(*previousFrequencyTable));
-							string borrar2 = excludedFrequencyTable->toString();
-							cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
-							previousFrequencyTable = excludedFrequencyTable;
-						}
-						string borrar1 = previousFrequencyTable->toString();
-						cout << "borrar1 CantElemSinESC "<< previousFrequencyTable->getCharCount()<<" :"<<borrar1<<endl;
-						excludedFrequencyTable = new FrequencyTable(frequencyTable->excludeFromTable(*previousFrequencyTable));
-						string borrar2 = excludedFrequencyTable->toString();
-						cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
-						previousFrequencyTable = excludedFrequencyTable;
+				if (borrarContador == 14){
+					cout<< "cagamos: 13"<<endl;
+					sequentialFile->close();
+					return false;}
+
+		//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
+		if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
+				//escribo en el archivo de salida el caracter.
+				sequentialFile->writeChar(character);
+				cout<<"MANDO AL ARCHIVO ( "<<outPath<<" ) : '" << character << "'" << endl;
+
+				getMaxStringContext(maxStringContext,characterAnterior,maxContext,false);
+				//cout << "maxStringContext: " << maxStringContext<<", ";
+				getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,false);
+				//cout << "maxStringContextDesfasadoEn1: " << maxStringContextDesfasadoEn1<<", ";
+				//cout << "previousStringContext: " << previousStringContext<<endl;
+
+
+				//-----------actualizo todas las tablas de frecuencias que necesite--------------
+				std::string maxStringContextAux;
+				if (previousStringContext.length()!=maxContext){
+					for (unsigned int i = maxStringContext.length(); i>=1;i--){
+						maxStringContextAux = maxStringContext;
+						stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
+						updateFrequencyTables(stringContext,shortCharacter);
+						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 					}
-					else if (compareStringContexts(previousStringContext,stringContext)==0){
-						string borrar1 = minusOneCtxtFreqTable->toString();
-						cout << "borrar1 CantElemSinESC "<< minusOneCtxtFreqTable->getCharCount()<<" :"<<borrar1<<endl;
-						string borrar3 = frequencyTable->toString();
-						cout << "borrar3 CantElemSinESC "<< frequencyTable->getCharCount()<<" :"<<borrar3<<endl;
-						excludedFrequencyTable = new FrequencyTable(minusOneCtxtFreqTable->excludeFromTable(*frequencyTable));
-						string borrar2 = excludedFrequencyTable->toString();
-						cout << "borrar2 CantElemSinESC "<< excludedFrequencyTable->getCharCount()<<" :"<<borrar2<<endl;
-						previousFrequencyTable = excludedFrequencyTable;
+				}
+				else {   //previousContext tiene mismo tam que maxContext
+					for (unsigned int i = previousStringContext.length(); i>=1;i--){
+						maxStringContextAux = previousStringContext;
+						stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
+						updateFrequencyTables(stringContext,shortCharacter);
+						cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+					}
+				}
+
+				//-------actualizo la del cero
+				stringContext = ZERO_CONTEXT;
+				updateFrequencyTables(stringContext,shortCharacter);
+				cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
+
+
+				// -------creo todas las tablas de frecuencias nuevas--
+				std::string stringContextAux;
+				for (unsigned int i = maxStringContextDesfasadoEn1.length(); i>=1;i--){
+					maxStringContextAux = maxStringContextDesfasadoEn1;
+					stringContext = maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-i,i);
+					updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
+					cout << "CREATE (o update): " << stringContext<<endl;
+				}
+
+				//-------actualizo stringContext para entrar al ciclo de nuevo
+				if (previousStringContext == ZERO_CONTEXT){
+					stringContext =  character;
+				}
+				else{//aca me llega con actualContextNumber==maxContext
+					if(maxStringContextDesfasadoEn1.length()!=maxContext){
+						maxStringContextAux = maxStringContextDesfasadoEn1; //todo actualContextNumber ??
+						stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
+						cout << "nunca paso por aca todavia"<<endl;
 					}else{
-						excludedFrequencyTable = frequencyTable;
-						previousFrequencyTable = excludedFrequencyTable;
+						maxStringContextAux = maxStringContextDesfasadoEn1;
+						stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
 					}
 				}
-
-		string borrar = excludedFrequencyTable->toString();
-		cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
-		shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
-	//	shortCharacter = borrarEsteMetodo(borrarContador);      //TODO esta hardcodeado esto para probar hasta que ande el decompress de aritmetico
-		if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< (char) shortCharacter<<endl;
-		else cout<<"aritmetico emitio : ESC "<<endl;
-		if (borrarContador == 13){
-			cout<< "cagamos: 13"<<endl;
-			sequentialFile->close();
-			return false;}
-								if (primeraVez && (shortCharacter == EOF_CHAR)){
-									cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor";
-									return false; //TODO false o true?
-								}
-								else if (shortCharacter == EOF_CHAR){
-									continuarCiclo = false;
-								}
-								//if (actualContextNumber != -1)	//libero memoria
-								if (stringContext!= MINUS_ONE_CONTEXT)
-									delete frequencyTable;
-
-		if (continuarCiclo){
-			//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
-			if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
-					//escribo en el archivo de salida el caracter.
-					character = (char) shortCharacter;
-					sequentialFile->writeChar(character);
-					cout<<"MANDO AL ARCHIVO ( "<<outPath<<" ) : '" << character << "'" << endl;
-
-					getMaxStringContext(maxStringContext,characterAnterior,maxContext,primeraVez);
-					//cout << "maxStringContext: " << maxStringContext<<", ";
-					getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,primeraVez);
-					//cout << "maxStringContextDesfasadoEn1: " << maxStringContextDesfasadoEn1<<", ";
-					//cout << "previousStringContext: " << previousStringContext<<endl;
-
-
-					//-----------actualizo todas las tablas de frecuencias que necesite--------------
-						std::string maxStringContextAux;
-						if(!primeraVez){
-							if (previousStringContext.length()!=maxContext){
-								for (unsigned int i = maxStringContext.length(); i>=1;i--){
-									maxStringContextAux = maxStringContext;
-									//actualContextNumber++;
-									stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
-									updateFrequencyTables(stringContext,shortCharacter);
-									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-								}
-							}
-							else {   //previousContext tiene mismo tam que maxContext
-								for (unsigned int i = previousStringContext.length(); i>=1;i--){
-									maxStringContextAux = previousStringContext;
-									//actualContextNumber++;
-									stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
-									updateFrequencyTables(stringContext,shortCharacter);
-									cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-								}
-							}
-						}
-
-						//actualizo la del cero
-//						actualContextNumber=0;
-						stringContext = ZERO_CONTEXT;
-							updateFrequencyTables(stringContext,shortCharacter);
-							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-
-
-						// -------creo todas las tablas de frecuencias nuevas--
-						std::string stringContextAux;
-						if (primeraVez){	//actualizo contexto 1
-							stringContextAux = character;
-							updateFrequencyTables(stringContextAux, ESC_CHAR);//creo la tabla del contexto con esc(1)
-							cout << "CREATE (o update): " << stringContextAux<<endl;
-						}
-						else{
-//							actualContextNumber=1;
-							for (unsigned int i = maxStringContextDesfasadoEn1.length(); i>=1;i--){
-								maxStringContextAux = maxStringContextDesfasadoEn1;
-								stringContext = maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-i,i);
-								updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
-								cout << "CREATE (o update): " << stringContext<<endl;
-//								if (i!=maxStringContextDesfasadoEn1.length())
-//									actualContextNumber++;
-							}
-						}
-
-					//actualizo stringContext para entrar al ciclo de nuevo
-					if (!primeraVez){
-						if (previousStringContext == ZERO_CONTEXT){
-							//actualContextNumber = 1;
-							stringContext =  character;
-						}
-						else{//aca me llega con actualContextNumber==maxContext
-							if(maxStringContextDesfasadoEn1.length()!=maxContext){
-								maxStringContextAux = maxStringContextDesfasadoEn1; //todo actualContextNumber ??
-								stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
-								cout << "nunca paso por aca todavia"<<endl;
-							}else{
-								maxStringContextAux = maxStringContextDesfasadoEn1;
-								stringContext =  maxStringContextAux.substr(maxStringContextDesfasadoEn1.length()-maxStringContext.length(),maxStringContextDesfasadoEn1.length());
-								//actualContextNumber = stringContext.length();
-							}
-						}
-						previousStringContext = stringContext;
-					}
-					else{// es primeraVez
-						previousStringContext = MINUS_ONE_CONTEXT;
-					}
-
+				previousStringContext = stringContext;
+		}
+		else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
+			if (stringContext==ZERO_CONTEXT){
+				previousStringContext = stringContext;
+				stringContext = MINUS_ONE_CONTEXT;
+			}else if (stringContext==MINUS_ONE_CONTEXT){
+				cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
+			}else if (stringContext.length()==1){
+				previousStringContext = stringContext;
+				stringContext=ZERO_CONTEXT;
+			}else{
+				previousStringContext = stringContext;
+				stringContext = stringContext.substr(1,stringContext.length()-1);
 			}
-			else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
-				//actualContextNumber--;
-				if (stringContext==ZERO_CONTEXT){
-					previousStringContext = stringContext;
-					stringContext = MINUS_ONE_CONTEXT;
-				}else if (stringContext==MINUS_ONE_CONTEXT){
-					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
-				}else if (stringContext.length()==1){
-					previousStringContext = stringContext;
-					stringContext=ZERO_CONTEXT;
-				}else{
-					previousStringContext = stringContext;
-					stringContext = stringContext.substr(1,stringContext.length()-1);
-				}
-			}
+		}
 
-			primeraVez = false;
-			characterAnterior = character;
-
-			//ya actualice las tablas necesarias si hacian falta. Ahora obtengo tabla de frecs para volver al ciclo
+			//ya actualice las tablas necesarias si hacian falta. Ahora obtengo tabla de frecs para pasarle al descompresor aritmetico
 			if (this->existsElementInStructure(stringContext)) { // si Existe el contexto obtengo la tabla
 				frequencyTable = this->getFrequencyTable(stringContext, true);
 			}
-			else {	//no existe el ctxt -> lo creo
-//				if (actualContextNumber > -1){
-					cout<<"paso por aca! sino se pasa por aca, hay qe borrar este else"<<endl;
-					//updateFrequencyTables(stringContext, character);
-//					frequencyTable = this->getFrequencyTable(stringContext, true);
-//				}
+			else if (stringContext == MINUS_ONE_CONTEXT){
+				frequencyTable = this->minusOneCtxtFreqTable;
 			}
 
-		}//fin if(continuarCiclo)
+			string borrar = frequencyTable->toString();
+			cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
+		//	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+			shortCharacter = borrarEsteMetodo(borrarContador);
+
+			if (shortCharacter != ESC_CHAR) {
+				characterAnterior = character;
+				character = (char) shortCharacter;
+				cout<<"aritmetico emitio : "<< character<<endl;
+			}
+			else cout<<"aritmetico emitio : ESC "<<endl;
+
+			if (shortCharacter == EOF_CHAR){
+				isNotEOF = false;
+			}
+			if (stringContext!= MINUS_ONE_CONTEXT)
+				delete frequencyTable;		//libero memoria
+
 	}//fin While(continuarCiclo)
 
 	sequentialFile->close();
