@@ -28,9 +28,12 @@ void TestArithmetic::run()
 //	testStatic("I was born admist the purple waterfalls. I was weak, yet not unblessed. Death to the world, alive for the journey,1243254543634534534534534534598345098459083409583450309843509384509384509834905809283590283905829308590238509283095820938502938590843kjtoiawjuflkasjdoiut0989080935kjiosuf098twkejoisudf09awerkjoisudfoiasud09r81q43uasfj KIRA KIRA KIRA KIRA ASDF 1893 fasdkjfakls, akldfjkaljfd, paititi \n","random.gzip");
 	std::string b = "ab";
 
-	testDinamicFile("ab.txt");
+	std::string file="ocean-soul";
 
-	testDinamicString("ab","ab.gzip");
+	std::remove((file+".gzip").c_str());
+	testDinamicFile((file+".txt").c_str());
+
+	//testDinamicString("ab","ab.gzip");
 }
 
 
@@ -39,7 +42,7 @@ void TestArithmetic::testDinamicFile(string archToCompress)
 	SequentialFile* file;
 
 	m_filecompressed = archToCompress.substr(0,archToCompress.find(".txt"))+".gzip";
-	m_maxbits = 8;
+	m_maxbits = 26;
 
 	file = new SequentialFile(READ_FILE);
 	file->setInputType(TEXT);
@@ -53,10 +56,13 @@ void TestArithmetic::testDinamicFile(string archToCompress)
 
 	delete file;
 
+	cout << "Compress terminado"<<endl;
+
 	file = new SequentialFile(WRITE_FILE);
 	file->setInputType(TEXT);
 	string fileDesc = "filesDescomp/"+archToCompress;
 
+	std::remove(fileDesc.c_str());
 	file->open(fileDesc);
 	loadDinamicFTable();
 	testDinamicDecompress(file);
@@ -64,6 +70,8 @@ void TestArithmetic::testDinamicFile(string archToCompress)
 	m_ft.clearTable();
 
 	delete file;
+
+	cout << "Decompress terminado"<<endl;
 }
 
 void TestArithmetic::testDinamicCompress(SequentialFile* archToCompress)
@@ -71,7 +79,7 @@ void TestArithmetic::testDinamicCompress(SequentialFile* archToCompress)
 	// Le paso el nombre del archivo donde quiero que guarde lo que comprimio.
 	m_compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR,m_filecompressed,m_maxbits);
 
-	int i = 0;
+	unsigned int i = 0;
 	bool isNotEOF = true;
 
 	while (isNotEOF)
@@ -87,7 +95,7 @@ void TestArithmetic::testDinamicCompress(SequentialFile* archToCompress)
 	}
 
 	m_compressor->compress(EOF_CHAR,m_ft);
-
+	//m_compressor->compress('a',m_ft);
 
 	delete m_compressor;
 }
@@ -104,6 +112,9 @@ void TestArithmetic::testDinamicDecompress(SequentialFile* archdescomprimido)
 
 		if (c!=EOF_CHAR)
 		{
+//			cout << (char) c<<endl;
+/*			if(i%10==0)
+				cout <<endl;*/
 			m_ft.increaseFrequency(c,1);
 			archdescomprimido->writeChar(c);
 			i++;
@@ -136,6 +147,7 @@ void TestArithmetic::testStaticFile(string archToCompress)
 	file = new SequentialFile(WRITE_FILE);
 	string fileDesc = "filesDescomp/"+archToCompress;
 
+	std::remove(fileDesc.c_str());
 	file->open(fileDesc);
 	testStaticDecompress(file);
 	file->close();
