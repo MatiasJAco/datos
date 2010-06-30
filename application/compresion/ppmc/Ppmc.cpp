@@ -22,8 +22,6 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 Ppmc::~Ppmc() {
 }
 
-
-
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------COMPRESION -------------------------------------------------
 //-----------------------------------------------------------------------------------------------
@@ -537,4 +535,90 @@ int Ppmc::getFileSize(char* filename){
 	return size;
 
 
+}
+
+void Ppmc::ppmcDeCompressionEmitter(ArithmeticCompressor* decompressor, char& character, std::string stringContext, int actualContextNumber, int maxContext, bool newRead) {
+	FrequencyTable* frequencyTable;
+	if (this->existsElementInStructure(stringContext)) {
+		newRead = false;
+		frequencyTable = this->getFrequencyTable(stringContext, newRead);
+		character = decompressor->decompress(*(frequencyTable));
+		if ((short)character == ESC_CHAR) {
+		} else {
+			return;
+		}
+	} else { // No existe el contexto pasado por parametro. Por lo tanto lo crea.
+		frequencyTable = new FrequencyTable();
+		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
+		this->insertInStructure(stringContext,frequencyTable->toString());
+		newRead = false;
+	}
+
+	if ((actualContextNumber-1) > 0) {
+		newRead=false;
+		this->ppmcDeCompressionEmitter(decompressor, character, stringContext.substr(1,stringContext.length()), actualContextNumber-1, maxContext, newRead); // Bajo de contexto progresivamente.
+	} else if ((actualContextNumber-1) == 0) {
+		stringContext = ZERO_CONTEXT;
+		newRead=true;
+		this->ppmcDeCompressionEmitter(decompressor, character, stringContext, actualContextNumber-1, maxContext, newRead); // Bajo al contexto 0 que es el anteúltimo.
+	} else { // Llegamos al contexto -1.
+		character = decompressor->decompress(*(minusOneCtxtFreqTable));
+		std::cout << "Recupero el caracter " << character <<  " en el contexto -1." << std::endl;
+	}
+
+	if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se lo agrega.
+		std::cout << "Agrego caracter " << character << " al contexto " << stringContext << std::endl;
+		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
+		this->modifyInStructure(stringContext, frequencyTable->toString());
+	} else { // Si ya existe el caracter en el contexto dado, se incrementa su frecuencia.
+		frequencyTable->increaseFrequency(character,1);
+		this->modifyInStructure(stringContext, frequencyTable->toString());
+	}
+}
+
+bool Ppmc::deCompress2(const std::string path) {
+	int maxContext = 0;
+	std::string outPath = "";
+
+	size_t position = path.find(".ppmc");
+	if (position != string::npos) {
+		outPath = path.substr(0, position);
+		maxContext = atoi(path.substr(position+5, path.length()-position-5).c_str());
+	} else {
+		return false; // El archivo no posee la extension ".ppmc".
+	}
+
+	std::cout << "Descomprimiendo archivo... (" << path << ")" << std::endl;
+
+	outPath = outPath.substr(0, outPath.find(".txt"));
+	outPath.append("Descomprimido.txt");
+
+	ArithmeticCompressor* decompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 24);
+	bool newRead=true;
+	char character = NULL;
+	SequentialFile* sequentialFile = new SequentialFile(WRITE_FILE);
+	sequentialFile->open(outPath);
+	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
+	std::string stringContext = "0";
+
+	this->ppmcDeCompressionEmitter(decompressor, character, stringContext, actualContextNumber, maxContext, newRead);
+
+	actualContextNumber = 1;
+	stringContext = character;
+
+	while (character != EOF_CHAR) {
+		this->ppmcDeCompressionEmitter(decompressor, character, stringContext, actualContextNumber, maxContext, newRead);
+		if (actualContextNumber < maxContext) {
+			actualContextNumber++;
+			stringContext.append(1,character);
+		} else {
+			stringContext.append(1,character);
+			stringContext = stringContext.substr(1, stringContext.length());
+		}
+		sequentialFile->writeChar(character);
+	}
+	sequentialFile->close();
+	delete decompressor;
+	std::cout << "Fin de compresion" << std::endl;
+	return true;
 };
