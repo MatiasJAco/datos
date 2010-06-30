@@ -97,7 +97,7 @@ private:
 	 * @param newRead Indica si se acaba de leer un nuevo caracter o si se esta retrocediendo en contextos.
 	 * @param previousFrequencyTable Es la tabla de frecuencias del contexto anterior. Sirve para excluir caracteres.
 	 */
-	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
+	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, short character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
 
 	void ppmcDeCompressionEmitter(ArithmeticCompressor* decompressor, char& character, std::string stringContext, int actualContextNumber, int maxContext, bool newRead);
 
