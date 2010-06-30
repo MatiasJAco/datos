@@ -137,7 +137,7 @@ bool SequentialFile::readNChar(char * stream, unsigned int ammount)
 
 	unsigned int i;
 
-	for(i=0; i < ammount && (m_CurrentPos <= m_AmmountRead); i++)
+	for(i=0; i < ammount && (m_CurrentPos <=m_AmmountRead); i++)
 	{
 		if(m_CurrentPos >= m_BufferSize)
 		{
@@ -145,11 +145,13 @@ bool SequentialFile::readNChar(char * stream, unsigned int ammount)
 			m_CurrentPos =0;
 		}
 
-		stream[i] = m_Buffer[m_CurrentPos];
+		if(m_CurrentPos<=m_AmmountRead)
+			stream[i] = m_Buffer[m_CurrentPos];
+
 		m_CurrentPos++;
 	}
 
-	if(i == ammount)
+	if((i == ammount)&&(m_CurrentPos<=m_AmmountRead))
 		retVal = true;
 
 	return retVal;
