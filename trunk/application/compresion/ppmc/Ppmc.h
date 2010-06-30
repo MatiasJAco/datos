@@ -48,6 +48,8 @@ public:
 	 */
 	bool compress(std::string path,int maxContext);
 
+	bool deCompress2(const std::string path);
+
 	/**
 	 * Este metodo se encarga de la decompresión
 	 * @param path Es el path donde se encuentra el archivo a decomprimir.
@@ -96,6 +98,8 @@ private:
 	 * @param previousFrequencyTable Es la tabla de frecuencias del contexto anterior. Sirve para excluir caracteres.
 	 */
 	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
+
+	void ppmcDeCompressionEmitter(ArithmeticCompressor* decompressor, char& character, std::string stringContext, int actualContextNumber, int maxContext, bool newRead);
 
 	/**
 	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
