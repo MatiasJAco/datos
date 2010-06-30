@@ -10,8 +10,10 @@
 
 #include "../../../physical/file/BitFile.h"
 #include "../common/FrequencyTable.h"
+#include "../exceptions/CompressionException.h"
 
 #include <cmath>
+
 
 /**
  * Compresor aritmetico. Funciona como compresor y descompresor.
