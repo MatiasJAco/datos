@@ -58,14 +58,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	std::cout << "Comprimiendo archivo... (" << path << ")" << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
 	sequentialFile->open(path);
-	//TODO que pasa si el archivo esta vacio?? hay que validarlo
 	char character = sequentialFile->readChar();
-	//TODO no seria strinContext = "_" o  " " (vacio) ?? (para indicar el ctx cero)
 	std::string stringContext = ZERO_CONTEXT;
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 	FrequencyTable* previousFrequencyTable = new FrequencyTable();
 
-	this->ppmcCompressionEmitter(compressor, stringContext, character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
+	this->ppmcCompressionEmitter(compressor, stringContext, (short)character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
 
 	if (actualContextNumber < maxContext) { // Si el contexto maximo es mayor a cero, se incrementa el contexto actual a 1.
 		actualContextNumber++;
@@ -77,7 +75,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	character = sequentialFile->readChar(isNotEof);
 
 	while (isNotEof) {
-		this->ppmcCompressionEmitter(compressor, stringContext, character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
+		this->ppmcCompressionEmitter(compressor, stringContext, (short)character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
 		if (actualContextNumber < maxContext) {
 			actualContextNumber++;
 			stringContext.append(1,character);
@@ -87,6 +85,9 @@ bool Ppmc::compress(std::string path,int maxContext) {
 		}
 		character = sequentialFile->readChar(isNotEof);
 	}
+
+	this->ppmcCompressionEmitter(compressor, stringContext, EOF_CHAR, actualContextNumber, maxContext, newRead, previousFrequencyTable);
+
 	sequentialFile->close();
 	delete compressor;
 	std::cout << "Fin de compresion" << std::endl;
@@ -98,7 +99,7 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	return true;
 }
 
-void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string stringContext, char character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable) {
+void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string stringContext, short character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable) {
 	FrequencyTable* frequencyTable;
 	FrequencyTable* excludedFrequencyTable;
 	FrequencyTable* nextExclusionTable = previousFrequencyTable;
@@ -123,7 +124,7 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se lo emite, y se incrementa su frecuencia.
 			compressor->compress(character, (*excludedFrequencyTable));
-			std::cout << "Emito el caracter " << character <<  " en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(character) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
+			std::cout << "Emito el caracter " << (char)character <<  " en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(character) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
 			//std::cout << std::endl << "Tabla excluida   : " << excludedFrequencyTable->toString() << std::endl << std::endl;
 			this->countHit(stringContext);
 			frequencyTable->increaseFrequency(character,1);
@@ -150,7 +151,11 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 	} else { // Llegamos al contexto -1.
 		(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*nextExclusionTable); // Se excluyen los caracteres que estaban en el contexto anterior.
 		compressor->compress(character, (*minusOneCtxtFreqTable));
-		std::cout << "Emito el caracter " << character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl;
+		if (character == EOF_CHAR) {
+			std::cout << "Emito el caracter EOF en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl;
+		} else {
+			std::cout << "Emito el caracter " << (char)character <<  " en el contexto -1 con " << this->minusOneCtxtFreqTable->getFrequency(character) << "/" << minusOneCtxtFreqTable->getFrequencyTotal() << std::endl;
+		}
 		//std::cout << std::endl << "Tabla excluida   : " << minusOneCtxtFreqTable->toString() << std::endl << std::endl;
 	}
 }
