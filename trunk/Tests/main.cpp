@@ -28,21 +28,25 @@ void testAllPhysical() {
 	catch (PhysicalException e) {
 		std::cout << e.what() << std::endl;
 	}
+	delete testPhysical;
 }
 
 void testAllNode() {
 	TestNode* testNode = new TestNode();
 	testNode->testNode();
+	delete testNode;
 }
 
 void testAllLogger() {
 	TestLogger* testLogger = new TestLogger();
 	testLogger->testLogger();
+	delete testLogger;
 }
 
 void testAllBPlusTree() {
 	TestBPlusTree* testBPlusTree = new TestBPlusTree();
 	testBPlusTree->testBPlusTree();
+	delete testBPlusTree;
 }
 
 void testAllArithmetic() {
@@ -72,6 +76,7 @@ void testAllHash() {
 	//testHash->testFreqTable();
 
 	/* TESTS DE PPMC */
+	//testHash->testBugRaro();
 	testHash->testPpmcHashComprimir();
 	//testHash->testPpmcHashDescomprimir();
 
@@ -85,6 +90,7 @@ void testAllHash() {
 	//testHash->testTable2();
 	//testHash->testTable3();
 	//testHash->testTable4();
+	delete testHash;
 }
 
 void testAllFrequencyTable() {
@@ -101,6 +107,7 @@ void testAllFrequencyTable() {
 void testAllStadistic() {
 	TestStadistic* testStadistic = new TestStadistic();
 	testStadistic->testStadistic();
+	delete testStadistic;
 }
 
 int main() {
@@ -109,8 +116,8 @@ int main() {
 	//testAllLogger();
 	//testAllBPlusTree();
 	//testAllArithmetic();
-	testAllPpmcTree();
-	//testAllHash();
+	//testAllPpmcTree();
+	testAllHash();
 	//testAllFrequencyTable();
 	//testAllStadistic();
 	return 0;
