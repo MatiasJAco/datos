@@ -128,7 +128,7 @@ int main(int argc, const char* argv[])
 
 	//--------------------------compress/decompress---------------------//
 
-	//action = COMPRESS;ctxOrder=2; filePath="dead-gardens.txt";
+	//action = COMPRESS;ctxOrder=10; filePath="she-is-my-sin.txt";
 
 	if(action !=UNDEFINED_ACTION)
 	{
@@ -142,7 +142,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 
-	GeneralStructure* tree = new BPlusTree("arbol.dat",8192,0.5);
+	GeneralStructure* tree = new BPlusTree("arbol.dat",65536,0.5);
 	Ppmc* ppmcCompresor = new PpmcTree(tree);
 
 
