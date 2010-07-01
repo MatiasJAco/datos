@@ -214,6 +214,26 @@ int Ppmc::compareStringContexts(std::string previousStringContext,std::string st
 	return -1;
 }
 
+void Ppmc::setNumCtxtForUpdate(int &numCtxtForUpdate,std::string stringContext){
+	if (stringContext==ZERO_CONTEXT)
+		numCtxtForUpdate = 0;
+	else if (stringContext==MINUS_ONE_CONTEXT)
+		numCtxtForUpdate = -1;
+	else
+		numCtxtForUpdate = stringContext.length();
+}
+
+bool Ppmc::haveToUpdateContext(int numCtxtForUpdate,std::string stringContext){
+	int length = stringContext.length();
+	if (stringContext == ZERO_CONTEXT && (numCtxtForUpdate==0 || numCtxtForUpdate==-1))
+		return true;
+	else if (stringContext == MINUS_ONE_CONTEXT && numCtxtForUpdate==-1)
+		return true;
+	else if (length>=numCtxtForUpdate && stringContext!=ZERO_CONTEXT)
+		return true;
+	return false;
+}
+
 bool Ppmc::deCompress(const std::string & path) {
 	std::string log = ";Descomprimiendo archivo: ";
 	log.append(path);
@@ -244,8 +264,8 @@ bool Ppmc::deCompress(const std::string & path) {
 	bool isNotEOF = true;
 	int borrarContador = 1; //todo hacerle caso al nombre de la variable :D
 
-	string previousFrequencyTableString; //todo borrar
-	string frequencyTableString;//todo borrar
+	//string previousFrequencyTableString; //todo borrar
+	//string frequencyTableString;//todo borrar
 
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
@@ -255,7 +275,6 @@ bool Ppmc::deCompress(const std::string & path) {
 	string borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
 	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-	//shortCharacter = borrarEsteMetodo(borrarContador);
 	character = (char) shortCharacter;
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
 	if (shortCharacter == EOF_CHAR){
@@ -267,16 +286,12 @@ bool Ppmc::deCompress(const std::string & path) {
 	cout<<"MANDO AL ARCHIVO ( "<<outPath<<" ) : '" << character << "'" << endl;
 	characterAnterior = character;
 	getMaxStringContext(maxStringContext,characterAnterior,maxContext,true);
-	//cout << "maxStringContext: " << maxStringContext<<", ";
 	getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,true);
-	//cout << "maxStringContextDesfasadoEn1: " << maxStringContextDesfasadoEn1<<", ";
-	//cout << "previousStringContext: " << previousStringContext<<endl;
 
 	//actualizo contexto cero
 	stringContext = ZERO_CONTEXT;
 	updateFrequencyTables(stringContext,shortCharacter);
 	cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
-	//actualizo contexto 1
 	stringContext = character;
 	updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
 	cout << "CREATE (o update): " << stringContext<<endl;
@@ -286,23 +301,16 @@ bool Ppmc::deCompress(const std::string & path) {
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
 	stringContext=ZERO_CONTEXT;
 	frequencyTable = this->getFrequencyTable(stringContext, true);
-	frequencyTableString = ZERO_CONTEXT;
 	borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
 	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
-	//shortCharacter = borrarEsteMetodo(borrarContador);
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
 	else cout<<"aritmetico emitio : ESC "<<endl;
 	excludedFrequencyTable = frequencyTable;	//es la misma
 
-	int EscCount = 0;
+	int numCtxtForUpdate;	//es el numero de contexto hasta el cual hay que actualizar
 
 	while(isNotEOF){
-				borrarContador++;
-//				if (borrarContador == 14){
-//					cout<< "cagamos: 13"<<endl;
-//					sequentialFile->close();
-//					return false;}
 
 		//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
 		if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
@@ -323,31 +331,29 @@ bool Ppmc::deCompress(const std::string & path) {
 					for (unsigned int i = maxStringContext.length(); i>=1;i--){
 						maxStringContextAux = maxStringContext;
 						stringContext = maxStringContextAux.substr(maxStringContext.length()-i,i);
-						if (EscCount>=0){//para verificar si realmente hay que actualizar ese contexto
+						if (haveToUpdateContext(numCtxtForUpdate,stringContext)){
 							updateFrequencyTables(stringContext,shortCharacter);
 							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 						}
-						EscCount--;
 					}
 				}
 				else {   //previousContext tiene mismo tam que maxContext
 					for (unsigned int i = previousStringContext.length(); i>=1;i--){
 						maxStringContextAux = previousStringContext;
 						stringContext = maxStringContextAux.substr(previousStringContext.length()-i,i);
-						if (EscCount>=0){ //para verificar si realmente hay que actualizar ese contexto
+						if (haveToUpdateContext(numCtxtForUpdate,stringContext)){
 							updateFrequencyTables(stringContext,shortCharacter);
 							cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 						}
-						EscCount--;
 					}
 				}
 
-				if (EscCount>=0){ //para verificar si realmente hay que actualizar el contexto cero
-					stringContext = ZERO_CONTEXT;//actualizo la del cero
+				//actualizo la del cero
+				stringContext = ZERO_CONTEXT;
+				if (haveToUpdateContext(numCtxtForUpdate,stringContext)){
 					updateFrequencyTables(stringContext,shortCharacter);
 					cout << "UPDATE: ctx " << stringContext<<","<<(char) shortCharacter<<endl;
 				}
-				EscCount--;   //todo necesario?
 
 				// -------creo todas las tablas de frecuencias nuevas----------------------------
 				std::string stringContextAux;
@@ -376,15 +382,10 @@ bool Ppmc::deCompress(const std::string & path) {
 					}
 				}
 
-				//restart del escCount
-				EscCount = 0;
-
 				// ----------EXCLUSION --------
 				if (this->existsElementInStructure(stringContext)) { // si Existe el contexto obtengo la tabla
 					excludedFrequencyTable = this->getFrequencyTable(stringContext, true);
 					previousFrequencyTable = excludedFrequencyTable;
-					previousFrequencyTableString = stringContext;
-					//frequencyTableString = stringContext;
 				}
 
 		}
@@ -402,48 +403,36 @@ bool Ppmc::deCompress(const std::string & path) {
 				stringContext = stringContext.substr(1,stringContext.length()-1);
 			}
 
-			EscCount++;
-
 			//----------EXCLUSION
 
 			if (stringContext == MINUS_ONE_CONTEXT){
-				cout<<"frequencyTable : "<<frequencyTableString<<endl;
 				frequencyTable = this->getFrequencyTable(ZERO_CONTEXT, true);
 				(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*frequencyTable); // Se excluyen los caracteres que estaban en el contexto anterior.
 				excludedFrequencyTable = this->minusOneCtxtFreqTable;
 				previousFrequencyTable = new FrequencyTable();
-				previousFrequencyTableString = "NUEVA";
 			}
 			else{
-				cout<<"previousFrequencyTable : "<<previousFrequencyTableString<<endl;
-				cout<<"frequencyTable : "<<frequencyTableString<<endl;
 				frequencyTable = this->getFrequencyTable(stringContext, true);
 				(*excludedFrequencyTable) = frequencyTable->excludeFromTable((*previousFrequencyTable));
 				previousFrequencyTable = frequencyTable;
-				previousFrequencyTableString = stringContext;
 			}
-
 
 		}
 
-//			if (stringContext == MINUS_ONE_CONTEXT){
-////				frequencyTable = this->minusOneCtxtFreqTable;
-////				frequencyTableString = stringContext;
-//				excludedFrequencyTable = this->minusOneCtxtFreqTable;
-//			}
 
 			string borrar = excludedFrequencyTable->toString();
 			cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
 			shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
-		//	shortCharacter = borrarEsteMetodo(borrarContador);
 
 			if (shortCharacter != ESC_CHAR) {
 				characterAnterior = character;
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
+				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
 			}
-			else
+			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
+			}
 
 			if (shortCharacter == EOF_CHAR){
 				isNotEOF = false;
