@@ -255,7 +255,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
 
-	cout<<endl<<endl;	//todo borrar (solo para debug)
+	cout<<endl;	//todo borrar (solo para debug)
 //-----------------------------PRIMER PASADA-----------------------------
 	string borrar = frequencyTable->toString();
 	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
@@ -287,7 +287,7 @@ bool Ppmc::deCompress(const std::string & path) {
 		updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
 
 	previousStringContext = MINUS_ONE_CONTEXT;
-	cout<<endl<<endl;	//todo borrar (solo para debug)
+	cout<<endl;	//todo borrar (solo para debug)
 
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
 	stringContext=ZERO_CONTEXT;
@@ -390,7 +390,7 @@ bool Ppmc::deCompress(const std::string & path) {
 						excludedFrequencyTable = this->getFrequencyTable(stringContext, true);
 						previousFrequencyTable = excludedFrequencyTable;
 					}
-					cout<<endl<<endl;	//todo borrar (solo para debug)
+					cout<<endl;	//todo borrar (solo para debug)
 			}
 			else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
 				if (stringContext==ZERO_CONTEXT){
@@ -436,6 +436,7 @@ bool Ppmc::deCompress(const std::string & path) {
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
 				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
+				//delete excludedFrequencyTable; 	//libero memoria
 			}
 			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
@@ -444,8 +445,8 @@ bool Ppmc::deCompress(const std::string & path) {
 			if (shortCharacter == EOF_CHAR){
 				isNotEOF = false;
 			}
-				//if (stringContext!= MINUS_ONE_CONTEXT)
-					//delete frequencyTable;		//libero memoria
+//				if (stringContext!= MINUS_ONE_CONTEXT)
+//					delete frequencyTable;		//libero memoria
 
 		}//fin While(continuarCiclo)
 
