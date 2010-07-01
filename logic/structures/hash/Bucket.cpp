@@ -119,7 +119,8 @@ VarRegister Bucket::getRegister(std::string key) {
 	bool found = false;
 	while ((!found) && (this->getBlock()->hasNextRegister())) {
 		varRegister = this->getBlock()->getNextRegister(true);
-		char* registerValue = varRegister.getValue();
+		char* registerValue = NULL;
+		registerValue = varRegister.getValue();
 		StringInputData* sid = new StringInputData();
 		sid->toData(registerValue);
 		//if (sid->getKey() == key) {
