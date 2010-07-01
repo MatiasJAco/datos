@@ -6,7 +6,7 @@
  */
 #include "Ppmc.h"
 
-const string Ppmc::ZERO_CONTEXT = "0";
+const string Ppmc::ZERO_CONTEXT = "_";
 const string Ppmc::MINUS_ONE_CONTEXT = "-1";
 
 Ppmc::Ppmc(GeneralStructure* generalStructure){
