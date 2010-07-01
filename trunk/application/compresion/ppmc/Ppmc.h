@@ -159,6 +159,21 @@ private:
 	 */
 	int compareStringContexts(std::string previousStringContext,std::string stringContext);
 
+	/**
+	 * Setea el numero de contexto hasta el cual hay que hacer actualizaciones de tablas
+	 * @param numCtxtForUpdate Es el numero de contexto que se retorna
+	 * @param stringContext Es el contexto (en string) actual
+	 */
+	void setNumCtxtForUpdate(int &numCtxtForUpdate,std::string stringContext);
+
+	/**
+	 * Avisa si hay que actualizar o no la tabla de frecuencias
+	 * @param numCtxtForUpdate Es el numero de contexto hasta el cual se debe actualizar
+	 * @param stringContext Es el contexto (en string) actual
+	 * @return true en caso de que haya que actualizar, false caso contrario
+	 */
+	bool haveToUpdateContext(int numCtxtForUpdate,std::string stringContext);
+
 protected:
 
 	/**
