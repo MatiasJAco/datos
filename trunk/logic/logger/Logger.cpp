@@ -197,11 +197,10 @@ void Logger::writeFile(std::string cadena){
 		string nuevoNombre=nombre+numeroLog+".txt";
 		char* ptrNewName=&nuevoNombre[0];
 		rename("logger.txt",ptrNewName);
-		archivo->~ArchivoTexto();
+		delete archivo;
 		archivo=new ArchivoTexto("logger.txt");
-		archivo->~ArchivoTexto();
-	}else
-	archivo->~ArchivoTexto();
+	}
+	delete archivo;
 };
 
 //Busca la cadena de caracteres en el log.

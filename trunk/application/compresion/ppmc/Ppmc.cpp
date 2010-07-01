@@ -20,6 +20,9 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 }
 
 Ppmc::~Ppmc() {
+	delete this->generalStructure;
+	delete this->minusOneCtxtFreqTable;
+	delete this->logger;
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -90,6 +93,9 @@ bool Ppmc::compress(std::string path,int maxContext) {
 
 	sequentialFile->close();
 	delete compressor;
+	delete sequentialFile;
+	delete previousFrequencyTable;
+
 	std::cout << "Fin de compresion" << std::endl;
 
 	log = ";Se termino de comprimir el archivo: ";
@@ -112,8 +118,7 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 		if (frequencyTable->getFrequency(character) == 0) { // Si no existe el caracter en el contexto dado, se emite un escape y se agrega el caracter faltante.
 			if ((excludedFrequencyTable->getFrequency(ESC_CHAR) == 1) && (excludedFrequencyTable->getFrequencyTotal() == 1)) {
 				std::cout << "Emitiria el caracter Escape en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(ESC_CHAR) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
-			}
-			else {
+			} else {
 				try {
 					compressor->compress(ESC_CHAR, (*excludedFrequencyTable));
 				}
@@ -138,14 +143,18 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 			this->countHit(stringContext);
 			frequencyTable->increaseFrequency(character,1);
 			this->modifyInStructure(stringContext, frequencyTable->toString());
+			delete nextExclusionTable;
 			return;
 		}
+		delete frequencyTable;
+		delete excludedFrequencyTable;
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea.
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
 		std::cout << "Emitiria el caracter Escape en el contexto " << stringContext << " con " << frequencyTable->getFrequency(ESC_CHAR) << "/" << frequencyTable->getFrequencyTotal() << std::endl;
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
+		delete frequencyTable;
 	}
 	stringContext = stringContext.substr(1,stringContext.length());
 	actualContextNumber--;
