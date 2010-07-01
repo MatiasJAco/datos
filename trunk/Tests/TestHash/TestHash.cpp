@@ -384,7 +384,7 @@ void TestHash::testFreqTable()
 
 void TestHash::testPpmcHashComprimir() {
 	std::string path = "./archivoAComprimir.txt";
-	int maxContext = 2;
+	int maxContext = 3;//--------------------------------------------------CAMBIAR ACA EL contexto!!
 
 	std::string previousCompressionFile = "archivoAComprimir.txt";
 	previousCompressionFile.append(".ppmc");
@@ -410,6 +410,9 @@ void TestHash::testPpmcHashDescomprimir() {
 	std::remove("logger.txt");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc2");
+	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc3");//---------------CAMBIAR ACA EL NUMERITO .ppmc"3"!!!
 	hash->deleteGeneratedFiles();
+	std::remove("logger.txt");
+	std::remove("logger1.txt");
+	std::remove("contador.dat");
 }
