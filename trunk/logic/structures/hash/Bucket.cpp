@@ -116,6 +116,10 @@ bool Bucket::existsRegister(std::string key,int & position) {
 VarRegister Bucket::getRegister(std::string key) {
 	VarRegister varRegister;
 	this->getBlock()->restartCounter();
+
+	//Salto la info de control
+	this->getBlock()->getNextRegister(true);
+
 	bool found = false;
 	while ((!found) && (this->getBlock()->hasNextRegister())) {
 		varRegister = this->getBlock()->getNextRegister(true);
