@@ -27,15 +27,17 @@ void TestTree::run()
 
 //	testInsertComplejo();
 
+//	testRemoveInnerNode();
+
 //	testInsertComplejo();
-//testGetFirstElement();
+//	testGetFirstElement();
 //	testRemove();
-//	testModify();
+	testModify();
 //	testFind();
 //	testFindInodeData();
 //	testRemoveInnerNode();
 //	testReadNext();
-	testReadPrevious();
+//	testReadPrevious();
 }
 
 void TestTree::testReadNext()
@@ -182,60 +184,60 @@ void TestTree::testInsertComplejo()
 	mainFixture->insert("cos","77");
 	mainFixture->insert("d","88");
 
-
-	Node* nodoroot = mainFixture->getNode(1);
-	Node* leaf2 = mainFixture->getNode(2);
-	Node* leaf3 = mainFixture->getNode(3);
-	Node* leaf4 = mainFixture->getNode(4);
-	Node* leaf5 = mainFixture->getNode(5);
-	Node* leaf6 = mainFixture->getNode(6);
-	Node* leaf7 = mainFixture->getNode(7);
-	Node* leaf8 = mainFixture->getNode(8);
-
-
-
-	//Testeo de findInodeDATA
-	InnerNode* leaf10 = dynamic_cast<InnerNode*> (mainFixture->getNode(10));
-
-	leaf10->printContent();
-	INodeData search(3,"3");
-	INodeData found;
-
-	if(!leaf10->findINodeData(search,found, InnerNode::EQUAL))
-		cout << "Error en el equal"<<endl;
-
-	if(!leaf10->findINodeData(search,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
-
-	if(leaf10->findINodeData(search,found, InnerNode::MINOR))
-		cout << "Error en el minor"<<endl;
-
-	INodeData search2(3,"7");
-	if(!leaf10->findINodeData(search2,found, InnerNode::EQUAL))
-		cout << "Error en el equal"<<endl;
-
-	if(!leaf10->findINodeData(search2,found, InnerNode::MINOR))
-		cout << "Error en el minor"<<endl;
-
-	if(leaf10->findINodeData(search2,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
-
-	INodeData search3(3,"5");
-
-	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
-		cout << "Error en el bigger"<<endl;
+//
+//	Node* nodoroot = mainFixture->getNode(1);
+//	Node* leaf2 = mainFixture->getNode(2);
+//	Node* leaf3 = mainFixture->getNode(3);
+//	Node* leaf4 = mainFixture->getNode(4);
+//	Node* leaf5 = mainFixture->getNode(5);
+//	Node* leaf6 = mainFixture->getNode(6);
+//	Node* leaf7 = mainFixture->getNode(7);
+//	Node* leaf8 = mainFixture->getNode(8);
+//
+//
+//
+//	//Testeo de findInodeDATA
+//	InnerNode* leaf10 = dynamic_cast<InnerNode*> (mainFixture->getNode(10));
+//
+//	leaf10->printContent();
+//	INodeData search(3,"3");
+//	INodeData found;
+//
+//	if(!leaf10->findINodeData(search,found, InnerNode::EQUAL))
+//		cout << "Error en el equal"<<endl;
+//
+//	if(!leaf10->findINodeData(search,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
+//
+//	if(leaf10->findINodeData(search,found, InnerNode::MINOR))
+//		cout << "Error en el minor"<<endl;
+//
+//	INodeData search2(3,"7");
+//	if(!leaf10->findINodeData(search2,found, InnerNode::EQUAL))
+//		cout << "Error en el equal"<<endl;
+//
+//	if(!leaf10->findINodeData(search2,found, InnerNode::MINOR))
+//		cout << "Error en el minor"<<endl;
+//
+//	if(leaf10->findINodeData(search2,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
+//
+//	INodeData search3(3,"5");
+//
+//	if(!leaf10->findINodeData(search3,found, InnerNode::BIGGER))
+//		cout << "Error en el bigger"<<endl;
 
 	mainFixture->print();
 	mainFixture->deleteTree();
 
-	nodoroot->printContent();
-	leaf2->printContent();
-	leaf3->printContent();
-	leaf4->printContent();
-	leaf5->printContent();
-	leaf6->printContent();
-	leaf7->printContent();
-	leaf8->printContent();
+//	nodoroot->printContent();
+//	leaf2->printContent();
+//	leaf3->printContent();
+//	leaf4->printContent();
+//	leaf5->printContent();
+//	leaf6->printContent();
+//	leaf7->printContent();
+//	leaf8->printContent();
 
 }
 
@@ -355,9 +357,9 @@ void TestTree::testModify(){
 		mainFixture->insert("*@","33");
 		mainFixture->insert("1","44");
 		mainFixture->insert("po","55");
-		mainFixture->print();
+//		mainFixture->print();
 		mainFixture->insert("t","00000000000000000");
-		mainFixture->print();
+//		mainFixture->print();
 		mainFixture->insert("mn","77");
 		mainFixture->insert("n","88");
 		mainFixture->insert("re","99");
@@ -375,16 +377,20 @@ void TestTree::testModify(){
 
 
 
-		mainFixture->print();
+//		mainFixture->print();
+		cout << "modify t" << endl;
 		mainFixture->modify("t","10");
 		mainFixture->print();
 
+		cout << "modify po" << endl;
 		mainFixture->modify("po","10r00000000000000000");
 		mainFixture->print();
 
+		cout << "modify a" << endl;
 		mainFixture->modify("a","10000000000000000000");
 		mainFixture->print();
 
+		cout << "modify ñ" << endl;
 		mainFixture->modify("ñ","10");
 		mainFixture->print();
 
@@ -534,6 +540,19 @@ void TestTree::testGetFirstElement(){
 	mainFixture->insert("*","08");
 	mainFixture->insert("@","09");
 	mainFixture->insert("h","10");
+	mainFixture->insert("zza","as");
+	mainFixture->insert("zzb","as2");
+	mainFixture->insert("zzc","as3");
+	mainFixture->insert("zzd","as4");
+	mainFixture->insert("zze","as6");
+	mainFixture->insert("zzf","as7");
+	mainFixture->insert("zzg","as7");
+	mainFixture->insert("zzh","as8");
+	mainFixture->insert("zzi","as29");
+	mainFixture->insert("zzj","as28");
+	mainFixture->insert("zzk","as0");
+
+
 	mainFixture->print();
 	StringInputData datoDevuelto("0","");
 	mainFixture->getFirstElement(datoDevuelto);
