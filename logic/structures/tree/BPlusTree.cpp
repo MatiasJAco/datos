@@ -56,10 +56,16 @@ BPlusTree::~BPlusTree()
 	file.close();
 
 	if (m_root!=NULL)
+	{
 		delete m_root;
+	}
 
-	if (m_currentNode!=NULL)
+	if (m_currentNode!=m_root&&m_currentNode!=NULL)
+	{
 		delete m_currentNode;
+	}
+
+	m_root = m_currentNode = NULL;
 }
 
 bool BPlusTree::insert(std::string clave, std::string valor)
@@ -129,7 +135,12 @@ throw (ManagerException)
 				valueReg = reg.getValue();	//hace alloc
 				currentData.toNodeData(valueReg);
 
-				delete nodoIzquierdo;
+				if (nodoIzquierdo!=m_currentNode)
+				{
+					delete nodoIzquierdo;
+					nodoIzquierdo = NULL;
+				}
+
 				nodoIzquierdo = this->getNode(currentData.getLeftPointer());
 				bloqueIzquierdo = nodoIzquierdo->getBlock();
 
@@ -153,8 +164,11 @@ throw (ManagerException)
 			delete leftKey;
 
 
-			if (nodoIzquierdo!=NULL)
+			if (nodoIzquierdo!=NULL&&nodoIzquierdo!=m_currentNode)
+			{
 				delete nodoIzquierdo;
+				nodoIzquierdo = NULL;
+			}
 
 			if (valueReg!=NULL)
 				delete[] valueReg;
@@ -181,10 +195,19 @@ throw (ManagerException)
 		LeafNode* nodoDerecho = (LeafNode*)this->getNode(newKey.getLeftPointer());
 		nodoDerecho->setPreviousLeaf(sucesor->getNodeNumber());
 		saveNode(nodoDerecho);
-		delete nodoDerecho;
+
+		if (nodoDerecho!=m_currentNode)
+		{
+			delete nodoDerecho;
+			nodoDerecho = NULL;
+		}
 		};
 
-		delete sucesor;
+		if (sucesor!=m_currentNode)
+			{
+			delete sucesor;
+			sucesor = NULL;
+			}
 
 		// La raiz esta insertando el minimo de claves, no puede ser overflow.
 		if (result == OVERFLOW_LOAD)
@@ -258,8 +281,13 @@ bool BPlusTree::remove(std::string key) throw (ManagerException)
 		this->deleteNode(sucesor);
 		m_root->setLevel(currentLevel-1);
 
+		if (auxPointer!=m_currentNode)
+		{
+			// Si es el current tambien deberia borrarlo y poner en NULL porque ya no existe.
+			delete auxPointer;
+			auxPointer = NULL;
+		}
 
-		delete auxPointer;
 		delete [] currentValue;
 
 	}
@@ -403,7 +431,12 @@ bool BPlusTree::modify(std::string key, std::string newValue) throw (ManagerExce
 					valueReg = reg.getValue();
 					currentData.toNodeData(valueReg);
 
-					delete nodoIzquierdo;
+					if (nodoIzquierdo!=m_currentNode)
+					{
+						delete nodoIzquierdo;
+						nodoIzquierdo = NULL;
+					}
+
 					nodoIzquierdo = this->getNode(currentData.getLeftPointer());
 					bloqueIzquierdo = nodoIzquierdo->getBlock();
 
@@ -427,8 +460,11 @@ bool BPlusTree::modify(std::string key, std::string newValue) throw (ManagerExce
 				delete leftKey;
 
 
-				if (nodoIzquierdo!=NULL)
+				if (nodoIzquierdo!=NULL&&nodoIzquierdo!=m_currentNode)
+				{
 					delete nodoIzquierdo;
+					nodoIzquierdo = NULL;
+				}
 
 				if (valueReg!=NULL)
 					delete[] valueReg;
@@ -447,7 +483,12 @@ bool BPlusTree::modify(std::string key, std::string newValue) throw (ManagerExce
 			result = ((InnerNode*)m_root)->insertINodeData(newKey,promotedKey);
 
 			saveNode(sucesor);
-			delete sucesor;
+
+			if (sucesor!=m_currentNode)
+			{
+				delete sucesor;
+				sucesor = NULL;
+			}
 
 			// La raiz esta insertando el minimo de claves, no puede ser overflow.
 			if (result == OVERFLOW_LOAD)
@@ -486,7 +527,12 @@ bool BPlusTree::modify(std::string key, std::string newValue) throw (ManagerExce
 		this->deleteNode(sucesor);
 		m_root->setLevel(currentLevel-1);
 
-		delete auxPointer;
+		if (auxPointer!=m_currentNode)
+		{
+			delete auxPointer;
+			auxPointer = NULL;
+		}
+
 		delete[] currentValue;
 
 	}
@@ -596,6 +642,14 @@ bool BPlusTree::getFirstElement(InputData& data){
 
 void BPlusTree::setCurrent(LeafNode* node)
 {
+	/// Nunca voy a tener dos hojas en memoria al mismo tiempo.
+	/// Solo en el split y nunca llega a pasar cuando se llama al setCurrent.
+	if (m_currentNode!=NULL&&m_currentNode!=node)
+	{
+		delete m_currentNode;
+		m_currentNode = NULL;
+	}
+
 	m_currentNode = node;
 }
 

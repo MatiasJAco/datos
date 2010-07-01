@@ -113,8 +113,11 @@ throw (NodeException)
 				if (hasMinorBrother)
 				{
 
-					if (sibling!=NULL)
-					delete sibling;
+					if (sibling!=NULL&&sibling!=m_tree->getCurrent())
+					{
+						delete sibling;
+						sibling = NULL;
+					}
 
 					sibling = m_tree->getNode(minorBrother.getLeftPointer());
 					balanced = redistribute(sucesor,sibling,newData,keymodified,LEFT_SIDE);
@@ -151,14 +154,24 @@ throw (NodeException)
 			if (sibling!=NULL)
 			{
 				m_tree->saveNode(sibling);
-				delete sibling;
+
+				if (sibling!=m_tree->getCurrent())
+				{
+					delete sibling;
+					sibling = NULL;
+				}
 			}
 		}
 
 	if (sucesor!=NULL)
 	{
 		m_tree->saveNode(sucesor);
-		delete sucesor;
+
+		if (sucesor!=m_tree->getCurrent())
+		{
+			delete sucesor;
+			sucesor = NULL;
+		}
 	}
 
 	m_tree->saveNode(this);
@@ -235,7 +248,12 @@ throw (NodeException)
 	if (sucesor!=NULL)
 	{
 		m_tree->saveNode(sucesor);
-		delete sucesor;
+
+		if (sucesor!=m_tree->getCurrent())
+		{
+			delete sucesor;
+			sucesor = NULL;
+		}
 	}
 
 	m_tree->saveNode(this);
@@ -306,8 +324,11 @@ throw(NodeException)
 			if (hasMinorBrother)
 			{
 
-				if (sibling!=NULL)
+				if (sibling!=NULL&&m_tree->getCurrent())
+				{
 					delete sibling;
+					sibling = NULL;
+				}
 				sibling = m_tree->getNode(minorBrother.getLeftPointer());
 				balanced = redistribute(sucesor,sibling,data,keymodified,LEFT_SIDE);
 			}
@@ -344,12 +365,22 @@ throw(NodeException)
 		if (sibling!=NULL)
 		{
 			m_tree->saveNode(sibling);
-			delete sibling;
+
+			if (sibling!=m_tree->getCurrent())
+			{
+				delete sibling;
+				sibling = NULL;
+			}
 		}
 	}
 
 	m_tree->saveNode(sucesor);
-	delete sucesor;
+
+	if (sucesor!=m_tree->getCurrent())
+	{
+		delete sucesor;
+		sucesor = NULL;
+	}
 
 	m_tree->saveNode(this);
 
@@ -716,6 +747,8 @@ bool InnerNode::split(const INodeData& data,unsigned int pos,INodeData& promoted
 	this->m_tree->saveNode(sibling);
 
 	delete sibling;
+	sibling = NULL;
+
 
 	delete[] valueReg;
 
@@ -875,7 +908,12 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 			LeafNode* nextLeaf= (LeafNode*)m_tree->getNode(((LeafNode*)node)->getNextLeaf());
 			nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
 			m_tree->saveNode(nextLeaf);
-			delete nextLeaf;
+
+			if (nextLeaf!=m_tree->getCurrent())
+				{
+				delete nextLeaf;
+				nextLeaf = NULL;
+				}
 			}
 
 			if(prevLeaf!=UNDEFINED_NODE_NUMBER)
@@ -883,7 +921,12 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 				LeafNode* previLeaf= (LeafNode*)m_tree->getNode(prevLeaf);
 				previLeaf->setNextLeaf(((LeafNode*)node)->getNodeNumber());
 				m_tree->saveNode(previLeaf);
-				delete previLeaf;
+
+				if (previLeaf!=m_tree->getCurrent())
+				{
+					delete previLeaf;
+					previLeaf = NULL;
+				}
 			}
 
 		}
@@ -894,7 +937,12 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 				LeafNode* nextLeaf= (LeafNode*)this->m_tree->getNode(((LeafNode*)node)->getNextLeaf());
 				nextLeaf->setPreviousLeaf(((LeafNode*)node)->getNodeNumber());
 				m_tree->saveNode(nextLeaf);
-				delete nextLeaf;
+
+				if (nextLeaf!=m_tree->getCurrent())
+				{
+					delete nextLeaf;
+					nextLeaf = NULL;
+				}
 
 			}
 		}
@@ -907,7 +955,7 @@ bool InnerNode::merge(Node* node,Node* siblingNode,const InputData& data,INodeDa
 		firstKey = blockNode->getNextRegister();
 		valueReg = firstKey.getValue();
 		fusionatedNode.toNodeData(valueReg);
-		delete valueReg;
+		delete[] valueReg;
 	}
 
 	fusionatedNode.setLeftPointer(node->getNodeNumber());
@@ -977,8 +1025,11 @@ void InnerNode::show(){
 
 			hijo->show();
 
-			if (hijo!=NULL)
+			if (hijo!=NULL&&hijo!=m_tree->getCurrent())
+			{
 				delete hijo;
+				hijo = NULL;
+			}
 
 			m_block->getNextRegister();
 
@@ -1054,7 +1105,11 @@ INodeData InnerNode::getFirstKeyLeaf(Node* searchNode,const InputData&  data){
 			valueReg = reg.getValue();
 			firstData.toNodeData(valueReg);
 
-			delete nodoIzquierdo;
+			if (nodoIzquierdo!=m_tree->getCurrent())
+			{
+				delete nodoIzquierdo;
+				nodoIzquierdo = NULL;
+			}
 			nodoIzquierdo = m_tree->getNode(currentData.getLeftPointer());
 			bloqueIzquierdo = nodoIzquierdo->getBlock();
 
@@ -1078,8 +1133,11 @@ INodeData InnerNode::getFirstKeyLeaf(Node* searchNode,const InputData&  data){
 
 		delete leftKey;
 
-		if (nodoIzquierdo!=NULL)
+		if (nodoIzquierdo!=NULL&&nodoIzquierdo!=m_tree->getCurrent())
+		{
 			delete nodoIzquierdo;
+			nodoIzquierdo = NULL;
+		}
 
 		if (valueReg!=NULL)
 			delete[] valueReg;

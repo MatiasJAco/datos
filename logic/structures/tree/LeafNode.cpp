@@ -111,7 +111,12 @@ throw (NodeException)
 			LeafNode* formerSibling=(LeafNode*)this->m_tree->getNode(this->getNextLeaf());
 			formerSibling->setPreviousLeaf(promotedKey.getLeftPointer());
 			this->m_tree->saveNode(formerSibling);
-			delete formerSibling;
+
+			if (formerSibling!=m_tree->getCurrent())
+			{
+				delete formerSibling;
+				formerSibling = NULL;
+			}
 		};
 
 		setNextLeaf(promotedKey.getLeftPointer());
@@ -232,7 +237,12 @@ throw (NodeException)
 				LeafNode* formerSibling=(LeafNode*)this->m_tree->getNode(this->getNextLeaf());
 				formerSibling->setPreviousLeaf(promotedKey.getLeftPointer());
 				this->m_tree->saveNode(formerSibling);
-				delete formerSibling;
+
+				if (formerSibling!=m_tree->getCurrent())
+				{
+					delete formerSibling;
+					formerSibling = NULL;
+				}
 			};
 			setNextLeaf(promotedKey.getLeftPointer());
 		}
@@ -383,7 +393,11 @@ bool LeafNode::split(const InputData& data,unsigned int pos,INodeData& promotedK
 
 	delete firstKey;
 
-	delete sibling;
+	if (sibling!=m_tree->getCurrent())
+	{
+		delete sibling;
+		sibling = NULL;
+	}
 
 	delete[] valueReg;
 
