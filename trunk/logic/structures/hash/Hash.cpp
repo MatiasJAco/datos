@@ -40,6 +40,7 @@ bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
 		stringInputData->toData(varRegister.getValue());
 		data.setKey(stringInputData->getKey());
 		data.setValue(stringInputData->getValue());
+		delete stringInputData;
 		exists = true;
 	}
 	delete bucket;
