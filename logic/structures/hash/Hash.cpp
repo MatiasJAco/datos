@@ -236,8 +236,10 @@ bool Hash::modify(std::string key, string newValue) throw (ManagerException){
 	StringInputData* sid = new StringInputData();
 	sid->setKey(key);
 
-	if (!this->existsElement(sid->getKey()))
+	if (!this->existsElement(sid->getKey())) {
+		delete sid;
 		throw HashException(HashException::INEXISTENT_ELEM);
+	}
 
 	sid->setValue(newValue);
 	bool resultErase = this->remove(key);
@@ -250,7 +252,7 @@ bool Hash::modify(std::string key, string newValue) throw (ManagerException){
 	} else {
 		throw HashException(HashException::OPERATION_FAULT);
 	}
-
+	delete sid;
 	return true;
 }
 
