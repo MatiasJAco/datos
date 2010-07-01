@@ -65,7 +65,7 @@ void INodeData::toNodeData(const char *stream)
 
 unsigned int INodeData::getSize() const
 {
-	return (sizeof(int)*2);
+	return (m_key.size()+1 +sizeof(int));
 }
 
 bool    INodeData::operator ==(INodeData &p)
