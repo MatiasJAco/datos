@@ -475,13 +475,13 @@
 <externalSettings containerId="application;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 <externalSetting>
 <entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/application"/>
-<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/application/Release"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/application/Debug"/>
 </externalSetting>
 </externalSettings>
 <externalSettings containerId="physical;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 <externalSetting>
 <entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/physical"/>
-<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/physical/Release"/>
+<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/physical/Debug"/>
 </externalSetting>
 </externalSettings>
 </storageModule>
