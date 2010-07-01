@@ -133,9 +133,7 @@ public:
 	 */
 	void setCurrent(LeafNode* node);
 
-
-
-
+	LeafNode* getCurrent();
 
 
 public:

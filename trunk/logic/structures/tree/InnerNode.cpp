@@ -375,7 +375,12 @@ throw(NodeException)
 
 	found = sucesor->find(key,data);
 
-//	delete sucesor;
+	// Solo quiero mantener en memoria el current. El resto lo elimino una vez encontrado.
+	if (sucesor!=m_tree->getCurrent())
+	{
+		delete sucesor;
+		sucesor = NULL;
+	}
 
 	return found;
 }
@@ -1122,6 +1127,12 @@ bool InnerNode::getFirstData(InputData & data){
 		//Pido el primer hijo y le pido el primer elemento.
 		hijo = m_tree->getNode(currentData.getLeftPointer());
 		retval=hijo->getFirstData(data);
+
+		if (hijo!=m_tree->getCurrent())
+		{
+			delete hijo;
+			hijo = NULL;
+		}
 
 
 		delete[] valueReg;

@@ -599,6 +599,11 @@ void BPlusTree::setCurrent(LeafNode* node)
 	m_currentNode = node;
 }
 
+LeafNode* BPlusTree::getCurrent()
+{
+	return m_currentNode;
+}
+
 bool BPlusTree::deleteGeneratedFiles()
 {
 	return this->file.deleteFile();
