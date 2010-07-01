@@ -39,6 +39,7 @@ public:
 	void testMd5();
 	void testHashFunction();
 	void testFreqTable();
+	void testBugRaro();
 	void testPpmcHashComprimir();
 	void testPpmcHashDescomprimir();
 };

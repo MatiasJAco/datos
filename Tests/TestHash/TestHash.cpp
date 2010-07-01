@@ -382,9 +382,19 @@ void TestHash::testFreqTable()
         delete ft3;
 }
 
+void TestHash::testBugRaro() {
+	Hash* hash = new Hash();
+	hash->insert("1", "50-1/257-1");
+	StringInputData* sid2 = new StringInputData();
+	hash->find("1", *sid2);
+
+	std::cout << sid2->toString() << std::endl;
+	delete sid2;
+}
+
 void TestHash::testPpmcHashComprimir() {
 	std::string path = "./archivoAComprimir.txt";
-	int maxContext = 3;//--------------------------------------------------CAMBIAR ACA EL contexto!!
+	int maxContext = 2;//--------------------------------------------------CAMBIAR ACA EL contexto!!
 
 	std::string previousCompressionFile = "archivoAComprimir.txt";
 	previousCompressionFile.append(".ppmc");
@@ -410,7 +420,7 @@ void TestHash::testPpmcHashDescomprimir() {
 	std::remove("logger.txt");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc3");//---------------CAMBIAR ACA EL NUMERITO .ppmc"3"!!!
+	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc2");//---------------CAMBIAR ACA EL NUMERITO .ppmc"3"!!!
 	hash->deleteGeneratedFiles();
 	std::remove("logger.txt");
 	std::remove("logger1.txt");
