@@ -47,9 +47,11 @@ unsigned int INodeData::getLeftPointer()const
 
 char *INodeData::toStream(char* stream)const
 {
-	ByteConverter::stringToBytes(m_key,stream);
-	stream+=sizeof(m_key);
-	ByteConverter::uIntToBytes(m_leftPointer,stream);
+	char*p=stream;
+
+	ByteConverter::stringToBytes(m_key,p);
+	p+=m_key.size()+1;
+	ByteConverter::uIntToBytes(m_leftPointer,p);
 
 	return stream;
 }
@@ -57,7 +59,7 @@ char *INodeData::toStream(char* stream)const
 void INodeData::toNodeData(const char *stream)
 {
 	m_key = ByteConverter::bytesToString(stream);
-	stream+=sizeof(m_key);
+	stream+=m_key.size()+1;
 	m_leftPointer = ByteConverter::bytesToUInt(stream);
 }
 
