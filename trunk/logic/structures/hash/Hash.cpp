@@ -29,6 +29,7 @@ void Hash::setBlockSize(unsigned int size)
 
 
 bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
+	bool exists = false;
 	if (!this->existsElement(key))
 		throw HashException(HashException::INEXISTENT_ELEM);
 	unsigned int bucketNumber = this->getNumberOfBucket(key);
@@ -39,9 +40,10 @@ bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
 		stringInputData->toData(varRegister.getValue());
 		data.setKey(stringInputData->getKey());
 		data.setValue(stringInputData->getValue());
-		return true;
+		exists = true;
 	}
-	return false;
+	delete bucket;
+	return exists;
 }
 
 Bucket* Hash::createNewBucket(int depth){
