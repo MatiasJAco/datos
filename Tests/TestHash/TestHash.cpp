@@ -410,6 +410,7 @@ void TestHash::testPpmcHashComprimir() {
 	std::remove("logger.txt");
 	std::remove("logger1.txt");
 	std::remove("contador.dat");
+	delete ppmcHash;
 }
 
 void TestHash::testPpmcHashDescomprimir() {
