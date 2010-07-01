@@ -411,11 +411,13 @@ bool Ppmc::deCompress(const std::string & path) {
 					frequencyTable = this->getFrequencyTable(ZERO_CONTEXT, true);
 					(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*frequencyTable); // Se excluyen los caracteres que estaban en el contexto anterior.
 					excludedFrequencyTable = this->minusOneCtxtFreqTable;
-					previousFrequencyTable = new FrequencyTable();
+					//previousFrequencyTable = new FrequencyTable();
+					delete frequencyTable;
 				}
 				else{
 					frequencyTable = this->getFrequencyTable(stringContext, true);
 					(*excludedFrequencyTable) = frequencyTable->excludeFromTable((*previousFrequencyTable));
+					//delete previousFrequencyTable;   no se puede liberar aca
 					previousFrequencyTable = frequencyTable;
 				}
 
@@ -436,7 +438,8 @@ bool Ppmc::deCompress(const std::string & path) {
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
 				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
-				//delete excludedFrequencyTable; 	//libero memoria
+				//if (stringContext != MINUS_ONE_CONTEXT)
+					//delete excludedFrequencyTable;
 			}
 			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
@@ -456,7 +459,8 @@ bool Ppmc::deCompress(const std::string & path) {
 	log = ";Se termino de descomprimir el archivo: ";
 	log.append(path);
 	this->logger->insert(&log[0]);
-
+	delete arithmeticCompressor;
+	delete sequentialFile;
 	return true;
 }
 
