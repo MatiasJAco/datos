@@ -466,7 +466,11 @@ unsigned int LeafNode::getPreviousLeaf()
 	prevReg = m_block->getNextRegister();
 	nextReg = m_block->getNextRegister();
 
-	prevLeaf = ByteConverter::bytesToUInt(prevReg.getValue());
+	char* valueReg = prevReg.getValue();
+
+	prevLeaf = ByteConverter::bytesToUInt(valueReg);
+
+	delete[] valueReg;
 
 	return prevLeaf;
 }
