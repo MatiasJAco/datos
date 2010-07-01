@@ -104,7 +104,6 @@ private:
 	 * @param actualContextNumber Es el numero de contexto actual
 	 * @param maxContext Es el maximo contexto que se uso para la compresion
 	 */
-	//void updateFrequencyTables(std::string context, short character, int actualContextNumber, int maxContext); //todo borrars
 	void updateFrequencyTables(std::string stringContext, short character) ;
 
 	/**
@@ -114,9 +113,6 @@ private:
 	void getMaxStringContext(std::string &maxStringContext,char characterAnterior,unsigned int maxContext,bool primeraVez);
 
 	void getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,char character,unsigned int maxContext,bool primeraVez);
-
-	//todo HACERLE CASO AL NOMBRE DEL METODO :D
-	short borrarEsteMetodo(int contador);
 
 	/**
 	* Este metodo se usa para registrar los hits durante la compresion.
@@ -146,14 +142,6 @@ private:
 	 * @return false en caso de que El archivo no posee la extension ".ppmc".. Sino devuelve true
 	 */
 	bool getMetadata(std::string path, std::string & outPath, int & maxContext);
-
-	/**
-	 * Compara contextos y te dice si el anterior es >, < o = al actual
-	 * @param previousStringContext string a comparar
-	 * @param stringContext string a comparar
-	 * @return -1 si el primero es menor al segundo, 0 si son iguales, 1 si el primero es mayor al segundo
-	 */
-	int compareStringContexts(std::string previousStringContext,std::string stringContext);
 
 	/**
 	 * Setea el numero de contexto hasta el cual hay que hacer actualizaciones de tablas
