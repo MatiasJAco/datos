@@ -219,6 +219,7 @@ void TestHash::testEjemplo(){
 	catch (HashException e) {
 		cout<< e.what()<<endl;
 	}
+	hash->deleteGeneratedFiles();
 	delete hash;
 }
 
