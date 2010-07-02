@@ -28,7 +28,7 @@
 
 class Hash : public GeneralStructure {
 
-	static unsigned const int BUCKET_SIZE_DEFAULT = 524288;
+	static unsigned const int BUCKET_SIZE_DEFAULT = 16384;
 
 private:
 	Table* hashTable;
