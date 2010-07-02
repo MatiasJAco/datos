@@ -312,12 +312,14 @@ bool Ppmc::deCompress(const std::string & path) {
 	bool haveToDelPrevTable = false;	//es para ver si hay que hacer delete de previousFrequencyTable
 	bool deleteExcludTable;
 
-	while(isNotEOF){
+	while(isNotEOF)
+	{
 			//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
-			if (shortCharacter != ESC_CHAR){   // Aritmetico no emitio ESC -> me muevo a un contexto superior
-					//escribo en el archivo de salida el caracter.
-					sequentialFile->writeChar(character);
+			// Aritmetico no emitio ESC -> me muevo a un contexto superior
 
+			if (shortCharacter != ESC_CHAR)//escribo en el archivo de salida el caracter.
+			{
+					sequentialFile->writeChar(character);
 					getMaxStringContext(maxStringContext,characterAnterior,maxContext,false);
 //					cout << "maxStringContext: " << maxStringContext<<", ";
 					getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,false);
@@ -559,8 +561,8 @@ void Ppmc::getStatistics(int row) {
 }
 
 int Ppmc::setContextStats(int maxContexts){
-	if( (this->contextStats = (int*) malloc(sizeof(int)*(maxContexts+1)) ) == NULL)
-	return -1;
+	this->contextStats =  new int[maxContexts+1];
+
 	// Construye un vector dinamico de maxContexts enteros y se inicializan a 0.
 	for(int i=0;i<(maxContexts+1);i++)
 	contextStats[i] = 0;
