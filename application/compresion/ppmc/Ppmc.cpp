@@ -106,8 +106,8 @@ bool Ppmc::compress(std::string path,int maxContext) {
 }
 
 void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string stringContext, short character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable) {
-	FrequencyTable* frequencyTable;
-	FrequencyTable* excludedFrequencyTable;
+	FrequencyTable* frequencyTable=NULL;
+	FrequencyTable* excludedFrequencyTable=NULL;
 	FrequencyTable* nextExclusionTable = previousFrequencyTable;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
