@@ -48,7 +48,7 @@ std::string Logger::processLine(char *line) {
 	std::string cadena="";
 
 	int contador=0;
-	bool hayClave=false;
+
 
 	for (;;) {
 		//Si llegué al final de la línea termino.
@@ -58,24 +58,6 @@ std::string Logger::processLine(char *line) {
 
 		contador++;
 			switch (*line_index) {
-			case '(':
-
-				break;
-			case ')':
-
-				break;
-			case ';':
-				if (contador<3){
-					time_t rawtime;
-					struct tm * timeinfo;
-					time ( &rawtime );
-					timeinfo = localtime ( &rawtime );
-					hayClave=true;
-					cadena=cadena+(asctime(timeinfo));
-					cadena.erase(cadena.length()-1);
-				}
-				cadena=cadena+*line_index;
-				break;
 
 
 			case '\t':
