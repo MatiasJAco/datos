@@ -96,11 +96,10 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	delete previousFrequencyTable;
 
 	std::cout << "Fin de compresion" << std::endl;
-
 	log = ";Se termino de comprimir el archivo: ";
 	log.append(path);
+	log.append(" . Resultado: satisfactorio.");
 	this->logger->insert(&log[0]);
-
 	return true;
 }
 
