@@ -395,7 +395,7 @@ void TestHash::testBugRaro() {
 
 void TestHash::testPpmcHashComprimir() {
 	std::string path = "./archivoAComprimir.txt";
-	int maxContext = 2;//--------------------------------------------------CAMBIAR ACA EL contexto!!
+	int maxContext = 5;//--------------------------------------------------CAMBIAR ACA EL contexto!!
 
 	std::string previousCompressionFile = "archivoAComprimir.txt";
 	previousCompressionFile.append(".ppmc");
@@ -408,25 +408,15 @@ void TestHash::testPpmcHashComprimir() {
 	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress(path, maxContext);
 	hash->deleteGeneratedFiles();
-	std::remove("logger.txt");
-	std::remove("logger1.txt");
-	std::remove("contador.dat");
 	delete ppmcHash;
 }
 
 void TestHash::testPpmcHashDescomprimir() {
-	std::remove("tabla.txt");
-	std::remove("hash.bin");
-	std::remove("hash.bin.free");
 	std::remove("archivoAComprimirDescomprimido.txt");
-	std::remove("logger.txt");
 	GeneralStructure* hash = new Hash();
 	Ppmc* ppmcHash = new PpmcHash(hash);
-	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc2");//---------------CAMBIAR ACA EL NUMERITO .ppmc"3"!!!
+	ppmcHash->deCompress("./archivoAComprimir.txt.ppmc5");//---------------CAMBIAR ACA EL NUMERITO .ppmc"3"!!!
 	hash->deleteGeneratedFiles();
-	std::remove("logger.txt");
-	std::remove("logger1.txt");
-	std::remove("contador.dat");
 	delete ppmcHash;
 	delete hash;
 }
