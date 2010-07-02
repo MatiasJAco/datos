@@ -20,7 +20,7 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 }
 
 Ppmc::~Ppmc() {
-	delete this->generalStructure;
+	//delete this->generalStructure;
 	delete this->minusOneCtxtFreqTable;
 	delete this->logger;
 }
@@ -481,7 +481,7 @@ bool Ppmc::deCompress(const std::string & path) {
 
 void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 
-	FrequencyTable* frequencyTable;
+	FrequencyTable* frequencyTable=NULL;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
 		StringInputData stringInputData;
