@@ -197,24 +197,33 @@ FrequencyTable FrequencyTable::excludeFromTable(FrequencyTable &ft)
 
 	itDel = ft.m_Frequencies.begin();
 
-	//Voy buscando el caracter si termino la tabla corto el ciclo
-	for(it=retFt.m_Frequencies.begin();it !=retFt.m_Frequencies.end(); it++)
+	if(itDel !=ft.m_Frequencies.end())
 	{
-		while(((*itDel) < (*it)||(*itDel)==ESC_CHAR)&&itDel!=ft.m_Frequencies.end())
-			itDel++;
-
-		if( (*itDel) == (*it))
+		//Voy buscando el caracter si termino la tabla corto el ciclo
+		for(it=retFt.m_Frequencies.begin();it !=retFt.m_Frequencies.end(); it++)
 		{
-			retFt.m_FrequencyTotal -= it->getFrequency();
-			it = retFt.m_Frequencies.erase(it);
-			itDel++;
-
-			if((*itDel)==ESC_CHAR)
+			while((itDel!=ft.m_Frequencies.end())&&((*itDel) < (*it)||(*itDel)==ESC_CHAR))
 				itDel++;
-		}
 
-		if(itDel==ft.m_Frequencies.end())
-			break;
+			if(itDel==ft.m_Frequencies.end())
+				break;
+
+			if( (*itDel) == (*it))
+			{
+				retFt.m_FrequencyTotal -= it->getFrequency();
+				it = retFt.m_Frequencies.erase(it);
+				itDel++;
+
+				if(itDel==ft.m_Frequencies.end())
+					break;
+
+				if((*itDel)==ESC_CHAR)
+					itDel++;
+			}
+
+			if(itDel==ft.m_Frequencies.end())
+				break;
+		}
 	}
 	return retFt;
 }
