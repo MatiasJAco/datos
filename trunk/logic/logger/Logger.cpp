@@ -129,8 +129,7 @@ bool Logger::findFile(char *ptrArchivo, std::string cadena)
             contadorDeLetras = 0;
 
     }
-    ;
-    archivo->~ArchivoTexto();
+    delete archivo;
     return cadenaEncontrada;
 }
 
@@ -216,7 +215,7 @@ void Logger::print(){
 	while (archivo->leerLinea(cadenaLeida)){
 		std::cout<<cadenaLeida<<std::endl;
 	}
-	archivo->~ArchivoTexto();
+	delete archivo;
 };
 
 void Logger::insert(char *e_arg)
