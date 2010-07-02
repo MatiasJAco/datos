@@ -50,7 +50,7 @@ bool Hash::find(std::string key, InputData & data) throw (ManagerException) {
 
 Bucket* Hash::createNewBucket(int depth){
 	VarRegister* varRegister = new VarRegister();
-
+	Bucket *bucket =NULL;
 	std::string depthString;
 	std::stringstream aux;
 	aux << depth;
@@ -58,7 +58,7 @@ Bucket* Hash::createNewBucket(int depth){
 
 	varRegister->setValue(depthString);
 	Block* block = this->hashFile->getNewBlock();
-	Bucket *bucket = new Bucket(block);
+	bucket = new Bucket(block);
 	bucket->setDepth(depth);
 	block->addRegister(*varRegister);
 	this->saveBucket(bucket);
@@ -69,10 +69,13 @@ Bucket* Hash::createNewBucket(int depth){
 
 void Hash::inicializeHashFile(){
 	Block* block = this->hashFile->getBlock(1);
+	Bucket * bucket = NULL;
 	if (block == NULL)
-		createNewBucket(1);
+		bucket = createNewBucket(1);
 	if (block!=NULL)
 		delete block;
+	if (bucket!=NULL)
+		delete bucket;
 }
 
 int Hash::calculateHashFunction(std::string key) {
