@@ -73,9 +73,9 @@ int main(int argc, const char* argv[])
 					}
 				}
 
-				if(ctxOrder <0 || ctxOrder >1000)
+				if(ctxOrder <0 || ctxOrder >100)
 				{
-					cout << "Contexto maximo fuera de rango(debe estar entre 0 y 1000). Utilice \""<< argv[0]<< " -h\" para obtener mas ayuda. " << endl;
+					cout << "Contexto maximo fuera de rango(debe estar entre 0 y 100). Utilice \""<< argv[0]<< " -h\" para obtener mas ayuda. " << endl;
 					return 0;
 				}
 			}
