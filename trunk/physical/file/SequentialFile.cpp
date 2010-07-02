@@ -56,12 +56,16 @@ bool SequentialFile::open(const std::string fileName)
 	//Me guardo el nombre del archivo
 	m_FileName=fileName;
 
-	//Se abre el archivo en modo escritura unicamente para crearlo si no existe.
-	//Si no existe y lo abro en modo lectura se presenta un error. El append se
-	//agrega para que no trunque el archivo
-	m_FileHandler.open (fileName.c_str(), ios::out|ios::binary|ios::app);
-	m_FileSize =m_FileHandler.tellg();
-	m_FileHandler.close();
+
+	if(m_AccessMode != READ_FILE)
+	{
+		//Se abre el archivo en modo escritura unicamente para crearlo si no existe.
+		//Si no existe y lo abro en modo lectura se presenta un error. El append se
+		//agrega para que no trunque el archivo
+		m_FileHandler.open (fileName.c_str(), ios::out|ios::binary|ios::app);
+		m_FileSize =m_FileHandler.tellg();
+		m_FileHandler.close();
+	}
 
 	ios_base::openmode flag;
 
