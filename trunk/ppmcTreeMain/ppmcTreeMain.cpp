@@ -146,10 +146,12 @@ int main(int argc, const char* argv[])
 			return 0;
 		}
 	}
+	GeneralStructure* tree = NULL;
+	Ppmc* ppmcCompresor = NULL;
 
 	try{
-	GeneralStructure* tree = new BPlusTree("arbol.dat",65536,0.5);
-	Ppmc* ppmcCompresor = new PpmcTree(tree);
+	tree = new BPlusTree("arbol.dat",65536,0.5);
+	ppmcCompresor = new PpmcTree(tree);
 
 
 
