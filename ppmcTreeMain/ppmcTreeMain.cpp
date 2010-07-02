@@ -3,6 +3,7 @@
 
 #include "../application/compresion/ppmc/PpmcTree.h"
 #include "../logic/structures/tree/BPlusTree.h"
+#include "../logic/logger/Logger.h"
 #include <cstdlib>
 
 using namespace std;
@@ -29,12 +30,15 @@ int main(int argc, const char* argv[])
 
 	string filePath= "";
 	string ctxName;
-	int ctxOrder;
+	int ctxOrder=1;
 	bool showAllCTX=false;
 	bool showOneCTX=false;
 	bool showStatistics=false;
 	bool showHelp=false;
+	string error;
+	Logger *log = Logger::Instance();
 	actionTypeEnum action =UNDEFINED_ACTION;
+
 
 
 	//Obtengo todas las opciones seteadas para el compresor
@@ -142,6 +146,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 
+	try{
 	GeneralStructure* tree = new BPlusTree("arbol.dat",65536,0.5);
 	Ppmc* ppmcCompresor = new PpmcTree(tree);
 
@@ -195,5 +200,28 @@ int main(int argc, const char* argv[])
 	delete tree;
 	delete ppmcCompresor;
 
+	}
+	catch (CompressionException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch (ManagerException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch (PhysicalException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch(exception e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+
+	delete log;
 	return 0;
 }

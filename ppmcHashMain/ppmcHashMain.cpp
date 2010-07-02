@@ -29,12 +29,14 @@ int main(int argc, const char* argv[])
 
 	string filePath= "";
 	string ctxName;
-	int ctxOrder;
+	int ctxOrder=1;
 	bool showAllCTX=false;
 	bool showOneCTX=false;
 	bool showStatistics=false;
 	bool showHelp=false;
 	actionTypeEnum action =UNDEFINED_ACTION;
+	string error;
+	Logger *log = Logger::Instance();
 
 
 	//Obtengo todas las opciones seteadas para el compresor
@@ -126,6 +128,7 @@ int main(int argc, const char* argv[])
 
 	//------------------------Validacion--------------------------------//
 
+	try{
 	//--------------------------compress/decompress---------------------//
 	if(action !=UNDEFINED_ACTION)
 	{
@@ -191,6 +194,30 @@ int main(int argc, const char* argv[])
 
 	delete hash;
 	delete ppmcCompresor;
+
+	}
+	catch (CompressionException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch (ManagerException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch (PhysicalException e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+	catch(exception e)
+	{
+		error = (e.what());
+		log->insert(&error[0]);
+	}
+
+	delete log;
 
 	return 0;
 }
