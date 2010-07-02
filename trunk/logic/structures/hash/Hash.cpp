@@ -11,6 +11,7 @@
 Hash::Hash() {
 	m_BlockSize = BUCKET_SIZE_DEFAULT;
 	this->hashTable->createFile();
+	bucketsUsedAmount=0;
 	this->hashFile = new BlockFile();
 	this->hashFile->open("./hash.bin", m_BlockSize);
 	this->inicializeHashFile();
