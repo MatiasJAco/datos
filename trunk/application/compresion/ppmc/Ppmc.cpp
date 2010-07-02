@@ -196,7 +196,6 @@ bool Ppmc::getMetadata(std::string path, std::string & outPath, int & maxContext
 	} else {
 		return false; // El archivo no posee la extension ".ppmc".
 	}
-
 	position = outPath.find(".txt");
 	outPath = outPath.substr(0, position);
 	outPath.append("Descomprimido.txt");
@@ -255,13 +254,10 @@ bool Ppmc::deCompress(const std::string & path) {
 	//primer llamado para inicializar al ctxt 0
 	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
 
-	cout<<endl;	//todo borrar (solo para debug)
 //-----------------------------PRIMER PASADA-----------------------------
-	string borrar = frequencyTable->toString();
-	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
 	try
 	{
-	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
 	}
 	catch(CompressionException e)
 	{
@@ -287,17 +283,13 @@ bool Ppmc::deCompress(const std::string & path) {
 		updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
 
 	previousStringContext = MINUS_ONE_CONTEXT;
-	cout<<endl;	//todo borrar (solo para debug)
 
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
 	stringContext=ZERO_CONTEXT;
 	frequencyTable = this->getFrequencyTable(stringContext, true);
-	borrar = frequencyTable->toString();
-	cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<frequencyTable->getCharCount()<<") : "<<borrar << endl;
-
 	try
 	{
-	shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
+		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
 	}
 	catch (CompressionException e)
 	{
@@ -316,18 +308,14 @@ bool Ppmc::deCompress(const std::string & path) {
 	{
 			//si el caracter no es ESC ni EOF, lo emito,armo el maxStringContext y actualizo las tablas de frec q necesito, y creo las nuevas
 			// Aritmetico no emitio ESC -> me muevo a un contexto superior
-
 			if (shortCharacter != ESC_CHAR)//escribo en el archivo de salida el caracter.
 			{
 					sequentialFile->writeChar(character);
 					getMaxStringContext(maxStringContext,characterAnterior,maxContext,false);
-//					cout << "maxStringContext: " << maxStringContext<<", ";
 					getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,false);
-//					cout << "maxStringContextDesfasadoEn1: " << maxStringContextDesfasadoEn1<<", ";
-//					cout << "previousStringContext: " << previousStringContext<<endl;
 
-					cout<<"ACTUALIZO TODAS LAS TABLAS DE FRECUENCIAS QUE NECESITE"<<endl;
-					std::string maxStringContextAux; //todo ver si se puede sacar esta variable
+					// ----------------ACTUALIZO TODAS LAS TABLAS DE FRECUENCIAS QUE NECESITE-------------
+					std::string maxStringContextAux;
 					if (maxContext!=1){
 						if ((int)previousStringContext.length()!=maxContext){
 							for (unsigned int i = maxStringContext.length(); i>=1;i--){
@@ -359,7 +347,7 @@ bool Ppmc::deCompress(const std::string & path) {
 					}
 					//---------fin actualizacion de tablas-------------------
 
-					cout<<"CREO (O ACTUALIZO) LAS TABLAS DE FRECS QUE HAGAN FALTA: "<<endl;
+					//------------CREO (O ACTUALIZO) LAS TABLAS DE FRECS QUE HAGAN FALTA------------------
 					std::string stringContextAux;
 					for (int i = maxStringContextDesfasadoEn1.length(); i>=1;i--){
 						maxStringContextAux = maxStringContextDesfasadoEn1;
@@ -378,7 +366,7 @@ bool Ppmc::deCompress(const std::string & path) {
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								previousStringContext = stringContext;
 								stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
-								cout << "nunca paso por aca todavia"<<endl;
+								cout << "nunca paso por aca todavia"<<endl;//todo borrar si no pasa realmente
 							}else{
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								previousStringContext = stringContext;
@@ -399,14 +387,13 @@ bool Ppmc::deCompress(const std::string & path) {
 						previousFrequencyTable = new FrequencyTable((*excludedFrequencyTable));
 						haveToDelPrevTable=true;
 					}
-					cout<<endl;	//todo borrar (solo para debug)
 			}
 			else {	// Aritmetico emitio ESC -> me muevo a un contexto inferior e incremento el contador cantidadContextosAActualizar
 				if (stringContext==ZERO_CONTEXT){
 					previousStringContext = stringContext;
 					stringContext = MINUS_ONE_CONTEXT;
 				}else if (stringContext==MINUS_ONE_CONTEXT){
-					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor";
+					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor"; //todo borrar si nunca se muestra este msj
 				}else if (stringContext.length()==1){
 					previousStringContext = stringContext;
 					stringContext=ZERO_CONTEXT;
@@ -438,8 +425,6 @@ bool Ppmc::deCompress(const std::string & path) {
 			}
 
 			//----------Llamo al Aritmetico Descompresor
-			string borrar = excludedFrequencyTable->toString();
-			cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
 			deleteExcludTable = false;
 			if (shortCharacter != ESC_CHAR || (shortCharacter == ESC_CHAR && stringContext != MINUS_ONE_CONTEXT))
 				deleteExcludTable = true;
@@ -454,8 +439,12 @@ bool Ppmc::deCompress(const std::string & path) {
 				excludedFrequencyTable = NULL;
 			}
 
-
-			if (shortCharacter != ESC_CHAR) {
+			if (shortCharacter == EOF_CHAR){
+				delete previousFrequencyTable;
+				if (stringContext != MINUS_ONE_CONTEXT)
+					delete excludedFrequencyTable;
+				isNotEOF = false;
+			}else if (shortCharacter != ESC_CHAR) {
 				characterAnterior = character;
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
@@ -464,21 +453,10 @@ bool Ppmc::deCompress(const std::string & path) {
 			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
 			}
-
-			if (shortCharacter == EOF_CHAR){
-				delete previousFrequencyTable;
-				if (stringContext != MINUS_ONE_CONTEXT)
-					delete excludedFrequencyTable;
-				isNotEOF = false;
-			}
-//				if (stringContext!= MINUS_ONE_CONTEXT)
-//					delete frequencyTable;		//libero memoria
-
 		}//fin While(continuarCiclo)
 
 	sequentialFile->close();
 	std::cout << "Fin de descompresion" << std::endl;
-
 	log = ";Se termino de descomprimir el archivo: ";
 	log.append(path);
 	this->logger->insert(&log[0]);
@@ -503,8 +481,6 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 			frequencyTable->setFrequency(ESC_CHAR,cantCaract); //actualizo la frecuencia del ESC si es necesario
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
-			string borrar = frequencyTable->toString();
-			cout << "Update ctx "<< stringContext<<" : " <<borrar << endl;
 		} else { // Si ya existe el caracter en el contexto dado, se incrementa su frecuencia.
 			//this->countHit(stringContext);		//TODO MAti - countHit!
 			if (character!=ESC_CHAR)
@@ -513,8 +489,6 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 			frequencyTable->setFrequency(ESC_CHAR,cantCaract);  //actualizo la frecuencia del ESC si es necesario
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
-			string borrar = frequencyTable->toString();
-			cout << "Update ctx "<< stringContext<<" : " <<borrar << endl;
 			delete frequencyTable;
 			return;
 		}
@@ -523,11 +497,9 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
 		if (character!= ESC_CHAR)
-			cout<<"se esperaba q este metodo se use solo como parametro de entrada a ESC"<<endl;    //todo borrar desp de que ande todo
+			cout<<"se esperaba q este metodo se use solo como parametro de entrada a ESC"<<endl;    //todo borrar desp de que ande
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
-		string borrar = frequencyTable->toString();
-		cout << "Create ctx "<< stringContext<<" : " <<borrar << endl;
 		delete frequencyTable;
 	}
 }
