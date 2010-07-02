@@ -264,7 +264,7 @@ bool Ppmc::deCompress(const std::string & path) {
 		logger->insert((char*)e.what());
 	}
 	character = (char) shortCharacter;
-	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
+	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 	if (shortCharacter == EOF_CHAR){
 		cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor"; //todo logguear error?
 		return false;
@@ -297,7 +297,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	}
 
 	delete frequencyTable;
-	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : "<< character<<endl;
+	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 	else cout<<"aritmetico emitio : ESC "<<endl;
 
 	int numCtxtForUpdate;	//es el numero de contexto hasta el cual hay que actualizar
@@ -365,8 +365,7 @@ bool Ppmc::deCompress(const std::string & path) {
 							if((int)maxStringContextDesfasadoEn1.length()!=maxContext){
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								previousStringContext = stringContext;
-								stringContext =  maxStringContextAux.substr(0,maxStringContextDesfasadoEn1.length());
-								cout << "nunca paso por aca todavia"<<endl;//todo borrar si no pasa realmente
+								stringContext =  maxStringContextAux.substr(1,maxStringContextDesfasadoEn1.length()-1);
 							}else{
 								maxStringContextAux = maxStringContextDesfasadoEn1;
 								previousStringContext = stringContext;
@@ -447,7 +446,7 @@ bool Ppmc::deCompress(const std::string & path) {
 			}else if (shortCharacter != ESC_CHAR) {
 				characterAnterior = character;
 				character = (char) shortCharacter;
-				cout<<"aritmetico emitio : "<< character<<endl;
+				cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
 			}
 			else{
