@@ -5,6 +5,7 @@
 #include "../logic/structures/tree/BPlusTree.h"
 #include "../logic/logger/Logger.h"
 #include <cstdlib>
+#define UNDEFINED -1
 
 using namespace std;
 
@@ -30,7 +31,7 @@ int main(int argc, const char* argv[])
 
 	string filePath= "";
 	string ctxName;
-	int ctxOrder=1;
+	int ctxOrder;
 	bool showAllCTX=false;
 	bool showOneCTX=false;
 	bool showStatistics=false;
@@ -196,10 +197,6 @@ int main(int argc, const char* argv[])
 	if(showStatistics &&action == COMPRESS )
 		ppmcCompresor->getStatistics(ctxOrder);
 
-
-	delete tree;
-	delete ppmcCompresor;
-
 	}
 	catch (CompressionException e)
 	{
@@ -222,6 +219,8 @@ int main(int argc, const char* argv[])
 		log->insert(&error[0]);
 	}
 
-	delete log;
+	delete tree;
+	delete ppmcCompresor;
+	//delete log;
 	return 0;
 }
