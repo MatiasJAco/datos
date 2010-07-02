@@ -10,8 +10,6 @@
 using namespace std;
 
 TestArithmetic::TestArithmetic() {
-	// TODO Auto-generated constructor stub
-
 //	m_tocompress = "Naciste en una prisión que no puedes oler, probar ni tocar. Una prisión para tu mente";
 	m_tocompress = "DIVIDIDOS";
 	m_filecompressed = "comprimido.gzip"; //xD
@@ -24,8 +22,6 @@ TestArithmetic::TestArithmetic() {
 }
 
 TestArithmetic::~TestArithmetic() {
-	// TODO Auto-generated destructor stub
-
 	if (m_compressor != NULL)
 		delete m_compressor;
 }
