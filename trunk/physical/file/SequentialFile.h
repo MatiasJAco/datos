@@ -14,7 +14,7 @@
 
 typedef enum {BINARY, TEXT} dataTypeEnum;
 typedef enum {READ_FILE, WRITE_FILE} accessModeEnum;
-
+typedef enum {APPEND_FILE, TRUNCATE_FILE} writeEnum;
 /**
  * Implementacion de un archivo secuencial con un buffer interno para realizar operaciones,
  * para reducir la cantidad de operaciones de disco
@@ -92,6 +92,8 @@ public:
 
 	void setInputType(dataTypeEnum InputType);
 
+	void setOverwriteMode(writeEnum mode );
+
 protected:
 	//-----------------------------Headers-----------------------------//
 	/**
@@ -138,6 +140,11 @@ private:
 	 * Posicion actual dentro del buffer
 	 */
 	unsigned int m_CurrentPos;
+
+	/**
+	 *
+	 */
+	writeEnum m_doTruncate;
 
 	/**
 	 * Tama�o del buffer
