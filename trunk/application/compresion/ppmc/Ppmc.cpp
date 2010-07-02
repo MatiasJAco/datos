@@ -434,26 +434,33 @@ bool Ppmc::deCompress(const std::string & path) {
 			//----------Llamo al Aritmetico Descompresor
 			string borrar = excludedFrequencyTable->toString();
 			cout << "Tabla p el aritmetico (ctx '"<<stringContext<<"' / CantElemSinESC "<<excludedFrequencyTable->getCharCount()<<") : "<<borrar << endl;
+			bool deleteExcludTable = false;
+			if (shortCharacter != ESC_CHAR || (shortCharacter == ESC_CHAR && stringContext != MINUS_ONE_CONTEXT))
+				deleteExcludTable = true;
 			try{
 			shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
 			}
 			catch(CompressionException e){
 				logger->insert((char *)e.what());
 			}
+			if (deleteExcludTable)
+				delete excludedFrequencyTable;
 
 			if (shortCharacter != ESC_CHAR) {
 				characterAnterior = character;
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : "<< character<<endl;
 				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
-				if (stringContext != MINUS_ONE_CONTEXT)
-					delete excludedFrequencyTable;
+//				if (stringContext != MINUS_ONE_CONTEXT)
+//					delete excludedFrequencyTable;
 			}
 			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
 			}
 
 			if (shortCharacter == EOF_CHAR){
+				delete previousFrequencyTable;
+				delete excludedFrequencyTable;
 				isNotEOF = false;
 			}
 //				if (stringContext!= MINUS_ONE_CONTEXT)
