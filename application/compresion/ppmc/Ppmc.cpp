@@ -20,7 +20,6 @@ Ppmc::Ppmc(GeneralStructure* generalStructure){
 }
 
 Ppmc::~Ppmc() {
-	//delete this->generalStructure;
 	delete this->minusOneCtxtFreqTable;
 	delete this->logger;
 }
@@ -238,23 +237,21 @@ bool Ppmc::deCompress(const std::string & path) {
 	//instancio el compresor aritmetico como Decompresor.
 	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 30);   //todo ta bien 3er param?
 
-	std::string stringContext = MINUS_ONE_CONTEXT;
-	std::string previousStringContext="";
-	std::string maxStringContext = "";
-	std::string maxStringContextDesfasadoEn1 = "";
-	//int actualContextNumber = -1; // Representa el número de contexto -1 (de donde arranca la descompresion)
+	bool isNotEOF = true;
 	char character;
 	char characterAnterior;
 	short shortCharacter;
+	std::string stringContext = MINUS_ONE_CONTEXT;	//Arranca del contexto -1 la descompresion
+	std::string previousStringContext="";
+	std::string maxStringContext = "";
+	std::string maxStringContextDesfasadoEn1 = "";
 	FrequencyTable * frequencyTable = minusOneCtxtFreqTable;
 	FrequencyTable* previousFrequencyTable=NULL;
 	FrequencyTable * excludedFrequencyTable=NULL;
-	bool isNotEOF = true;
 
-	//primer llamado para inicializar al ctxt 0
-	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR);
+	updateFrequencyTables(ZERO_CONTEXT, ESC_CHAR); 	//primer llamado para inicializar al ctxt 0
 
-//-----------------------------PRIMER PASADA-----------------------------
+	//-----------------------------PRIMER PASADA-----------------------------
 	try
 	{
 		shortCharacter = arithmeticCompressor->decompress(*frequencyTable);
@@ -266,11 +263,11 @@ bool Ppmc::deCompress(const std::string & path) {
 	character = (char) shortCharacter;
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 	if (shortCharacter == EOF_CHAR){
-		cout<<"El compresor aritmetico devolvio EOF al ppio de todo en el decompresor"; //todo logguear error?
+		log = ";Hubo un error en la descompresion. El primer caracter devuelto por el descompresor aritmetico fue EOF.";
+		this->logger->insert(&log[0]);
 		return false;
 	}
-	//escribo en el archivo de salida el caracter.
-	sequentialFile->writeChar(character);
+	sequentialFile->writeChar(character);//escribo en el archivo de salida el caracter.
 	characterAnterior = character;
 	getMaxStringContext(maxStringContext,characterAnterior,maxContext,true);
 	getMaxStringContextDesfasado(maxStringContextDesfasadoEn1,character,maxContext,true);
@@ -285,7 +282,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	previousStringContext = MINUS_ONE_CONTEXT;
 
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
-	stringContext=ZERO_CONTEXT;
+	stringContext=ZERO_CONTEXT;//segunda pasada siempre arranca desde el contexto cero
 	frequencyTable = this->getFrequencyTable(stringContext, true);
 	try
 	{
@@ -296,13 +293,13 @@ bool Ppmc::deCompress(const std::string & path) {
 		logger->insert((char*)e.what());
 	}
 
-	delete frequencyTable;
+	delete frequencyTable;//libero memoria
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 	else cout<<"aritmetico emitio : ESC "<<endl;
 
-	int numCtxtForUpdate;	//es el numero de contexto hasta el cual hay que actualizar
+	int numCtxtForUpdate;				//es el numero de contexto hasta el cual hay que actualizar
 	bool haveToDelPrevTable = false;	//es para ver si hay que hacer delete de previousFrequencyTable
-	bool deleteExcludTable;
+	bool haveToDeleteExcludTable;		//es para ver si hay que hacer delete de excludedFrequencyTable
 
 	while(isNotEOF)
 	{
@@ -392,7 +389,7 @@ bool Ppmc::deCompress(const std::string & path) {
 					previousStringContext = stringContext;
 					stringContext = MINUS_ONE_CONTEXT;
 				}else if (stringContext==MINUS_ONE_CONTEXT){
-					cout<< "hubo un error de actualContextNumber. quedo menor a -1 en ppmc descompresor"; //todo borrar si nunca se muestra este msj
+					cout<< "Hubo un error. Se intento bajar del contexto -1 a uno mas abajo. No se debe realizar esta operacion"; //todo borrar si nunca se muestra este msj
 				}else if (stringContext.length()==1){
 					previousStringContext = stringContext;
 					stringContext=ZERO_CONTEXT;
@@ -406,13 +403,12 @@ bool Ppmc::deCompress(const std::string & path) {
 					frequencyTable = this->getFrequencyTable(ZERO_CONTEXT, true);
 					(*minusOneCtxtFreqTable) = this->minusOneCtxtFreqTable->excludeFromTable(*frequencyTable); // Se excluyen los caracteres que estaban en el contexto anterior.
 					excludedFrequencyTable = this->minusOneCtxtFreqTable;
-					//previousFrequencyTable = new FrequencyTable();
 					delete frequencyTable;
 					frequencyTable=NULL;
 				}
 				else{
 					frequencyTable = this->getFrequencyTable(stringContext, true);
-					excludedFrequencyTable = new FrequencyTable(frequencyTable->excludeFromTable((*previousFrequencyTable)));
+					excludedFrequencyTable = new FrequencyTable(frequencyTable->excludeFromTable((*previousFrequencyTable)));// Se excluyen los caracteres que estaban en el contexto anterior.
 					delete previousFrequencyTable;
 					previousFrequencyTable=NULL;
 					previousFrequencyTable = new FrequencyTable((*frequencyTable));
@@ -423,17 +419,17 @@ bool Ppmc::deCompress(const std::string & path) {
 
 			}
 
-			//----------Llamo al Aritmetico Descompresor
-			deleteExcludTable = false;
+			//----------Llamo al Aritmetico Descompresor------
+			haveToDeleteExcludTable = false;
 			if (shortCharacter != ESC_CHAR || (shortCharacter == ESC_CHAR && stringContext != MINUS_ONE_CONTEXT))
-				deleteExcludTable = true;
+				haveToDeleteExcludTable = true;
 			try{
 			shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
 			}
 			catch(CompressionException e){
 				logger->insert((char *)e.what());
 			}
-			if (deleteExcludTable){
+			if (haveToDeleteExcludTable){
 				delete excludedFrequencyTable;
 				excludedFrequencyTable = NULL;
 			}
@@ -458,6 +454,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	std::cout << "Fin de descompresion" << std::endl;
 	log = ";Se termino de descomprimir el archivo: ";
 	log.append(path);
+	log.append(" . Resultado: satisfactorio.");
 	this->logger->insert(&log[0]);
 	delete arithmeticCompressor;
 	delete sequentialFile;
@@ -465,7 +462,6 @@ bool Ppmc::deCompress(const std::string & path) {
 }
 
 void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
-
 	FrequencyTable* frequencyTable=NULL;
 
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
@@ -495,8 +491,6 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 	} else { // No existe el contexto pasado por parametro. Por lo tanto se lo crea con ESC(1)
 		frequencyTable = new FrequencyTable();
 		frequencyTable->setFrequency(ESC_CHAR,1); // Agrega el escape en el contexto a crearse.
-		if (character!= ESC_CHAR)
-			cout<<"se esperaba q este metodo se use solo como parametro de entrada a ESC"<<endl;    //todo borrar desp de que ande
 		frequencyTable->setFrequency(character,1); // Agrega el caracter al contexto a crearse, con una ocurrencia.
 		this->insertInStructure(stringContext,frequencyTable->toString());
 		delete frequencyTable;
