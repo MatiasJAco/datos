@@ -17,6 +17,7 @@ SequentialFile::SequentialFile(accessModeEnum mode) {
 	m_Buffer = NULL;
 	m_CurrentPos =0;
 	m_AmmountRead=0;
+	m_doTruncate=APPEND_FILE;
 
 }
 
@@ -70,7 +71,14 @@ bool SequentialFile::open(const std::string fileName)
 
 	//Si es de escritura o lectura/escritura
 	if(m_AccessMode != READ_FILE)
-		flag=ios::out|ios::app;
+	{
+		flag=ios::out;
+
+		if(m_doTruncate==TRUNCATE_FILE)
+			flag|ios::trunc;
+		else
+			flag|ios::app;
+	}
 
 	if(m_InputType==BINARY)
 		flag|ios::binary;
@@ -219,19 +227,22 @@ dataTypeEnum SequentialFile::getInputType() const
 
 void SequentialFile::setAccessMode(accessModeEnum AccessMode)
 {
-    this->m_AccessMode = AccessMode;
+    m_AccessMode = AccessMode;
 }
 
 void SequentialFile::setBufferSize(unsigned int BufferSize)
 {
-    this->m_BufferSize = BufferSize;
+    m_BufferSize = BufferSize;
 }
 
 void SequentialFile::setInputType(dataTypeEnum InputType)
 {
-    this->m_InputType = InputType;
+    m_InputType = InputType;
 }
 
-
+void SequentialFile::setOverwriteMode(writeEnum mode )
+{
+	m_doTruncate = mode;
+}
 
 

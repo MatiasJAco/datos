@@ -13,6 +13,8 @@ using namespace std;
 BitFile::BitFile(accessModeEnum type) {
 
 	m_byteFile = new SequentialFile(type);
+	if(type == WRITE_FILE)
+		m_byteFile->setOverwriteMode(TRUNCATE_FILE);
 	m_byteFile->setInputType(BINARY);
 }
 
