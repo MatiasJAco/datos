@@ -158,6 +158,11 @@ private:
 	 */
 	bool haveToUpdateContext(int numCtxtForUpdate,std::string stringContext);
 
+	/**
+	 * Se encarga de loggear el error de utilizacion de un caracter igual al del utilizado para contexto cero
+	 */
+	void logSpecialError();
+
 protected:
 
 	/**
