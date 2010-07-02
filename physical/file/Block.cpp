@@ -434,7 +434,7 @@ VarRegister Block::getRegisterN(unsigned int number)
 
 }
 
-VarRegister Block::getPreviousRegister(bool backward)
+VarRegister Block::getPreviousRegisterSequence(bool backward)
 {
 	VarRegister current;
 	RegisterListIt it;
@@ -442,7 +442,7 @@ VarRegister Block::getPreviousRegister(bool backward)
 
 	if(m_registers.size()>0)
 	{
-		if(it!=m_registers.begin()&&m_posActual!=3)
+		if(it!=m_registers.begin()&&m_posActual!=(int)m_fixedRegisterCount)
 		{
 			it--;
 //			it--;
@@ -463,6 +463,29 @@ VarRegister Block::getPreviousRegister(bool backward)
 	return current;
 }
 
+VarRegister Block::getPreviousRegister(bool backward)
+{
+	VarRegister current;
+	RegisterListIt it;
+	it=m_actualReg;
+
+	if(m_registers.size()>0)
+	{
+		if(it!=m_registers.end())
+		{
+			current=*it;
+			it--;
+
+			if(backward)
+			{
+				m_actualReg =it;
+				m_posActual--;
+			}
+		}
+	}
+
+	return current;
+}
 
 
 

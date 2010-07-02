@@ -572,7 +572,7 @@ bool LeafNode::getPreviousData(InputData& data)
 
 	if (m_block->getPosActual()!=3)
 	{
-		reg = m_block->getPreviousRegister();
+		reg = m_block->getPreviousRegisterSequence();
 		currentValue = reg.getValue();
 		currentData->toData(currentValue);
 

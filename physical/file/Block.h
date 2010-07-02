@@ -133,6 +133,16 @@ public:
 	VarRegister getPreviousRegister(bool foward=true);
 
 	/**
+	* Obtiene el  retrocede y obtiene registro actual. Util para recorrer secuencialmente en orden inverso.
+	* @param backward indica si se retrocede el iterador despues de obtener un registro
+	* @return VarRegister el registro actual
+	*/
+
+	VarRegister getPreviousRegisterSequence(bool backward=true);
+
+
+
+	/**
 	 * Posiciona el iterador en la posicion n, y devuelve el registro
 	 * que se encuentra en esa posicion
 	 * @param number posicion a la que se salta
