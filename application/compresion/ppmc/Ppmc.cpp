@@ -49,6 +49,16 @@ std::string Ppmc::getCompressionOutFile(std::string path, int maxContext) {
 	return outFile;
 }
 
+void Ppmc::logSpecialError(){
+	string log = ";Se utilizo un caracter no permitido. El mismo es utilizado como indicador de contexto Cero. Se terminará la ejecución...";
+	log.append("El caracter utilizado es : '");
+	log.append(ZERO_CONTEXT);
+	log.append("'");
+	log.append(" . Se decidio comprimir todo el texto anterior a dicho caracter.");
+	this->logger->insert(&log[0]);
+	cout<<"Se termino la ejecución debido a que se utilizo un caracter no permitido. El mismo es usado para el contexto cero. Caracter: '"<<ZERO_CONTEXT<<"'"<<endl;
+}
+
 bool Ppmc::compress(std::string path,int maxContext) {
 	std::string log = ";Comprimiendo archivo: ";
 	log.append(path);
@@ -61,6 +71,12 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	SequentialFile* sequentialFile = new SequentialFile(READ_FILE);
 	sequentialFile->open(path);
 	char character = sequentialFile->readChar();
+	string charAux= "";
+	charAux = character;
+	if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+		logSpecialError();
+		return false;
+	}
 	std::string stringContext = ZERO_CONTEXT;
 	int actualContextNumber = 0; // Representa el número de contexto más alto que se alcanzó hasta ahora.
 	FrequencyTable* previousFrequencyTable = new FrequencyTable();
@@ -75,7 +91,11 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	bool isNotEof = false;
 
 	character = sequentialFile->readChar(isNotEof);
-
+	charAux = character;
+	if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+		logSpecialError();
+		return false;
+	}
 	while (isNotEof) {
 		this->ppmcCompressionEmitter(compressor, stringContext, (short)character, actualContextNumber, maxContext, newRead, previousFrequencyTable);
 		if (actualContextNumber < maxContext) {
@@ -86,6 +106,11 @@ bool Ppmc::compress(std::string path,int maxContext) {
 			stringContext = stringContext.substr(1, stringContext.length());
 		}
 		character = sequentialFile->readChar(isNotEof);
+		charAux = character;
+		if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+			logSpecialError();
+			isNotEof = false;
+		}
 	}
 
 	this->ppmcCompressionEmitter(compressor, stringContext, EOF_CHAR, actualContextNumber, maxContext, newRead, previousFrequencyTable);
@@ -260,6 +285,12 @@ bool Ppmc::deCompress(const std::string & path) {
 		logger->insert((char*)e.what());
 	}
 	character = (char) shortCharacter;
+	string charAux = "";
+	charAux = character;
+	if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+		logSpecialError();
+		return false;
+	}
 	if (shortCharacter != ESC_CHAR) cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 	if (shortCharacter == EOF_CHAR){
 		log = ";Hubo un error en la descompresion. El primer caracter devuelto por el descompresor aritmetico fue EOF.";
@@ -443,6 +474,11 @@ bool Ppmc::deCompress(const std::string & path) {
 				character = (char) shortCharacter;
 				cout<<"aritmetico emitio : '"<< character<<"'"<<endl;
 				setNumCtxtForUpdate(numCtxtForUpdate,stringContext);
+				charAux = character;
+				if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+					logSpecialError();
+					return false;
+				}
 			}
 			else{
 				cout<<"aritmetico emitio : ESC "<<endl;
