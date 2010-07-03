@@ -91,11 +91,12 @@ private:
 	 * @param context Es el contexto en donde quiero emitir.
 	 * @param character Es el caracter que quiero emitir.
 	 * @param actualContextNumber Es el numero de contexto actual.
-	 * @param maxContext Es el maximo contexto para la compresion.
 	 * @param newRead Indica si se acaba de leer un nuevo caracter o si se esta retrocediendo en contextos.
 	 * @param previousFrequencyTable Es la tabla de frecuencias del contexto anterior. Sirve para excluir caracteres.
+	 * @param haveToDelFreqTab Indicador para liberacion de memoria
+	 * @param haveToDelExclTab Indicador para liberacion de memoria
 	 */
-	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, short character, int actualContextNumber, int maxContext, bool newRead, FrequencyTable* previousFrequencyTable);
+	void ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string context, short character, int actualContextNumber, bool newRead, FrequencyTable* previousFrequencyTable,int &haveToDelFreqTab,int &haveToDelExclTab);
 
 	/**
 	 * Este metodo se usa recursivamente para ir actualizando las tablas de frecuencia
