@@ -283,7 +283,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	std::cout << endl<<"Descomprimiendo archivo... (" << path << ") con contexto "<<maxContext << std::endl;
 	SequentialFile* sequentialFile = new SequentialFile(WRITE_FILE);
 	sequentialFile->open(outPath);
-
+	this->setContextStats(maxContext);
 	//instancio el compresor aritmetico como Decompresor.
 	ArithmeticCompressor* arithmeticCompressor = new ArithmeticCompressor(ArithmeticCompressor::DECOMPRESSOR, path, 30);   //todo ta bien 3er param?
 
@@ -541,7 +541,7 @@ void Ppmc::updateFrequencyTables(std::string stringContext, short character) {
 			std::string stringFrequencyTable = frequencyTable->toString();
 			this->modifyInStructure(stringContext,stringFrequencyTable);
 		} else { // Si ya existe el caracter en el contexto dado, se incrementa su frecuencia.
-			//this->countHit(stringContext);		//TODO MAti - countHit!
+			this->countHit(stringContext);
 			if (character!=ESC_CHAR)
 				frequencyTable->increaseFrequency(character,1);
 			unsigned long cantCaract = frequencyTable->getCharCount();
@@ -582,7 +582,7 @@ void Ppmc::getMaxStringContextDesfasado(std::string &maxStringContextDesfasado,c
 
 
 void Ppmc::getStatistics(int row) {
-	for (int i=0;i<row;i++){
+	for (int i=0;i<row+1;i++){
 	printf("Cantidad de aciertos en contexto de orden %d : %d \n",i,this->contextStats[i]);
 
 	}
@@ -600,8 +600,11 @@ int Ppmc::setContextStats(int maxContexts){
 };
 
 void Ppmc::countHit(std::string successfulContext) {
-	int contextNumber=successfulContext.size();
-	this->contextStats[contextNumber]++;
+	if(successfulContext==ZERO_CONTEXT){
+		this->contextStats[0]++;
+	}else{
+		int contextNumber=successfulContext.size();
+		this->contextStats[contextNumber]++;}
 
 
 
