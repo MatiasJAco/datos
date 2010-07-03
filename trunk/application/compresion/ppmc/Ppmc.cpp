@@ -134,7 +134,7 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 	FrequencyTable* frequencyTable=NULL;
 	FrequencyTable* excludedFrequencyTable=NULL;
 	FrequencyTable* nextExclusionTable = previousFrequencyTable;
-
+	string error;
 	if (this->existsElementInStructure(stringContext)) { // Existe el contexto pasado por parametro.
 		if (haveToDelFreqTab==1){
 			delete frequencyTable;
@@ -154,7 +154,8 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 					compressor->compress(ESC_CHAR, (*excludedFrequencyTable));
 				}
 				catch(CompressionException e) {
-					logger->insert((char*)e.what());
+					error = (e.what());
+					this->logger->insert(&error[0]);
 				}
 				//std::cout << "Emito el caracter Escape en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(ESC_CHAR) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
 				//std::cout << std::endl << "Tabla excluida   : " << excludedFrequencyTable->toString() << std::endl << std::endl;
@@ -167,7 +168,8 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 				compressor->compress(character, (*excludedFrequencyTable));
 			}
 			catch(CompressionException e) {
-				logger->insert((char*)e.what());
+				error = (e.what());
+				this->logger->insert(&error[0]);
 			}
 			std::cout << "Emito el caracter " << (char)character <<  " en el contexto " << stringContext << " con " << excludedFrequencyTable->getFrequency(character) << "/" << excludedFrequencyTable->getFrequencyTotal() << std::endl;
 			//std::cout << std::endl << "Tabla excluida   : " << excludedFrequencyTable->toString() << std::endl << std::endl;
@@ -217,7 +219,8 @@ void Ppmc::ppmcCompressionEmitter(ArithmeticCompressor* compressor, std::string 
 		try {
 			compressor->compress(character, (*minusOneCtxtFreqTable));
 		} catch(CompressionException e) {
-			logger->insert((char*)e.what());
+			error = (e.what());
+			this->logger->insert(&error[0]);
 		}
 
 		if (character == EOF_CHAR) {
@@ -305,7 +308,8 @@ bool Ppmc::deCompress(const std::string & path) {
 	}
 	catch(CompressionException e)
 	{
-		logger->insert((char*)e.what());
+		string error = (e.what());
+		this->logger->insert(&error[0]);
 	}
 	character = (char) shortCharacter;
 	string charAux = "";
@@ -331,7 +335,7 @@ bool Ppmc::deCompress(const std::string & path) {
 	stringContext = character;
 	if (maxContext >0)
 		updateFrequencyTables(stringContext, ESC_CHAR);//creo la tabla del contexto con esc(1)
-
+	string error;
 	previousStringContext = MINUS_ONE_CONTEXT;
 
 	//-----------------------------COMIENZO DE 2da PASADA-----------------------------
@@ -343,7 +347,8 @@ bool Ppmc::deCompress(const std::string & path) {
 	}
 	catch (CompressionException e)
 	{
-		logger->insert((char*)e.what());
+		error = (e.what());
+		this->logger->insert(&error[0]);
 	}
 
 	delete frequencyTable;//libero memoria
@@ -480,7 +485,8 @@ bool Ppmc::deCompress(const std::string & path) {
 			shortCharacter = arithmeticCompressor->decompress(*excludedFrequencyTable);
 			}
 			catch(CompressionException e){
-				logger->insert((char *)e.what());
+				string error = (e.what());
+				this->logger->insert(&error[0]);
 			}
 			if (haveToDeleteExcludTable){
 				delete excludedFrequencyTable;
