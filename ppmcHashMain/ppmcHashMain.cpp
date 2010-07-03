@@ -35,7 +35,7 @@ int main(int argc, const char* argv[])
 	bool showStatistics=false;
 	bool showHelp=false;
 	actionTypeEnum action =UNDEFINED_ACTION;
-	string error;
+	string logText;
 	Logger *log = Logger::Instance();
 
 
@@ -148,11 +148,32 @@ int main(int argc, const char* argv[])
 
 
 
+	stringstream info;
 	if(action == COMPRESS)
+	{
+		info << "Comprimiendo archivo "<<filePath<<  " con contexto "<<ctxOrder<<endl;
+		logText = info.str();
+		log->insert(&logText[0]);
+
 		ppmcCompresor->compress(filePath, ctxOrder);
+
+		logText = "La compresion fue exitosa\n";
+		log->insert(&logText[0]);
+	}
+
 	else
 		if(action == DECOMPRESS)
+		{
+			info << "Descomprimiendo archivo "<<filePath<<endl;
+			logText = info.str();
+			log->insert(&logText[0]);
 			ppmcCompresor->deCompress(filePath);
+
+			info.clear();
+			info << "La compresion fue exitosa "<<endl;
+			logText = info.str();
+			log->insert(&logText[0]);
+		}
 
 
 	//---------------------------HELP-----------------------------------//
@@ -191,30 +212,26 @@ int main(int argc, const char* argv[])
 	if(showStatistics &&action == COMPRESS )
 		ppmcCompresor->getStatistics(ctxOrder);
 
-
-	delete hash;
-	delete ppmcCompresor;
-
 	}
 	catch (CompressionException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch (ManagerException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch (PhysicalException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch(exception e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 
 	//delete log;
