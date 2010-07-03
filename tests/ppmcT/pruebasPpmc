@@ -1,0 +1,48 @@
+Pruebas que se corrieron
+
+Se comprimió el archivo dead-gardens.txt con el ppmc mediante distinta cantidad de contextos maximos.
+
+El tamaño del archivo original es de 703 bytes.
+
+contextos de orden 2:
+
+Estadisticas:
+
+Cantidad de aciertos en contexto de orden 0 : 0 
+Cantidad de aciertos en contexto de orden 1 : 407 
+
+tamaño de salida: 373 bytes.
+
+contextos de orden 6:
+
+Cantidad de aciertos en contexto de orden 0 : 0 
+Cantidad de aciertos en contexto de orden 1 : 407 
+Cantidad de aciertos en contexto de orden 2 : 102 
+Cantidad de aciertos en contexto de orden 3 : 52 
+Cantidad de aciertos en contexto de orden 4 : 27 
+Cantidad de aciertos en contexto de orden 5 : 15 
+
+tamaño de salida: 373 bytes.
+
+contextos de orden 10:
+
+Estadisticas:
+
+Cantidad de aciertos en contexto de orden 0 : 0 
+Cantidad de aciertos en contexto de orden 1 : 407 
+Cantidad de aciertos en contexto de orden 2 : 102 
+Cantidad de aciertos en contexto de orden 3 : 52 
+Cantidad de aciertos en contexto de orden 4 : 27 
+Cantidad de aciertos en contexto de orden 5 : 15 
+Cantidad de aciertos en contexto de orden 6 : 7 
+Cantidad de aciertos en contexto de orden 7 : 4 
+Cantidad de aciertos en contexto de orden 8 : 3 
+Cantidad de aciertos en contexto de orden 9 : 3 
+
+tamaño de salida: 373 bytes.
+
+
+
+
+
+
