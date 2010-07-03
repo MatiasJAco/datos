@@ -107,8 +107,9 @@ bool Ppmc::compress(std::string path,int maxContext) {
 			stringContext = stringContext.substr(1, stringContext.length());
 		}
 		character = sequentialFile->readChar(isNotEof);
-		charAux = character;
-		if(strcmp(charAux.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
+		string charAux2 = "";
+		charAux2=character;
+		if(strcmp(charAux2.c_str(),ZERO_CONTEXT.c_str())==0){//si un caracter es el usado para el contexto cero, se loguea como error
 			logSpecialError();
 			isNotEof = false;
 		}
