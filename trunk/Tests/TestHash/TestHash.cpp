@@ -408,7 +408,7 @@ void TestHash::testPpmcHashComprimir() {
 	Ppmc* ppmcHash = new PpmcHash(hash);
 	ppmcHash->compress(path, maxContext);
 	hash->deleteGeneratedFiles();
-	delete ppmcHash;
+	//delete ppmcHash;
 }
 
 void TestHash::testPpmcHashDescomprimir() {
