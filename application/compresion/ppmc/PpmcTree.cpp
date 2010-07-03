@@ -89,7 +89,6 @@ void PpmcTree::printAllContexts()
 
 	bool hasLeaf = true;
 
-	//TODO ver si valido arbol vacio
 	((BPlusTree *) generalStructure)->getFirstElement(stringInputData);
 
 	FrequencyTable ft;
