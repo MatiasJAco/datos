@@ -32,7 +32,7 @@ private:
 	 */
 	ArchivoTexto* archivo;
 
-	static const int TAMANIO_LIMITE = 100;
+	static const int TAMANIO_LIMITE = 10000;
 
 	/**
 	 * Busca una cadena de caracteres en el archivo de texto.

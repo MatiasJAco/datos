@@ -60,9 +60,9 @@ void Ppmc::logSpecialError(){
 }
 
 bool Ppmc::compress(std::string path,int maxContext) {
-	std::string log = ";Comprimiendo archivo: ";
-	log.append(path);
-	this->logger->insert(&log[0]);
+	//std::string log = ";Comprimiendo archivo: ";
+	//log.append(path);
+	//this->logger->insert(&log[0]);
 
 	ArithmeticCompressor* compressor = new ArithmeticCompressor(ArithmeticCompressor::COMPRESSOR, this->getCompressionOutFile(path, maxContext), 30);
 	this->setContextStats(maxContext);
@@ -123,10 +123,10 @@ bool Ppmc::compress(std::string path,int maxContext) {
 	delete previousFrequencyTable;
 
 	std::cout << "Fin de compresion" << std::endl;
-	log = ";Se termino de comprimir el archivo: ";
-	log.append(path);
-	log.append(" . Resultado: satisfactorio.");
-	this->logger->insert(&log[0]);
+	//log = ";Se termino de comprimir el archivo: ";
+	//log.append(path);
+	//log.append(" . Resultado: satisfactorio.");
+	//this->logger->insert(&log[0]);
 	return true;
 }
 

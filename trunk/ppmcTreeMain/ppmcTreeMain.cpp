@@ -36,7 +36,7 @@ int main(int argc, const char* argv[])
 	bool showOneCTX=false;
 	bool showStatistics=false;
 	bool showHelp=false;
-	string error;
+	string logText;
 	Logger *log = Logger::Instance();
 	actionTypeEnum action =UNDEFINED_ACTION;
 
@@ -155,12 +155,32 @@ int main(int argc, const char* argv[])
 
 
 
-
+	stringstream info;
 	if(action == COMPRESS)
+	{
+		info << "Comprimiendo archivo "<<filePath<<  " con contexto "<<ctxOrder<<endl;
+		logText = info.str();
+		log->insert(&logText[0]);
+
 		ppmcCompresor->compress(filePath, ctxOrder);
+
+		logText = "La compresion fue exitosa\n";
+		log->insert(&logText[0]);
+	}
+
 	else
 		if(action == DECOMPRESS)
+		{
+			info << "Descomprimiendo archivo "<<filePath<<endl;
+			logText = info.str();
+			log->insert(&logText[0]);
 			ppmcCompresor->deCompress(filePath);
+
+			info.clear();
+			info << "La compresion fue exitosa "<<endl;
+			logText = info.str();
+			log->insert(&logText[0]);
+		}
 
 
 	//---------------------------HELP-----------------------------------//
@@ -202,23 +222,23 @@ int main(int argc, const char* argv[])
 	}
 	catch (CompressionException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch (ManagerException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch (PhysicalException e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 	catch(exception e)
 	{
-		error = (e.what());
-		log->insert(&error[0]);
+		logText = (e.what());
+		log->insert(&logText[0]);
 	}
 
 	delete tree;
