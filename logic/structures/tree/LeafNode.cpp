@@ -72,7 +72,6 @@ throw (NodeException)
 	m_block->restartCounter();
 
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 	VarRegister pointerprev = m_block->getNextRegister();
 	VarRegister pointernext = m_block->getNextRegister();
@@ -145,7 +144,6 @@ throw (NodeException)
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 	VarRegister prevPointer = m_block->getNextRegister();
 	VarRegister nextPointer = m_block->getNextRegister();
@@ -197,7 +195,6 @@ throw (NodeException)
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 	VarRegister prevPointer = m_block->getNextRegister();
 	VarRegister nextPointer = m_block->getNextRegister();
@@ -271,7 +268,6 @@ throw (NodeException)
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 	VarRegister prevPointer = m_block->getNextRegister();
 	VarRegister nextPointer = m_block->getNextRegister();
@@ -312,7 +308,6 @@ throw (NodeException)
 	/// Busco el dato dentro del bloque de hoja.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 	VarRegister prevPointer = m_block->getNextRegister();
 	VarRegister nextPointer = m_block->getNextRegister();
@@ -596,7 +591,6 @@ bool LeafNode::getFirstData(InputData & data){
 		/// Busco el primer dato dentro del bloque de hoja.
 		m_block->restartCounter();
 		/// Tengo que avanzar primero los datos de control siempre.
-		/// TODO ver si poner esto dentro de un metodo de Nodo.
 		VarRegister level = m_block->getNextRegister();
 		VarRegister prevPointer = m_block->getNextRegister();
 		VarRegister nextPointer = m_block->getNextRegister();

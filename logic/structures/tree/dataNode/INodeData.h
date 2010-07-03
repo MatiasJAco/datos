@@ -40,7 +40,6 @@ public:
 	 * Devuelve la clave (separador) del nodo interno.
 	 * @return Entero que representa a la clave.
 	 */
-	//TODO revisar si no deberia ser generico, por el momento, no.
 	// Si fuera generico deberia hacerse ese cambio de implementacion sobre las claves, en todos los proyectos.
 	std::string getKey()const;
 
