@@ -234,7 +234,6 @@ bool BPlusTree::remove(std::string key) throw (ManagerException)
 	bool retVal = true;
 	loadResultEnum result = NORMAL_LOAD;
 
-	// TODO manejo de baja del nivel de profundidad.
 
 	if (m_root == NULL)
 		throw BPlusTreeException(BPlusTreeException::INNEXISTENT_ROOT);

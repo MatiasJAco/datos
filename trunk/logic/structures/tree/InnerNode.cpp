@@ -437,7 +437,6 @@ throw(NodeException)
 	m_block->restartCounter();
 
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
 
@@ -585,7 +584,6 @@ throw (NodeException)
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 
 	while (!m_block->isLastRegister()&&!found)
@@ -634,7 +632,6 @@ throw (NodeException)
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 //	VarRegister pointers = m_block->getNextRegister();
 
@@ -683,7 +680,6 @@ throw (NodeException)
 	/// Busco donde insertar el dato dentro del bloque de nodo interno.
 	m_block->restartCounter();
 	/// Tengo que avanzar primero los datos de control siempre.
-	/// TODO ver si poner esto dentro de un metodo de Nodo.
 	VarRegister level = m_block->getNextRegister();
 //	VarRegister pointers = m_block->getNextRegister();
 

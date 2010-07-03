@@ -89,7 +89,6 @@ public:
 
 
 public:
-/// TODO Estos deberian ser privates? o friends?
 	/**
 	 * Recibe un numero de nodo y devuelve el nodo almacenado en disco.
 	 * Como crea la instancia internamente, luego es necesario destruir desde afuera

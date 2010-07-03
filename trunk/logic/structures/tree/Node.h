@@ -121,7 +121,6 @@ public:
 	 */
 	bool isEmpty();
 
-	// TODO falta definir los metodos split y join (supongo que irian solo en InnerNode)
 
 	bool isLeaf();
 
