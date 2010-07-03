@@ -217,7 +217,7 @@ int main(int argc, const char* argv[])
 		log->insert(&error[0]);
 	}
 
-	delete log;
+	//delete log;
 
 	return 0;
 }
